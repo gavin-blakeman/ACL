@@ -1,0 +1,20 @@
+Astronomy Class Library (ACL)
+=============================
+
+Copyright: Gavin Blakeman (gavin.blakeman@theblakemans.id.au)
+
+This file is part of the Astronomy Class Library (ACL) ACL is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+ACL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with ACL.  If not, see <http://www.gnu.org/licenses/>.
+
+This library contains a number of classes and functions for astronomy.
+There are classes for image processing, FITS file managment (on top off cfitsio) and astronomical algorithms.
+
+The classes where designed for the AIRDAS application. (www.airdas.net)
+
+All functions and constants are enclosed in the ACL namespace.
+
+

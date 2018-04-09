@@ -1,0 +1,160 @@
+﻿//*********************************************************************************************************************************
+//
+// PROJECT:             Astronomy Class Library
+// FILE:                ACL
+// SUBSYSTEM:           Main Include file for library
+// LANGUAGE:            C++
+// TARGET OS:           None.
+// LIBRARY DEPENDANCE:	None.
+// NAMESPACE:           ACL
+// AUTHOR:              Gavin Blakeman (GGB)
+// LICENSE:             GPLv2
+//
+//                      Copyright 2010-2017 Gavin Blakeman.
+//                      This file is part of the Astronomy Class Library (ACL)
+//
+//                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
+//                      Public License as published by the Free Software Foundation, either version 2 of the License, or (at your
+//                      option) any later version.
+//
+//                      ACL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+//                      implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+//                      for more details.
+//
+//                      You should have received a copy of the GNU General Public License along with ACL.  If not,
+//                      see <http://www.gnu.org/licenses/>.
+//
+// HISTORY:             2016-04-11 GGB - Added FITSKeyword hierarchy
+//                      2015-09-22 GGB - AIRDAS 2015.09 release
+//                      2015-03-26 GGB - Rename to Astronomy Class Library (ACL)
+//                      2013-02-09 GGB - Added findstar.h and SourceExtraction.h
+//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+//                      2013-06-08 GGB - Added new files for photometry observations, astrometry observations and apertures.
+//                      2013-03-22 GGB - AIRDAS 2013.03 release.
+//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//
+//*********************************************************************************************************************************
+
+#ifndef ACL_H
+#define ACL_H
+
+/*!
+ * @mainpage Astronomy Class Library (ACL).
+ * @section Introduction
+ * The Astronomy Class Library implements a number of classes that have been developed to support astronomy applications.
+ * This includes support for image manipulation and data extraction, as well as classes that support astronomical calculations.<br>
+ * The library is written in C++14.<br>
+ * The library is written as an operating system independent library.
+ *
+ * @section Dependencies
+ * The following open source libraries are required by the Astronomy Class library.
+ * @arg SOFA <a href="http://www.iausofa.org">Standards of Fundamental Astronomy</a>
+ * @arg CFitsIO <a href="http://heasarc.gsfc.nasa.gov/fitsio/fitsio.html">A FITS File Subroutine Library</a>
+ * @arg Boost Library <a href="http//www.boost.org">Boost C++ Libraries</a>
+ * @arg GCL <a href="http://www.theroboticobservatory.org">General Class Library</a>
+ * @arg MCL <a href="http://www.theroboticobservatory.org">Maths Class Library</a>
+ * @arg PCL <a href="http://www.theroboticobservatory.org">Physics Class Library</a>
+ * @arg SCL <a href="http://www.theroboticobservatory.org">Storage Class Library</a>
+ *
+ * @section Compilation Control
+ * The following macros control how the code will be compiled for various applications.
+ * @li @b ACL_NOBOOST - Do not use the Boost C++ libraries. This should only be used on platforms where the Boost C++ libraries are not
+ * 								      supported. By default the Boost C++ libraries are enabled.
+ * @li @b ACL_NOMT - Do not use multi-threading. This should only be used on platforms where multi-threading is not available. By
+ *									 default, multi-threading support is enabled.
+ * @li @b ACL_REALTIME - Compile in the realtime library support. By default this will not be compiled in.
+ * @li @b ACL_NOSTRINGS - Compile without using strings. This is intended to be used for embedded applications.
+ * @li @b EMBEDDED - Compile the library for embedded applications.
+ * @li @b ACL_CONTROL - Compile the library for control type applications.
+ *
+ * @section Projects
+ * The Astronomy Class Library is used as the Astronomy Library by the following projects.
+ * @li Astronomical Image Reduction and Data Analysis Software.  (<a href="http://www.airdas.net">AIRDAS</a>)
+ * @li The Robotic Observatory Project (<a href="http://www.theroboticobservatory.org">The Robotic Observatory</a>)
+ *
+ * @section Development
+ * The library is still under active development and is being expanded and improved along with the development of the AIRDAS
+ * application.
+ * @par Note
+ * The classes within this library have been in development from 2005. As a result, all the code is not written using the
+ * C++14 functionality. There is an opportunity to "clean" up the code by updating the code to reflect the C++14 standard.
+ * All new code that is being developed is written to the C++14 standard.<br>
+ * All C string functions will be phased out over time. Any new code should not include C string functions, but should rather use
+ * the C++ std::string classes.
+ * @par Reporting Bugs
+ * Bugs are tracked on the bugzilla database used by <a href="https://bugzilla.theroboticobservatory.org">The Robotic
+ * Observatory project.</a>. The bugs should be entered against the ACL project.
+ * @par Source Code
+ * The source code can be downloaded as a zipped file from the <a href="https://bugzilla.theroboticobservatory.org">The Robotic
+ * Observatory project.</a>.<br>
+ * The source code is also included in the source package for the <a href="http://www.airdas.net">AIRDAS Project</a>. Where it
+ * can be downloaded from the project site, or from the project site on Launchpad.
+ *
+ * @section Legal
+ * @author Gavin Blakeman (GGB)
+ * @version 2013.09
+ * @copyright 2005-2017 Gavin Blakeman
+ * @par Licence
+ * The Astronomy Class Library is licensed under the GPLv2. The full text of the GPLv2 can be found in the file license.txt that
+ * is distributed with the source of the library.<br>
+ * The Astronomy Class Library is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.<br>
+ * The Astronomy Class Library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br>
+ * You should have received a copy of the GNU General Public License along with the Astronomy Class Library.  If not, see
+ * <a href="http://www.gnu.org/licenses/">The GNU Project</a>
+ */
+
+#include "Include/AAVSO.h"
+#include "Include/constants.h"
+#include "Include/AstroFunctions.h"
+#include "Include/AstroClass.h"
+#include "Include/AstroFile.h"
+#include "Include/AstroImageCalibration.h"
+#include "Include/AstroImageFunctions.hpp"
+#include "Include/AstroImage.h"
+#include "Include/Astrometry.h"
+#include "Include/AstrometryObservation.h"
+#include "Include/AstronomicalCoordinates.h"
+#include "Include/AstronomicalTime.h"
+#include "Include/HDBBinTable.h"
+#include "Include/FITSKeyword.h"
+#include "Include/FITSKeywordBool.h"
+#include "Include/FITSKeywordComplex.h"
+#include "Include/FITSKeywordDateTime.h"
+#include "Include/FITSKeywordDouble.h"
+#include "Include/FITSKeywordDoubleComplex.h"
+#include "Include/FITSKeywordFloat.h"
+#include "Include/FITSKeywordInt08.h"
+#include "Include/FITSKeywordInt16.h"
+#include "Include/FITSKeywordInt32.h"
+#include "Include/FITSKeywordInt64.h"
+#include "Include/FITSKeywordString.h"
+#include "Include/FITSKeywordUInt08.h"
+#include "Include/FITSKeywordUInt16.h"
+#include "Include/FITSKeywordUInt32.h"
+#include "Include/FITSMemoryFile.h"
+#include "Include/FITSMemoryFileArray.h"
+#include "Include/config.h"
+#include "Include/common.h"
+#include "Include/findstar.h"
+#include "Include/FITS.h"
+#include "Include/FITSInspector.h"
+#include "Include/FITSStrings.h"
+#include "Include/FITSUtilities.h"
+#include "Include/geographicLocation.h"
+#include "Include/HDB.h"
+#include "Include/HDBPrimary.h"
+#include "Include/PhotometryObservation.h"
+#include "Include/PhotometryAperture.h"
+#include "Include/PhotometryApertureCircular.h"
+#include "Include/photometryFilters.h"
+#include "Include/ImageRegister.h"
+#include "Include/ImageStack.h"
+#include "Include/observatoryInformation.h"
+#include "Include/SIMBAD.h"
+#include "Include/SourceExtraction.h"
+#include "Include/TargetStellar.h"
+#include "Include/TargetSolar.h"
+#include "Include/telescope.h"
+#endif
