@@ -1,0 +1,15 @@
+2017-06 (2017-06-30)
+------------------------------------------------------------------------------------------------------------------------------------
+FIX	#22 - Parameter checking
+FIX 	#23 - Parameter checking
+FIX	#24 - Parameter checking
+
+2016.04 (2016-04-30)
+------------------------------------------------------------------------------------------------------------------------------------
+FIX:    #1574420 - Not displaying RA/Dec correctly.
+FIX:    #1571169 - Not stripping off "'" character.
+FIX:    #1571151 - Date/Time Display incorrect
+CHANGE  (2016-04-11): Change keywords to use non-templated functions and create hierarchy.
+CHANGE: PAstroFile to a std::shared_ptr<>, from a boost::shared_ptr<>
+FIX:    Incorrect algorithm being used in CImagePlane to calculate the rendered value whenrendering an 8 bit mono image.
+CHANGE: Processing of special keywords changed to reflect use of cfitsio instead of CCfits.
