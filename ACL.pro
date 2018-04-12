@@ -32,13 +32,13 @@ else:unix:CONFIG(debug, debug|release) {
 
 INCLUDEPATH += \
   "../astrometry.net/astrometry.net-0.56/include" \
-  "../Boost/boost 1.62" \
+  "../boost 1.62" \
   "../cfitsio" \
-  "../Dlib/dlib-19.4" \
+  "../dlib-19.4" \
   "../GCL" \
   "../libWCS/wcstools-3.8.7/libwcs" \
   "../MCL" \
-  "../NOVAS/novasc3.1" \
+  "../novasc3.1" \
   "../PCL" \
   "../SBIG" \
   "../SCL" \

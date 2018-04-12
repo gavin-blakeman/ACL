@@ -74,11 +74,6 @@
 
 #include "wcs.h"
 
-  // astrometry.net
-
-#include "astrometry/blind.h"
-#include "astrometry/solver.h"
-
   // Miscellaneous headers
 
 #include <GCL>
