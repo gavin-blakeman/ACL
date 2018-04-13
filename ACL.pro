@@ -22,12 +22,12 @@ else:win32:CONFIG(debug, debug|release) {
   OBJECTS_DIR = "../Library/win32/debug/object/ACL"
 }
 else:unix:CONFIG(release, debug|release) {
-  DESTDIR = "../Library/unix/release"
-  OBJECTS_DIR = "../Library/unix/release/object/ACL"
+  DESTDIR = ""
+  OBJECTS_DIR = "objects"
 }
 else:unix:CONFIG(debug, debug|release) {
-  DESTDIR = "../Library/unix/debug"
-  OBJECTS_DIR = "../Library/unix/debug/object/ACL"
+  DESTDIR = ""
+  OBJECTS_DIR = "objects"
 }
 
 INCLUDEPATH += \
