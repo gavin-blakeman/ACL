@@ -45,13 +45,13 @@
 //                        - CRAWAstroFile
 //
 // HISTORY:             2017-07-24/GGB - Removed factory function and class hierarchy. Included in CAstroFile.
-//                      2015-09-22 GGB - AIRDAS 2015.09 release
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-09/GGB - Moved classes for SBIG and RAW into seperate files.
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
 //                      2011-12-10 GGB - Removed HDB classes into seperate file HDB.h
-//                      2011-06-04 GGB - Development of classes for AIRDAS
+//                      2011-06-04 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
@@ -1976,7 +1976,7 @@ namespace ACL
     }
     else
     {
-      hdb.reset(new CImageHDB(this, AIRDAS_HDB_PRIMARY));
+      hdb.reset(new CImageHDB(this, astroManager_HDB_PRIMARY));
     };
     hdb->readFromFITS(file);
     HDB.push_back(hdb);
@@ -2021,7 +2021,7 @@ namespace ACL
   void CAstroFile::loadFromSBIG(boost::filesystem::path const &fileName)
   {
     CSBIGImg *imageFile = new CSBIGImg();
-    CImageHDB_Ptr newHDB(new CImageHDB(this, AIRDAS_HDB_PRIMARY));
+    CImageHDB_Ptr newHDB(new CImageHDB(this, astroManager_HDB_PRIMARY));
     PFITSKeyword keyword;
     unsigned short xbin, ybin;
 
@@ -2138,7 +2138,7 @@ namespace ACL
 #ifdef USE_LIBRAW
   void CAstroFile::loadFromRaw()
   {
-    CImageHDB_Ptr newHDB(new CImageHDB(this, AIRDAS_HDB_PRIMARY));
+    CImageHDB_Ptr newHDB(new CImageHDB(this, astroManager_HDB_PRIMARY));
     LibRaw *iProcessor = new LibRaw;
 
     if (hasData())
@@ -2252,15 +2252,15 @@ namespace ACL
       }
     }
     
-    if (keywordExists(0, AIRDAS_ALTITUDE))
+    if (keywordExists(0, astroManager_ALTITUDE))
     {
       try
       {
-        observationLocation->altitude(static_cast<int>(std::stod(keywordData(0, AIRDAS_ALTITUDE))));
+        observationLocation->altitude(static_cast<int>(std::stod(keywordData(0, astroManager_ALTITUDE))));
       }
       catch(...)
       {
-        WARNINGMESSAGE("Invalid format for keyword: " + AIRDAS_ALTITUDE);
+        WARNINGMESSAGE("Invalid format for keyword: " + astroManager_ALTITUDE);
       }
     }
     else if (keywordExists(0, MAXIM_ALTITUDE))
@@ -2388,11 +2388,11 @@ namespace ACL
       };
     };
 
-    if (keywordExists(0, AIRDAS_JD))
+    if (keywordExists(0, astroManager_JD))
     {
         // This is easy, just reset and construct with the JD and the relevant timeSystem.
 
-      observationTime.reset(new CAstroTime(static_cast<double>(keywordData(0, AIRDAS_JD)), timeSystem));
+      observationTime.reset(new CAstroTime(static_cast<double>(keywordData(0, astroManager_JD)), timeSystem));
     }
 
     // DATE-OBS should be in the format "YYYY-MM-DDTHH:mm:ss"
@@ -2401,7 +2401,7 @@ namespace ACL
     {
       observationTime.reset(new CAstroTime(&time, (timeSystem == ACL::TS_NONE) ? ACL::TS_UTC : timeSystem));
     }
-    else if ((keywordExists(0, AIRDAS_DATEHP)) && (parseDATE_OBS(static_cast<std::string>(keywordData(0, FITS_DATEOBS)), &time)))
+    else if ((keywordExists(0, astroManager_DATEHP)) && (parseDATE_OBS(static_cast<std::string>(keywordData(0, FITS_DATEOBS)), &time)))
     {
       observationTime.reset(new CAstroTime(&time, (timeSystem == ACL::TS_NONE) ? ACL::TS_UTC : timeSystem));
     }
@@ -2550,20 +2550,20 @@ namespace ACL
 //    {
 //      if ( (keyword == MAXIM_BOLTAMBT) ||
 //           (keyword == MAXIM_DAVAMBT) ||
-//           (keyword == AIRDAS_AMBTEM))
+//           (keyword == astroManager_AMBTEM))
 //      {
 //        observationWeather->temperature(PCL::CTemperature(std::stod(keyword), PCL::TU_C));
 //        returnValue = true;
 //      }
 //      else if ( (keyword == MAXIM_DAVBAROM) ||
-//                (keyword == AIRDAS_AMBPRE))
+//                (keyword == astroManager_AMBPRE))
 //      {
 //        observationWeather->pressure(PCL::CPressure(std::stod(keyword) * 100, PCL::PU::PA));
 //        returnValue = true;
 //      }
 //      else if ( (keyword == MAXIM_BOLTHUM) ||
 //                (keyword == MAXIM_DAVHUM) ||
-//                (keyword == AIRDAS_AMBHUM) )
+//                (keyword == astroManager_AMBHUM) )
 //      {
 //        observationWeather->RH(std::stod(keyword));
 //        returnValue = true;
@@ -3240,7 +3240,7 @@ namespace ACL
         };
         case BINARY_TBL:
         {
-          if (extName == AIRDAS_HDB_ASTROMETRY)
+          if (extName == astroManager_HDB_ASTROMETRY)
           {
             astrometryHDB_.reset(new CHDBAstrometry(this));
 
@@ -3255,7 +3255,7 @@ namespace ACL
 
             astrometryHDB()->readFromFITS(file);
           }
-          else if (extName == AIRDAS_HDB_PHOTOMETRY)
+          else if (extName == astroManager_HDB_PHOTOMETRY)
           {
             photometryHDB_.reset(new CHDBPhotometry(this));
 

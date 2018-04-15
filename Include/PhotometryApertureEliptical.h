@@ -33,10 +33,10 @@
 //
 // CLASS HIERARCHY:
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-06-08 GGB - Moved CPhotometryObservation, PhotometryAperture  into seperate file.
-//                      2013-03-22 GGB - AIRDAS 2013.03 Release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 Release.
+//                      2013-03-22 GGB - astroManager 2013.03 Release.
+//                      2013-01-20 GGB - astroManager 0000.00 Release.
 //                      2010-06-23 GGB - Started development of classes.
 //
 //*********************************************************************************************************************************

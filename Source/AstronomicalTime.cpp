@@ -39,10 +39,10 @@
 //                      2. Functions from other libraries, referenced by this library can be written in C.
 //                      3. New functions should be written to be multi-thread safe.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-29 GGB - Renamed to AstronomicalTime.h
-//                      2013-03-20 GGB - AIRDAS 2013.03 release.
-//                      2013-01-22 GGB - AIRDAS 000.00 release.
+//                      2013-03-20 GGB - astroManager 2013.03 release.
+//                      2013-01-22 GGB - astroManager 000.00 release.
 //                      2005-06-19 GGB - Start Development of classes in file ACL::Astrometry
 //
 //*********************************************************************************************************************************

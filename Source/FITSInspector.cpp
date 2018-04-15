@@ -31,7 +31,7 @@
 //
 // CLASS HIERARCHY:     CFITSInspector
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-07/GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -95,7 +95,7 @@ namespace ACL
       if (hduNumber == 1)
       {
         CFITSIO_TEST(fits_read_keyword(file, FITS_SIMPLE.c_str(), keywordValue, keywordComment, &status));
-        newHDU->hduName = AIRDAS_HDB_PRIMARY;
+        newHDU->hduName = astroManager_HDB_PRIMARY;
       }
       else
       {

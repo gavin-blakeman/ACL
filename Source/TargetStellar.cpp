@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2017 Gavin Blakeman.
+//                      Copyright 2005-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -59,10 +59,10 @@
 //
 // CLASS HIERARCHY:     CTargetStellar
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
-//                      2011-06-30 GGB - Development of classes for AIRDAS
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
+//                      2011-06-30 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 

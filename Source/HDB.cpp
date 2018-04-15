@@ -36,11 +36,11 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
-//                      2013-01-20 GGB - Release of AIRDAS 0000.00
+//                      2013-01-20 GGB - Release of astroManager 0000.00
 //                      2011-12-10 GGB - Move classed from AstroFile.h to HDB.h
 //
 //*********************************************************************************************************************************
@@ -995,7 +995,7 @@ namespace ACL
     {
       bSimple = static_cast<bool>(*keyword);
       bPrimary_ = true;
-      extname_ = AIRDAS_HDB_PRIMARY;
+      extname_ = astroManager_HDB_PRIMARY;
       keyword.reset();
       returnValue = true;
     }

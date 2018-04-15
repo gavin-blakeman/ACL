@@ -44,13 +44,13 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 released.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 released.
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
-//                      2013-01-20 GGB - AIRDAS 0000.00 released.
+//                      2013-01-20 GGB - astroManager 0000.00 released.
 //                      2011-12-10 GGB - Move classed from AstroFile.h to HDB.h
 //
 //*********************************************************************************************************************************

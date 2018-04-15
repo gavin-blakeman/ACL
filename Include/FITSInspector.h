@@ -31,7 +31,7 @@
 //
 // CLASS HIERARCHY:     CFITSInspector
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-07/GGB - File created.
 //
 //*********************************************************************************************************************************

@@ -32,7 +32,7 @@
 // CLASS HIERARCHY:     std::runtime_error
 //                        CFITSException
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-09-05/GGB - File created.
 //
 //*********************************************************************************************************************************

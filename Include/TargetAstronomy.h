@@ -32,10 +32,10 @@
 //
 // RELEASE HISTORY:     2016-03-24 GGB - Simplified class interface
 //                      2015-09-27/GGB - Coordinate classes moved into this file from AstroClass
-//                      2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-21 GGB - AIRDAS 0000.00 release.
+//                      2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-21 GGB - astroManager 0000.00 release.
 //                      2010-05-05 GGB -  1) All windows related functions have been removed as part if the change over to the Qt
 //                                          API platform. This has been done to facilitate the move to a multi-platform environment.
 //                                        2) The intention with the changes are also to make this software platform independant to

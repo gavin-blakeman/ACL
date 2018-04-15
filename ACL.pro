@@ -38,7 +38,7 @@ INCLUDEPATH += \
   "../GCL" \
   "../libWCS/wcstools-3.8.7/libwcs" \
   "../MCL" \
-  "../novasc3.1" \
+  "../NOVAS" \
   "../PCL" \
   "../SBIG" \
   "../SCL" \

@@ -27,7 +27,7 @@
 //
 // OVERVIEW:						This file is a port of some of the routines in findstar.c to C++. findstar.c is part of the libWCS suite of
 //                      routines.
-//                      This port has been done to support the AIRDAS project.
+//                      This port has been done to support the astroManager project.
 //                      All the functions have also been ported to support x64 processors.
 //
 // FUNCTIONS INCLUDED:  None
@@ -36,7 +36,7 @@
 //
 // CLASS HIERARCHY:     CFindStars
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2014-01-31 GGB - Ported to C++
 //
 //*********************************************************************************************************************************

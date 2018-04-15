@@ -26,9 +26,9 @@
 //
 // OVERVIEW:						Standalone functions templated functions for coordinate manipulation.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-01-20 GGB - Release of AIRDAS 0000.00
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-01-20 GGB - Release of astroManager 0000.00
 //                      2012-01-14 GGB - Start Development of classes in file
 //
 //*********************************************************************************************************************************

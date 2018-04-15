@@ -54,13 +54,13 @@
 // Notes:               1) CImagePlane stores all images with a double representation. This provides the best implementation,
 //                          without having to have multiple implementations, with type changes on the fly.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-04-14 GGB - Changed filename from CImagePlane.h to ImagePlane.h
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
 //                      2012-11-27 GGB - Removed class CImagePlane into file CImagePlane
-//                      2010-10-16 GGB - Development of classes for AIRDAS
+//                      2010-10-16 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
