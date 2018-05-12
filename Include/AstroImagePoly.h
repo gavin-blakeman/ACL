@@ -5,12 +5,12 @@
 // SUBSYSTEM:						Astronomical Image Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, cfitsio, gsl, boost.
+// LIBRARY DEPENDANCE:	SCL, cfitsio, boost.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2016 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -115,7 +115,7 @@ namespace ACL
       // Image Plane functions
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, long radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const { ACL_CODE_ERROR;}
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const { ACL_CODE_ERROR;}
 
     virtual void insertImagePlane(PImagePlane);
 

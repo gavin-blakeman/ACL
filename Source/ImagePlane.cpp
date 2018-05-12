@@ -10,7 +10,7 @@
 // AUTHORS:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2017 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -1999,11 +1999,13 @@ namespace ACL
     sourceExtractor.findStars(sourceList);
   }
 
-  /// Determines the FWHM of a star.
-  /// Looks within radius pixels of the center
-  /// Performs 2D curve fitting to function
-  /// EXCEPTIONS: 0x1205 - IMAGEPLANE: FWHM Call Radius == 0.
-  //
+  /// @brief Determines the FWHM of a star.
+  /// @details Searches within radius pixels of the center. Performs 2D curve fitting to function
+  /// @param[in] center - The center point to determine the FWHM from.
+  /// @param[radius] - The maximum radius
+  /// @returns The FWHM of the object.
+  /// @throws 0x1205 - IMAGEPLANE: FWHM Call Radius == 0.
+  /// @version 2018-05-12/GGB - Function created/
 
   boost::optional<FP_t> CImagePlane::FWHM(MCL::TPoint2D<AXIS_t> const &center, AXIS_t radius) const
   {

@@ -313,7 +313,7 @@ namespace ACL
     virtual FP_t imageMean(DHDBStore::size_type = 0) const;
     virtual FP_t imageStdev(DHDBStore::size_type = 0) const;
     virtual FP_t imageMin(DHDBStore::size_type = 0) const;
-    void objectProfile(DHDBStore::size_type, MCL::TPoint2D<FP_t> centroid, long radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
+    void objectProfile(DHDBStore::size_type, MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
     virtual std::string imageFilter() const;
     virtual FP_t imageExposure(DHDBStore::size_type = 0) const;
 

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2017 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -230,7 +230,7 @@ namespace ACL
 
     void plusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
     void minusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
-    void transformThread(long yStart, long yEnd, SThreadData const &);
+    void transformThread(AXIS_t yStart, AXIS_t yEnd, SThreadData const &);
     void resampleThread(double *newImagePlane, boost::tuple<AXIS_t, AXIS_t> yVals, AXIS_t newWidth, boost::tuple<FP_t, FP_t>);
 
     template<typename T>
@@ -257,9 +257,9 @@ namespace ACL
     void renderImageGrey8LogThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
 
   public:
-    explicit CImagePlane();								      // Default constructor.
-    CImagePlane(CImagePlane const &);		        // Copy constructor.
-    CImagePlane(CImagePlane const *, long, long, long, long);   // Create a sub-image from an image.
+    explicit CImagePlane();                                     // Default constructor.
+    CImagePlane(CImagePlane const &);                           // Copy constructor.
+    CImagePlane(CImagePlane const *, AXIS_t, AXIS_t, AXIS_t, AXIS_t);   // Create a sub-image from an image.
     CImagePlane(AXIS_t, AXIS_t);	// Constructor with a size
     CImagePlane(AXIS_t, AXIS_t, AXIS_t, AXIS_t); // Constructor with an origen and size.
     CImagePlane(fitsfile *, AXIS_t);         // Constructor from a FITS HDU with slicing.
@@ -493,7 +493,7 @@ namespace ACL
 
     MCL::TPoint2D<FP_t> starCentroid(MCL::TPoint2D<AXIS_t> const &) const;
     boost::optional<MCL::TPoint2D<AXIS_t> > brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax, int sensitivity) const;
-    boost::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, long radius) const;
+    boost::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, AXIS_t radius) const;
     void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
 
       // Image Analysis functions

@@ -41,6 +41,10 @@
 
 #include "../Include/FITSUtilities.h"
 
+  // ACL Libraries
+
+#include "../Include/constants.h"
+
   // Standard library
 
 #include <exception>
@@ -177,10 +181,9 @@ namespace ACL
 
   /// @brief Parses an RA value represented as a string to a floating point value. (HH MM SS.sss)
   /// @param[in] value - The string to parse
-  /// @param[out] ra - The value retrieved from the operation.
-  /// @returns true = success
-  /// @returns false = failure
+  /// @returns The value retrieved from the operation in radians
   /// @throws std::invalid_argument
+  /// @version 2018-05-12/GGB - Updated to return radians.
   /// @version 2017-08-02/GGB - Function created.
 
   FP_t parseRA(std::string value)
@@ -203,6 +206,10 @@ namespace ACL
           {
             throw(std::invalid_argument("Hours value not correctly delineated."));
           }
+          else
+          {
+            returnValue *= DEGREE_PER_HOUR;   // Convert to degrees.
+          };
           break;
         }
         case 1:
@@ -233,17 +240,18 @@ namespace ACL
         };
       };
       ++index;
-    }
+    };
 
-    return returnValue;
+      // Return value now in form hh.ddddd. Need to change this to radians.
+
+    return (returnValue * D_D2R);
   }
 
   /// @brief Parses a Declination value represented as a string to a floating point value. (SDD MM SS.sss)
   /// @param[in] value - The string to parse
-  /// @param[out] ra - The value retrieved from the operation.
-  /// @returns true = success
-  /// @returns false = failure
+  /// @returns The value retrieved from the argument in radians.
   /// @throws std::invalid_argument
+  /// @version 2018-05-12/GGB - Updated to return radians.
   /// @version 2017-08-02/GGB - Function created.
 
   FP_t parseDEC(std::string value)
@@ -298,7 +306,7 @@ namespace ACL
       ++index;
     };
 
-    return returnValue;
+    return (returnValue * D_D2R);
   }
 
   /// @brief Parses a Latitude value represented as a string to a floating point value. (sDD MM SS.sss)

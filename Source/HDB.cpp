@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -906,10 +906,9 @@ namespace ACL
   /// @returns The NAXISn number specified.
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
-  //
-  // 2011-11-27/GGB - Function created.
+  /// @version 2011-11-27/GGB - Function created.
 
-  long CHDB::NAXISn(NAXIS_t n) const
+  AXIS_t CHDB::NAXISn(NAXIS_t n) const
   {
     if ( (n < 1) || (n > 999) )
     {
@@ -928,8 +927,7 @@ namespace ACL
   /// @brief Sets the specified value of NAXISn
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
-  //
-  // 2011-12-18/GGB - Function created.
+  /// @version 2011-12-18/GGB - Function created.
 
   void CHDB::NAXISn(std::vector<AXIS_t>::size_type nax, AXIS_t n)
   {
