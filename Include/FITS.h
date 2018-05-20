@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITS
@@ -41,6 +41,7 @@
 
   // Standard libraries
 
+#include <boost/filesystem.hpp>
 #include <string>
 
 namespace ACL
@@ -48,6 +49,7 @@ namespace ACL
   unsigned int const NAXIS_MAX = 999;       // As per FITS standard.
 
   std::string Bitpix2String(int);
+  bool isFitsFile(boost::filesystem::path const &);
 }
 
 #endif // ACL_FITS_H

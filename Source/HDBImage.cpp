@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -361,7 +361,7 @@ namespace ACL
   /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
   /// @version 2012-07-28/GGB - Function created.
 
-  void CImageHDB::findStars(TImageSourCAstronomicalCoordinatesontainer &imageSourceList, const SFindSources &sourceDefaults) const
+  void CImageHDB::findStars(TImageSourceContainer &imageSourceList, const SFindSources &sourceDefaults) const
   {
     if (!data)
     {

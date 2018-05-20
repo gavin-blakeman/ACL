@@ -1472,7 +1472,7 @@ namespace ACL
   /// @version 2012-07-30/GGB - Function created.
 
   void CAstroFile::findStars(DHDBStore::size_type hdb,
-                             TImageSourCAstronomicalCoordinatesontainer &imageSourceList,
+                             TImageSourceContainer &imageSourceList,
                              SFindSources const &parameters) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");

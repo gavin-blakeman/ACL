@@ -138,7 +138,7 @@ namespace ACL
 
     void setParameters(SFindSources const &parameters);
 
-    void findStars(TImageSourCAstronomicalCoordinatesontainer &imageObjectList);
+    void findStars(TImageSourceContainer &imageObjectList);
 
   };
 

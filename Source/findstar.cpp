@@ -186,7 +186,7 @@ namespace ACL
   /// @version 2014-01-30/GGB - Added check that the return from brightWalk falls within the image.
   /// @version 2012-07-20/GGB - Function ported to C++
 
-  void CFindSources::findStars(TImageSourCAstronomicalCoordinatesontainer &imageObjectList)
+  void CFindSources::findStars(TImageSourceContainer &imageObjectList)
   {
     FP_t noise, nsigma;
     FP_t minll;
@@ -204,7 +204,7 @@ namespace ACL
     boost::optional<MCL::TPoint2D<AXIS_t> > bw;
     FP_t b = bmin;
     AXIS_t sx, sy, r;
-    TImageSourCAstronomicalCoordinatesontainer::iterator iter;
+    TImageSourceContainer::iterator iter;
 
       /* Set trim section for star searching */
 

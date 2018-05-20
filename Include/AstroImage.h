@@ -260,7 +260,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
 
       // Image Analysis functions
 
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const = 0;
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const = 0;
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const = 0;
 
       // Photometry functions

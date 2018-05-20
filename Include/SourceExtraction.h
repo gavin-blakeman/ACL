@@ -62,7 +62,7 @@ namespace ACL
   };
 
   typedef boost::shared_ptr<SImageSource> PImageSource;
-  typedef std::list<PImageSource> TImageSourCAstronomicalCoordinatesontainer;
+  typedef std::list<PImageSource> TImageSourceContainer;
 }
 
 #endif // ACL_SOURCEEXTRACTION_H

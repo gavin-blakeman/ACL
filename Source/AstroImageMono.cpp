@@ -356,7 +356,7 @@ namespace ACL
   /// @version 2014-02-01/GGB - Changed to function findStars. Use class CFindStars.
   /// @version 2013-10-29/GGB - Function created.
 
-  void CAstroImageMono::findStars(TImageSourCAstronomicalCoordinatesontainer &imageObjectList, const SFindSources &sourceDefaults) const
+  void CAstroImageMono::findStars(TImageSourceContainer &imageObjectList, const SFindSources &sourceDefaults) const
   {
     if (imagePlaneStorage.empty())
     {

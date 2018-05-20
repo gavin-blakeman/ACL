@@ -305,7 +305,7 @@ namespace ACL
       // Image Analysis functions
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR(ACL); }
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const { CODE_ERROR(ACL); }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR(ACL); }
     //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) {CODE_ERROR(ACL); };
     virtual bool plateSolve(AXIS_t) { CODE_ERROR(ACL); }
 

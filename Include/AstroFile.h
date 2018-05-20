@@ -354,7 +354,7 @@ namespace ACL
 
       // Image Analysis Functions
 
-    virtual void findStars(DHDBStore::size_type, TImageSourCAstronomicalCoordinatesontainer &, const SFindSources &parameters) const;
+    virtual void findStars(DHDBStore::size_type, TImageSourceContainer &, const SFindSources &parameters) const;
     virtual bool plateSolve(DHDBStore::size_type, AXIS_t);
 
       // Astrometry functions

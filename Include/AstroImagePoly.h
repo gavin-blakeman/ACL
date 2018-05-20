@@ -141,7 +141,7 @@ namespace ACL
     virtual FP_t getValue(AXIS_t, AXIS_t, AXIS_t=0) const {ACL_CODE_ERROR;}
     virtual void setValue(AXIS_t, AXIS_t, AXIS_t, FP_t) { ACL_CODE_ERROR; }
 
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const { ACL_CODE_ERROR; }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {ACL_CODE_ERROR;}
     virtual void photometry(SPPhotometryObservation /*photometryObservation*/) const {ACL_CODE_ERROR;}
     virtual boost::optional<double> FWHM(MCL::TPoint2D<double> const &) const { ACL_CODE_ERROR; }

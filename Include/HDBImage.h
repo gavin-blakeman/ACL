@@ -179,7 +179,7 @@ namespace ACL
       // Image Analysis functions
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &imageSourceList, SFindSources const &) const;
+    virtual void findStars(TImageSourceContainer &imageSourceList, SFindSources const &) const;
     virtual bool plateSolve(AXIS_t);
 
       // Photometry functions

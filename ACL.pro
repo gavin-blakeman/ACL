@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
-
 TARGET = ACL
 TEMPLATE = lib
 CONFIG += staticlib
-DEFINES += BOOST_THREAD_USE_LIB
 
-QMAKE_CXXFLAGS += -std=c++14
+QT       -= core gui
+
+QMAKE_CXXFLAGS += -std=c++17
+DEFINES += BOOST_THREAD_USE_LIB
 
 win32:CONFIG(release, debug|release) {
   DESTDIR = "../Library/win32/release"
@@ -31,7 +31,6 @@ else:unix:CONFIG(debug, debug|release) {
 }
 
 INCLUDEPATH += \
-  "../astrometry.net/astrometry.net-0.56/include" \
   "../boost 1.62" \
   "../cfitsio" \
   "../dlib-19.4" \

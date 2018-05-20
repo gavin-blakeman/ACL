@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITS
@@ -38,12 +38,9 @@
 
 #include "../Include/FITS.h"
 
-  // cfitsio library
+#include <fstream>
 
 #include "cfitsio/fitsio.h"
-
-  // Miscellaneous libraries
-
 #include <GCL>
 
 namespace ACL
@@ -115,4 +112,38 @@ namespace ACL
 
     return returnValue;
   }
+
+  /// @brief Determines if a file is a FITS file.
+  /// @param[in] p - The path to the file.
+  /// @returns true - The path points to a file that is likely a FITS file.
+  /// @returns false - The path is not a FITS file.
+  /// @throws None.
+  /// @version 2018-05-20/GGB - Function created.
+
+  bool isFitsFile(boost::filesystem::path const &p)
+  {
+    bool returnValue = false;
+    char const testWord[] = "SIMPLE";
+
+
+    if (boost::filesystem::exists(p))
+    {
+      boost::filesystem::ifstream inputStream;
+      std::string testRead(sizeof(testWord+1, ' ');
+
+      if (inputStream.open(p))
+      {
+        if (&inputStream.read(testRead[0], sizeof(testRead-1)))
+        {
+          if (testRead.find(testWord) != std::string::npos)
+          {
+            returnValue = true;
+          };
+        };
+      }
+    };
+
+    return returnValue;
+  }
+
 }   // namespace ACL

@@ -178,14 +178,17 @@ namespace ACL
       // The following members are used for rendering the image.
 
     SColourRGB planeColour;                     ///< The colour to render this plane to
-    FP_t transparency;                          ///< The transpararency of this plane.
+    FP_t transparency;                          ///< The transparency of this plane.
     FP_t blackPoint;                            ///< THe black point for this plane.
     FP_t whitePoint;                            ///< The white point for this plane.
     bool invert;                                ///< Invert the image plane.
     ETransferFunction transferFunction;         ///< Transfer function to use when rendering.
     FP_t transferFunctionParameter;             ///< Transfer function parameter.
 
-      // The following arrays are used for storing the image.
+      // The following arrays are used for storing the image. Note that std::valarray was used at one time for storing the image,
+      // the reason for moving from std::valarray is not recorded, but it must have been good.
+      // It is possibly a good idea to write a specialised valarray template that supports multi-threading and also c-style array
+      // access specifically for storing the image plane data.
 
     std::uint8_t *imagePlane8;
     std::int8_t *imagePlaneS8;
@@ -498,7 +501,7 @@ namespace ACL
 
       // Image Analysis functions
 
-    void findStars(TImageSourCAstronomicalCoordinatesontainer &sourceList, SFindSources const &sourceDefaults);
+    void findStars(TImageSourceContainer &sourceList, SFindSources const &sourceDefaults);
 
       // Object special functionality
 

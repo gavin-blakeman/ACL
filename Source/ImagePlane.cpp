@@ -1939,7 +1939,7 @@ namespace ACL
   /// @li Add additional data types as supported by cfitsio V3.3
   /// @version 2014-02-01/GGB - Function created.
 
-  void CImagePlane::findStars(TImageSourCAstronomicalCoordinatesontainer &sourceList, SFindSources const &sourceParameters)
+  void CImagePlane::findStars(TImageSourceContainer &sourceList, SFindSources const &sourceParameters)
   {
     double *tempImage = new double[dimX * dimY];
 

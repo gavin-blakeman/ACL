@@ -139,7 +139,7 @@ namespace ACL
 
       // Image Analysis functions
 
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const;
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const;
   };
 }
 
