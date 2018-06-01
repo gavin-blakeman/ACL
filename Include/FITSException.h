@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITSException
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2017 Gavin Blakeman.
+//                      Copyright 2015-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -25,7 +25,7 @@
 //                      see <http://www.gnu.org/licenses/>.
 //
 //
-// OVERVIEW:						Provides exception support for cfitsio
+// OVERVIEW:						Provides a lightweight wrapper to convert fits errors into exceptions.
 //
 // CLASSES INCLUDED:		CFITSException
 //
@@ -63,7 +63,8 @@ namespace ACL
     void logErrorMessage() const;
   };
 
-  #define CFITSIO_TEST(EXPRESSION) {if (int err_ = EXPRESSION) { if (err_) throw ACL::CFITSException(); };}
+//#define CFITSIO_TEST(EXPRESSION) {if (int err_ = EXPRESSION) { throw ACL::CFITSException(); };}
+#define CFITSIO_TEST(FUNC, ...) { int status; FUNC(__VA_ARGS__, &status)) if (!status) { throw ACL::CFITSException(); }; }
 
 }    // namespace ACL
 
