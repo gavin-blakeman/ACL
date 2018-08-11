@@ -684,17 +684,16 @@ namespace ACL
   void CHDB::readFromFITS(fitsfile *file)
   {
     NAXIS_t index;
-    int status = 0;
     int naxis;
     LONGLONG naxisn[NAXIS_MAX];
 
-    CFITSIO_TEST(fits_get_img_dim(file, &naxis, &status));
+    CFITSIO_TEST(fits_get_img_dim, file, &naxis);
     naxis_ = static_cast<NAXIS_t>(naxis);           // NAXIS_t is an unsigned int, while naxis is an int.
 
       // Capture the size of each axis.
 
     naxisn_.clear();
-    CFITSIO_TEST(fits_get_img_sizell(file, NAXIS_MAX, naxisn, &status));
+    CFITSIO_TEST(fits_get_img_sizell, file, NAXIS_MAX, naxisn);
 
     for (index = 1; index <= naxis_; index++)
     {
@@ -724,22 +723,21 @@ namespace ACL
     char szValue[FLEN_VALUE];
     char szComment[FLEN_COMMENT];
     int keywordCount, nIndex;
-    int status = 0;
     char dType;
     int neg;
     int dataType;
 
-    CFITSIO_TEST(fits_get_hdrspace(file, &keywordCount, nullptr, &status));   // Get the number of keywords in the header.
+    CFITSIO_TEST(fits_get_hdrspace, file, &keywordCount, nullptr);   // Get the number of keywords in the header.
 
       // Iterate through each keyword to process
 
     for (nIndex = 1; nIndex <= keywordCount; ++nIndex)
     {
-      CFITSIO_TEST(fits_read_keyn(file, nIndex, szKeyword, szValue, szComment, &status));
+      CFITSIO_TEST(fits_read_keyn, file, nIndex, szKeyword, szValue, szComment);
 
       if (szValue[0] != '\0')
       {
-        CFITSIO_TEST(fits_get_keytype(szValue, &dType, &status));
+        CFITSIO_TEST(fits_get_keytype, szValue, &dType);
 
         switch(dType)
         {
@@ -765,7 +763,7 @@ namespace ACL
           case 'I':
           {
             neg = 0;    // cfitsio does not reset this value.
-            CFITSIO_TEST(fits_get_inttype(szValue, &dataType, &neg, &status));
+            CFITSIO_TEST(fits_get_inttype, szValue, &dataType, &neg);
             switch(dataType)
             {
               case TSBYTE:
@@ -1024,10 +1022,8 @@ namespace ACL
 
   void CHDB::writeCommentsToFITS(fitsfile *file) const
   {
-    int status = 0;
-
     std::for_each(comments_.begin(), comments_.end(),
-                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_comment(file, s.c_str(), &status));});
+                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_comment, file, s.c_str());});
   }
 
   /// @brief Writes the history to a FITS file.
@@ -1037,10 +1033,8 @@ namespace ACL
 
   void CHDB::writeHistoryToFITS(fitsfile *file) const
   {
-    int status = 0;
-
     std::for_each(history_.begin(), history_.end(),
-                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_history(file, s.c_str(), &status));});
+                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_history, file, s.c_str());});
   }
 
   /// @brief Writes the keywords to the passed HDU.

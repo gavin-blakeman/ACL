@@ -125,15 +125,16 @@ namespace ACL
     bool returnValue = false;
     char const testWord[] = "SIMPLE";
 
-
     if (boost::filesystem::exists(p))
     {
       boost::filesystem::ifstream inputStream;
-      std::string testRead(sizeof(testWord+1, ' ');
+      std::string testRead(sizeof(testWord+1), ' ');
 
-      if (inputStream.open(p))
+      inputStream.open(p);
+
+      if (inputStream)
       {
-        if (&inputStream.read(testRead[0], sizeof(testRead-1)))
+        if (inputStream.read(testRead.data(), sizeof(testRead)-1))
         {
           if (testRead.find(testWord) != std::string::npos)
           {

@@ -1284,7 +1284,7 @@ namespace ACL
   /// @param[in] file - The FITS file.
   /// @throws GCL::CRuntimeAssert
   /// @details A check must be made to see if this object is a primary header or an extended HDU. Mismatches will cause exceptions
-  ///          to be generated. This function ensures that the image data is written. The CHDB::writeToFITS must also be called to
+  ///          to be generated. This function ensures that the image data is written. The CHDB::CFITS must also be called to
   ///          ensure that all the data is correctly written to disk.
   /// @version 2015-08-13/GGB - Updated to use cfitsio.
   /// @version 2012-01-20/GGB - Function created.
@@ -1301,7 +1301,7 @@ namespace ACL
     naxisn[1] = static_cast<LONGLONG>(data->NAXISn(2));
     naxisn[2] = static_cast<LONGLONG>(data->NAXISn(3));
 
-    CFITSIO_TEST(fits_insert_imgll(file, data->BITPIX(), data->NAXIS(), naxisn, &status));
+    CFITSIO_TEST(fits_insert_imgll, file, data->BITPIX(), data->NAXIS(), naxisn);
 
     CHDB::writeToFITS(file);
 

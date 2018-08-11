@@ -32,9 +32,6 @@
 //                      is required as these classes do ultimately service astronomical images and the standard format for
 //                      astonomical images is FITS.
 //
-//											Support for statistical and other mathematics is derived from the gsl library. Where multi-threaded
-//                      functions are required, the support is derived from the MCL library.
-//
 //											The library is designed to be platform independant. IE, only standard C++ functionality is used.
 //
 //											While this library has been designed to be used from Qt, it makes no reference to the Qt library.
@@ -168,7 +165,7 @@ namespace ACL
     mutable FP_t fStDev;                        ///< The standard deviation of the image.
 
     mutable bool bMinMax;                       ///< Variable to track if the min/max values are valid or need to be recalculated.
-    mutable bool bMean;                          ///< Track if the average value is valid or needs to be recalculated.
+    mutable bool bMean;                         ///< Track if the average value is valid or needs to be recalculated.
 
     int bitpix_;                                ///< same as BITPIX
     FP_t bscale_;                               ///< Same as BSCALE
@@ -229,7 +226,7 @@ namespace ACL
     template<typename T>
     void rotateThread(std::tuple<AXIS_t, AXIS_t>, T *, T *, std::tuple<AXIS_t , AXIS_t, AXIS_t, AXIS_t>, FP_t, FP_t, FP_t, FP_t);
 
-    // Thread functions for doing the heavy lifting. Called from the public functions as required.
+      // Thread functions for doing the heavy lifting. Called from the public functions as required.
 
     void plusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
     void minusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
@@ -328,7 +325,7 @@ namespace ACL
 
     virtual ~CImagePlane();
 
-     // Basic arithmetic operations
+      // Basic arithmetic operations
 
     CImagePlane &operator=(const CImagePlane &);
     CImagePlane &operator+=(const CImagePlane &);
@@ -360,20 +357,23 @@ namespace ACL
     double BZERO() const;
     void BZERO(double);
 
-    inline int PEDESTAL() const { return pedestal_; }
+    inline int PEDESTAL() const noexcept { return pedestal_; }
 
       // Basic image information
 
-    inline AXIS_t width() const { return dimX; }
-    inline AXIS_t height() const { return dimY; }
+    inline AXIS_t width() const noexcept { return dimX; }
+    inline AXIS_t height() const noexcept { return dimY; }
 
     FP_t getValue(INDEX_t) const;
     FP_t getValue(AXIS_t, AXIS_t) const;
     double getValue(MCL::TPoint2D<AXIS_t> const &) const;
     void getRow(AXIS_t x1, AXIS_t x2, AXIS_t y, double *);
 
-    /// EXCEPTIONS: 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-    ///             0x1201 - CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
+    /// @brief Sets the value of a particular pixel.
+    /// @param[in] index: The index of the pixel.
+    /// @param[in] value: The value to set.
+    /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
+    /// @throws 0x1201 - CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
     /// @version 2017-08-27/GGB - Ensure min/max are recalculated as required.
     /// @version 2013-01-27/GGB - Function created.
 
@@ -381,7 +381,9 @@ namespace ACL
     void setValue(INDEX_t index, T value)
     {
       if ( (index >= (INDEX_t) (dimX * dimY)) )
+      {
         ERROR(ACL, 0x1202);    // CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
+      }
       else
       {
         switch (bitpix_)
@@ -442,9 +444,9 @@ namespace ACL
     }
 
     /// @brief Sets the value of the image at the relevant point to the passed value.
-    /// @param[in] x - The x coordinate
-    /// @param[in] y - THe y coordinate
-    /// @param[in] value - The value to set.
+    /// @param[in] x: The x coordinate
+    /// @param[in] y:  The y coordinate
+    /// @param[in] value: The value to set.
     /// @throws GCL::CError(ACL, 0x1202)
     /// @version 2010-10-16/GGB - Function created.
 

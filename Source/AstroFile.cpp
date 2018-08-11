@@ -1907,11 +1907,10 @@ namespace ACL
          (ext == ".FITS") )
     {
       fitsfile *file;
-      int status = 0;
 
-      CFITSIO_TEST(fits_open_diskfile(&file, fileName.string().c_str(), READONLY, &status));
+      CFITSIO_TEST(fits_open_diskfile, &file, fileName.string().c_str(), READONLY);
       loadFromFITS(file);
-      CFITSIO_TEST(fits_close_file(file, &status));
+      CFITSIO_TEST(fits_close_file, file);
     }
     else if (ext == ".ST7")
     {
@@ -1955,20 +1954,20 @@ namespace ACL
   /// @version 2011-05-04/GGB - Function created.
 
   void CAstroFile::loadFromFITS(fitsfile *file)
-  { 
+  {
     PHDB hdb;
     int iIndex;
     int status = 0;
     int hduCount;
     int naxis;
 
-    CFITSIO_TEST(fits_get_num_hdus(file, &hduCount, &status));
+    CFITSIO_TEST(fits_get_num_hdus, file, &hduCount);
 
       // Process the Primary HDU
 
-    CFITSIO_TEST(fits_movabs_hdu(file, 1, nullptr, &status));
+    CFITSIO_TEST(fits_movabs_hdu, file, 1, nullptr);
 
-    CFITSIO_TEST(fits_get_img_dim(file, &naxis, &status));
+    CFITSIO_TEST(fits_get_img_dim, file, &naxis);
 
     if (naxis == 0)
     {
@@ -2004,10 +2003,9 @@ namespace ACL
     fitsfile *file;
     int status = 0;
 
-    CFITSIO_TEST(fits_open_memfile(&file, "", READONLY, memoryFile.memoryPointer(), memoryFile.memorySize(), FITS_BLOCK,
-                                   nullptr, &status));
+    CFITSIO_TEST(fits_open_memfile, &file, "", READONLY, memoryFile.memoryPointer(), memoryFile.memorySize(), FITS_BLOCK, nullptr);
     loadFromFITS(file);
-    CFITSIO_TEST(fits_close_file(file, &status));
+    CFITSIO_TEST(fits_close_file, file);
   }
 
   /// @brief Loads data from an SBIG camera image file. The file can be have a .ST7 or .SBIG extension.
@@ -2177,7 +2175,7 @@ namespace ACL
   /// @version 2017-08-03/GGB - Function created.
 
   void CAstroFile::processObservationLocation()
-  { 
+  {
     if (keywordExists(0, NOAO_OBSERVATORY))
     {
       observationLocation->siteName(static_cast<std::string>(keywordData(0, NOAO_OBSERVATORY)));
@@ -2251,7 +2249,7 @@ namespace ACL
         WARNINGMESSAGE("Invalid format for keyword: " + SBIG_LONGITUDE);
       }
     }
-    
+
     if (keywordExists(0, astroManager_ALTITUDE))
     {
       try
@@ -2843,9 +2841,9 @@ namespace ACL
 
           // Create the FITS file.
 
-        CFITSIO_TEST(fits_create_file(&file, newPath.c_str(), &status));
+        CFITSIO_TEST(fits_create_file, &file, newPath.c_str());
         saveAsFITS(file);
-        CFITSIO_TEST(fits_close_file(file, &status));
+        CFITSIO_TEST(fits_close_file, file);
         isDirty(false);
 
         if ( boost::filesystem::exists(fileName) )
@@ -2906,14 +2904,13 @@ namespace ACL
   void CAstroFile::save(CFITSMemoryFile &memoryFile)
   {
     fitsfile *file;
-    int status = 0;
 
       // Create the FITS file.
 
-    CFITSIO_TEST(fits_create_memfile(&file, memoryFile.memoryPointer(), memoryFile.memorySize(), FITS_BLOCK,
-                                     &CFITSMemoryFile::reallocate, &status));
+    CFITSIO_TEST(fits_create_memfile, &file, memoryFile.memoryPointer(), memoryFile.memorySize(), FITS_BLOCK,
+                                     &CFITSMemoryFile::reallocate);
     saveAsFITS(file);
-    CFITSIO_TEST(fits_close_file(file, &status));
+    CFITSIO_TEST(fits_close_file, file);
 
     isDirty(false);
   }
@@ -3186,7 +3183,7 @@ namespace ACL
     int hduType;
     PHDB hdb;
 
-    CFITSIO_TEST(fits_movabs_hdu(file, extension, &hduType, &status));
+    CFITSIO_TEST(fits_movabs_hdu, file, extension, &hduType);
 
       // Check the type of the "XTENSION" and load the data.
 

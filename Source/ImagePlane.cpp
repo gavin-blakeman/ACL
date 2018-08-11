@@ -35,8 +35,6 @@
 //											It is not intended that these classes support other formats at this time (2010), but support for other
 //                      image formats may be added. (DNG, JPG, TIFF)
 //
-//											Support for statistical and other mathematics is derived from the gsl library.
-//
 //											The library is designed to be platform independant. IE, only standard C++ functionallity is used.
 //
 //											While this library has been designed to be used from Qt, it makes no reference to the Qt library.
@@ -88,14 +86,15 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Thread function to perform the copy of the data.
-  /// @param[in] srcData<0> -> sourceImage
-  /// @param[in] srcData<1> -> startX
-  /// @param[in] srcData<2> -> startY
-  /// @param[in] srcData<3> - dimX
-  /// @param[in] destData<0> -> destination image
-  /// @param[in] destData<1> -> dimX
-  /// @param[in] destData<2> -> rowBegin
-  /// @param[in] destData<3> -> rowEnd
+  /// @param[in] srcData<0>: sourceImage
+  /// @param[in] srcData<1>: startX
+  /// @param[in] srcData<2>: startY
+  /// @param[in] srcData<3>: dimX
+  /// @param[in] destData<0>: destination image
+  /// @param[in] destData<1>: dimX
+  /// @param[in] destData<2>: rowBegin
+  /// @param[in] destData<3>: rowEnd
+  /// @throws None.
   /// @version 2013-04-21/GGB - Function created.
 
   template <typename T>
@@ -200,7 +199,7 @@ namespace ACL
 
   /// @brief Copy constructor for the class.
   /// @details Uses the operator= function to perform the copy.
-  /// @param[in] toCopy - The imagePlane to copy to this.
+  /// @param[in] toCopy: The imagePlane to copy to this.
   /// @throws None.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
@@ -317,8 +316,8 @@ namespace ACL
   }
 
   /// @brief Constructor for CImagePlane class.
-  /// @param[in] newx - New x-dimension
-  /// @param[in] newy - New y-dimension.
+  /// @param[in] newx: New x-dimension
+  /// @param[in] newy: New y-dimension.
   /// @throws None.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
@@ -3549,33 +3548,29 @@ namespace ACL
     RUNTIME_ASSERT(ACL, axis <= 999, "Parameter axis must be <= 999");
     RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
 
-    int status = 0;
-
-    CFITSIO_TEST(fits_get_img_equivtype(file, &bitpix_, &status));
+    CFITSIO_TEST(fits_get_img_equivtype, file, &bitpix_);
 
       // These keywords are not mandatory.
 
     try
     {
-      CFITSIO_TEST(fits_read_key(file, TDOUBLE, FITS_BSCALE.c_str(), &bscale_, nullptr, &status));
+      CFITSIO_TEST(fits_read_key, file, TDOUBLE, FITS_BSCALE.c_str(), &bscale_, nullptr);
     }
     catch(...)
     {
-      status = 0;
     };
 
     try
     {
-      CFITSIO_TEST(fits_read_key(file, TDOUBLE, FITS_BZERO.c_str(), &bzero_, nullptr, &status));
+      CFITSIO_TEST(fits_read_key, file, TDOUBLE, FITS_BZERO.c_str(), &bzero_, nullptr);
     }
     catch(...)
     {
-      status = 0;
     };
 
     {
       long naxis[2];
-      CFITSIO_TEST(fits_get_img_size(file, 2, naxis, &status));
+      CFITSIO_TEST(fits_get_img_size, file, 2, naxis);
 
       dimX = static_cast<AXIS_t>(naxis[0]);
       dimY = static_cast<AXIS_t>(naxis[1]);
@@ -3590,55 +3585,55 @@ namespace ACL
       case BYTE_IMG:
       {
         imagePlane8 = new std::uint8_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TBYTE, startPixel, readPixels, 0, imagePlane8, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TBYTE, startPixel, readPixels, 0, imagePlane8, &anynul);
         break;
       };
       case SBYTE_IMG:
       {
         imagePlaneS8 = new std::int8_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TSBYTE, startPixel, readPixels, 0, imagePlaneS8, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TSBYTE, startPixel, readPixels, 0, imagePlaneS8, &anynul);
         break;
       }
       case USHORT_IMG:
       {
         imagePlaneU16 = new std::uint16_t[readPixels];
-        CFITSIO_TEST(fits_read_img(file, TUSHORT, startPixel, readPixels, 0, imagePlaneU16, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TUSHORT, startPixel, readPixels, 0, imagePlaneU16, &anynul);
         break;
       }
       case SHORT_IMG:
       {
         imagePlane16 = new std::int16_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TSHORT, startPixel, readPixels, 0, imagePlane16, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TSHORT, startPixel, readPixels, 0, imagePlane16, &anynul);
         break;
       }
       case ULONG_IMG:
       {
         imagePlaneU32 = new std::uint32_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TULONG, startPixel, readPixels, 0, imagePlaneU32, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TULONG, startPixel, readPixels, 0, imagePlaneU32, &anynul);
         break;
       };
       case LONG_IMG:
       {
         imagePlane32 = new std::int32_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TLONG, startPixel, readPixels, 0, imagePlane32, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TLONG, startPixel, readPixels, 0, imagePlane32, &anynul);
         break;
       }
       case LONGLONG_IMG:
       {
         imagePlane64 = new std::int64_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TLONGLONG, startPixel, readPixels, 0, imagePlane64, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TLONGLONG, startPixel, readPixels, 0, imagePlane64, &anynul);
         break;
       }
       case FLOAT_IMG:
       {
         imagePlaneF = new float[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TFLOAT, startPixel, readPixels, 0, imagePlaneF, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TFLOAT, startPixel, readPixels, 0, imagePlaneF, &anynul);
         break;
       }
       case DOUBLE_IMG:
       {
         imagePlaneD = new double[dimX * dimY];
-        CFITSIO_TEST(fits_read_img(file, TDOUBLE, startPixel, readPixels, 0, imagePlaneD, &anynul, &status));
+        CFITSIO_TEST(fits_read_img, file, TDOUBLE, startPixel, readPixels, 0, imagePlaneD, &anynul);
         break;
       }
       default:
@@ -4474,54 +4469,54 @@ namespace ACL
     INDEX_t pixelCount = dimX * dimY;
     int status = 0;
 
-    CFITSIO_TEST(fits_write_key(file, TFLOAT, FITS_BSCALE.c_str(), &bscale_, FITS_COMMENT_BSCALE.c_str(), &status));
-    CFITSIO_TEST(fits_write_key(file, TFLOAT, FITS_BZERO.c_str(), &bzero_, FITS_COMMENT_BZERO.c_str(), &status));
+    CFITSIO_TEST(fits_write_key, file, TFLOAT, FITS_BSCALE.c_str(), &bscale_, FITS_COMMENT_BSCALE.c_str());
+    CFITSIO_TEST(fits_write_key, file, TFLOAT, FITS_BZERO.c_str(), &bzero_, FITS_COMMENT_BZERO.c_str());
 
     switch (bitpix_)
     {
       case BYTE_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TBYTE, startPixel, pixelCount, imagePlane8, &status));
+        CFITSIO_TEST(fits_write_img, file, TBYTE, startPixel, pixelCount, imagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TSBYTE, startPixel, pixelCount, imagePlaneS8, &status));
+        CFITSIO_TEST(fits_write_img, file, TSBYTE, startPixel, pixelCount, imagePlaneS8);
         break;
       };
       case USHORT_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TUSHORT, startPixel, pixelCount, imagePlaneU16, &status));
+        CFITSIO_TEST(fits_write_img, file, TUSHORT, startPixel, pixelCount, imagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TSHORT, startPixel, pixelCount, imagePlane16, &status));
+        CFITSIO_TEST(fits_write_img, file, TSHORT, startPixel, pixelCount, imagePlane16);
         break;
       };
       case ULONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TULONG, startPixel, pixelCount, imagePlaneU32, &status));
+        CFITSIO_TEST(fits_write_img, file, TULONG, startPixel, pixelCount, imagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TLONG, startPixel, pixelCount, imagePlane32, &status));
+        CFITSIO_TEST(fits_write_img, file, TLONG, startPixel, pixelCount, imagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TLONGLONG, startPixel, pixelCount, imagePlane64, &status));
+        CFITSIO_TEST(fits_write_img, file, TLONGLONG, startPixel, pixelCount, imagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TFLOAT, startPixel, pixelCount, imagePlaneF, &status));
+        CFITSIO_TEST(fits_write_img, file, TFLOAT, startPixel, pixelCount, imagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
-        CFITSIO_TEST(fits_write_img(file, TDOUBLE, startPixel, pixelCount, imagePlaneD, &status));
+        CFITSIO_TEST(fits_write_img, file, TDOUBLE, startPixel, pixelCount, imagePlaneD);
         break;
       };
       default:

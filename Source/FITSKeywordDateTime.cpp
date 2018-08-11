@@ -1,4 +1,4 @@
-//**********************************************************************************************************************************
+﻿//**********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITSKeywordDateTime
@@ -86,10 +86,9 @@ namespace ACL
     char dateTime[FITSLEN_DATETIME];
     struct tm dt;
     int const decimals = 0;
-    int status = 0;
 
     value_.UTC().gregorianDate(&dt);
-    CFITSIO_TEST(fits_time2str(dt.tm_year , dt.tm_mon, dt.tm_mday, dt.tm_hour, dt.tm_min, dt.tm_sec, decimals, dateTime, &status));
+    CFITSIO_TEST(fits_time2str, dt.tm_year , dt.tm_mon, dt.tm_mday, dt.tm_hour, dt.tm_min, dt.tm_sec, decimals, dateTime);
 
     return std::string(dateTime);
   }
@@ -106,9 +105,8 @@ namespace ACL
 
   void CFITSKeywordDateTime::writeToFITS(fitsfile *file) const
   {
-    int status = 0;
     std::string szString = static_cast<std::string>(*this);
 
-    CFITSIO_TEST(fits_write_key(file, TSTRING, keyword_.c_str(), const_cast<char *>(szString.c_str()), comment_.c_str(), &status));
+    CFITSIO_TEST(fits_write_key, file, TSTRING, keyword_.c_str(), const_cast<char *>(szString.c_str()), comment_.c_str());
   }
 }

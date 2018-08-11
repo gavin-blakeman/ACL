@@ -1,4 +1,4 @@
-#include "../Include/FITSKeywordBool.h"
+﻿#include "../Include/FITSKeywordBool.h"
 
 namespace ACL
 {
@@ -54,10 +54,9 @@ namespace ACL
 
   void CFITSKeywordBool::writeToFITS(fitsfile *file) const
   {
-    int status = 0;
     int iValue = static_cast<int>(value_);
 
-    CFITSIO_TEST(fits_update_key(file, TLOGICAL, keyword_.c_str(), &iValue, comment_.c_str(), &status));
+    CFITSIO_TEST(fits_update_key, file, TLOGICAL, keyword_.c_str(), &iValue, comment_.c_str());
   }
 
 }   // namespace ACL
