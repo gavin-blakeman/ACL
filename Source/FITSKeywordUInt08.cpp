@@ -1,4 +1,4 @@
-//**********************************************************************************************************************************
+﻿//**********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITSKeywordByte
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016 Gavin Blakeman.
+//                      Copyright 2016-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -161,9 +161,7 @@ namespace ACL
 
   void CFITSKeywordUInt08::writeToFITS(fitsfile *file) const
   {
-    int status = 0;
-
-    CFITSIO_TEST(fits_update_key(file, TBYTE, keyword_.c_str(), const_cast<void *>(static_cast<void const *>(&value_)),
-                                 comment_.c_str(), &status));
+    CFITSIO_TEST(fits_update_key, file, TBYTE, keyword_.c_str(), const_cast<void *>(static_cast<void const *>(&value_)),
+                                 comment_.c_str());
   }
 }

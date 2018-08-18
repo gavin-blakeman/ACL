@@ -32,11 +32,11 @@
 //
 // CLASS HIERARCHY:     none
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
-//                      2011-07-14 GGB - Development of classes for AIRDAS
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
+//                      2011-07-14 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
@@ -166,15 +166,15 @@ namespace ACL
   std::string const SBIG_LONGITUDE                ("SITELONG");
   std::string const MAXIM_LONGITUDE               ("LONG-OBS");
 
-  std::string const AIRDAS_ALTITUDE               ("ALTITUDE");
+  std::string const astroManager_ALTITUDE               ("ALTITUDE");
   std::string const MAXIM_ALTITUDE                ("ALT-OBS");
 
     // Date/Time information
 
-  std::string const AIRDAS_JD                     ("JD");
-  std::string const AIRDAS_DATEHP                 ("DATE-HP");
-  std::string const AIRDAS_TIME                   ("TIME-OBS");
-  std::string const AIRDAS_UT                     ("UT");
+  std::string const astroManager_JD                     ("JD");
+  std::string const astroManager_DATEHP                 ("DATE-HP");
+  std::string const astroManager_TIME                   ("TIME-OBS");
+  std::string const astroManager_UT                     ("UT");
 
     // Weather information
 
@@ -190,9 +190,9 @@ namespace ACL
   std::string const MAXIM_DAVHUM                  ("DAVHUM");       // Davis Humidity in percent
   std::string const MAXIM_DAVBAROM                ("DAVBAROM");     // Davis Ambient Pressure in hPa
 
-  std::string const AIRDAS_AMBTEM                 ("AMBTEM");       // Ambient temperature deg C
-  std::string const AIRDAS_AMBPRE                 ("AMBPRE");       // Ambient pressure hPa
-  std::string const AIRDAS_AMBHUM                 ("AMBHUM");       // Ambient humidity %
+  std::string const astroManager_AMBTEM                 ("AMBTEM");       // Ambient temperature deg C
+  std::string const astroManager_AMBPRE                 ("AMBPRE");       // Ambient pressure hPa
+  std::string const astroManager_AMBHUM                 ("AMBHUM");       // Ambient humidity %
 
     // Pixel information
 
@@ -219,7 +219,7 @@ namespace ACL
     // General information
 
   std::string const HEASARC_CREATOR               ("CREATOR");
-  std::string const AIRDAS_UUID                   ("UUID");
+  std::string const astroManager_UUID                   ("UUID");
 
     // Display information
 
@@ -228,7 +228,7 @@ namespace ACL
 
     // Other known and used keywords
 
-  std::string const AIRDAS_ZMAG                   ("ZMAG");
+  std::string const astroManager_ZMAG                   ("ZMAG");
   std::string const SBIG_PEDESTAL                 ("PEDESTAL");
 
     // libAstrometry information
@@ -243,7 +243,7 @@ namespace ACL
 
     // Photometry
 
-  std::string const AIRDAS_FWHM                   ("FWHM");
+  std::string const astroManager_FWHM                   ("FWHM");
 
     // Maxim keywords
 
@@ -320,23 +320,23 @@ namespace ACL
 
   std::string const NOAO_COMMENT_EXPTIME          ("[s] Exposure time in seconds");
 
-  std::string const AIRDAS_COMMENT_FWHM           ("[pixels] Mean Full-Width-Half-Max of image star");
-  std::string const AIRDAS_COMMENT_PLATE_FL       ("Astrometry: Plate Constant - Focal Length");
-  std::string const AIRDAS_COMMENT_PLATE_A        ("Astrometry: Plate Constant - a");
-  std::string const AIRDAS_COMMENT_PLATE_B        ("Astrometry: Plate Constant - b");
-  std::string const AIRDAS_COMMENT_PLATE_C        ("Astrometry: Plate Constant - c");
-  std::string const AIRDAS_COMMENT_PLATE_D        ("Astrometry: Plate Constant - d");
-  std::string const AIRDAS_COMMENT_PLATE_E        ("Astrometry: Plate Constant - e");
-  std::string const AIRDAS_COMMENT_PLATE_F        ("Astrometry: Plate Constant - f");
+  std::string const astroManager_COMMENT_FWHM           ("[pixels] Mean Full-Width-Half-Max of image star");
+  std::string const astroManager_COMMENT_PLATE_FL       ("Astrometry: Plate Constant - Focal Length");
+  std::string const astroManager_COMMENT_PLATE_A        ("Astrometry: Plate Constant - a");
+  std::string const astroManager_COMMENT_PLATE_B        ("Astrometry: Plate Constant - b");
+  std::string const astroManager_COMMENT_PLATE_C        ("Astrometry: Plate Constant - c");
+  std::string const astroManager_COMMENT_PLATE_D        ("Astrometry: Plate Constant - d");
+  std::string const astroManager_COMMENT_PLATE_E        ("Astrometry: Plate Constant - e");
+  std::string const astroManager_COMMENT_PLATE_F        ("Astrometry: Plate Constant - f");
 
-  std::string const AIRDAS_COMMENT_LATITUDE       ("Geographic latitude where the observation was made");
-  std::string const AIRDAS_COMMENT_LONGITUDE      ("Geographic longitude where the observation was made");
-  std::string const AIRDAS_COMMENT_ALTITUDE       ("Geographic altitude where the observation was taken");
-  std::string const AIRDAS_COMMENT_UUID           ("UUID file identifier");
+  std::string const astroManager_COMMENT_LATITUDE       ("Geographic latitude where the observation was made");
+  std::string const astroManager_COMMENT_LONGITUDE      ("Geographic longitude where the observation was made");
+  std::string const astroManager_COMMENT_ALTITUDE       ("Geographic altitude where the observation was taken");
+  std::string const astroManager_COMMENT_UUID           ("UUID file identifier");
 
-  std::string const AIRDAS_COMMENT_AMBTEM         ("Ambient temperature deg C");
-  std::string const AIRDAS_COMMENT_AMBPRE         ("Ambient pressure hPa");
-  std::string const AIRDAS_COMMENT_AMBHUM         ("Ambient RH %");
+  std::string const astroManager_COMMENT_AMBTEM         ("Ambient temperature deg C");
+  std::string const astroManager_COMMENT_AMBPRE         ("Ambient pressure hPa");
+  std::string const astroManager_COMMENT_AMBHUM         ("Ambient RH %");
 
     // ACL comments
 
@@ -356,9 +356,9 @@ namespace ACL
 
   // Defined strings
 
-  std::string const AIRDAS_HDB_PRIMARY            ("PRIMARY");
-  std::string const AIRDAS_HDB_ASTROMETRY         ("ASTROMETRY");
-  std::string const AIRDAS_HDB_PHOTOMETRY         ("PHOTOMETRY");
+  std::string const astroManager_HDB_PRIMARY            ("PRIMARY");
+  std::string const astroManager_HDB_ASTROMETRY         ("ASTROMETRY");
+  std::string const astroManager_HDB_PHOTOMETRY         ("PHOTOMETRY");
 
   // Time strings
 

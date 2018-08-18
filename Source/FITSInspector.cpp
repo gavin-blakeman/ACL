@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITSInspector
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2017 Gavin Blakeman.
+//                      Copyright 2015-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -31,7 +31,7 @@
 //
 // CLASS HIERARCHY:     CFITSInspector
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-07/GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -75,11 +75,11 @@ namespace ACL
     char keywordValue[80];
     char keywordComment[80];
 
-    CFITSIO_TEST(fits_open_diskfile(&file, fileName_.string().c_str(), READONLY, &status));
+    CFITSIO_TEST(fits_open_diskfile, &file, fileName_.string().c_str(), READONLY);
 
       // Get the number of HDUs and iteratively read the HDUs
 
-    CFITSIO_TEST(fits_get_num_hdus(file, &hduCount, &status));
+    CFITSIO_TEST(fits_get_num_hdus, file, &hduCount);
     for (hduNumber = 1; hduNumber <= hduCount; hduNumber++)
     {
       int keywordCount;
@@ -94,27 +94,27 @@ namespace ACL
 
       if (hduNumber == 1)
       {
-        CFITSIO_TEST(fits_read_keyword(file, FITS_SIMPLE.c_str(), keywordValue, keywordComment, &status));
-        newHDU->hduName = AIRDAS_HDB_PRIMARY;
+        CFITSIO_TEST(fits_read_keyword, file, FITS_SIMPLE.c_str(), keywordValue, keywordComment);
+        newHDU->hduName = astroManager_HDB_PRIMARY;
       }
       else
       {
-        CFITSIO_TEST(fits_read_keyword(file, FITS_XTENSION.c_str(), keywordValue, keywordComment, &status));
+        CFITSIO_TEST(fits_read_keyword, file, FITS_XTENSION.c_str(), keywordValue, keywordComment);
         newHDU->hduName = keywordValue;
       };
 
         // Get the number of keywords and iterativly read the keywords.
 
-      CFITSIO_TEST(fits_get_hdrspace(file, &keywordCount, nullptr, &status));
+      CFITSIO_TEST(fits_get_hdrspace, file, &keywordCount, nullptr);
       for (keywordNumber = 1; keywordNumber <= keywordCount; keywordNumber++)
       {
-        CFITSIO_TEST(fits_read_keyn(file, keywordNumber, keywordName, keywordValue, keywordComment, &status));
+        CFITSIO_TEST(fits_read_keyn, file, keywordNumber, keywordName, keywordValue, keywordComment);
 
         newHDU->keywordData.emplace_back(std::string(keywordName), std::string(keywordValue), std::string(keywordComment));
       };
     };
 
-    CFITSIO_TEST(fits_close_file(file, &status));
+    CFITSIO_TEST(fits_close_file, file);
   }
 
 }   // namespace ACL

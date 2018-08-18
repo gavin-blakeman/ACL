@@ -5,12 +5,12 @@
 // SUBSYSTEM:						FITS helper classes
 // LANGUAGE:						C++
 // TARGET OS:						WINDOWS/UNIX/LINUX/MAC
-// LIBRARY DEPENDANCE:	stdlib, boost
+// LIBRARY DEPENDANCE:	boost
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -31,7 +31,8 @@
 //
 // CLASS HIERARCHY:     None.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2018-05-12 GGB - Bug fixes
+//                      2015-09-22 GGB - AIRDAS 2015.09 release
 //                      2013-09-30 GGB - AIRDAS 2013.09 release.
 //                      2013-03-22 GGB - AIRDAS 2013.03 release.
 //                      2013-01-20 GGB - AIRDAS 0000.00 release.

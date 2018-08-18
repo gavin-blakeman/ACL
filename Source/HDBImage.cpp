@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -52,9 +52,9 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
 //                      2013-02-10 GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -73,11 +73,6 @@
   // libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment out K&R prototypes.)
 
 #include "wcs.h"
-
-  // astrometry.net
-
-#include "astrometry/blind.h"
-#include "astrometry/solver.h"
 
   // Miscellaneous headers
 
@@ -366,7 +361,7 @@ namespace ACL
   /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
   /// @version 2012-07-28/GGB - Function created.
 
-  void CImageHDB::findStars(TImageSourCAstronomicalCoordinatesontainer &imageSourceList, const SFindSources &sourceDefaults) const
+  void CImageHDB::findStars(TImageSourceContainer &imageSourceList, const SFindSources &sourceDefaults) const
   {
     if (!data)
     {
@@ -1289,7 +1284,7 @@ namespace ACL
   /// @param[in] file - The FITS file.
   /// @throws GCL::CRuntimeAssert
   /// @details A check must be made to see if this object is a primary header or an extended HDU. Mismatches will cause exceptions
-  ///          to be generated. This function ensures that the image data is written. The CHDB::writeToFITS must also be called to
+  ///          to be generated. This function ensures that the image data is written. The CHDB::CFITS must also be called to
   ///          ensure that all the data is correctly written to disk.
   /// @version 2015-08-13/GGB - Updated to use cfitsio.
   /// @version 2012-01-20/GGB - Function created.
@@ -1306,7 +1301,7 @@ namespace ACL
     naxisn[1] = static_cast<LONGLONG>(data->NAXISn(2));
     naxisn[2] = static_cast<LONGLONG>(data->NAXISn(3));
 
-    CFITSIO_TEST(fits_insert_imgll(file, data->BITPIX(), data->NAXIS(), naxisn, &status));
+    CFITSIO_TEST(fits_insert_imgll, file, data->BITPIX(), data->NAXIS(), naxisn);
 
     CHDB::writeToFITS(file);
 

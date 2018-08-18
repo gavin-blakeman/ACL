@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -36,11 +36,11 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
-//                      2013-01-20 GGB - Release of AIRDAS 0000.00
+//                      2013-01-20 GGB - Release of astroManager 0000.00
 //                      2011-12-10 GGB - Move classed from AstroFile.h to HDB.h
 //
 //*********************************************************************************************************************************
@@ -684,17 +684,16 @@ namespace ACL
   void CHDB::readFromFITS(fitsfile *file)
   {
     NAXIS_t index;
-    int status = 0;
     int naxis;
     LONGLONG naxisn[NAXIS_MAX];
 
-    CFITSIO_TEST(fits_get_img_dim(file, &naxis, &status));
+    CFITSIO_TEST(fits_get_img_dim, file, &naxis);
     naxis_ = static_cast<NAXIS_t>(naxis);           // NAXIS_t is an unsigned int, while naxis is an int.
 
       // Capture the size of each axis.
 
     naxisn_.clear();
-    CFITSIO_TEST(fits_get_img_sizell(file, NAXIS_MAX, naxisn, &status));
+    CFITSIO_TEST(fits_get_img_sizell, file, NAXIS_MAX, naxisn);
 
     for (index = 1; index <= naxis_; index++)
     {
@@ -724,22 +723,21 @@ namespace ACL
     char szValue[FLEN_VALUE];
     char szComment[FLEN_COMMENT];
     int keywordCount, nIndex;
-    int status = 0;
     char dType;
     int neg;
     int dataType;
 
-    CFITSIO_TEST(fits_get_hdrspace(file, &keywordCount, nullptr, &status));   // Get the number of keywords in the header.
+    CFITSIO_TEST(fits_get_hdrspace, file, &keywordCount, nullptr);   // Get the number of keywords in the header.
 
       // Iterate through each keyword to process
 
     for (nIndex = 1; nIndex <= keywordCount; ++nIndex)
     {
-      CFITSIO_TEST(fits_read_keyn(file, nIndex, szKeyword, szValue, szComment, &status));
+      CFITSIO_TEST(fits_read_keyn, file, nIndex, szKeyword, szValue, szComment);
 
       if (szValue[0] != '\0')
       {
-        CFITSIO_TEST(fits_get_keytype(szValue, &dType, &status));
+        CFITSIO_TEST(fits_get_keytype, szValue, &dType);
 
         switch(dType)
         {
@@ -765,7 +763,7 @@ namespace ACL
           case 'I':
           {
             neg = 0;    // cfitsio does not reset this value.
-            CFITSIO_TEST(fits_get_inttype(szValue, &dataType, &neg, &status));
+            CFITSIO_TEST(fits_get_inttype, szValue, &dataType, &neg);
             switch(dataType)
             {
               case TSBYTE:
@@ -906,10 +904,9 @@ namespace ACL
   /// @returns The NAXISn number specified.
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
-  //
-  // 2011-11-27/GGB - Function created.
+  /// @version 2011-11-27/GGB - Function created.
 
-  long CHDB::NAXISn(NAXIS_t n) const
+  AXIS_t CHDB::NAXISn(NAXIS_t n) const
   {
     if ( (n < 1) || (n > 999) )
     {
@@ -928,8 +925,7 @@ namespace ACL
   /// @brief Sets the specified value of NAXISn
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
-  //
-  // 2011-12-18/GGB - Function created.
+  /// @version 2011-12-18/GGB - Function created.
 
   void CHDB::NAXISn(std::vector<AXIS_t>::size_type nax, AXIS_t n)
   {
@@ -995,7 +991,7 @@ namespace ACL
     {
       bSimple = static_cast<bool>(*keyword);
       bPrimary_ = true;
-      extname_ = AIRDAS_HDB_PRIMARY;
+      extname_ = astroManager_HDB_PRIMARY;
       keyword.reset();
       returnValue = true;
     }
@@ -1026,10 +1022,8 @@ namespace ACL
 
   void CHDB::writeCommentsToFITS(fitsfile *file) const
   {
-    int status = 0;
-
     std::for_each(comments_.begin(), comments_.end(),
-                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_comment(file, s.c_str(), &status));});
+                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_comment, file, s.c_str());});
   }
 
   /// @brief Writes the history to a FITS file.
@@ -1039,10 +1033,8 @@ namespace ACL
 
   void CHDB::writeHistoryToFITS(fitsfile *file) const
   {
-    int status = 0;
-
     std::for_each(history_.begin(), history_.end(),
-                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_history(file, s.c_str(), &status));});
+                  [&] (std::string const &s) {CFITSIO_TEST(fits_write_history, file, s.c_str());});
   }
 
   /// @brief Writes the keywords to the passed HDU.

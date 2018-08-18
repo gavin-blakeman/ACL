@@ -34,7 +34,7 @@
 //                          CTargetMinorPlanet
 //                          CTargetPlanet
 //
-// HISTORY:             2016-03-23 GGB - Development of classes for AIRDAS
+// HISTORY:             2016-03-23 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 

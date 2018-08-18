@@ -42,12 +42,12 @@
 //                        CFITSKeywordUInt16
 //                        CFITSKeywordUInt32
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-06-24/GGB - Removed dependency on SCL and deriving from SCL::CPackage.
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
-//                      2011-06-04 GGB - Development of classes for AIRDAS
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
+//                      2011-06-04 GGB - Development of classes for astroManager
 //
 // NOTE:                Prior to 2016-04 this heirarchy was implemented using a templated class approach. Faced with the need to
 //                      specialise most of the functionality based in the information stored, it was decided to switch to a "proper"

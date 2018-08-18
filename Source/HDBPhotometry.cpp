@@ -36,12 +36,12 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-03-22 GGB - astroManager 2013.03 release.
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
 //                      2011-12-10 GGB - Move classed from AstroFile.h to HDB.h
 //
 //*********************************************************************************************************************************
@@ -70,7 +70,7 @@ namespace ACL
   /// @throws None.
   /// @version 2013-06-08/GGB - Function created.
 
-  CHDBPhotometry::CHDBPhotometry(CAstroFile *np) : CHDBBinTable(np, AIRDAS_HDB_PHOTOMETRY), photometryObservations()
+  CHDBPhotometry::CHDBPhotometry(CAstroFile *np) : CHDBBinTable(np, astroManager_HDB_PHOTOMETRY), photometryObservations()
   {
   }
 
@@ -423,18 +423,18 @@ namespace ACL
 
       char objectName[nameLength+1];
 
-      CFITSIO_TEST(fits_read_col(file, TSTRING, columnIndex++, 1, 1, 1, 0, objectName, 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, RA.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, DEC.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, CCDX.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, CCDY.data(), 0, &status));
+      CFITSIO_TEST(fits_read_col, file, TSTRING, columnIndex++, 1, 1, 1, 0, objectName, 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, RA.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, DEC.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, CCDX.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, CCDY.data(), 0);
       columnIndex++;   // Don't read magnitude
       columnIndex++;   // Don't read magErr
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, sourceADU.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, sourceArea.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, skyADU.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, skyArea.data(), 0, &status));
-      CFITSIO_TEST(fits_read_col(file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, FWHM.data(), 0, &status));
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, sourceADU.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, sourceArea.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, skyADU.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, skyArea.data(), 0);
+      CFITSIO_TEST(fits_read_col, file, TFLOAT, columnIndex++, 1, 1, NAXISn(2), 0, FWHM.data(), 0);
 
         // Now construct the objects.
 
@@ -551,24 +551,24 @@ namespace ACL
       //aperture.push_back(aps);        // Creates a copy of aps.
     };
 
-    fits_create_tbl(file, BINARY_TBL, NAXISn(2), tfields, ttype, tform, tunit, const_cast<char *>(AIRDAS_HDB_PHOTOMETRY.c_str()),
+    fits_create_tbl(file, BINARY_TBL, NAXISn(2), tfields, ttype, tform, tunit, const_cast<char *>(astroManager_HDB_PHOTOMETRY.c_str()),
                     &status);
 
     CHDB::writeToFITS(file);
 
     //CFITSIO_TEST(fits_write_col(bhdu->column(photometryColNames[columnIndex++]).write(objectNames, 1));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), RA.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), DEC.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), CCDX.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), CCDY.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), magnitude.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), magnitudeError.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), sourceADU.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), sourceArea.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), skyADU.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), skyArea.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), FWHM.data(), &status));
-    CFITSIO_TEST(fits_write_col(file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), aperture.data(), &status));
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), RA.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), DEC.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), CCDX.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), CCDY.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), magnitude.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), magnitudeError.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), sourceADU.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), sourceArea.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), skyADU.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), skyArea.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), FWHM.data());
+    CFITSIO_TEST(fits_write_col, file, TDOUBLE, columnIndex++, 1, 1, NAXISn(2), aperture.data());
   }
 
 }  // namespace ACL

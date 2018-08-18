@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2013-2016 Gavin Blakeman.
+//                      Copyright 2013-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -33,8 +33,9 @@
 // CLASS HIERARCHY:     None.
 //
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+// HISTORY:             2018-05-12/GGB - Changed AXIS_t to be 32bit by default, INDEX_t also changed to 32bit value.
+//                      2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-05-08 GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -104,8 +105,8 @@ namespace ACL
 
 
   typedef std::uint8_t base_t;                ///< Base type used for imagePlane storage.
-  typedef long AXIS_t;                        ///< The type used for image axis dimensions. Must be a signed integer value.
-  typedef size_t INDEX_t;                     ///< The type used for indexes of arrays. (Can be bigger than AXIS_t)
+  typedef std::int32_t AXIS_t;                ///< The type used for image axis dimensions. Must be a signed integer value.
+  typedef std::uint64_t INDEX_t;              ///< The type used for indexes of arrays. (Can be bigger than AXIS_t)
                                               ///< This must be an unsigned integer type. (If you use a signed integer type,
                                               ///< a large number of comparisons and loops will have undetermined behaviour.
                                               ///< This type should be large enough to store AXIS_2 ^ 2.
@@ -113,7 +114,7 @@ namespace ACL
 
 
   typedef std::uint16_t NAXIS_t;              ///< The type used for NAXIS values. (1->999)
-  typedef unsigned long JD_t;                 ///< Type used for integer Julian dates
+  typedef std::uint32_t JD_t;                 ///< Type used for integer Julian dates
 
   typedef std::uint8_t renderImage_t;         ///< The type used to render images.
   typedef std::uint8_t renderImageGrey8_t;    ///< The type used for rendering Grey8 images.

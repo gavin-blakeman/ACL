@@ -52,8 +52,8 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-03-22 GGB - astroManager 2013.03 release.
 //                      2013-02-01 GGB - Moved class from HDB.h
 //
 //*********************************************************************************************************************************
@@ -88,7 +88,7 @@ namespace ACL
   /// @details Initialise all variables to reasonable default values,
   /// @version 2011-11-25/GGB - Function created.
 
-  CHDBAstrometry::CHDBAstrometry(CAstroFile *aParent) : CHDBBinTable(aParent, AIRDAS_HDB_ASTROMETRY),
+  CHDBAstrometry::CHDBAstrometry(CAstroFile *aParent) : CHDBBinTable(aParent, astroManager_HDB_ASTROMETRY),
     astrometryObservationsIterator(astrometryObservations.begin())
   {
   }
@@ -347,37 +347,37 @@ namespace ACL
   {
     /*double value = (double) (*kwd);
 
-    if ( (*kwd) == AIRDAS_COMMENT_PLATE_FL )
+    if ( (*kwd) == astroManager_COMMENT_PLATE_FL )
     {
       plateData.F = value;
       pcFlag |= 0x01;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_A )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_A )
     {
       plateData.a = value;
       pcFlag |= 0x02;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_B )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_B )
     {
       plateData.b = value;
       pcFlag |= 0x04;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_C )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_C )
     {
       plateData.c = value;
       pcFlag |= 0x08;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_D )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_D )
     {
       plateData.d = value;
       pcFlag |= 0x10;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_E )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_E )
     {
       plateData.e = value;
       pcFlag |= 0x20;
     }
-    else if ( (*kwd) == AIRDAS_COMMENT_PLATE_F )
+    else if ( (*kwd) == astroManager_COMMENT_PLATE_F )
     {
       plateData.f = value;
       pcFlag |= 0x40;
@@ -487,13 +487,13 @@ namespace ACL
 
   bool CHDBAstrometry::specialKeyword(PFITSKeyword kwd)
   {
-    if ( ((*kwd) == AIRDAS_COMMENT_PLATE_FL) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_A) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_B) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_C) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_D) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_E) ||
-         ((*kwd) == AIRDAS_COMMENT_PLATE_F) )
+    if ( ((*kwd) == astroManager_COMMENT_PLATE_FL) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_A) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_B) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_C) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_D) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_E) ||
+         ((*kwd) == astroManager_COMMENT_PLATE_F) )
     {
       loadKeywordPlateConstant(kwd);
       return true;

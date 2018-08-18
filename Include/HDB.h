@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2017 Gavin Blakeman.
+//                      Copyright 2011-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -44,13 +44,13 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 released.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 released.
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
-//                      2013-01-20 GGB - AIRDAS 0000.00 released.
+//                      2013-01-20 GGB - astroManager 0000.00 released.
 //                      2011-12-10 GGB - Move classed from AstroFile.h to HDB.h
 //
 //*********************************************************************************************************************************
@@ -305,7 +305,7 @@ namespace ACL
       // Image Analysis functions
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR(ACL); }
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const { CODE_ERROR(ACL); }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR(ACL); }
     //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) {CODE_ERROR(ACL); };
     virtual bool plateSolve(AXIS_t) { CODE_ERROR(ACL); }
 

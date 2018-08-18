@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       -= core gui
-
 TARGET = ACL
 TEMPLATE = lib
 CONFIG += staticlib
-DEFINES += BOOST_THREAD_USE_LIB
 
-QMAKE_CXXFLAGS += -std=c++14
+QT       -= core gui
+
+QMAKE_CXXFLAGS += -std=c++17
+DEFINES += BOOST_THREAD_USE_LIB
 
 win32:CONFIG(release, debug|release) {
   DESTDIR = "../Library/win32/release"
@@ -22,23 +22,22 @@ else:win32:CONFIG(debug, debug|release) {
   OBJECTS_DIR = "../Library/win32/debug/object/ACL"
 }
 else:unix:CONFIG(release, debug|release) {
-  DESTDIR = "../Library/unix/release"
-  OBJECTS_DIR = "../Library/unix/release/object/ACL"
+  DESTDIR = ""
+  OBJECTS_DIR = "objects"
 }
 else:unix:CONFIG(debug, debug|release) {
-  DESTDIR = "../Library/unix/debug"
-  OBJECTS_DIR = "../Library/unix/debug/object/ACL"
+  DESTDIR = ""
+  OBJECTS_DIR = "objects"
 }
 
 INCLUDEPATH += \
-  "../astrometry.net/astrometry.net-0.56/include" \
-  "../Boost/boost 1.62" \
+  "../boost 1.62" \
   "../cfitsio" \
-  "../Dlib/dlib-19.4" \
+  "../dlib-19.4" \
   "../GCL" \
   "../libWCS/wcstools-3.8.7/libwcs" \
   "../MCL" \
-  "../NOVAS/novasc3.1" \
+  "../novasc3.1" \
   "../PCL" \
   "../SBIG" \
   "../SCL" \

@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License along with ACL
 This library contains a number of classes and functions for astronomy.
 There are classes for image processing, FITS file managment (on top off cfitsio) and astronomical algorithms.
 
-The classes where designed for the AIRDAS application. (www.airdas.net)
+The classes where designed for the astroManager application. (www.astroManager.net)
 
 All functions and constants are enclosed in the ACL namespace.
 

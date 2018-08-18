@@ -36,7 +36,7 @@
 //                        CTargetStellar
 //                        CTargetSolar
 //
-// HISTORY:             2011-06-30/GGB - Development of classes for AIRDAS
+// HISTORY:             2011-06-30/GGB - Development of classes for astroManager
 //
 // TO DO:               1) Make these classes re-entrant. Once C++11 supports native multi-threading.
 //

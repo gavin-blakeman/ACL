@@ -35,8 +35,8 @@
 //
 // CLASS HIERARCHY:
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-05-09 GGB - File created.
 //
 //*********************************************************************************************************************************

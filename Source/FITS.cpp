@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITS
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2017 Gavin Blakeman.
+//                      Copyright 2015-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -31,19 +31,16 @@
 //
 // CLASS HIERARCHY:     None
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-16/GGB - File created.
 //
 //*********************************************************************************************************************************
 
 #include "../Include/FITS.h"
 
-  // cfitsio library
+#include <fstream>
 
 #include "cfitsio/fitsio.h"
-
-  // Miscellaneous libraries
-
 #include <GCL>
 
 namespace ACL
@@ -115,4 +112,39 @@ namespace ACL
 
     return returnValue;
   }
+
+  /// @brief Determines if a file is a FITS file.
+  /// @param[in] p - The path to the file.
+  /// @returns true - The path points to a file that is likely a FITS file.
+  /// @returns false - The path is not a FITS file.
+  /// @throws None.
+  /// @version 2018-05-20/GGB - Function created.
+
+  bool isFitsFile(boost::filesystem::path const &p)
+  {
+    bool returnValue = false;
+    char const testWord[] = "SIMPLE";
+
+    if (boost::filesystem::exists(p))
+    {
+      boost::filesystem::ifstream inputStream;
+      std::string testRead(sizeof(testWord+1), ' ');
+
+      inputStream.open(p);
+
+      if (inputStream)
+      {
+        if (inputStream.read(testRead.data(), sizeof(testRead)-1))
+        {
+          if (testRead.find(testWord) != std::string::npos)
+          {
+            returnValue = true;
+          };
+        };
+      }
+    };
+
+    return returnValue;
+  }
+
 }   // namespace ACL

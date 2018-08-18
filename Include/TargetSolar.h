@@ -37,8 +37,8 @@
 //                        CTargetSolar
 //                          CTargetMinorPlanet
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2011-06-30 GGB - Development of classes for AIRDAS
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2011-06-30 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 

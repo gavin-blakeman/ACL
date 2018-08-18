@@ -49,13 +49,13 @@
 //                        - CSBIGAstroFile
 //                        - CRAWAstroFile
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 Release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 Release.
 //                      2012-11-11 GGB - Moved class CFitsAstroFile into its own file.
 //                      2011-12-10 GGB - Removed HDB classes into seperate file HDB.h
-//                      2011-06-04 GGB - Development of classes for AIRDAS
+//                      2011-06-04 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
@@ -313,7 +313,7 @@ namespace ACL
     virtual FP_t imageMean(DHDBStore::size_type = 0) const;
     virtual FP_t imageStdev(DHDBStore::size_type = 0) const;
     virtual FP_t imageMin(DHDBStore::size_type = 0) const;
-    void objectProfile(DHDBStore::size_type, MCL::TPoint2D<FP_t> centroid, long radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
+    void objectProfile(DHDBStore::size_type, MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
     virtual std::string imageFilter() const;
     virtual FP_t imageExposure(DHDBStore::size_type = 0) const;
 
@@ -354,7 +354,7 @@ namespace ACL
 
       // Image Analysis Functions
 
-    virtual void findStars(DHDBStore::size_type, TImageSourCAstronomicalCoordinatesontainer &, const SFindSources &parameters) const;
+    virtual void findStars(DHDBStore::size_type, TImageSourceContainer &, const SFindSources &parameters) const;
     virtual bool plateSolve(DHDBStore::size_type, AXIS_t);
 
       // Astrometry functions

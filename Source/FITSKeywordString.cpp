@@ -1,4 +1,4 @@
-//**********************************************************************************************************************************
+﻿//**********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								CFITSKeywordString
@@ -190,10 +190,8 @@ namespace ACL
 
   void CFITSKeywordString::writeToFITS(fitsfile *file) const
   {
-    int status = 0;
     char *szValue = const_cast<char *>(value_.c_str());
 
-    CFITSIO_TEST(fits_update_key(file, TSTRING, keyword_.c_str(), szValue,
-                                 comment_.c_str(), &status));
+    CFITSIO_TEST(fits_update_key, file, TSTRING, keyword_.c_str(), szValue, comment_.c_str());
   }
 }

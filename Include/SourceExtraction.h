@@ -31,7 +31,7 @@
 //
 // CLASS HIERARCHY:     SImageSource
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2014-02-09 GGB - File created
 //
 //*********************************************************************************************************************************
@@ -62,7 +62,7 @@ namespace ACL
   };
 
   typedef boost::shared_ptr<SImageSource> PImageSource;
-  typedef std::list<PImageSource> TImageSourCAstronomicalCoordinatesontainer;
+  typedef std::list<PImageSource> TImageSourceContainer;
 }
 
 #endif // ACL_SOURCEEXTRACTION_H

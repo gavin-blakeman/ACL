@@ -31,11 +31,11 @@
 //
 // CLASS HIERARCHY:     CAstronomicalCalc
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-25 GGB - Removed all deprecated functions.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
-//                      2005-07-01 GGB - Development of classes for AIRDAS
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
+//                      2005-07-01 GGB - Development of classes for astroManager
 //
 //**********************************************************************************************************************************
 

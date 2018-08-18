@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITS
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2017 Gavin Blakeman.
+//                      Copyright 2015-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -31,7 +31,7 @@
 //
 // CLASS HIERARCHY:     None
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-08-16/GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -41,6 +41,7 @@
 
   // Standard libraries
 
+#include <boost/filesystem.hpp>
 #include <string>
 
 namespace ACL
@@ -48,6 +49,7 @@ namespace ACL
   unsigned int const NAXIS_MAX = 999;       // As per FITS standard.
 
   std::string Bitpix2String(int);
+  bool isFitsFile(boost::filesystem::path const &);
 }
 
 #endif // ACL_FITS_H

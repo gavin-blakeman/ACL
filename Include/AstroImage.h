@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2017 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -52,13 +52,13 @@
 //											  2) If there is an EXTENSION with the name DARKFRAME it is loaded as the dark frame.
 //											  3) If there is an EXTENSION with the name FLATFRAME it is loaded as the flat frame.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-05-25 GGB - Moved CAstroImageMono & CAstroImagePoly to their own files.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
 //                      2012-11-27 GGB - Removed class CImagePlane into file CImagePlane
-//                      2010-10-16 GGB - Development of classes for AIRDAS
+//                      2010-10-16 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
@@ -173,7 +173,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
     virtual CAstroImage *createCopy() const = 0;
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const = 0;
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, long radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const = 0;
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const = 0;
 
       // Image information functions
 
@@ -260,7 +260,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
 
       // Image Analysis functions
 
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &, SFindSources const &) const = 0;
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const = 0;
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const = 0;
 
       // Photometry functions

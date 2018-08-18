@@ -132,7 +132,7 @@
 //									?NOTES: Comments or notes about the observation. This field has a maximum length
 //										of 100 characters. If no comments, use "na".
 //
-// HISTORY:         2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:         2015-09-22 GGB - astroManager 2015.09 release
 //
 //*************************************************************************************************
 

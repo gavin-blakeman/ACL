@@ -52,9 +52,9 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
 //                      2013-02-10 GGB - File created.
 //
 //*********************************************************************************************************************************
@@ -179,7 +179,7 @@ namespace ACL
       // Image Analysis functions
 
     virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
-    virtual void findStars(TImageSourCAstronomicalCoordinatesontainer &imageSourceList, SFindSources const &) const;
+    virtual void findStars(TImageSourceContainer &imageSourceList, SFindSources const &) const;
     virtual bool plateSolve(AXIS_t);
 
       // Photometry functions

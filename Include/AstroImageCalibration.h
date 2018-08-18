@@ -48,8 +48,8 @@
 //                        - CMasterBiasFrame
 //                      CCalibrateFrame
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2011-05-25 GGB - Development of classes and code for implementation into AIRDAS.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2011-05-25 GGB - Development of classes and code for implementation into astroManager.
 //
 //*********************************************************************************************************************************
 

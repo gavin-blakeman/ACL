@@ -27,7 +27,7 @@
 //
 // OVERVIEW:						This file is a port of some of the routines in findstar.c to C++. findstar.c is part of the libWCS suite of
 //                      routines.
-//                      This port has been done to support the AIRDAS project.
+//                      This port has been done to support the astroManager project.
 //                      All the functions have also been ported to support x64 processors.
 //
 // FUNCTIONS INCLUDED:  None
@@ -36,7 +36,7 @@
 //
 // CLASS HIERARCHY:     CFindStars
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
 //                      2014-01-31 GGB - Ported to C++
 //
 //*********************************************************************************************************************************
@@ -186,7 +186,7 @@ namespace ACL
   /// @version 2014-01-30/GGB - Added check that the return from brightWalk falls within the image.
   /// @version 2012-07-20/GGB - Function ported to C++
 
-  void CFindSources::findStars(TImageSourCAstronomicalCoordinatesontainer &imageObjectList)
+  void CFindSources::findStars(TImageSourceContainer &imageObjectList)
   {
     FP_t noise, nsigma;
     FP_t minll;
@@ -204,7 +204,7 @@ namespace ACL
     boost::optional<MCL::TPoint2D<AXIS_t> > bw;
     FP_t b = bmin;
     AXIS_t sx, sy, r;
-    TImageSourCAstronomicalCoordinatesontainer::iterator iter;
+    TImageSourceContainer::iterator iter;
 
       /* Set trim section for star searching */
 

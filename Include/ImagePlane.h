@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2017 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -32,9 +32,6 @@
 //                      is required as these classes do ultimately service astronomical images and the standard format for
 //                      astonomical images is FITS.
 //
-//											Support for statistical and other mathematics is derived from the gsl library. Where multi-threaded
-//                      functions are required, the support is derived from the MCL library.
-//
 //											The library is designed to be platform independant. IE, only standard C++ functionality is used.
 //
 //											While this library has been designed to be used from Qt, it makes no reference to the Qt library.
@@ -54,13 +51,13 @@
 // Notes:               1) CImagePlane stores all images with a double representation. This provides the best implementation,
 //                          without having to have multiple implementations, with type changes on the fly.
 //
-// HISTORY:             2015-09-22 GGB - AIRDAS 2015.09 release
-//                      2013-09-30 GGB - AIRDAS 2013.09 release.
+// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+//                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-04-14 GGB - Changed filename from CImagePlane.h to ImagePlane.h
-//                      2013-03-22 GGB - AIRDAS 2013.03 release.
-//                      2013-01-20 GGB - AIRDAS 0000.00 release.
+//                      2013-03-22 GGB - astroManager 2013.03 release.
+//                      2013-01-20 GGB - astroManager 0000.00 release.
 //                      2012-11-27 GGB - Removed class CImagePlane into file CImagePlane
-//                      2010-10-16 GGB - Development of classes for AIRDAS
+//                      2010-10-16 GGB - Development of classes for astroManager
 //
 //*********************************************************************************************************************************
 
@@ -168,7 +165,7 @@ namespace ACL
     mutable FP_t fStDev;                        ///< The standard deviation of the image.
 
     mutable bool bMinMax;                       ///< Variable to track if the min/max values are valid or need to be recalculated.
-    mutable bool bMean;                          ///< Track if the average value is valid or needs to be recalculated.
+    mutable bool bMean;                         ///< Track if the average value is valid or needs to be recalculated.
 
     int bitpix_;                                ///< same as BITPIX
     FP_t bscale_;                               ///< Same as BSCALE
@@ -178,14 +175,17 @@ namespace ACL
       // The following members are used for rendering the image.
 
     SColourRGB planeColour;                     ///< The colour to render this plane to
-    FP_t transparency;                          ///< The transpararency of this plane.
+    FP_t transparency;                          ///< The transparency of this plane.
     FP_t blackPoint;                            ///< THe black point for this plane.
     FP_t whitePoint;                            ///< The white point for this plane.
     bool invert;                                ///< Invert the image plane.
     ETransferFunction transferFunction;         ///< Transfer function to use when rendering.
     FP_t transferFunctionParameter;             ///< Transfer function parameter.
 
-      // The following arrays are used for storing the image.
+      // The following arrays are used for storing the image. Note that std::valarray was used at one time for storing the image,
+      // the reason for moving from std::valarray is not recorded, but it must have been good.
+      // It is possibly a good idea to write a specialised valarray template that supports multi-threading and also c-style array
+      // access specifically for storing the image plane data.
 
     std::uint8_t *imagePlane8;
     std::int8_t *imagePlaneS8;
@@ -226,11 +226,11 @@ namespace ACL
     template<typename T>
     void rotateThread(std::tuple<AXIS_t, AXIS_t>, T *, T *, std::tuple<AXIS_t , AXIS_t, AXIS_t, AXIS_t>, FP_t, FP_t, FP_t, FP_t);
 
-    // Thread functions for doing the heavy lifting. Called from the public functions as required.
+      // Thread functions for doing the heavy lifting. Called from the public functions as required.
 
     void plusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
     void minusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
-    void transformThread(long yStart, long yEnd, SThreadData const &);
+    void transformThread(AXIS_t yStart, AXIS_t yEnd, SThreadData const &);
     void resampleThread(double *newImagePlane, boost::tuple<AXIS_t, AXIS_t> yVals, AXIS_t newWidth, boost::tuple<FP_t, FP_t>);
 
     template<typename T>
@@ -257,9 +257,9 @@ namespace ACL
     void renderImageGrey8LogThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
 
   public:
-    explicit CImagePlane();								      // Default constructor.
-    CImagePlane(CImagePlane const &);		        // Copy constructor.
-    CImagePlane(CImagePlane const *, long, long, long, long);   // Create a sub-image from an image.
+    explicit CImagePlane();                                     // Default constructor.
+    CImagePlane(CImagePlane const &);                           // Copy constructor.
+    CImagePlane(CImagePlane const *, AXIS_t, AXIS_t, AXIS_t, AXIS_t);   // Create a sub-image from an image.
     CImagePlane(AXIS_t, AXIS_t);	// Constructor with a size
     CImagePlane(AXIS_t, AXIS_t, AXIS_t, AXIS_t); // Constructor with an origen and size.
     CImagePlane(fitsfile *, AXIS_t);         // Constructor from a FITS HDU with slicing.
@@ -325,7 +325,7 @@ namespace ACL
 
     virtual ~CImagePlane();
 
-     // Basic arithmetic operations
+      // Basic arithmetic operations
 
     CImagePlane &operator=(const CImagePlane &);
     CImagePlane &operator+=(const CImagePlane &);
@@ -357,20 +357,23 @@ namespace ACL
     double BZERO() const;
     void BZERO(double);
 
-    inline int PEDESTAL() const { return pedestal_; }
+    inline int PEDESTAL() const noexcept { return pedestal_; }
 
       // Basic image information
 
-    inline AXIS_t width() const { return dimX; }
-    inline AXIS_t height() const { return dimY; }
+    inline AXIS_t width() const noexcept { return dimX; }
+    inline AXIS_t height() const noexcept { return dimY; }
 
     FP_t getValue(INDEX_t) const;
     FP_t getValue(AXIS_t, AXIS_t) const;
     double getValue(MCL::TPoint2D<AXIS_t> const &) const;
     void getRow(AXIS_t x1, AXIS_t x2, AXIS_t y, double *);
 
-    /// EXCEPTIONS: 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-    ///             0x1201 - CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
+    /// @brief Sets the value of a particular pixel.
+    /// @param[in] index: The index of the pixel.
+    /// @param[in] value: The value to set.
+    /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
+    /// @throws 0x1201 - CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
     /// @version 2017-08-27/GGB - Ensure min/max are recalculated as required.
     /// @version 2013-01-27/GGB - Function created.
 
@@ -378,7 +381,9 @@ namespace ACL
     void setValue(INDEX_t index, T value)
     {
       if ( (index >= (INDEX_t) (dimX * dimY)) )
+      {
         ERROR(ACL, 0x1202);    // CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
+      }
       else
       {
         switch (bitpix_)
@@ -439,9 +444,9 @@ namespace ACL
     }
 
     /// @brief Sets the value of the image at the relevant point to the passed value.
-    /// @param[in] x - The x coordinate
-    /// @param[in] y - THe y coordinate
-    /// @param[in] value - The value to set.
+    /// @param[in] x: The x coordinate
+    /// @param[in] y:  The y coordinate
+    /// @param[in] value: The value to set.
     /// @throws GCL::CError(ACL, 0x1202)
     /// @version 2010-10-16/GGB - Function created.
 
@@ -493,12 +498,12 @@ namespace ACL
 
     MCL::TPoint2D<FP_t> starCentroid(MCL::TPoint2D<AXIS_t> const &) const;
     boost::optional<MCL::TPoint2D<AXIS_t> > brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax, int sensitivity) const;
-    boost::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, long radius) const;
+    boost::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, AXIS_t radius) const;
     void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
 
       // Image Analysis functions
 
-    void findStars(TImageSourCAstronomicalCoordinatesontainer &sourceList, SFindSources const &sourceDefaults);
+    void findStars(TImageSourceContainer &sourceList, SFindSources const &sourceDefaults);
 
       // Object special functionality
 

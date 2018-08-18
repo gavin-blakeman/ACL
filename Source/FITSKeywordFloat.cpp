@@ -1,4 +1,4 @@
-//**********************************************************************************************************************************
+﻿//**********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								FITSKeywordFloat
@@ -120,9 +120,7 @@ namespace ACL
 
   void CFITSKeywordFloat::writeToFITS(fitsfile *file) const
   {
-    int status = 0;
-
-    CFITSIO_TEST(fits_update_key(file, TFLOAT, keyword_.c_str(), const_cast<void *>(static_cast<void const *>(&value_)),
-                                 comment_.c_str(), &status));
+    CFITSIO_TEST(fits_update_key, file, TFLOAT, keyword_.c_str(), const_cast<void *>(static_cast<void const *>(&value_)),
+                                 comment_.c_str());
   }
 }
