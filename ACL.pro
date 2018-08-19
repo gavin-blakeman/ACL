@@ -1,8 +1,34 @@
-
+#-----------------------------------------------------------------------------------------------------------------------------------
 #
-# Project created by QtCreator 2013-06-15T19:19:08
+# PROJECT:            Astronomy Class Library
+# FILE:								ACL.pro
+# SUBSYSTEM:          Project File
+# LANGUAGE:						C++
+# TARGET OS:          WINDOWS/UNIX/LINUX/MAC
+# LIBRARY DEPENDANCE:	None.
+# NAMESPACE:          N/A
+# AUTHOR:							Gavin Blakeman.
+# LICENSE:            GPLv2
 #
-#-------------------------------------------------
+#                     Copyright 2013-2018 Gavin Blakeman.
+#                     This file is part of the Astronomy Class Library (ACL).
+#
+#                     ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
+#                     Public License as published by the Free Software Foundation, either version 2 of the License, or (at your
+#                     option) any later version.
+#
+#                     ACL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+#                     implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#                     for more details.
+#
+#                     You should have received a copy of the GNU General Public License along with ACL.  If not, see
+#                     <http://www.gnu.org/licenses/>.
+#
+# OVERVIEW:						Project file for compiling the project
+#
+# HISTORY:            2013-06-15/GGB - Development of classes for astroManager
+#
+#-----------------------------------------------------------------------------------------------------------------------------------
 
 TARGET = ACL
 TEMPLATE = lib
@@ -37,7 +63,7 @@ INCLUDEPATH += \
   "../GCL" \
   "../libWCS/wcstools-3.8.7/libwcs" \
   "../MCL" \
-  "../NOVAS/novasc3.1" \
+  "../NOVAS" \
   "../PCL" \
   "../SBIG" \
   "../SCL" \
@@ -46,341 +72,148 @@ INCLUDEPATH += \
   "../GeographicLib/GeographicLib-1.48/include/GeographicLib"
 
 SOURCES += \
-    Source/ImageStack.cpp \
-    Source/ImageRegister.cpp \
-    Source/ImagePlane.cpp \
-    Source/HDBPrimary.cpp \
-    Source/HDBPhotometry.cpp \
-    Source/HDBImage.cpp \
-    Source/HDBBinTable.cpp \
-    Source/HDBAstrometry.cpp \
-    Source/HDBAsciiTable.cpp \
-    Source/HDB.cpp \
-    Source/FWHM.cpp \
-    Source/AstroImagePoly.cpp \
-    Source/AstroImageMono.cpp \
-    Source/AstroImage.cpp \
-    Source/AstroFile.cpp \
-    Source/Observation.cpp \
-    Source/AstroClass.cpp \
-    Source/AstroFunctions.cpp \
-    Source/PhotometryObservation.cpp \
-    Source/PhotometryApertureCircular.cpp \
-    Source/PhotometryAperture.cpp \
-    Source/AstrometryObservation.cpp \
-    Source/AstroImageCalibration.cpp \
-    Source/common.cpp \
-    Source/findstar.cpp \
-    Source/SourceExtraction.cpp \
-    Source/AstronomicalTime.cpp \
-    Source/AAVSO.cpp \
-    Source/config.cpp \
-    Source/FITSInspector.cpp \
-    Source/FITSUtilities.cpp \
-    Source/FITS.cpp \
-    Source/FITSException.cpp \
-    Source/Photometry.cpp \
-    Source/AstronomicalCoordinates.cpp \
-    Source/TargetAstronomy.cpp \
-    Source/TargetSolar.cpp \
-    Source/TargetStellar.cpp \
-    Source/TargetMinorPlanet.cpp \
-    Source/TargetPlanet.cpp \
-    Source/FITSKeyword.cpp \
-    Source/FITSKeywordString.cpp \
-    Source/FITSKeywordFloat.cpp \
-    Source/FITSKeywordDouble.cpp \
-    Source/FITSKeywordComplex.cpp \
-    Source/FITSKeywordDoubleComplex.cpp \
-    Source/FITSKeywordInt08.cpp \
-    Source/FITSKeywordBool.cpp \
-    Source/FITSKeywordUInt08.cpp \
-    Source/FITSKeywordInt16.cpp \
-    Source/FITSKeywordInt32.cpp \
-    Source/FITSKeywordUInt16.cpp \
-    Source/FITSKeywordInt64.cpp \
-    Source/FITSKeywordUInt32.cpp \
-    Source/FITSKeywordDateTime.cpp \
-    Source/FITSKeywordDate.cpp \
-    Source/SIMBAD.cpp \
-    Source/geographicLocation.cpp \
-    Source/observatoryInformation.cpp \
-    Source/photometryFilters.cpp \
-    Source/julianDay.cpp \
-    Source/telescope.cpp \
-    Source/FITSMemoryFileArray.cpp \
-    Source/FITSMemoryFile.cpp
+    source/ImageStack.cpp \
+    source/ImageRegister.cpp \
+    source/ImagePlane.cpp \
+    source/HDBPrimary.cpp \
+    source/HDBPhotometry.cpp \
+    source/HDBImage.cpp \
+    source/HDBBinTable.cpp \
+    source/HDBAstrometry.cpp \
+    source/HDBAsciiTable.cpp \
+    source/HDB.cpp \
+    source/FWHM.cpp \
+    source/AstroImagePoly.cpp \
+    source/AstroImageMono.cpp \
+    source/AstroImage.cpp \
+    source/AstroFile.cpp \
+    source/Observation.cpp \
+    source/AstroClass.cpp \
+    source/AstroFunctions.cpp \
+    source/PhotometryObservation.cpp \
+    source/PhotometryApertureCircular.cpp \
+    source/PhotometryAperture.cpp \
+    source/AstrometryObservation.cpp \
+    source/AstroImageCalibration.cpp \
+    source/common.cpp \
+    source/findstar.cpp \
+    source/SourceExtraction.cpp \
+    source/AstronomicalTime.cpp \
+    source/AAVSO.cpp \
+    source/config.cpp \
+    source/FITSInspector.cpp \
+    source/FITSUtilities.cpp \
+    source/FITS.cpp \
+    source/FITSException.cpp \
+    source/Photometry.cpp \
+    source/AstronomicalCoordinates.cpp \
+    source/TargetAstronomy.cpp \
+    source/TargetSolar.cpp \
+    source/TargetStellar.cpp \
+    source/TargetMinorPlanet.cpp \
+    source/TargetPlanet.cpp \
+    source/FITSKeyword.cpp \
+    source/FITSKeywordString.cpp \
+    source/FITSKeywordFloat.cpp \
+    source/FITSKeywordDouble.cpp \
+    source/FITSKeywordComplex.cpp \
+    source/FITSKeywordDoubleComplex.cpp \
+    source/FITSKeywordInt08.cpp \
+    source/FITSKeywordBool.cpp \
+    source/FITSKeywordUInt08.cpp \
+    source/FITSKeywordInt16.cpp \
+    source/FITSKeywordInt32.cpp \
+    source/FITSKeywordUInt16.cpp \
+    source/FITSKeywordInt64.cpp \
+    source/FITSKeywordUInt32.cpp \
+    source/FITSKeywordDateTime.cpp \
+    source/FITSKeywordDate.cpp \
+    source/SIMBAD.cpp \
+    source/geographicLocation.cpp \
+    source/observatoryInformation.cpp \
+    source/photometryFilters.cpp \
+    source/julianDay.cpp \
+    source/telescope.cpp \
+    source/FITSMemoryFileArray.cpp \
+    source/FITSMemoryFile.cpp \
+    source/error.cpp
 
 HEADERS += \
-    Include/wcs.h \
-    Include/PhotometryObservation.h \
-    Include/PhotometryApertureEliptical.h \
-    Include/PhotometryApertureCircular.h \
-    Include/PhotometryAperture.h \
-    Include/Observation.h \
-    Include/ObserClass.h \
-    Include/ImageStack.h \
-    Include/ImageRegister.h \
-    Include/ImagePlane.h \
-    Include/HDBPrimary.h \
-    Include/HDBPhotometry.h \
-    Include/HDBImage.h \
-    Include/HDBBinTable.h \
-    Include/HDBAstrometry.h \
-    Include/HDBAsciiTable.h \
-    Include/HDB.h \
-    Include/FWHM.h \
-    Include/config.h \
-    Include/common.h \
-    Include/AstroRT.h \
-    Include/AstrometryObservation.h \
-    Include/Astrometry.h \
-    Include/AstroImagePoly.h \
-    Include/AstroImageMono.h \
-    Include/AstroImageFunctions.hpp \
-    Include/AstroImageCalibration.h \
-    Include/AstroImage.h \
-    Include/AstroFunctions.h \
-    Include/AstroFile.h \
-    Include/AstroClass.h \
-    Include/AstroCatalogue.h \
-    Include/AAVSO.h \
-    Include/findstar.h \
-    Include/SourceExtraction.h \
-    Include/constants.h \
-    Include/AstronomicalTime.h \
-    Include/FITSInspector.h \
-    Include/FITSStrings.h \
-    Include/FITSUtilities.h \
-    Include/FITS.h \
-    Include/FITSException.h \
-    Include/Photometry.h \
-    Include/AstronomicalCoordinates.h \
-    Include/AstronomicalObject.h \
-    Include/TargetAstronomy.h \
-    Include/TargetSolar.h \
-    Include/TargetStellar.h \
-    Include/TargetMinorPlanet.h \
-    Include/TargetPlanet.h \
-    Include/FITSKeyword.h \
-    Include/FITSKeywordString.h \
-    Include/FITSKeywordFloat.h \
-    Include/FITSKeywordDouble.h \
-    Include/FITSKeywordComplex.h \
-    Include/FITSKeywordDoubleComplex.h \
-    Include/FITSKeywordDateTime.h \
-    Include/FITSKeywordInt16.h \
-    Include/FITSKeywordInt32.h \
-    Include/FITSKeywordInt08.h \
-    Include/FITSKeywordInt64.h \
-    Include/FITSKeywordUInt08.h \
-    Include/FITSKeywordUInt16.h \
-    Include/FITSKeywordUInt32.h \
-    Include/FITSKeywordBool.h \
-    Include/FITSKeywordDate.h \
-    Include/SIMBAD.h \
-    Include/geographicLocation.h \
-    Include/observatoryInformation.h \
-    Include/photometryFilters.h \
-    Include/julianDay.h \
-    Include/telescope.h \
-    Include/FITSMemoryFileArray.h \
-    Include/FITSMemoryFile.h
-
-OTHER_FILES += \
-    ACL \
-    license.txt \
-    README \
-    changelog.txt
-
-#
-# Project created by QtCreator 2013-06-15T19:19:08
-#
-#-------------------------------------------------
-
-TARGET = ACL
-TEMPLATE = lib
-CONFIG += staticlib
-
-QT       -= core gui
-
-QMAKE_CXXFLAGS += -std=c++17
-DEFINES += BOOST_THREAD_USE_LIB
-
-win32:CONFIG(release, debug|release) {
-  DESTDIR = "../Library/win32/release"
-  OBJECTS_DIR = "../Library/win32/release/object/ACL"
-}
-else:win32:CONFIG(debug, debug|release) {
-  DESTDIR = "../Library/win32/debug"
-  OBJECTS_DIR = "../Library/win32/debug/object/ACL"
-}
-else:unix:CONFIG(release, debug|release) {
-  DESTDIR = ""
-  OBJECTS_DIR = "objects"
-}
-else:unix:CONFIG(debug, debug|release) {
-  DESTDIR = ""
-  OBJECTS_DIR = "objects"
-}
-
-INCLUDEPATH += \
-  "../boost 1.62" \
-  "../cfitsio" \
-  "../dlib-19.4" \
-  "../GCL" \
-  "../libWCS/wcstools-3.8.7/libwcs" \
-  "../MCL" \
-  "../NOVAS/novasc3.1" \
-  "../novasc3.1" \
-  "../PCL" \
-  "../SBIG" \
-  "../SCL" \
-  "../SOFA/src" \
-  "../" \
-  "../GeographicLib/GeographicLib-1.48/include/GeographicLib"
-
-SOURCES += \
-    Source/ImageStack.cpp \
-    Source/ImageRegister.cpp \
-    Source/ImagePlane.cpp \
-    Source/HDBPrimary.cpp \
-    Source/HDBPhotometry.cpp \
-    Source/HDBImage.cpp \
-    Source/HDBBinTable.cpp \
-    Source/HDBAstrometry.cpp \
-    Source/HDBAsciiTable.cpp \
-    Source/HDB.cpp \
-    Source/FWHM.cpp \
-    Source/AstroImagePoly.cpp \
-    Source/AstroImageMono.cpp \
-    Source/AstroImage.cpp \
-    Source/AstroFile.cpp \
-    Source/Observation.cpp \
-    Source/AstroClass.cpp \
-    Source/AstroFunctions.cpp \
-    Source/PhotometryObservation.cpp \
-    Source/PhotometryApertureCircular.cpp \
-    Source/PhotometryAperture.cpp \
-    Source/AstrometryObservation.cpp \
-    Source/AstroImageCalibration.cpp \
-    Source/common.cpp \
-    Source/findstar.cpp \
-    Source/SourceExtraction.cpp \
-    Source/AstronomicalTime.cpp \
-    Source/AAVSO.cpp \
-    Source/config.cpp \
-    Source/FITSInspector.cpp \
-    Source/FITSUtilities.cpp \
-    Source/FITS.cpp \
-    Source/FITSException.cpp \
-    Source/Photometry.cpp \
-    Source/AstronomicalCoordinates.cpp \
-    Source/TargetAstronomy.cpp \
-    Source/TargetSolar.cpp \
-    Source/TargetStellar.cpp \
-    Source/TargetMinorPlanet.cpp \
-    Source/TargetPlanet.cpp \
-    Source/FITSKeyword.cpp \
-    Source/FITSKeywordString.cpp \
-    Source/FITSKeywordFloat.cpp \
-    Source/FITSKeywordDouble.cpp \
-    Source/FITSKeywordComplex.cpp \
-    Source/FITSKeywordDoubleComplex.cpp \
-    Source/FITSKeywordInt08.cpp \
-    Source/FITSKeywordBool.cpp \
-    Source/FITSKeywordUInt08.cpp \
-    Source/FITSKeywordInt16.cpp \
-    Source/FITSKeywordInt32.cpp \
-    Source/FITSKeywordUInt16.cpp \
-    Source/FITSKeywordInt64.cpp \
-    Source/FITSKeywordUInt32.cpp \
-    Source/FITSKeywordDateTime.cpp \
-    Source/FITSKeywordDate.cpp \
-    Source/SIMBAD.cpp \
-    Source/geographicLocation.cpp \
-    Source/observatoryInformation.cpp \
-    Source/photometryFilters.cpp \
-    Source/julianDay.cpp \
-    Source/telescope.cpp \
-    Source/FITSMemoryFileArray.cpp \
-    Source/FITSMemoryFile.cpp
-
-HEADERS += \
-    Include/wcs.h \
-    Include/PhotometryObservation.h \
-    Include/PhotometryApertureEliptical.h \
-    Include/PhotometryApertureCircular.h \
-    Include/PhotometryAperture.h \
-    Include/Observation.h \
-    Include/ObserClass.h \
-    Include/ImageStack.h \
-    Include/ImageRegister.h \
-    Include/ImagePlane.h \
-    Include/HDBPrimary.h \
-    Include/HDBPhotometry.h \
-    Include/HDBImage.h \
-    Include/HDBBinTable.h \
-    Include/HDBAstrometry.h \
-    Include/HDBAsciiTable.h \
-    Include/HDB.h \
-    Include/FWHM.h \
-    Include/config.h \
-    Include/common.h \
-    Include/AstroRT.h \
-    Include/AstrometryObservation.h \
-    Include/Astrometry.h \
-    Include/AstroImagePoly.h \
-    Include/AstroImageMono.h \
-    Include/AstroImageFunctions.hpp \
-    Include/AstroImageCalibration.h \
-    Include/AstroImage.h \
-    Include/AstroFunctions.h \
-    Include/AstroFile.h \
-    Include/AstroClass.h \
-    Include/AstroCatalogue.h \
-    Include/AAVSO.h \
-    Include/findstar.h \
-    Include/SourceExtraction.h \
-    Include/constants.h \
-    Include/AstronomicalTime.h \
-    Include/FITSInspector.h \
-    Include/FITSStrings.h \
-    Include/FITSUtilities.h \
-    Include/FITS.h \
-    Include/FITSException.h \
-    Include/Photometry.h \
-    Include/AstronomicalCoordinates.h \
-    Include/AstronomicalObject.h \
-    Include/TargetAstronomy.h \
-    Include/TargetSolar.h \
-    Include/TargetStellar.h \
-    Include/TargetMinorPlanet.h \
-    Include/TargetPlanet.h \
-    Include/FITSKeyword.h \
-    Include/FITSKeywordString.h \
-    Include/FITSKeywordFloat.h \
-    Include/FITSKeywordDouble.h \
-    Include/FITSKeywordComplex.h \
-    Include/FITSKeywordDoubleComplex.h \
-    Include/FITSKeywordDateTime.h \
-    Include/FITSKeywordInt16.h \
-    Include/FITSKeywordInt32.h \
-    Include/FITSKeywordInt08.h \
-    Include/FITSKeywordInt64.h \
-    Include/FITSKeywordUInt08.h \
-    Include/FITSKeywordUInt16.h \
-    Include/FITSKeywordUInt32.h \
-    Include/FITSKeywordBool.h \
-    Include/FITSKeywordDate.h \
-    Include/SIMBAD.h \
-    Include/geographicLocation.h \
-    Include/observatoryInformation.h \
-    Include/photometryFilters.h \
-    Include/julianDay.h \
-    Include/telescope.h \
-    Include/FITSMemoryFileArray.h \
-    Include/FITSMemoryFile.h
+    include/wcs.h \
+    include/PhotometryObservation.h \
+    include/PhotometryApertureEliptical.h \
+    include/PhotometryApertureCircular.h \
+    include/PhotometryAperture.h \
+    include/Observation.h \
+    include/ObserClass.h \
+    include/ImageStack.h \
+    include/ImageRegister.h \
+    include/ImagePlane.h \
+    include/HDBPrimary.h \
+    include/HDBPhotometry.h \
+    include/HDBImage.h \
+    include/HDBBinTable.h \
+    include/HDBAstrometry.h \
+    include/HDBAsciiTable.h \
+    include/HDB.h \
+    include/FWHM.h \
+    include/config.h \
+    include/common.h \
+    include/AstroRT.h \
+    include/AstrometryObservation.h \
+    include/Astrometry.h \
+    include/AstroImagePoly.h \
+    include/AstroImageMono.h \
+    include/AstroImageFunctions.hpp \
+    include/AstroImageCalibration.h \
+    include/AstroImage.h \
+    include/AstroFunctions.h \
+    include/AstroFile.h \
+    include/AstroClass.h \
+    include/AstroCatalogue.h \
+    include/AAVSO.h \
+    include/findstar.h \
+    include/SourceExtraction.h \
+    include/constants.h \
+    include/AstronomicalTime.h \
+    include/FITSInspector.h \
+    include/FITSStrings.h \
+    include/FITSUtilities.h \
+    include/FITS.h \
+    include/FITSException.h \
+    include/Photometry.h \
+    include/AstronomicalCoordinates.h \
+    include/AstronomicalObject.h \
+    include/TargetAstronomy.h \
+    include/TargetSolar.h \
+    include/TargetStellar.h \
+    include/TargetMinorPlanet.h \
+    include/TargetPlanet.h \
+    include/FITSKeyword.h \
+    include/FITSKeywordString.h \
+    include/FITSKeywordFloat.h \
+    include/FITSKeywordDouble.h \
+    include/FITSKeywordComplex.h \
+    include/FITSKeywordDoubleComplex.h \
+    include/FITSKeywordDateTime.h \
+    include/FITSKeywordInt16.h \
+    include/FITSKeywordInt32.h \
+    include/FITSKeywordInt08.h \
+    include/FITSKeywordInt64.h \
+    include/FITSKeywordUInt08.h \
+    include/FITSKeywordUInt16.h \
+    include/FITSKeywordUInt32.h \
+    include/FITSKeywordBool.h \
+    include/FITSKeywordDate.h \
+    include/SIMBAD.h \
+    include/geographicLocation.h \
+    include/observatoryInformation.h \
+    include/photometryFilters.h \
+    include/julianDay.h \
+    include/telescope.h \
+    include/FITSMemoryFileArray.h \
+    include/FITSMemoryFile.h \
+    include/error.h
 
 OTHER_FILES += \
     ACL \
