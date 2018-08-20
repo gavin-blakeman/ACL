@@ -64,7 +64,7 @@ namespace ACL
   };
 
 //#define CFITSIO_TEST(EXPRESSION) {if (int err_ = EXPRESSION) { throw ACL::CFITSException(); };}
-#define CFITSIO_TEST(FUNC, ...) { int status; FUNC(__VA_ARGS__, &status); if (!status) { throw ACL::CFITSException(); }; }
+#define CFITSIO_TEST(FUNC, ...) { int status = 0; FUNC(__VA_ARGS__, &status); if (status) { throw ACL::CFITSException(); }; }
 
 }    // namespace ACL
 

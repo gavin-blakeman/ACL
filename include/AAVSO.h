@@ -144,8 +144,6 @@
 
 #include "config.h"
 
-#include <SCL>
-
 namespace ACL
 {
 
@@ -179,7 +177,7 @@ namespace ACL
   public:
   };
 
-  class CAAVSOObservation : public SCL::CPackage
+  class CAAVSOObservation
   {
   private:
     char szName[MAX_NAME+1];
