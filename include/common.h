@@ -42,9 +42,13 @@
 #ifndef ACL_COMMON_H
 #define ACL_COMMON_H
 
-#include "config.h"
+  // Standard C++ library header files.
 
 #include <string>
+
+  // ACL library header files.
+
+#include "config.h"
 
 namespace ACL
 {

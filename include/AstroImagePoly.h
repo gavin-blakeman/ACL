@@ -117,7 +117,7 @@ namespace ACL
 
       // Image Plane functions
 
-    virtual boost::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
+    virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
     virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const { ACL_CODE_ERROR;}
 
     virtual void insertImagePlane(PImagePlane);
@@ -145,9 +145,9 @@ namespace ACL
     virtual void setValue(AXIS_t, AXIS_t, AXIS_t, FP_t) { ACL_CODE_ERROR; }
 
     virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
-    virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {ACL_CODE_ERROR;}
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {ACL_CODE_ERROR;}
     virtual void photometry(SPPhotometryObservation /*photometryObservation*/) const {ACL_CODE_ERROR;}
-    virtual boost::optional<double> FWHM(MCL::TPoint2D<double> const &) const { ACL_CODE_ERROR; }
+    virtual std::optional<double> FWHM(MCL::TPoint2D<double> const &) const { ACL_CODE_ERROR; }
   };
 
 } // namespace ACL

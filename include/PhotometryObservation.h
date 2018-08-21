@@ -48,16 +48,16 @@
 #ifndef ACL_PHOTOMETRYOBSERVATION_H
 #define ACL_PHOTOMETRYOBSERVATION_H
 
+  // Standard C++ libraries
+
+#include <memory>
+#include <string>
+
   // ACL header files
 
 #include "config.h"
 #include "Observation.h"
 #include "PhotometryAperture.h"
-
-  // Standard libraries
-
-#include <memory>
-#include <string>
 
 namespace ACL
 {
@@ -70,19 +70,19 @@ namespace ACL
     FP_t skyArea_;
     FP_t exposure_;
     FP_t gain_;
-    boost::optional<FP_t> FWHM_;
+    std::optional<FP_t> FWHM_;
     PPhotometryAperture photometryAperture_;
 
   protected:
   public:
     CPhotometryObservation(std::string const &);
     CPhotometryObservation(CPhotometryObservation const &);
-    CPhotometryObservation(SPTargetAstronomy &);
+    CPhotometryObservation(std::shared_ptr<CTargetAstronomy>);
     virtual ~CPhotometryObservation() {}
 
     virtual SPObservation createCopy() const;
 
-    virtual boost::optional<FP_t> instrumentMagnitude();
+    virtual std::optional<FP_t> instrumentMagnitude();
     virtual FP_t magnitudeError() const;
 
     inline PPhotometryAperture &photometryAperture() { return photometryAperture_;}
@@ -104,8 +104,8 @@ namespace ACL
     FP_t getStarADU() const;
     FP_t getStarSkyADU() const;
 
-    boost::optional<FP_t> FWHM() const { return FWHM_;}
-    void FWHM(boost::optional<FP_t> const &fwhm) { FWHM_ = fwhm; }
+    std::optional<FP_t> FWHM() const { return FWHM_;}
+    void FWHM(std::optional<FP_t> const &fwhm) { FWHM_ = fwhm; }
 
     FP_t getStarE() const;
     FP_t getSNR() const;

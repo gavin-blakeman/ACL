@@ -72,22 +72,21 @@
 #ifndef ACL_TARGETSTELLAR_H
 #define ACL_TARGETSTELLAR_H
 
+  // Standard C++ libraries
+
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
+  // ACL Libraries
+
 #include "AstronomicalCoordinates.h"
 #include "TargetAstronomy.h"
 #include "AstronomicalTime.h"
 #include "config.h"
 #include "Photometry.h"
-
-// Standard C++ libraries
-
-#include <cstdint>
-#include <memory>
-#include <string>
-#include <vector>
-
-  // Boost library
-
-#include "boost/optional.hpp"
 
   // Miscellaneous libraries
 
@@ -121,10 +120,10 @@ namespace ACL
   protected:
     CAstronomicalCoordinates catalogCoordinates_;     ///< Catalog Coordinates of the object.
     TJD catalogEquinox_;                              ///< JD of coordinate equinox.
-    boost::optional<FP_t> pmRA_;                      ///< Proper Motion RA (mas)
-    boost::optional<FP_t> pmDec_;                     ///< Proper Motion DEC (mas)
-    boost::optional<FP_t> radialVelocity_;            ///< Radial velocity (km/s)
-    boost::optional<FP_t> parallax_;                  ///< The parallax (distance) of the object
+    std::optional<FP_t> pmRA_;                        ///< Proper Motion RA (mas)
+    std::optional<FP_t> pmDec_;                       ///< Proper Motion DEC (mas)
+    std::optional<FP_t> radialVelocity_;              ///< Radial velocity (km/s)
+    std::optional<FP_t> parallax_;                    ///< The parallax (distance) of the object
     TJD epoch_;                                       ///< JD of epoch
     std::string spectralType_;                        ///< Spectral type of the object.
     std::vector<std::string> identifiers_;            ///< Alternate identifiers for the object.
@@ -181,10 +180,6 @@ namespace ACL
 
     virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &);
   };
-
-  typedef std::shared_ptr<CTargetStellar> SPTargetStellar;
-  typedef CTargetStellar *PTargetStellar;
-
 
 }  // namespace ACL
 

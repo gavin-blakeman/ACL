@@ -75,7 +75,7 @@ namespace ACL
   {
   }
 
-  CPhotometryObservation::CPhotometryObservation(SPTargetAstronomy &ta) : CObservation(ta)
+  CPhotometryObservation::CPhotometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(ta)
   {
 
   }
@@ -91,20 +91,22 @@ namespace ACL
     return returnValue;
   }
 
-  /// Sets the magnitude.
-  /// EXCEPTIONS: 0x2500 - PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude.
-  //
-  // 2013-04-01/GGB - Function created.
+  /// @brief Calculates and returns the instrument magnitude
+  /// @throws EXCEPTIONS: 0x2500 - PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude.
+  /// @returns The instrument magniture
+  /// @version 2013-04-01/GGB - Function created.
 
-  boost::optional<FP_t> CPhotometryObservation::instrumentMagnitude()
+  std::optional<FP_t> CPhotometryObservation::instrumentMagnitude()
   {
     if (exposure_ == 0)
+    {
       ERROR(ACL, 0x2500); // PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude.
+    }
     else
     {
       FP_t value = sourceADU_ - (sourceArea_ * getSkyADU());
       value = -2.5 * std::log(value / exposure_);
-      boost::optional<FP_t> returnValue(value);
+      std::optional<FP_t> returnValue(value);
       return returnValue;
     };
   }

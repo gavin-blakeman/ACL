@@ -24,7 +24,8 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
-// HISTORY:             2016-04-11 GGB - Added FITSKeyword hierarchy
+// HISTORY:             2018-08-21 GGB - Added RST support
+//                      2016-04-11 GGB - Added FITSKeyword hierarchy
 //                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-26 GGB - Rename to Astronomy Class Library (ACL)
 //                      2013-02-09 GGB - Added findstar.h and SourceExtraction.h
@@ -149,6 +150,7 @@
 #include "include/PhotometryAperture.h"
 #include "include/PhotometryApertureCircular.h"
 #include "include/photometryFilters.h"
+#include "include/RST.h"
 #include "include/ImageRegister.h"
 #include "include/ImageStack.h"
 #include "include/observatoryInformation.h"

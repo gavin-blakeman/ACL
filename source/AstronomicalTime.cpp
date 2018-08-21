@@ -49,29 +49,26 @@
 
 #include "../include/AstronomicalTime.h"
 
-  // ACL Library
-
-#include "../include/AstroFunctions.h"
-#include "../include/AstroClass.h"
-
-  // Standard libraries
+  // Standard C++ library header files. (std)
 
 #include <cmath>
 #include <fstream>
 #include <iostream>
+
+  // ACL Library
+
+#include "../include/AstroFunctions.h"
+#include "../include/AstroClass.h"
 
   // SOFA Library
 
 #include "sofa.h"
 #include "sofam.h"
 
-  // Boost Libraries
-
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
-
   // Miscellaneous Libraries
 
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 #include <GCL>
 
 namespace ACL
@@ -239,17 +236,21 @@ namespace ACL
   }
 
   /// @brief Constructor taking a julian day and time scale.
-  //
-  // 2011-07-13/GGB - Function created.
+  /// @param[in] jd: The JD to construct the instance with.
+  /// @param[in] timeScale: The time scale to construct the class with.
+  /// @throws std::bad_alloc
+  /// @version 2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime(TJD const &jd, ETimeScale timeScale) : TT_()
   {
     constructClass(jd, timeScale);
   }
 
-  // Constructor taking one doubles.
-  //
-  // 2011-07-13/GGB - Function created.
+  /// @brief Constructor taking one doubles.
+  /// @param[in] jd: The JD to construct the instance with.
+  /// @param[in] timeScale: The time scale to construct the class with.
+  /// @throws std::bad_alloc
+  /// @version 2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime(FP_t jd, ETimeScale timeScale) : TT_()
   {
@@ -269,9 +270,9 @@ namespace ACL
     constructClass(jd, timeScale);
   }
 
-  // Constructor for YYYY-MM-DD HH-MM-SS time.
+  /// @brief Constructor for YYYY-MM-DD HH-MM-SS time.
   //
-  // 2011-07-16/GGB - Function created.
+  /// @version 2011-07-16/GGB - Function created.
 
   CAstroTime::CAstroTime(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int min,
     FP_t second, ETimeScale timeScale) : TT_()
@@ -362,10 +363,12 @@ namespace ACL
     dUT1Array[mjd] = val;
   }
 
-  // Constructs the class using a JD and time scale.
+  /// @brief Constructs the class using a JD and time scale.
+  /// @param[in] jd: The Julian day to construct with.
+  /// @param[in] timeScale: The time scale to use.
   /// @throws ACL::CACLError(0x3200)
   /// @throws ACL::CACLCodeError()
-  // 2011-07-13/GGB - Function created.
+  /// @version 2011-07-13/GGB - Function created.
 
   void CAstroTime::constructClass(const TJD &jd, ETimeScale timeScale)
   {
@@ -393,12 +396,15 @@ namespace ACL
     };
   }
 
-  // Converts time from one time scale to another. Use is made of other funcitons and the conversion is done in a two step
-  // process.
-  // Step 1.  Convert to TT
-  // Step 2.  Convert from TT to the required time scale.
-  //
-  // 2011-07-13/GGB - Function created.
+  /// @brief Converts time from one time scale to another.
+  /// @details Use is made of other funcitons and the conversion is done in a two step process.
+  ///           Step 1.  Convert to TT
+  ///           Step 2.  Convert from TT to the required time scale.
+  /// @param[in] jd:
+  /// @param[in] ts1:
+  /// @param[in] ts2:
+  /// @throws
+  /// @version 2011-07-13/GGB - Function created.
 
   TJD CAstroTime::convertTime(TJD const &jd, ETimeScale ts1, ETimeScale ts2)
   {
@@ -466,9 +472,10 @@ namespace ACL
     return retJD;
   }
 
-  /// Returns the value of dAT for the given date.
-  /// EXCEPTIONS: 0x3207 - ASTROTIME: Cannot get TAI-UTC before 1973.
-  //
+  /// @brief Returns the value of dAT for the given date.
+  /// @param[in] JD:
+  /// @throws 0x3207 - ASTROTIME: Cannot get TAI-UTC before 1973.
+  /// @todo Convert function from unsigned long to properly defined type.
   // 2011-07-07/GGB - Function created.
 
   FP_t CAstroTime::dAT(unsigned long JD)
@@ -499,9 +506,9 @@ namespace ACL
       return returnValue;
   }
 
-  // Returns the dAT for this objects tt.
-  //
-  // 2011-07-09/GGB - Function created.
+  /// @brief Returns the dAT for this objects tt.
+  /// @returns the dAT value for this instance tt.
+  /// @version  2011-07-09/GGB - Function created.
 
   FP_t CAstroTime::dAT() const
   {

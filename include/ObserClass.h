@@ -1,4 +1,4 @@
-// LICENSE:             GPLv2
+﻿// LICENSE:             GPLv2
 //
 // Copyright 2011-2016 Gavin Blakeman.
 // This file is part of the Astronomy Class Library (ACL)
@@ -9,11 +9,11 @@
 // ACL is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along with ACL.  If not, 
+// You should have received a copy of the GNU General Public License along with ACL.  If not,
 // see <http://www.gnu.org/licenses/>.
 
-#ifndef __OBSERCLASS_H
-#define __OBSERCLASS_H
+#ifndef ACL_OBSERCLASS_H
+#define ACL_OBSERCLASS_H
 
 #include <astroclass.h>
 
@@ -25,38 +25,38 @@ class TObserver : public TLocation
 {
 private:
   char ObserverName[MAXOBSERVERNAME];
-	char ObserverInit[MAXOBSERVERINIT];
+  char ObserverInit[MAXOBSERVERINIT];
 
 protected:
 public:
-	TObserver(char *, char *, const TLocation &);
-	TObsserver(void);
-	void SetData(char *, char *, const TLocation &);
+  TObserver(char *, char *, const TLocation &);
+  TObsserver(void);
+  void SetData(char *, char *, const TLocation &);
   const char *GetObserverName(void) {return ObserverName;}
-	const char *GetObserverInit(void);
+  const char *GetObserverInit(void);
 };
 
 class TTelecope
 {
 private:
-	char TelescopeName[MAXTELESCOPENAME];
-	double dAperture;
-	double dFRatio;
+  char TelescopeName[MAXTELESCOPENAME];
+  double dAperture;
+  double dFRatio;
 protected:
 public:
-	TTelescope(void);
-	TTelescope(const char *, double, double);
-	double Aperture(void);
-	double FRatio(void);
-	const char *TelescopeName(void);
+  TTelescope(void);
+  TTelescope(const char *, double, double);
+  double Aperture(void);
+  double FRatio(void);
+  const char *TelescopeName(void);
 };
 
 class TInstrument
 {
 private:
-	char InstrumentName[MAXINSTRUMENTNAME];
-	char SerialNumber[MAXSERIALNUMBER];
-	char InstrumentType[MAXINSTRUMENTTYPE];
+  char InstrumentName[MAXINSTRUMENTNAME];
+  char SerialNumber[MAXSERIALNUMBER];
+  char InstrumentType[MAXINSTRUMENTTYPE];
 
 protected:
 public:

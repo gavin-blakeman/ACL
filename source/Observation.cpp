@@ -81,7 +81,7 @@ namespace ACL
   /// @throws None.
   /// @version 2016-05-04/GGB - Function created.
 
-  CObservation::CObservation(SPTargetAstronomy &target) : targetObject(target), time_(), location_(), weather_()
+  CObservation::CObservation(std::shared_ptr<CTargetAstronomy> target) : targetObject(target), time_(), location_(), weather_()
   {
   }
 
@@ -175,7 +175,7 @@ namespace ACL
   /// @throws None.
   /// @version 2012-01-12/GGB - Function created.
 
-  boost::optional<CAstronomicalCoordinates> &CObservation::observedCoordinates()
+  std::optional<CAstronomicalCoordinates> &CObservation::observedCoordinates()
   {
     return observedCoordinates_;
   }

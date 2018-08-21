@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:			        Astronomy Class Library
 // FILE:				        AstronomicalObject
@@ -54,18 +54,18 @@
 #ifndef ACL_TARGETASTRONOMY_H
 #define ACL_TARGETASTRONOMY_H
 
-  // ACL header files
-
-#include "AstroClass.h"
-
-  // Standard libraries
+  // Standard C++ library headers
 
 #include <list>
 #include <memory>
 #include <string>
 
+  // ACL header files
 
-  // Other libraries
+#include "AstroClass.h"
+#include "RST.h"
+
+  // Miscellaneous libraries
 
 #include <GCL>
 
@@ -80,17 +80,18 @@ namespace ACL
   class CTargetAstronomy
   {
     typedef std::list<std::string> DTargetName;
+
   private:
   protected:
-    DTargetName objectName_;
+    DTargetName objectName_;                        ///< List of object names. Object may have more than one name.
 
   public:
     CTargetAstronomy(std::string const &);
-    virtual ~CTargetAstronomy() {}           // Make class virtual
+    virtual ~CTargetAstronomy() {}
 
       // Operators
 
-    //virtual bool operator==(CTargetAstronomy const &) const;
+//    virtual bool operator==(CTargetAstronomy const &) const;
     virtual bool operator==(std::string const &) const;
 
       // Data manipulation functions
@@ -104,11 +105,10 @@ namespace ACL
 
       // Position Calculation functions.
 
-    virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &){CODE_ERROR(ACL);}
+    virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &) {CODE_ERROR(ACL);}
+    virtual void calculateRSTTime(CAstroTime const &, CLocation const &, CWeather const &, TJD &, TJD &, TJD *);
   };
-  typedef CTargetAstronomy *PTargetAstronomy;
-  typedef std::shared_ptr<CTargetAstronomy> SPTargetAstronomy;
-  typedef std::vector<SPTargetAstronomy> DTargetAstronomy;
+  typedef std::vector<std::shared_ptr<CTargetAstronomy>> DTargetAstronomy;
 
 } // namespace ACL
 

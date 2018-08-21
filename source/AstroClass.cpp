@@ -86,7 +86,7 @@ namespace ACL
   }
 
   /// @brief Copy constructor
-  /// @param[in] toCopy - The instance to make a copy of.
+  /// @param[in] toCopy: The instance to make a copy of.
   /// @throws std::bad_alloc
   /// @version 2017-08-26/GGB - Function created.
 
@@ -95,7 +95,7 @@ namespace ACL
   }
 
   /// @brief Class constructor taking a temperature value.
-  /// @param[in] nt - The temperature to associate with the class.
+  /// @param[in] nt: The temperature to associate with the class.
   /// @throws None.
   /// @version 2015-09-17/GGB - Updated to use PCL classes as storage and interface types.
   /// @version 2011-07-15/GGB - Function created.
@@ -106,8 +106,8 @@ namespace ACL
   }
 
   /// @brief Class constructor.
-  /// @param[in] nt - The temperature to associate with the instance.
-  /// @param[in] np - The pressure to associate with the instance.
+  /// @param[in] nt: The temperature to associate with the instance.
+  /// @param[in] np: The pressure to associate with the instance.
   /// @throws None.
   /// @version 2015-09-17/GGB - Updated to use PCL classes as storage and interface types.
   /// @version 2011-07-02/GGB - Function created.
@@ -119,6 +119,9 @@ namespace ACL
   }
 
   /// @brief Constructor for 3 weather parameters.
+  /// @param[in] nt: The temperature to associate with the instance.
+  /// @param[in] np: The pressure to associate with the instance.
+  /// @param[in] rh: The RH value.
   /// @throws None.
   /// @version 2011-07-14/GGB - Function created
 
@@ -154,7 +157,7 @@ namespace ACL
   /// @version 2015-09-17/GGB - Updated to use PCL::CPressure.
   /// @version 2011-07-09/GGB - Function created.
 
-  boost::optional<PCL::CPressure> &CWeather::pressure()
+  std::optional<PCL::CPressure> &CWeather::pressure()
   {
     return pressure_;
   }
@@ -178,7 +181,7 @@ namespace ACL
   /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
   /// @version 2011-07-09/GGB - Function created.
 
-  boost::optional<float> &CWeather::RH()
+  std::optional<float> &CWeather::RH()
   {
     return RH_;
   }
@@ -202,7 +205,7 @@ namespace ACL
   /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
   /// @version 2011-07-09/GGB - Function created.
 
-  boost::optional<PCL::CTemperature> &CWeather::temperature()
+  std::optional<PCL::CTemperature> &CWeather::temperature()
   {
     return temperature_;
   }
@@ -230,9 +233,9 @@ namespace ACL
 
   std::map<JD_t, CEarthOrientationData::SPole> CEarthOrientationData::orientationData;
 
-  // Returns the relevant earth orienatation data.
-  //
-  // 2011-12-24/GGB - Function created.
+  /// @brief Returns the relevant earth orienatation data.
+  ///
+  /// @version 2011-12-24/GGB - Function created.
 
   bool CEarthOrientationData::getData(const ACL::CAstroTime &time, FP_t &Xp, FP_t &Yp)
   {

@@ -40,11 +40,15 @@
 
 #include "../include/AstronomicalCoordinates.h"
 
-#include "../include/AstroFunctions.h"
+  // Standard C++ library headers
 
 #include <cmath>
 
-  // Miscellaneous libraries
+  // ACL library header files.
+
+#include "../include/AstroFunctions.h"
+
+  // Miscellaneous librariy header files.
 
 #include <GCL>
 
@@ -67,7 +71,7 @@ namespace ACL
   }
 
   /// @brief Copy constructor for the class.
-  /// @param[in] toCopy - the instance to copy.
+  /// @param[in] toCopy: The instance to copy.
   /// @throws None.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
@@ -81,9 +85,10 @@ namespace ACL
   }
 
   /// @brief Class constructor
-  /// @param[in] ra - The Right ascension (hms)
-  /// @param[in] dec - The declination (dms)
-  /// @param[in] referenceSystem - The reference system to assign.
+  /// @param[in] ra: The Right ascension (hms)
+  /// @param[in] dec: The declination (dms)
+  /// @param[in] referenceSystem: The reference system to assign.
+  /// @param[in] referenceSystem: The reference system to assign.
   /// @throws None.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
@@ -97,7 +102,9 @@ namespace ACL
   }
 
   /// @brief Class constructor
-  /// @param[in] coords - The RA/Dec pair of coordinates.
+  /// @param[in] coords: The RA/Dec pair of coordinates.
+  /// @param[in] referenceSystem: The reference system to assign.
+  /// @param[in] epoch: The epoch of the coordinates.
   /// @throws None.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
@@ -111,7 +118,7 @@ namespace ACL
   }
 
   /// @brief Copy operator for the class.
-  /// @param[in] toCopy - The instance to copy.
+  /// @param[in] toCopy: The instance to copy.
   /// @throws None.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
@@ -130,7 +137,7 @@ namespace ACL
   }
 
   /// @brief Copy operator for a set of coordinates.
-  /// @param[in] toCopy - The coordinates to use.
+  /// @param[in] toCopy: The coordinates to use.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle
@@ -145,8 +152,8 @@ namespace ACL
   }
 
   /// @brief Sets the coordinates to the specified values.
-  /// @param[in] ra - The new RA value
-  /// @param[in] dec - The new declination value.
+  /// @param[in] ra: The new RA value
+  /// @param[in] dec: The new declination value.
   /// @throws None.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2016-04-25/GGB - Bug# 1574420
@@ -160,8 +167,8 @@ namespace ACL
   }
 
   /// @brief Sets the coordinates to the specified values.
-  /// @param[in] ra - The new RA value
-  /// @param[in] dec - The new declination value.
+  /// @param[in] ra: The new RA value
+  /// @param[in] dec: The new declination value.
   /// @throws None.
   /// @version 2017-09-22/GGB - Function created.
 

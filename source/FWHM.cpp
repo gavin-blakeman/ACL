@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Calculation of FWHM value
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	boost, dlib.
+// LIBRARY DEPENDANCE:	dlib.
 // NAMESPACE:						ACL
 // AUTHORS:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2

@@ -25,10 +25,10 @@
 // OVERVIEW:            These classes provide the helper classes for several categories of astronomical calculations
 //
 // REMARKS:             1) This series of classes was initially developed for the TCS application. All classes were used extensively
-//                        with windows and integrated with Windows. As development of the classes continues, the linkages with
-//                        Windows will all be deprecated and will excluded with definition statements.
+//                         with windows and integrated with Windows. As development of the classes continues, the linkages with
+//                         Windows will all be deprecated and will excluded with definition statements.
 //                      2) This library is written to be as close as possible to vanilla C++, and to not rely on operating system
-//                        support.
+//                         support.
 //
 // CLASSES INCLUDED:    CAstronomicalCoordinates - Equitorial coordinates
 //
@@ -41,12 +41,14 @@
 #ifndef ACL_COORDINATES_H
 #define ACL_COORDINATES_H
 
-#include "config.h"
-#include "julianDay.h"
-
   // Standard C++ libraries
 
 #include <string>
+
+  // ACL Library headers
+
+#include "config.h"
+#include "julianDay.h"
 
   // Miscellaneous libraries
 
@@ -106,7 +108,7 @@ namespace ACL
   class CAstronomicalCoordinates
   {
   private:
-    MCL::TPoint2D<MCL::CAngle> coordinates_;
+    MCL::TPoint2D<MCL::CAngle> coordinates_;          ///< The coordinates that are represented.
     EReferenceSystem referenceSystem_;                ///< The reference system that the coordinates refer to
     TJD epoch_;                                       ///< Epoch specified in Julian Days.
     TJD equinox_;                                     ///< The equinox of the system (if required)

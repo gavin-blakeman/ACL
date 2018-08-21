@@ -353,7 +353,7 @@ namespace ACL
   }
 
   /// @brief Loads the HDB from the FITS HDB. All the keywords and data are loaded.
-  /// @param[in] file - Pointer to FITS file to open from.
+  /// @param[in] file: Pointer to FITS file to open from.
   /// @note The magnitude and magnitude error do not need to be read from the HDU as they are calculated values.
   /// @note This function overrides the CHDBBinTable::readFromFits function. Do not call the CHDBBinTable function.
   /// @throws CError(ACL::0x190C) - HDB: Cannot dynamic_cast to BinTable.
@@ -367,7 +367,6 @@ namespace ACL
   void CHDBPhotometry::readFromFITS(fitsfile *file)
   {
     size_t const nameLength = 40;
-    int status = 0;
 
     RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
 
@@ -456,7 +455,7 @@ namespace ACL
           newRecord->gain(egain);
           if (FWHM[index] != DOUBLENULLVALUE)
           {
-            newRecord->FWHM(boost::optional<FP_t>(FWHM[index]));
+            newRecord->FWHM(std::optional<FP_t>(FWHM[index]));
           };
           PPhotometryAperture photometryAperture(CPhotometryAperture::createAperture(aperture[index]));
           photometryAperture->serialiseIn(aperture[index]);

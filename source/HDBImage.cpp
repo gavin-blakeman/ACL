@@ -345,7 +345,7 @@ namespace ACL
   /// @version 2013-08-02/GGB - Added sensitivity parameter.
   /// @version 2011-11-27/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CImageHDB::centroid(MCL::TPoint2D<AXIS_t> const &c0, AXIS_t rmax, int sensitivity) const
+  std::optional<MCL::TPoint2D<FP_t> > CImageHDB::centroid(MCL::TPoint2D<AXIS_t> const &c0, AXIS_t rmax, int sensitivity) const
   {
     if (data)
     {
@@ -378,7 +378,7 @@ namespace ACL
   /// @throws GCL::CError(0x2007) - Data pointer == NULL
   /// @version 2014-04-14/GGB - Function created.
 
-  boost::optional<FP_t> CImageHDB::FWHM(MCL::TPoint2D<FP_t> const &star) const
+  std::optional<FP_t> CImageHDB::FWHM(MCL::TPoint2D<FP_t> const &star) const
   {
     if (!data)
     {
@@ -958,7 +958,7 @@ namespace ACL
   }
 
   /// @brief Converts the pixel coordinates passed to WCS coordinates.
-  /// @param[in] toConvert - The coordinates to convert.
+  /// @param[in] toConvert: The coordinates to convert.
   /// @returns RA/DEC of passed CCD coordinates.
   /// @throws None.
   /// @version 2018-01-17/GGB - Updated control flow to have a single if statement to handle all the cases.
@@ -968,9 +968,9 @@ namespace ACL
   /// @version 2013-02-24/GGB - Changed return type to boost::optional. Changed TPoint2D data type to FP_t. Removed exceptions.
   /// @version 2013-02-17/GGB - Function created.
 
-  boost::optional<CAstronomicalCoordinates> CImageHDB::pix2wcs(MCL::TPoint2D<FP_t> const &toConvert) const
+  std::optional<CAstronomicalCoordinates> CImageHDB::pix2wcs(MCL::TPoint2D<FP_t> const &toConvert) const
   {
-    boost::optional<CAstronomicalCoordinates> returnValue;
+    std::optional<CAstronomicalCoordinates> returnValue;
     CAstronomicalCoordinates intermediate;
 
     if ( WCSInformation &&
@@ -1108,15 +1108,15 @@ namespace ACL
   }
 
   /// @brief Converts RA/Dec to image coordinates.
-  /// @param[in] toConvert - The coordinates to convert.
+  /// @param[in] toConvert: The coordinates to convert.
   /// @returns The image coordinates.
   /// @throws None.
   /// @version 2017-08-27/GGB - Updated to reflect that RA is stored in hours not degrees.
   /// @version 2013-08-21/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CImageHDB::wcs2pix(CAstronomicalCoordinates const &toConvert) const
+  std::optional<MCL::TPoint2D<FP_t> > CImageHDB::wcs2pix(CAstronomicalCoordinates const &toConvert) const
   {
-    boost::optional<MCL::TPoint2D<FP_t>> returnValue;
+    std::optional<MCL::TPoint2D<FP_t>> returnValue;
     MCL::TPoint2D<FP_t> intermediate;
     int offscl;
 

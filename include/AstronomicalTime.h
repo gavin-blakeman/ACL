@@ -50,12 +50,7 @@
 #ifndef ACL_ASTRONOMICALTIME_H
 #define ACL_ASTRONOMICALTIME_H
 
-  // ACL Libraries
-
-#include "config.h"
-#include "julianDay.h"
-
-  // Standard C++ Libraries (std)
+  // Standard C++ Library header files (std)
 
 #include <cstdint>
 #include <ctime>
@@ -63,10 +58,15 @@
 #include <memory>
 #include <utility>
 
+  // ACL Libraries (ACL)
+
+#include "config.h"
+#include "julianDay.h"
+
 #ifndef ACL_NOBOOST
 // Boost Library
 
-#include "boost/shared_ptr.hpp"
+//#include "boost/shared_ptr.hpp"
 #include "boost/shared_array.hpp"
 #include "boost/filesystem.hpp"
 #endif // ACL_NOBOOST

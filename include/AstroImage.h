@@ -65,24 +65,21 @@
 #ifndef ACL_ASTROIMAGE_H
 #define ACL_ASTROIMAGE_H
 
+// Standard libraries
+
+#include <cstdint>
+#include <list>
+#include <memory>
+#include <optional>
+#include <valarray>
+#include <vector>
+
   // ACL header files.
 
 #include "common.h"
 #include "config.h"
 #include "ImagePlane.h"
 #include "PhotometryObservation.h"
-
-  // Standard libraries
-
-#include <cstdint>
-#include <list>
-#include <memory>
-#include <valarray>
-#include <vector>
-
-  // Boost Library
-
-#include "boost/optional/optional.hpp"
 
   // cfitsio library
 
@@ -172,7 +169,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
 
     virtual CAstroImage *createCopy() const = 0;
 
-    virtual boost::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const = 0;
+    virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const = 0;
     virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const = 0;
 
       // Image information functions
@@ -261,12 +258,12 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
       // Image Analysis functions
 
     virtual void findStars(TImageSourceContainer &, SFindSources const &) const = 0;
-    virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const = 0;
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const = 0;
 
       // Photometry functions
 
     virtual void photometry(SPPhotometryObservation) const = 0;
-    virtual boost::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const = 0;
+    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const = 0;
   };
 
 }	// namespace ACL

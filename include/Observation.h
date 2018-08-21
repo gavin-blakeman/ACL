@@ -48,6 +48,12 @@
 #ifndef ACL_OBSERVATION_H
 #define ACL_OBSERVATION_H
 
+  // Standard C++ library header files.
+
+#include <cstddef>
+#include <optional>
+#include <memory>
+
   // ACL header files
 
 #include "AstroClass.h"
@@ -55,21 +61,9 @@
 #include "config.h"
 #include "TargetAstronomy.h"
 
-  // Standard libraries
-
-#include <memory>
-
-  // Boost Library
-
-#include "boost/optional.hpp"
-
   // Math Class Library
 
 #include <MCL>
-
-  // Standard header files
-
-#include <cstddef>
 
 namespace ACL
 {
@@ -86,17 +80,17 @@ namespace ACL
   {
   private:
   protected:
-    SPTargetAstronomy targetObject;         ///< The target object.
-    PAstroTime time_;                       ///< The time of the observation.
-    PLocation location_;                    ///< The location the observation was made from.
-    PWeather weather_;                      ///< The weather at the time of the observation.
-    MCL::TPoint2D<FP_t> CCDCoordinates_;    ///< The CCD coordinates of the observation.
-    boost::optional<CAstronomicalCoordinates> observedCoordinates_;  ///< The observed coordinates of the observation (if known)
+    std::shared_ptr<CTargetAstronomy>  targetObject;                ///< The target object.
+    PAstroTime time_;                                               ///< The time of the observation.
+    PLocation location_;                                            ///< The location the observation was made from.
+    PWeather weather_;                                              ///< The weather at the time of the observation.
+    MCL::TPoint2D<FP_t> CCDCoordinates_;                            ///< The CCD coordinates of the observation.
+    std::optional<CAstronomicalCoordinates> observedCoordinates_;   ///< The observed coordinates of the observation (if known)
 
   public:
     CObservation(std::string const &);
     CObservation(CObservation const &);
-    CObservation(SPTargetAstronomy &);
+    CObservation(std::shared_ptr<CTargetAstronomy>);
     virtual ~CObservation();
 
     bool operator==(std::string const &) const;
@@ -115,7 +109,7 @@ namespace ACL
     virtual bool isClose(MCL::TPoint2D<FP_t> const &center, int r) const;
 
     virtual void observedCoordinates(CAstronomicalCoordinates const &);
-    virtual boost::optional<CAstronomicalCoordinates> &observedCoordinates();
+    virtual std::optional<CAstronomicalCoordinates> &observedCoordinates();
   };
 
   typedef std::shared_ptr<CObservation> SPObservation;

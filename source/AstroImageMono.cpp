@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Monochrome astronomical image class.
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, CFitsIO, gsl, boost.
+// LIBRARY DEPENDANCE:	SCL, CFitsIO.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
@@ -65,15 +65,9 @@
 
   // Standard library
 
+#include <cstdint>
 #include <limits>
 #include <valarray>
-
-  // Boost Library
-
-#include <boost/cstdint.hpp>
-#include "boost/shared_array.hpp"
-#include "boost/shared_ptr.hpp"
-#include "boost/optional/optional.hpp"
 
 namespace ACL
 {
@@ -305,12 +299,12 @@ namespace ACL
   /// @version 2013-08-02/GGB - Changed return value to boost::optional<MCL::TPoint2D<FP_t>>
   /// @version 2012-11-10/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CAstroImageMono::centroid(MCL::TPoint2D<AXIS_t> const &guess,
+  std::optional<MCL::TPoint2D<FP_t> > CAstroImageMono::centroid(MCL::TPoint2D<AXIS_t> const &guess,
                                                                   AXIS_t radius, int sensitivity) const
   {
     RUNTIME_ASSERT(ACL, radius >= 1, "Parameter radius must be >= 1");
 
-    boost::optional<MCL::TPoint2D<FP_t> > guess2;
+    std::optional<MCL::TPoint2D<FP_t> > guess2;
 
     if (imagePlaneStorage.empty())
     {
@@ -372,7 +366,7 @@ namespace ACL
   /// @throws CError(ACL::0x2202) - ASTROIMAGE: No Image Plane available.
   /// @version 2013-04-14/GGB - Function created.
 
-  boost::optional<FP_t> CAstroImageMono::FWHM(MCL::TPoint2D<FP_t> const &star) const
+  std::optional<FP_t> CAstroImageMono::FWHM(MCL::TPoint2D<FP_t> const &star) const
   {
     if (imagePlaneStorage.empty())
     {
@@ -418,7 +412,7 @@ namespace ACL
   /// @version 2013-06-15/GGB - Changed to use valarry as the array type.
   /// @version 2010-11-05/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CAstroImageMono::findCentroid(const MCL::TPoint2D<AXIS_t> &center, AXIS_t halfRect) const
+  std::optional<MCL::TPoint2D<FP_t> > CAstroImageMono::findCentroid(const MCL::TPoint2D<AXIS_t> &center, AXIS_t halfRect) const
   {
     AXIS_t xIndex, yIndex;
     INDEX_t lIndex = 0;
@@ -428,7 +422,7 @@ namespace ACL
     FP_t xbar = 0, ybar = 0;
     FP_t skyMean;
     FP_t xden = 0, yden = 0;
-    boost::optional<MCL::TPoint2D<FP_t> > returnValue;
+    std::optional<MCL::TPoint2D<FP_t> > returnValue;
     MCL::TPoint2D<FP_t> centroid;
 
     if (imagePlaneStorage.empty())

@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Time Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	Boost, SOFA, Novas
+// LIBRARY DEPENDANCE:	SOFA, Novas
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
@@ -48,6 +48,8 @@
 //*********************************************************************************************************************************
 
 #include "../include/julianDay.h"
+
+  // ACL library header files.
 
 #include "../include/AstronomicalCoordinates.h"
 #include "../include/AstroFunctions.h"
@@ -125,7 +127,7 @@ namespace ACL
 
   /// Contructor taking a floating point type.
   /// @details Sets the value of the class to the value passed in the arguments list.
-  /// @param[in] dJD - floating point value representing a julian day
+  /// @param[in] dJD: Floating point value representing a julian day
   /// @throws None
   /// @version 2005-06-19/GGB - Function created.
 
@@ -136,7 +138,7 @@ namespace ACL
 
   /// @brief Copy contructor for the class.
   /// @details  Sets the value of the class to the value passed in the arguments list.
-  /// @param[in] toCopy - The JD instance to copy.
+  /// @param[in] toCopy: The JD instance to copy.
   /// @throws None.
   /// @version 2005-06-19/GGB - Function created.
 
@@ -149,10 +151,10 @@ namespace ACL
   /// @brief Y:M:D Constructor for the class
   /// @details Sets the value of the class to the value passed in the arguments list. The arguments are interpreted as a Gregorian
   ///          calender date. Calls the initialiser function JD(year, month, day)
-  /// @param[in] dY = Year (eg 2000)
-  /// @param[in] dM = Month (1 - Jan, 12 = Dec)
-  /// @param[in] dD = Day
-  /// @note Class variables modified: JDay - Julian Day (double Days.fractional)
+  /// @param[in] dY: Year (eg 2000)
+  /// @param[in] dM: Month (1 - Jan, 12 = Dec)
+  /// @param[in] dD: Day
+  /// @note 1. Class variables modified: JDay - Julian Day (double Days.fractional)
   /// @version 2015-06-01/GGB - Use initialiser function.
   /// @version 2011-07-09/GGB - Use two doubles to store value of the JD.
   /// @version 2009-11-05/GGB - Changed code to use the IAU SOFA library to calculate the Julian Day. If an error occurs, the JD
@@ -164,14 +166,16 @@ namespace ACL
     JD(dY, dM, dD);
   }
 
-  // Constructor for a date and time.
-  //
-  // 2011-07-16/GGB - Function created.
+  /// @brief Constructor for a date and time.
+  /// @throws std::bad_alloc
+  /// @version 2011-07-16/GGB - Function created.
 
   TJD::TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds)
   {
     if (iauCal2jd(year, month, day, &JD_[0], &JD_[1]) != 0)
+    {
       JD_[0] = JD_[1] = 0;
+    }
     else
     {
       JD_[1] += (FP_t) hour / 24 + (FP_t) minute / 1440 + (FP_t) seconds / 86400;
@@ -192,7 +196,9 @@ namespace ACL
     FP_t dH;
 
     if (iauCal2jd(tmDateTime->tm_year + 1900, tmDateTime->tm_mon + 1, tmDateTime->tm_mday, &JD_[0], &JD_[1]) != 0)
+    {
       JD_[0] = JD_[1] = 0;
+    }
     else
     {
       dH = tmDateTime->tm_hour;
@@ -449,7 +455,9 @@ namespace ACL
   TJD &TJD::operator =(TJD const &toCopy)
   {
     if (this == &toCopy)
+    {
       return *this;
+    }
     else
     {
       JD_[0] = toCopy.JD_[0];
@@ -595,10 +603,10 @@ namespace ACL
     return returnValue;
   }
 
-  // Returns the Epoch of the Julian Day.
-  // Makes use of the SOFA iauEpj function.
-  //
-  // 2009-12-14/GGB - Function created.
+  /// @brief Returns the Epoch of the Julian Day.
+  /// @returns The EPOCH as a floating point value.
+  /// @note 1. Makes use of the SOFA iauEpj function.
+  /// @version 2009-12-14/GGB - Function created.
 
   FP_t TJD::Epoch() const
   {

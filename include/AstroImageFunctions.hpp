@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2012-2017 Gavin Blakeman.
+//                      Copyright 2012-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -223,7 +223,7 @@ namespace ACL
   template<typename T>
   MCL::TPoint2D<T> imageResample(MCL::TPoint2D<T> const &pt, boost::tuple<AXIS_t, AXIS_t> const &oldDim,
                                  boost::tuple<AXIS_t, AXIS_t> const &newDim)
-  { 
+  {
     FP_t xVal, yVal;
 
     AXIS_t oldWidth = oldDim.get<0>();

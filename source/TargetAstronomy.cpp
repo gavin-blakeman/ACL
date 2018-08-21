@@ -53,7 +53,7 @@
 
 #include "../include/TargetAstronomy.h"
 
-  // Standard library
+  // Standard C++ library headewrs
 
 #include <algorithm>
 
@@ -80,12 +80,13 @@ namespace ACL
   /// @param[in] rhs - The object to test.
   /// @returns true - The objects are the same
   /// @returns false - The objects are not the same.
+  /// @note 1. The object has a list of possible names. The names should be searched for any entries being the same.
   /// @throws None.
   /// @version 2012-01-12/GGB - Function created.
 
 //  bool CTargetAstronomy::operator==(CTargetAstronomy const &rhs) const
 //  {
-//    //return ( (*this) == rhs.objectName_);
+//    return ( (*this) == rhs.objectName_);
 //  }
 
   /// @brief Tests for equality between this objects name and the passed string.

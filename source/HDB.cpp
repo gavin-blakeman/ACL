@@ -75,8 +75,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include "boost/lexical_cast.hpp"
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
 
 namespace ACL
 {
@@ -88,8 +86,8 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Constructor taking the name of the new HDB
-  /// @param[in] np - Parent Object
-  /// @param[in] name - name of the HDB (HDU)
+  /// @param[in] np:  Parent Object
+  /// @param[in] name:  name of the HDB (HDU)
   /// @throws 0x1908 - HDB: parent cannot be == NULL.
   /// @version 2011-11-27/GGB - Function created.
 

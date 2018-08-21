@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2012-2016 Gavin Blakeman.
+//                      Copyright 2012-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -49,16 +49,14 @@
   // Std include files
 
 #include <list>
+#include <memory>
 #include <string>
 #include <vector>
 
-  // Boost library files
-
-#include "boost/shared_ptr.hpp"
 
 namespace ACL
 {
-  typedef std::list<SPTargetStellar> TStellarObjectContainer;
+  typedef std::list<std::shared_ptr<CTargetStellar>> TStellarObjectContainer;
 
   class CAstroCatalogue
   {
@@ -70,13 +68,13 @@ namespace ACL
   public:
     CAstroCatalogue();
 
-    virtual void addStellarObject(SPTargetStellar);
+    virtual void addStellarObject(std::shared_ptr<CTargetStellar>);
     virtual void empty();
 
-    virtual SPTargetStellar moveFirst();
-    virtual SPTargetStellar moveLast();
-    virtual SPTargetStellar moveNext();
-    virtual SPTargetStellar movePrevious();
+    virtual std::shared_ptr<CTargetStellar> moveFirst();      /// @todo Should these be references?
+    virtual std::shared_ptr<CTargetStellar> moveLast();
+    virtual std::shared_ptr<CTargetStellar> moveNext();
+    virtual std::shared_ptr<CTargetStellar> movePrevious();
   };
 
   struct SAstroCatalogue
@@ -89,7 +87,7 @@ namespace ACL
     FP_t CCDy;
   };
 
-  typedef boost::shared_ptr<SAstroCatalogue> SAstroCatalogue_Ptr;
+  typedef std::shared_ptr<SAstroCatalogue> SAstroCatalogue_Ptr;
   typedef std::vector<SAstroCatalogue_Ptr> SAstroCatalogueContainer;
 }
 

@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								Config
@@ -43,7 +43,7 @@
 #ifndef ACL_CONFIG_H
 #define ACL_CONFIG_H
 
-  // Standard library
+  // Standard C++ library header files.
 
 #include <cstdint>
 #include <cstddef>
@@ -127,7 +127,7 @@ namespace ACL
                                               /// application. The default value is 1.
 
 #endif // ACL_NOMT
-  
+
   struct SRGBHP
   {
     FP_t A;

@@ -68,15 +68,17 @@
 
 #include "../include/TargetStellar.h"
 
+  // Standard C++ library headers
+
+#include <sstream>
+
+  // ACL library header files.
+
 #include "../include/constants.h"
 #include "../include/AstroFunctions.h"
 #include "../include/FITSStrings.h"
 
-  // Standard C++ library
-
-#include <sstream>
-
-  // NOVAS library
+  // NOVAS library (optional depending on DEFINES)
 
 #ifdef USE_NOVAS
 #ifndef _MSC_VER
@@ -96,14 +98,10 @@ extern "C"
 #include "sofa.h"
 #include "sofam.h"
 
-  // Boost Library
-
-#include "boost/scoped_ptr.hpp"
 
   // Miscellaneous libraries
 
 #include <GCL>
-
 
 namespace ACL
 {
@@ -124,6 +122,12 @@ namespace ACL
   {
   }
 
+  /// @brief Constructor and assigning values
+  /// @param[in] newName: The name to associate with the object.
+  /// @param[in] catCoords: The catalog coordinates to associate with the object.
+  /// @throws None.
+  /// @version 2009-12-16/GGB - Function created.
+
   CTargetStellar::CTargetStellar(std::string const &newName, CAstronomicalCoordinates const &catCoords) : CTargetAstronomy(newName),
     catalogCoordinates_(catCoords), pmRA_(), pmDec_(), radialVelocity_(), parallax_(), epoch_(double(0))
   {
@@ -131,6 +135,13 @@ namespace ACL
   }
 
   /// @brief Constructor and assigning values
+  /// @param[in] newName: The name to associate with the object.
+  /// @param[in] catCoords: The catalog coordinates to associate with the object.
+  /// @param[in] dEP: The Epoch to associate with the object. As a JD.
+  /// @param[in] dpmRA: RA Proper Motion
+  /// @param[in] dpmDEC: Declination proper motion.
+  /// @param[in] dRV: The Radial Velocity of the object.
+  /// @param[in] dParallax: The parallax of the object
   /// @throws None.
   /// @version 2012-01-22/GGB - Added name string to constructor list.
   /// @version 2009-12-16/GGB - Function created.
@@ -146,11 +157,12 @@ namespace ACL
   }
 
   /// @brief Copy contructor for class.
+  /// @param[in] toCopy: The object to make a copy of.
   /// @throws None.
   /// @version 2009-12-16/GGB - Updated to reflect changes to class members.
   /// @version 2005-09-19/GGB - Function created.
 
-  CTargetStellar::CTargetStellar(const CTargetStellar &toCopy) :  CTargetAstronomy(toCopy.objectName()),
+  CTargetStellar::CTargetStellar(CTargetStellar const &toCopy) :  CTargetAstronomy(toCopy.objectName()),
     catalogCoordinates_(toCopy.catalogCoordinates_), pmRA_(toCopy.pmRA_),
     pmDec_(toCopy.pmDec_), radialVelocity_(toCopy.radialVelocity_), parallax_(toCopy.parallax_), epoch_(toCopy.epoch_)
   {
@@ -165,10 +177,11 @@ namespace ACL
   }
 
   /// @brief Copy operator.
+  /// @param[in] toCopy: Object to make a copy of.
   /// @throws None
   /// @version 2009-12-16/GGB - Updated to reflect the changes to the class.
 
-  CTargetStellar &CTargetStellar::operator=(const CTargetStellar &toCopy)
+  CTargetStellar &CTargetStellar::operator=(CTargetStellar const &toCopy)
   {
     catalogCoordinates_ = toCopy.catalogCoordinates_;
     pmRA_ = toCopy.pmRA_;
@@ -236,8 +249,11 @@ namespace ACL
 //  }
 
   /// @brief Calculates the observed position of the stellar object.
-  /// Different methods of calculation are used depending on the coordinate system in use (FK4, FK5, ICRS)
-  /// The first step is always to convert the coordinates into ICRS coordinates.
+  /// @details Different methods of calculation are used depending on the coordinate system in use (FK4, FK5, ICRS)
+  ///          The first step is always to convert the coordinates into ICRS coordinates.
+  /// @param[in] tt:
+  /// @param[in] location: The location of the observer (needed to calculate the observed place)
+  /// @param[in] weather: The weather associated with the observer location (needed to calculate observed place)
   /// @note This routine makes use of the SOFA routines to convert the ICRS coordinates to the observed coordinates.
   /// @note The routine always calculates the current place of the object.
   /// @throws RUNTIME_ASSERT
@@ -249,10 +265,10 @@ namespace ACL
 
   CAstronomicalCoordinates const &CTargetStellar::calculateObservedPlace(PAstroTime &tt, PLocation &location, PWeather &weather)
   {
-    double utc1, utc2;
-    double dut1;
-    double aob, zob, hob, dob, rob, eo;
-    double rh, dh, drh, ddh, pxh, rvh;
+    FP_t utc1, utc2;
+    FP_t dut1;
+    FP_t aob, zob, hob, dob, rob, eo;
+    FP_t rh, dh, drh, ddh, pxh, rvh;
 
       // Perform some error checking to ensure that the passed data is valid.
 
@@ -303,6 +319,7 @@ namespace ACL
 
   /// @brief Returns the reference system as a string value.
   /// @returns The catalog system as a string value.
+  /// @throws CODE_ERROR(ACL)
   /// @version 2012-01-22/GGB - Function created.
 
   std::string CTargetStellar::catalogSystemString()
@@ -353,7 +370,7 @@ namespace ACL
   }
 
   /// @brief Corrects the Catalogue coordinates for ProperMotion.
-  /// @param[in] jd - The julian day to correct to.
+  /// @param[in] jd: The julian day to correct to.
   /// @returns The corrected coordinates for the stellar object.
   /// @throws GCL::CCodeError
   /// @throws GCL::CError(ACL, 0x2302) - StellarObjects: SOFA library error, iteration did not converge.
@@ -389,6 +406,8 @@ namespace ACL
   }
 
   /// @brief Overloaded function to determine the proper motion for a date.
+  /// @param[in] ep: Epoch of the date.
+  /// @returns The proper motion of the object.
   /// @throws None.
   /// @version 2011-07-09/GGB - Function created.
 
@@ -400,7 +419,7 @@ namespace ACL
   }
 
   /// @brief Function to set the catalog coordinates and reference system.
-  /// @param[in] ncc - The new catalogue coordinates.
+  /// @param[in] ncc: The new catalogue coordinates.
   /// @throws None.
   /// @version 2017-08-03/GGB - Removed referenceSystem_ member.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
@@ -412,7 +431,7 @@ namespace ACL
   }
 
   /// @brief Converts the passed string into a Julian day epoch
-  /// @param[in] newEpoch - The epoch string to convert.
+  /// @param[in] newEpoch: The epoch string to convert.
   /// @throws Several from convertEpoch
   /// @version 2017-08-05/GGB - Use new style convertEpoch.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
@@ -424,7 +443,7 @@ namespace ACL
   }
 
   /// @brief Stores the value of newEpoch into the Epoch value.
-  /// @param[in] newEpoch - The new epoch value.
+  /// @param[in] newEpoch: The new epoch value.
   /// @throws None.
   /// @version 2015-08-01/GGB - Corrected bug with assignment of value. Changed parameter to const &.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support.

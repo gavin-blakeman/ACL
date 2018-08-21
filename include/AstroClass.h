@@ -72,18 +72,9 @@
 #include <cstdio>
 #include <map>
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
-
-#ifndef ACL_NOBOOST
-
-// Boost library
-
-#include "boost/shared_ptr.hpp"
-
-#endif  // ACL_NOBOOST
-
-#include "boost/optional.hpp"
 
   // Miscellaneous Libraries
 
@@ -143,9 +134,9 @@ namespace ACL
   class CWeather
   {
   private:
-    boost::optional<PCL::CTemperature> temperature_;     ///< The atmospheric temperature. (C)
-    boost::optional<PCL::CPressure> pressure_;           ///< The atmospheric pressure. (Pa)
-    boost::optional<float> RH_;                          ///< The relative humidity. (%) (This never needs to be a double.
+    std::optional<PCL::CTemperature> temperature_;     ///< The atmospheric temperature. (C)
+    std::optional<PCL::CPressure> pressure_;           ///< The atmospheric pressure. (Pa)
+    std::optional<float> RH_;                          ///< The relative humidity. (%) (This never needs to be a double.
 
   protected:
   public:
@@ -165,9 +156,9 @@ namespace ACL
 
       // Value retrieval functions
 
-    boost::optional<PCL::CTemperature> &temperature();
-    boost::optional<PCL::CPressure> &pressure();
-    boost::optional<float> &RH();
+    std::optional<PCL::CTemperature> &temperature();
+    std::optional<PCL::CPressure> &pressure();
+    std::optional<float> &RH();
   };
 
   class CEarthOrientationData

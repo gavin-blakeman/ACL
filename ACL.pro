@@ -213,7 +213,8 @@ HEADERS += \
     include/telescope.h \
     include/FITSMemoryFileArray.h \
     include/FITSMemoryFile.h \
-    include/error.h
+    include/error.h \
+    include/RST.h
 
 OTHER_FILES += \
     ACL \

@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Time Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	Boost, SOFA, Novas
+// LIBRARY DEPENDANCE:	SOFA, Novas
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
@@ -50,12 +50,14 @@
 #ifndef ACL_JULIANDAY_H
 #define ACL_JULIANDAY_H
 
-#include "config.h"
-
-  // Standard C++ libraries
+  // Standard C++ library header files. (std)
 
 #include <cstdint>
 #include <ctime>
+
+  // ACL header files (ACL)
+
+#include "config.h"
 
 namespace ACL
 {
@@ -109,7 +111,7 @@ namespace ACL
     unsigned long MJD() const;
     FP_t floor() const;
     FP_t HJD(CAstronomicalCoordinates const &);								// returns the heliocentric correction for the JD.
-    const char *JDH(char *, int);
+    char const *JDH(char *, int);
 
     size_t JD(char *, size_t, int = 1);
     bool gregorianDate(struct tm *) const;     // Converts the JD to a struct tm date.

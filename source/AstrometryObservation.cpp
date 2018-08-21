@@ -74,14 +74,14 @@ namespace ACL
   {
   }
 
-  CAstrometryObservation::CAstrometryObservation(SPTargetAstronomy &ta) : CObservation(ta)
+  CAstrometryObservation::CAstrometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(ta)
   {
 
   }
 
-  // Class destructor
-  //
-  // 2011-07-16/GGB - Function created.
+  /// @brief Class destructor
+  /// @throws None.
+  /// @version 2011-07-16/GGB - Function created.
 
   CAstrometryObservation::~CAstrometryObservation()
   {

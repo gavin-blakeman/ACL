@@ -69,6 +69,7 @@
 #include <cstdint>
 #include <list>
 #include <memory>
+#include <optional>
 #include <tuple>
 
   // ACL Library
@@ -81,8 +82,7 @@
   // Miscellaneous Libraries
 
 #include "boost/shared_array.hpp"
-#include "boost/shared_ptr.hpp"
-#include "boost/optional/optional.hpp"
+//#include "boost/shared_ptr.hpp"
 #include "fitsio.h"
 #include <GCL>
 #include <MCL>
@@ -262,7 +262,7 @@ namespace ACL
     CImagePlane(fitsfile *, AXIS_t);         // Constructor from a FITS HDU with slicing.
 
     /// @brief Data constructor for class.
-    /// @param[in] bitpix - The value for BITPIX
+    /// @param[in] bitpix: The value for BITPIX
     /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
     /// @throws 0x1206 - CIMAGEPLANE: Invalid BITPIX value.
     /// @version 2012-12-01/GGB - Added support for FITS native data types
@@ -494,8 +494,8 @@ namespace ACL
       // Image information functions
 
     MCL::TPoint2D<FP_t> starCentroid(MCL::TPoint2D<AXIS_t> const &) const;
-    boost::optional<MCL::TPoint2D<AXIS_t> > brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax, int sensitivity) const;
-    boost::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, AXIS_t radius) const;
+    std::optional<MCL::TPoint2D<AXIS_t> > brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax, int sensitivity) const;
+    std::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, AXIS_t radius) const;
     void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
 
       // Image Analysis functions

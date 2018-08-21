@@ -178,20 +178,20 @@ namespace ACL
 
       // Image Analysis functions
 
-    virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
     virtual void findStars(TImageSourceContainer &imageSourceList, SFindSources const &) const;
     virtual bool plateSolve(AXIS_t);
 
       // Photometry functions
 
     virtual void pointPhotometry(SPPhotometryObservation);
-    virtual boost::optional<double> FWHM(MCL::TPoint2D<FP_t> const &) const;
+    virtual std::optional<double> FWHM(MCL::TPoint2D<FP_t> const &) const;
 
       // WCS functions
 
     virtual bool hasWCSData() const;
-    virtual boost::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const;
-    virtual boost::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const;
+    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const;
+    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const;
   };
 
   typedef std::shared_ptr<CImageHDB> CImageHDB_Ptr;

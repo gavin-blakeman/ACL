@@ -58,6 +58,15 @@
 #ifndef ACL_HDB_H
 #define ACL_HDB_H
 
+// Standard C++ libraries
+
+#include <cstdint>
+#include <list>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
   // ACL Library
 
 #include "AstroCatalogue.h"
@@ -65,18 +74,6 @@
 #include "Astrometry.h"
 #include "FITSKeyword.h"
 #include "FITSStrings.h"
-
-  // Standard C++ libraries
-
-#include <cstdint>
-#include <list>
-#include <memory>
-#include <string>
-#include <vector>
-
-  // Boost
-
-#include "boost/optional.hpp"
 
   // cfitsio
 
@@ -304,7 +301,7 @@ namespace ACL
 
       // Image Analysis functions
 
-    virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR(ACL); }
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR(ACL); }
     virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR(ACL); }
     //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) {CODE_ERROR(ACL); };
     virtual bool plateSolve(AXIS_t) { CODE_ERROR(ACL); }
@@ -312,13 +309,13 @@ namespace ACL
       // Photometry functions
 
     virtual void pointPhotometry(SPPhotometryObservation) { CODE_ERROR(ACL); }
-    virtual boost::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
+    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
 
       // WCS functions
 
     virtual bool hasWCSData() const { CODE_ERROR(ACL); }
-    virtual boost::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
-    virtual boost::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { CODE_ERROR(ACL); }
+    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
+    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { CODE_ERROR(ACL); }
 
   };
 

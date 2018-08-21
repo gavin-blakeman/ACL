@@ -1,16 +1,14 @@
 ﻿//*********************************************************************************************************************************
 //
-// PROJECT:							Astronomy Class Library
-// FILE:								FITSException
-// SUBSYSTEM:						FITS Exception class
-// LANGUAGE:						C++
-// TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, CFitsIO, boost.
-// NAMESPACE:						ACL
-// AUTHOR:							Gavin Blakeman (GGB)
+// PROJECT:			        Astronomy Class Library
+// FILE:				        RST
+// SUBSYSTEM:		        Rise Set Transit Times
+// TARGET OS:		        WINDOWS/UNIX/LINUX/MAC
+// LIBRARY DEPENDANCE:	GCL, MCL, PCL
+// AUTHOR:              Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2018 Gavin Blakeman.
+//                      Copyright 2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -24,47 +22,33 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
+// OVERVIEW:
 //
-// OVERVIEW:						Provides a lightweight wrapper to convert fits errors into exceptions.
+// CLASSES INCLUDED:
 //
-// CLASSES INCLUDED:		CFITSException
+// CLASS HIERARCHY:
 //
-// CLASS HIERARCHY:     std::runtime_error
-//                        CFITSException
-//
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
-//                      2015-09-05/GGB - File created.
+// RELEASE HISTORY:     2018-08-21 GGB - File created.
 //
 //*********************************************************************************************************************************
 
-#ifndef CFITSIOERROR_H
-#define CFITSIOERROR_H
+#ifndef ACL_RST_H
+#define ACL_RST_H
 
-  // Standard C++ libraries
+  // Standard C++ header files.
 
-#include <stdexcept>
-#include <string>
-#include <utility>
-#include <vector>
+#include <memory>
+#include <optional>
 
 namespace ACL
 {
-  class CFITSException : std::runtime_error
+  class CRST
   {
   private:
-    typedef std::pair<int, std::string> TErrorMessage;
-    std::vector<TErrorMessage> errorMessages;
-
   protected:
   public:
-    explicit CFITSException();
-
-    std::string errorMessage() const;
-    void logErrorMessage() const;
   };
+}
 
-#define CFITSIO_TEST(FUNC, ...) { int status = 0; FUNC(__VA_ARGS__, &status); if (status) { throw ACL::CFITSException(); }; }
+#endif // ACL_RST_H
 
-}    // namespace ACL
-
-#endif // CFITSIOERROR_H

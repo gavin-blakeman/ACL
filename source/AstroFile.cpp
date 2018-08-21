@@ -57,6 +57,10 @@
 
 #include "../include/AstroFile.h"
 
+  // Standard Libraries
+
+
+
   // ACL Library
 
 #include "../include/AstroFunctions.h"
@@ -71,22 +75,11 @@
 #include "../include/HDB.h"
 #include "../include/HDBPrimary.h"
 
-
-  // Boost library
-
-#include <boost/algorithm/string.hpp>
-#include <boost/scoped_ptr.hpp>
-#include "boost/scoped_array.hpp"
-
   // Miscellaneous libraries
 
-#include <GCL>
-
+#include <boost/algorithm/string.hpp>
 #include "csbigimg.h"
-
-  // Standard Libraries
-
-#include <stdexcept>
+#include <GCL>
 
 namespace ACL
 {
@@ -898,7 +891,7 @@ namespace ACL
   /// @version 2011-11-27/GGB - Convert to boost::shared_ptr, use smart HDB's (CHDB)
   /// @version 2011-06-12/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CAstroFile::centroid(DHDBStore::size_type hdb, MCL::TPoint2D<AXIS_t> const &c0,
+  std::optional<MCL::TPoint2D<FP_t> > CAstroFile::centroid(DHDBStore::size_type hdb, MCL::TPoint2D<AXIS_t> const &c0,
                                                            AXIS_t rmax, int sensitivity) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
@@ -1114,9 +1107,9 @@ namespace ACL
   //
   //
 
-  boost::optional<FP_t> CAstroFile::FWHM()
+  std::optional<FP_t> CAstroFile::FWHM()
   {
-    return boost::optional<FP_t>();
+    return std::optional<FP_t>();
   }
 
   /// @brief Determines the FWHM for a star.
@@ -1124,7 +1117,7 @@ namespace ACL
   /// @throws 0x2005 - Invalid HDB type
   /// @version 2013-04-14/GGB - Function created.
 
-  boost::optional<FP_t> CAstroFile::FWHM(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &star) const
+  std::optional<FP_t> CAstroFile::FWHM(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &star) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
@@ -2728,7 +2721,7 @@ namespace ACL
   /// @throws GCL::CRuntimeAssert
   /// @version 2013-08-21/GGB - Function created.
 
-  boost::optional<CAstronomicalCoordinates> CAstroFile::pix2wcs(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &toConvert) const
+  std::optional<CAstronomicalCoordinates> CAstroFile::pix2wcs(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &toConvert) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
@@ -3359,7 +3352,7 @@ namespace ACL
   /// @version 2015-08-09/GGB - Use runtime assert to check for valid HDB number and type.
   /// @version 2013-08-21/GGB - Function created.
 
-  boost::optional<MCL::TPoint2D<FP_t> > CAstroFile::wcs2pix(DHDBStore::size_type hdb, CAstronomicalCoordinates const &toConvert) const
+  std::optional<MCL::TPoint2D<FP_t> > CAstroFile::wcs2pix(DHDBStore::size_type hdb, CAstronomicalCoordinates const &toConvert) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Invalid HDB Number");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");

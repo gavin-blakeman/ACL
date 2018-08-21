@@ -62,7 +62,15 @@
 #ifndef ACL_ASTROFILE_H
 #define ACL_ASTROFILE_H
 
-  // ACL
+  // Standard C++ libraries
+
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
+  // ACL header files
 
 #include "AstroClass.h"
 #include "AstroImage.h"
@@ -79,24 +87,13 @@
 #include "SourceExtraction.h"
 #include "telescope.h"
 
-  // Standard C++ libraries
-
-#include <cstdint>
-#include <memory>
-#include <string>
-#include <vector>
-
-  // Boost libraries
-
-#include "boost/filesystem.hpp"
-#include "boost/optional/optional.hpp"
-
   // fitsio Library
 
 #include "fitsio.h"
 
   // Miscellaneous libraries
 
+#include "boost/filesystem.hpp"
 #include <MCL>
 #include <SCL>
 
@@ -332,7 +329,7 @@ namespace ACL
       // Image actions
 
     virtual renderImage_t *getRenderedImage(DHDBStore::size_type) const;
-    virtual boost::optional<MCL::TPoint2D<FP_t>> centroid(DHDBStore::size_type, MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
+    virtual std::optional<MCL::TPoint2D<FP_t>> centroid(DHDBStore::size_type, MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
     virtual void setImagePlaneRenderFunction(DHDBStore::size_type, size_t, FP_t, FP_t, bool, ETransferFunction, FP_t);
     virtual void setImagePlaneColourValues(DHDBStore::size_type, size_t, SColourRGB, FP_t);
     virtual void renderImage(DHDBStore::size_type, ERenderMode);
@@ -382,15 +379,15 @@ namespace ACL
     void photometryObjectRemoveAll();
     SPPhotometryObservation photometryObjectFirst();
     SPPhotometryObservation photometryObjectNext();
-    boost::optional<FP_t> FWHM();                                     // Determine the mean Full-Width-Half-Max for the image.
-    boost::optional<FP_t> FWHM(DHDBStore::size_type, MCL::TPoint2D<FP_t> const &) const;  // Determine the Full-Width-Half-Max for an image star.
+    std::optional<FP_t> FWHM();                                     // Determine the mean Full-Width-Half-Max for the image.
+    std::optional<FP_t> FWHM(DHDBStore::size_type, MCL::TPoint2D<FP_t> const &) const;  // Determine the Full-Width-Half-Max for an image star.
     virtual void pointPhotometry(DHDBStore::size_type, SPPhotometryObservation);
 
       // WCS functions
 
     bool hasWCSData(DHDBStore::size_type) const;
-    boost::optional<CAstronomicalCoordinates> pix2wcs(DHDBStore::size_type, MCL::TPoint2D<FP_t> const &) const;
-    boost::optional<MCL::TPoint2D<FP_t>> wcs2pix(DHDBStore::size_type, CAstronomicalCoordinates const &) const;
+    std::optional<CAstronomicalCoordinates> pix2wcs(DHDBStore::size_type, MCL::TPoint2D<FP_t> const &) const;
+    std::optional<MCL::TPoint2D<FP_t>> wcs2pix(DHDBStore::size_type, CAstronomicalCoordinates const &) const;
 
       // Calibration functions
 

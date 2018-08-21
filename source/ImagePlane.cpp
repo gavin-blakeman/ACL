@@ -1450,7 +1450,7 @@ namespace ACL
   /// @version 2013-08-02/GGB - Changed bp parameter to sensitivity.
   /// @version 2012-07-20/GGB - Function converted to C++
 
-  boost::optional<MCL::TPoint2D<AXIS_t> > CImagePlane::brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax,
+  std::optional<MCL::TPoint2D<AXIS_t> > CImagePlane::brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax,
                                                                   int sensitivity) const
   {
     assert(guess.x() > 0);
@@ -1467,7 +1467,7 @@ namespace ACL
     AXIS_t x, y, x1, y1, i, xa, ya;
     AXIS_t newx = 0;
     AXIS_t newy = 0;
-    boost::optional<MCL::TPoint2D<AXIS_t> > returnValue;
+    std::optional<MCL::TPoint2D<AXIS_t> > returnValue;
     INDEX_t imagePointsSize = MCL::pow2(2 * rmax + 1);
 
     FP_t *imagePoints = new FP_t[imagePointsSize];   // Create a vector to hold all the points.
@@ -1487,8 +1487,8 @@ namespace ACL
       };
     };
 
-    boost::optional<FP_t> mean = MCL::mean(imagePoints, imagePointsSize);
-    boost::optional<FP_t> stdev = MCL::stdev(imagePoints, imagePointsSize);
+    std::optional<FP_t> mean = MCL::mean(imagePoints, imagePointsSize);
+    std::optional<FP_t> stdev = MCL::stdev(imagePoints, imagePointsSize);
 
     if (mean && stdev)
     {
@@ -2006,7 +2006,7 @@ namespace ACL
   /// @throws 0x1205 - IMAGEPLANE: FWHM Call Radius == 0.
   /// @version 2018-05-12/GGB - Function created/
 
-  boost::optional<FP_t> CImagePlane::FWHM(MCL::TPoint2D<AXIS_t> const &center, AXIS_t radius) const
+  std::optional<FP_t> CImagePlane::FWHM(MCL::TPoint2D<AXIS_t> const &center, AXIS_t radius) const
   {
     AXIS_t indexX, indexY, sizeX, sizeY;
 
@@ -2096,7 +2096,7 @@ namespace ACL
 
       if (dataPoints.size() < 5)
       {
-        return boost::optional<FP_t>();
+        return std::optional<FP_t>();
       }
       else
       {
@@ -2113,19 +2113,21 @@ namespace ACL
           input(1) = (*dataPointsIterator).coordinates_.y();
           dataSamples.push_back( std::make_pair(input, (*dataPointsIterator).value_) );
         };
-        return boost::optional<double>(ACL::FWHM(dataSamples));
+        return std::optional<FP_t>(ACL::FWHM(dataSamples));
       };
     }
     else
     {
-      return boost::optional<FP_t>();
+      return std::optional<FP_t>();
     };
   }
 
   /// @brief Gets the image plane value at the specified point.
-  //
-  // 2012-11-29/GGB - Changed to use native data types.
-  // 2012-11-10/GGB - Function created.
+  /// @param[in] addr: The point to get (x, y)
+  /// @returns The value of the point.
+  /// @throws None.
+  /// @version 2012-11-29/GGB - Changed to use native data types.
+  /// @version 2012-11-10/GGB - Function created.
 
   FP_t CImagePlane::getValue(MCL::TPoint2D<AXIS_t> const &addr) const
   {
@@ -3346,7 +3348,7 @@ namespace ACL
 
   FP_t CImagePlane::getMeanValue() const
   {
-    boost::optional<FP_t> returnValue;
+    std::optional<FP_t> returnValue;
 
     if (bMean)
     {
@@ -3646,7 +3648,7 @@ namespace ACL
   }
 
   /// @brief Renders the image as an 8 bit greyscale image.
-  /// @param[in] outputImage - Reference to the array that has been allocated for the output image.
+  /// @param[in] outputImage: Reference to the array that has been allocated for the output image.
   /// @throws GCL::CodeError(ACL)
   /// @throws std::bad_alloc
   /// @note Uses multi-threading for speedup.
@@ -3750,8 +3752,8 @@ namespace ACL
   /// performing additional function calls can mount up on large images. (On a 1MP image, 1µS/pixel = 1 second, on a 10MP image
   /// this becomes 10s.
   /// f(p) = pmax*((p-pblack)/(pwhite-pblack))^(1/3)
-  /// @param[out] oi - The array that the data will be written to
-  /// @param[in] startEnd - The start and end index values that will be processed by this thread.
+  /// @param[out] oi: The array that the data will be written to
+  /// @param[in] startEnd: The start and end index values that will be processed by this thread.
   //
   // 2015-06-30/GGB - Added extra parameter for the outputImage.
   // 2013-05-26/GGB - Function created.
@@ -3776,11 +3778,17 @@ namespace ACL
       currentValue = getValue(lIndex);          // This is corrected for BZERO and BSCALE
 
       if (fRange == 0)
+      {
         outputImage[lIndex] = minimumImageValue;
+      }
       else if (currentValue <= blackPoint)
+      {
         outputImage[lIndex] = minimumImageValue;
+      }
       else if (currentValue >= whitePoint)
+      {
         outputImage[lIndex] = maximumImageValue;
+      }
       else
       {
         currentValue = std::pow(((currentValue - blackPoint) / fRange), exponent) * maxVal;
@@ -3788,7 +3796,9 @@ namespace ACL
       };
 
       if (invert)
+      {
         outputImage[lIndex] = outputImage[lIndex] ^ maximumImageValue;
+      }
     };
   }
 

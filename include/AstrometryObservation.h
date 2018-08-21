@@ -49,12 +49,13 @@
 #ifndef ACL_ASTROMETRYOBSERVATION_H
 #define ACL_ASTROMETRYOBSERVATION_H
 
-#include "Observation.h"
-
-  // Standard header files.
+// Standard C++ header files.
 
 #include <cstddef>
 #include <memory>
+
+#include "Observation.h"
+
 
 namespace ACL
 {
@@ -78,7 +79,7 @@ namespace ACL
   public:
     CAstrometryObservation(std::string const &);
     CAstrometryObservation(CAstrometryObservation const &);
-    CAstrometryObservation(SPTargetAstronomy &);
+    CAstrometryObservation(std::shared_ptr<CTargetAstronomy>);
     virtual ~CAstrometryObservation();
 
     virtual SPObservation createCopy() const;

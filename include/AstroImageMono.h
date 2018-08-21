@@ -124,13 +124,13 @@ namespace ACL
 
       // Astromonical object functions
 
-    virtual boost::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
-    virtual boost::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const;
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const;
+    virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const;
 
       // Photometry functions
 
     virtual void photometry(SPPhotometryObservation photometryObservation) const;
-    virtual boost::optional<FP_t> FWHM(const MCL::TPoint2D<FP_t> &) const;
+    virtual std::optional<FP_t> FWHM(const MCL::TPoint2D<FP_t> &) const;
 
       // Calibration functions
 

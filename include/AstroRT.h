@@ -1,4 +1,4 @@
-//*************************************************************************************************
+﻿//*************************************************************************************************
 //
 // PROJECT:             Astronomy Class Library (ACL)
 // FILE:                AstroRT
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2016 Gavin Blakeman.
+//                      Copyright 2010-2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -42,6 +42,8 @@
 #ifndef ACL_ASTRORT_H
 #define ACL_ASTRORT_H
 
+  // ACL library header files.
+
 #include "AstroClass.h"
 #include "config.h"
 #include "AstronomicalTime.h"
@@ -56,7 +58,6 @@
 /// @file
 /// The AstroRT files provide the real-time position calculation functions that are used for telescope control. These functions
 /// are not required as part of the standard build for the ACL library and must be explicitly included.
-
 
 namespace ACL
 {
