@@ -3,3 +3,5 @@ Makefile
 *.user
 *.html
 /Documentation/html/
+
+*.autosave

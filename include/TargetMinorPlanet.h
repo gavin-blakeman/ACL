@@ -41,38 +41,52 @@
 #ifndef ACL_TARGETMINORPLANET_H
 #define ACL_TARGETMINORPLANET_H
 
-#include "config.h"
-#include "TargetSolar.h"
+  // Standard C++ library header files.
 
-#include <MCL>
-
+#include <cstdint>
 #include <memory>
 #include <string>
 
+  // ACL library header files.
+
+#include "config.h"
+#include "TargetAstronomy.h"
+
+  // Miscellaneous library header files.
+
+#include "boost/filesystem.hpp"
+#include <MCL>
+
+
 namespace ACL
 {
-  class CTargetMinorPlanet : public CTargetSolar
+  class CTargetMinorPlanet : public CTargetAstronomy
   {
   private:
-    FP_t a_;                        // Semi-major axis
+    std::string designation_;       ///< The MP designation. (From MPCORB)
+    float absoluteMagnitude_;       ///< Absolute magnitude, H
+    float slopeParameter_;          ///< Slope parameter, G
+    CAstroTime epoch_;              ///< Epoch
+    MCL::angle_t M0_;               ///< Mean anomoly at the epoch (degrees)
+    MCL::angle_t omega_;            ///< Argument of perihelion degrees.
+
+    FP_t a_;                        ///< Semi-major axis
     FP_t e_;                        // Eccentricity
     MCL::angle_t i_;                // Inclination
     MCL::angle_t OMEGA_;            // Longitude of ascending node
-    MCL::angle_t omega_;            // Argument of perihelion
-    MCL::angle_t M0_;               // Mean anomoly
-    CAstroTime epoch_;              // Epoch
+
+
+
     MCL::angle_t n_;                // Mean daily motion
 
     CTargetMinorPlanet() = delete;
 
   protected:
-    bool importMPCORBRecord(std::string const &);   // Read a record from an MPCORB 1 line record.
+    bool importMPCORBRecord(boost::filesystem::path const &);   // Read a record from an MPCORB 1 line record.
 
   public:
     CTargetMinorPlanet(std::string const &);        // Constructor constructs from an MPCORB 1 line record.
     virtual ~CTargetMinorPlanet();
-
-
 
       // Calculation functions
 

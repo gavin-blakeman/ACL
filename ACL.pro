@@ -108,10 +108,8 @@ SOURCES += \
     source/Photometry.cpp \
     source/AstronomicalCoordinates.cpp \
     source/TargetAstronomy.cpp \
-    source/TargetSolar.cpp \
     source/TargetStellar.cpp \
     source/TargetMinorPlanet.cpp \
-    source/TargetPlanet.cpp \
     source/FITSKeyword.cpp \
     source/FITSKeywordString.cpp \
     source/FITSKeywordFloat.cpp \
@@ -136,7 +134,8 @@ SOURCES += \
     source/telescope.cpp \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
-    source/error.cpp
+    source/error.cpp \
+    source/TargetMajorPlanet.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -185,10 +184,8 @@ HEADERS += \
     include/AstronomicalCoordinates.h \
     include/AstronomicalObject.h \
     include/TargetAstronomy.h \
-    include/TargetSolar.h \
     include/TargetStellar.h \
     include/TargetMinorPlanet.h \
-    include/TargetPlanet.h \
     include/FITSKeyword.h \
     include/FITSKeywordString.h \
     include/FITSKeywordFloat.h \
@@ -214,7 +211,8 @@ HEADERS += \
     include/FITSMemoryFileArray.h \
     include/FITSMemoryFile.h \
     include/error.h \
-    include/RST.h
+    include/RST.h \
+    include/TargetMajorPlanet.h
 
 OTHER_FILES += \
     ACL \

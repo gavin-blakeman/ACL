@@ -119,6 +119,7 @@ namespace ACL
     CAstronomicalCoordinates(CAstronomicalCoordinates const &);
     CAstronomicalCoordinates(MCL::CAngle, MCL::CAngle, EReferenceSystem = RS_FK5, FP_t = J2000);
     CAstronomicalCoordinates(MCL::TPoint2D<MCL::CAngle> const &, EReferenceSystem = RS_FK5, FP_t = J2000);
+    CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &, EReferenceSystem = RS_ICRS, FP_t = J2000);
 
     virtual CAstronomicalCoordinates &operator=(CAstronomicalCoordinates const &);
     virtual CAstronomicalCoordinates &operator=(MCL::TPoint2D<FP_t> const &);

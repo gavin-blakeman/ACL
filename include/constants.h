@@ -69,6 +69,7 @@ namespace ACL
   JD_t const D_J2000(2451545);                                ///< JD of standard epoch
 
 
+
 }  // namesapace ACL
 
 #endif // ACL_CONSTANTS_H

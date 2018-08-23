@@ -40,13 +40,31 @@
 #include <memory>
 #include <optional>
 
+  // ACL library header files.
+
+#include "julianDay.h"
+
 namespace ACL
 {
   class CRST
   {
   private:
+    std::optional<TJD> riseTime_;
+    std::optional<TJD> transitTime_;
+    std::optional<TJD> setTime_;
+
+
+    CRST(CRST const &) = delete;
+
   protected:
   public:
+    CRST();
+
+    void riseTime(TJD const &rt) {riseTime_ = rt; }
+    void setTime(TJD const &st) { setTime_ = st; }
+    void transitTime(TJD const &tt) { transitTime_ = tt; }
+
+
   };
 }
 

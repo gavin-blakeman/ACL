@@ -117,6 +117,23 @@ namespace ACL
   {
   }
 
+  /// @brief Constructoru using cartesian coordinate forms.
+  /// @param[in] cart: The cartesian coordinates.
+  /// @param[in] referenceSystem: The reference system
+  /// @param[in] epoch: THe epoch.
+  /// @throws std::bad_alloc
+  /// @version 2018-08-23/GGB - Function created.
+
+  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &cart, EReferenceSystem referenceSystem,
+                                                     FP_t = J2000)
+    : coordinates_(), referenceSystem_(referenceSystem), epoch_(epoch), equinox_(J2000)
+  {
+    FP_t r = cart.length();
+
+    coordinates_.x() = std::acos(cart.z() / length);
+    coordinates_.y() = std::atan2(cart.y(), cart.x());
+  }
+
   /// @brief Copy operator for the class.
   /// @param[in] toCopy: The instance to copy.
   /// @throws None.

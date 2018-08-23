@@ -63,6 +63,7 @@
   // ACL header files
 
 #include "AstroClass.h"
+#include "geographicLocation.h"
 #include "RST.h"
 
   // Miscellaneous libraries
@@ -101,12 +102,12 @@ namespace ACL
 
       // Get functions
 
-    virtual CAstronomicalCoordinates catalogueCoordinates() const {CODE_ERROR(ACL);}
+    virtual CAstronomicalCoordinates catalogueCoordinates(CAstroTime const &) const = 0;
 
       // Position Calculation functions.
 
     virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &) {CODE_ERROR(ACL);}
-    virtual void calculateRSTTime(CAstroTime const &, CLocation const &, CWeather const &, TJD &, TJD &, TJD *);
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *);
   };
   typedef std::vector<std::shared_ptr<CTargetAstronomy>> DTargetAstronomy;
 

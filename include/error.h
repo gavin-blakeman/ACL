@@ -48,7 +48,7 @@ namespace ACL
 {
 #define ACL_ERROR(ERR) (ERROR(ACL, ERR))
 #define ACL_CODE_ERROR CODE_ERROR(ACL)
-};
+}
 
 #endif // ACL_ERROR_H
 

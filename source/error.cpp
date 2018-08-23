@@ -174,6 +174,7 @@ namespace ACL
       {0x2402, "ASTROCATALOGUE: Reached first item in list. Cannot return item."},
       {0x2500, "PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude."},
       {0x2501, "Photometry: Cannot have intensity of zero."},
+      {0x2600, "TargetMajorPlanet: Keplers equation failed to converge."},
       {0x3000, "ASTROMETRY: Need at least 3 reference objects to calculate plate constants."},
       {0x3001, "ASTROMETRY: Observation Location must be defined to reduce positions to calculate plate constants."},
       {0x3002, "ASTROMETRY: Observation Time must be defined to reduce positions to calculate plate constants."},

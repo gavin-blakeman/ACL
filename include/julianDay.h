@@ -87,8 +87,8 @@ namespace ACL
     TJD(struct tm *);
     TJD(time_t const &);
 
-    TJD operator+(const TJD &) const;
-    TJD operator-(const TJD &) const;
+    TJD operator+(TJD const &) const;
+    TJD operator-(TJD const &) const;
     TJD operator+(FP_t) const;
     TJD operator-(FP_t) const;
     TJD &operator +=(FP_t);

@@ -1,8 +1,8 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:							ACL
-// FILE:								TTargetPlanet
-// SUBSYSTEM:						Object Positions and Calculations
+// FILE:								TargetMajorPlanet
+// SUBSYSTEM:						Major Planet Positions and Calculations
 // LANGUAGE:						C++
 // TARGET OS:						NONE
 // LIBRARY DEPENDANCE:  MCL
@@ -38,21 +38,27 @@
 //
 //*********************************************************************************************************************************
 
-#ifndef ACL_TARGETPLANET_H
-#define ACL_TARGETPLANET_H
+#ifndef ACL_TARGETMAJORPLANET_H
+#define ACL_TARGETMAJORPLANET_H
 
-#include "TargetSolar.h"
+  // Standard C++ library header files.
 
 #include <memory>
 
+  // ACL library header files.
+
+#include "TargetAstronomy.h"
+
+  // Miscellaneous library header files.
+
 namespace ACL
 {
-  class CTargetPlanet : public CTargetSolar
+  class CTargetMajorPlanet : public CTargetAstronomy
   {
   public:
     enum EPlanets
     {
-      Mercury,
+      Mercury = 0,      // Note these enums are used for indexing the static array used for parameters. Do not change order!
       Venus,
       Mars,
       Jupiter,
@@ -65,15 +71,16 @@ namespace ACL
   private:
     EPlanets planet;
 
-    CTargetPlanet() = delete;
+    CTargetMajorPlanet() = delete;
 
   protected:
   public:
-    CTargetPlanet(EPlanets const &);
-    virtual ~CTargetPlanet();
+    CTargetMajorPlanet(EPlanets const &);
+    virtual ~CTargetMajorPlanet();
+
+    virtual CAstronomicalCoordinates catalogueCoordinates(CAstroTime const &) const;
 
   };
-  std::shared_ptr<CTargetPlanet> PTargetPlanet;
 }
 
-#endif // ACL_TARGETPLANET_H
+#endif // ACL_TARGETMAJORPLANET_H
