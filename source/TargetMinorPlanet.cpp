@@ -39,32 +39,55 @@
 
 #include "../include/TargetMinorPlanet.h"
 
+  // Standard C++ library headers
+
 #include <cstdint>
 #include <cmath>
+#include <fstream>
+#include <vector>
+
+  // ACL library header files.
+
+#include "../include/error.h"
+
+  // Miscellaneous library header files.
+
+#include "boost/algorithm/string.hpp"
+#include "boost/filesystem/fstream.hpp"
+#include <GCL>
 
 namespace ACL
 {
   /// @brief Constructor constructs from an MPCORB 1 line record.
-  /// @param[in] line - The MPCORB line of data.
+  /// @param[in] targetName: The name of the target.
   /// @throws CError(0x0600)
   /// @version 2016-03-25/GGB - Functon created.
 
-  CTargetMinorPlanet::CTargetMinorPlanet(std::string const &line) : CTargetSolar(""), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
+  CTargetMinorPlanet::CTargetMinorPlanet(std::string const &targetName)
+    : CTargetAstronomy(targetName), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
   {
-    if (!importMPCORBRecord(line))
-    {
-      ERROR(ACL, 0x0600); // Unable to import 1-line MPCORB data
-    };
+  }
+
+  /// @brief Calculates and returns the ICRS position of a minor planet.
+  /// @param[in] time: The time to compute the position.
+  /// @returns The ICRS coordinates at the specified time.
+  /// @throws
+  /// @version 2018-08-25/GGB - Function created.
+
+  CAstronomicalCoordinates CTargetMinorPlanet::positionICRS(CAstroTime const &time) const
+  {
+
   }
 
   /// @brief Calculates the observed place of a minor planet.
+  /// @param[in] t: Time to calculate the observed place.
 
-  CAstronomicalCoordinates const &CTargetMinorPlanet::calculateObservedPlace(CAstroTime const &t, CGeographicLocation const &, CWeather const &)
+  CAstronomicalCoordinates CTargetMinorPlanet::positionObserved(CAstroTime const &t, CGeographicLocation const &, CWeather const &)
   {
     MCL::CAngle M(0);
     CAstroTime deltaT = epoch_ - t;
     FP_t E0, E1;
-    std::uint_least8_t loopCounter = 0;
+    std::uint_least32_t loopCounter = 0;
     FP_t v, r;
     FP_t xv, yv;
     FP_t xh, yh, zh;
@@ -103,6 +126,37 @@ namespace ACL
     //zh = r * ( sin(v+w) * sin(i) )
 
 
+  }
+
+  /// @brief Factory function taking a line from the MPCORB file to create the minor planet.
+  /// @param[in] dataLine: Line of data in MPCORB format. (null-terminated)
+  /// @returns Pointer to the created CMinorPlanet structure
+  /// @throws
+  /// @version 2018-08-24/GGB - Function created.
+
+  std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(std::string const &dataLine)
+  {
+
+  }
+
+  /// @brief Factory function taking the MPCORB filename/path and the descriptor of the object to create.
+  /// @param[in] fileName: The filename and path of the MPCORB file.
+  /// @param[in] descriptor: The descriptor of the object to load/create.
+  /// @returns Pointer to the created CMinorPlanet structure
+  /// @throws 0x2700 - TargetMinorPlanet: Minor Planet Specified not found.
+  /// @version 2018-08-24/GGB - Function created.
+
+  std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(boost::filesystem::path const &fileName,
+                                                               std::string const &descriptor)
+  {
+    std::unique_ptr<CTargetMinorPlanet> returnValue(std::make_unique<CTargetMinorPlanet>(descriptor));
+
+    if (!MPCORB::loadMP(fileName, descriptor, returnValue->elements()))
+    {
+      ACL_ERROR(0x2700);
+    };
+
+    return returnValue;
   }
 
 }

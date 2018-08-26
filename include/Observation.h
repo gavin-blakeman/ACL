@@ -112,9 +112,6 @@ namespace ACL
     virtual std::optional<CAstronomicalCoordinates> &observedCoordinates();
   };
 
-  typedef std::shared_ptr<CObservation> SPObservation;
-
-
 }
 
 #endif    // ACL_OBSERVATION_H

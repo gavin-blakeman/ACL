@@ -1309,15 +1309,16 @@ namespace ACL
   }
 
   /// @brief Returns the observation location.
-  /// @returns The observation location.
+  /// @returns Pointer to the observation location.
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed return type to raw pointer.
   /// @version 2017-07-23/GGB - Change implementation to std::unique_ptr.
   /// @version 2011-12-16/GGB - Use smart pointer implementation.
   /// @version 2011-07-15/GGB - Function created.
 
-  std::unique_ptr<CObservatory> &CAstroFile::getObservationLocation()
+  CObservatory *CAstroFile::getObservationLocation()
   {
-    return observationLocation;
+    return observationLocation.get();
   }
 
   /// @brief Returs the observation object or target.
@@ -1349,14 +1350,15 @@ namespace ACL
   }
 
   /// @brief Returns the observation weather
-  /// @returns The Observation Weather
+  /// @returns Pointer to the Observation Weather
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed return type to raw pointer.
   /// @version 2011-12-17/GGB - Smart pointer implementation
   /// @version 2011-07-15/GGB - Function created.
 
-  std::unique_ptr<CWeather> &CAstroFile::getObservationWeather()
+  CWeather *CAstroFile::getObservationWeather()
   {
-    return observationWeather;
+    return observationWeather.get();
   }
 
   /// @brief returns the observation coordinates. (IE center of the image.)
@@ -2952,17 +2954,17 @@ namespace ACL
     bHasData = bDirty = true;
   }
 
-  /// @brief Sets the observation weather
-  /// @param[in] newWeather - The new weather instance.
+  /// @brief Sets the observation weather (Replaces the current object)
+  /// @param[in] newWeather: The new weather instance.
   /// @throws None.
   /// @version 2011-12-17/GGB - Smart pointer implmentation
   /// @version 2011-07-15/GGB - Function created.
 
-  void CAstroFile::setObservationWeather(CWeather *newWeather)
+  void CAstroFile::setObservationWeather(std::unique_ptr<CWeather> newWeather)
   {
     RUNTIME_ASSERT(ACL, !newWeather, "Parameter newWeather cannot have a nullptr.");
 
-    observationWeather.reset(newWeather);
+    observationWeather.swap(newWeather);
 
     bHasData = bDirty = true;
   }

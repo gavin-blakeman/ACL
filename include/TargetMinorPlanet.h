@@ -50,6 +50,7 @@
   // ACL library header files.
 
 #include "config.h"
+#include "MPCORB.h"
 #include "TargetAstronomy.h"
 
   // Miscellaneous library header files.
@@ -64,8 +65,8 @@ namespace ACL
   {
   private:
     std::string designation_;       ///< The MP designation. (From MPCORB)
-    float absoluteMagnitude_;       ///< Absolute magnitude, H
-    float slopeParameter_;          ///< Slope parameter, G
+    MPCORB::SMPCORB elements_;
+
     CAstroTime epoch_;              ///< Epoch
     MCL::angle_t M0_;               ///< Mean anomoly at the epoch (degrees)
     MCL::angle_t omega_;            ///< Argument of perihelion degrees.
@@ -82,17 +83,26 @@ namespace ACL
     CTargetMinorPlanet() = delete;
 
   protected:
-    bool importMPCORBRecord(boost::filesystem::path const &);   // Read a record from an MPCORB 1 line record.
-
   public:
-    CTargetMinorPlanet(std::string const &);        // Constructor constructs from an MPCORB 1 line record.
+    CTargetMinorPlanet(std::string const &);
     virtual ~CTargetMinorPlanet();
 
-      // Calculation functions
+      // Getter functions
 
-    virtual CAstronomicalCoordinates const &calculateObservedPlace(CAstroTime const &, CGeographicLocation const &, CWeather const &);
+    MPCORB::SMPCORB &elements() { return elements_; }
+
+      // Position functions
+
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
+
+
+      // Factory functions
+
+    static std::unique_ptr<CTargetMinorPlanet> create(std::string const&);
+    static std::unique_ptr<CTargetMinorPlanet> create(boost::filesystem::path const &, std::string const&);
   };
-  typedef std::shared_ptr<CTargetMinorPlanet> PTargetMinorPlanet;
+
 
 }
 

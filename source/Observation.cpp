@@ -53,13 +53,13 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Constructor for the class.
-  /// @param[in] name - The name of the object being observed.
+  /// @param[in] name: The name of the object being observed.
   /// @throws std::bad_alloc
   /// @version 2016-05-03/GGB - Added pointer to the CTargetAstronomy class to capture observed object information.
   /// @version 2013-03-31/GGB - Function rewritten to use new intent of class.
-  /// @version  2011-12-23/GGB - Function created.
+  /// @version 2011-12-23/GGB - Function created.
 
-  CObservation::CObservation(std::string const &name) : targetObject(std::make_shared<CTargetAstronomy>(name)), time_(), location_(),
+  CObservation::CObservation(std::string const &name) : targetObject(), time_(), location_(),
     weather_()
   {
   }

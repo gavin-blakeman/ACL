@@ -336,11 +336,11 @@ namespace ACL
 
       // Site/Observation information
 
-    virtual std::unique_ptr<CWeather> &getObservationWeather();
-    virtual std::unique_ptr<CObservatory> &getObservationLocation();
-    virtual std::unique_ptr<CTelescope> &getObservationTelescope() { return observationTelescope; }
+    virtual CWeather *getObservationWeather();
+    virtual CObservatory *getObservationLocation();
+    virtual CTelescope *getObservationTelescope() { return observationTelescope.get(); }
     virtual CAstroTime const &getObservationTime() const;
-    virtual void setObservationWeather(CWeather *);
+    virtual void setObservationWeather(std::unique_ptr<CWeather>);
     //virtual void setObservationLocation(PLocation);
     virtual void setObservationTime(CAstroTime const &);
 

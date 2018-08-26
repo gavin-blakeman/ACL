@@ -135,7 +135,8 @@ SOURCES += \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
     source/error.cpp \
-    source/TargetMajorPlanet.cpp
+    source/TargetMajorPlanet.cpp \
+    source/MPCORB.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -212,7 +213,8 @@ HEADERS += \
     include/FITSMemoryFile.h \
     include/error.h \
     include/RST.h \
-    include/TargetMajorPlanet.h
+    include/TargetMajorPlanet.h \
+    include/MPCORB.h
 
 OTHER_FILES += \
     ACL \

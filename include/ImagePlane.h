@@ -36,22 +36,12 @@
 //
 //											While this library has been designed to be used from Qt, it makes no reference to the Qt library.
 //
-//
 // CLASSES INCLUDED:		CImagePlane					- A single plane image.
 //
-// CLASS HIERARCHY:
-//											CImagePlane
+// CLASS HIERARCHY:     CImagePlane
 //
-// FITS FILE INFORMATION:
-//											In order to simplify the reading process for FITS files, the following assumptions are made.
-//											  1) The image is contained in the primary extension.
-//											  2) If there is an EXTENSION with the name DARKFRAME it is loaded as the dark frame.
-//											  3) If there is an EXTENSION with the name FLATFRAME it is loaded as the flat frame.
-//
-// Notes:               1) CImagePlane stores all images with a double representation. This provides the best implementation,
-//                          without having to have multiple implementations, with type changes on the fly.
-//
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2018-08-25 GGB - Changed imagePointer types to std::unique_ptr<>()
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-04-14 GGB - Changed filename from CImagePlane.h to ImagePlane.h
 //                      2013-03-22 GGB - astroManager 2013.03 release.
@@ -64,7 +54,7 @@
 #ifndef ACL_CIMAGEPLANE_H
 #define ACL_CIMAGEPLANE_H
 
-  // Standard libraries
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <list>
@@ -72,17 +62,16 @@
 #include <optional>
 #include <tuple>
 
-  // ACL Library
+  // ACL Library header file.
 
 #include "common.h"
 #include "config.h"
 #include "findstar.h"
 #include "SourceExtraction.h"
 
-  // Miscellaneous Libraries
+  // Miscellaneous Library header files.
 
 #include "boost/shared_array.hpp"
-//#include "boost/shared_ptr.hpp"
 #include "fitsio.h"
 #include <GCL>
 #include <MCL>
@@ -120,7 +109,7 @@ namespace ACL
   }
 
   /// The structure SThreadData is used by the transform function for passing data.
-  ///
+
   struct SThreadData
   {
     MCL::TPoint2D<FP_t> ct;                       ///< The translation amount of the transform.
@@ -128,8 +117,8 @@ namespace ACL
     FP_t th;                                      ///< The angle of the transform (radians)
     FP_t sc;                                      ///< The scale of the transform
     MCL::TPoint2D<FP_t> pix;                      ///< The pixel size
-    FP_t *newImagePlane;                          ///< The new image plane to write the data to.
-    std::unique_ptr<bool[]> &maskPlane;             ///< If valid, the mask plane.
+    std::unique_ptr<double[]> newImagePlane;      ///< The new image plane to write the data to.
+    std::unique_ptr<bool[]> &maskPlane;           ///< If valid, the mask plane.
 
     SThreadData(std::unique_ptr<bool[]> &maskPlane_) : maskPlane(maskPlane_){}
   };
@@ -184,21 +173,21 @@ namespace ACL
       // It is possibly a good idea to write a specialised valarray template that supports multi-threading and also c-style array
       // access specifically for storing the image plane data.
 
-    std::uint8_t *imagePlane8;
-    std::int8_t *imagePlaneS8;
-    std::uint16_t *imagePlaneU16;
-    std::int16_t *imagePlane16;
-    std::uint32_t *imagePlaneU32;
-    std::int32_t *imagePlane32;
-    std::int64_t *imagePlane64;
-    float *imagePlaneF;
-    double *imagePlaneD;
+    std::unique_ptr<std::uint8_t[]> imagePlane8;
+    std::unique_ptr<std::int8_t[]> imagePlaneS8;
+    std::unique_ptr<std::uint16_t[]> imagePlaneU16;
+    std::unique_ptr<std::int16_t[]> imagePlane16;
+    std::unique_ptr<std::uint32_t[]> imagePlaneU32;
+    std::unique_ptr<std::int32_t[]> imagePlane32;
+    std::unique_ptr<std::int64_t[]> imagePlane64;
+    std::unique_ptr<float[]> imagePlaneF;
+    std::unique_ptr<double[]> imagePlaneD;
 
     template<typename T>
     void copyImagePlane(T const *, T*);
 
     template<typename T, typename U>
-    void convertImagePlane(T *, U *);
+    void convertImagePlane(T const *, U *);
     template<typename T, typename U>
     void convertImagePlaneThread(T const *, U *, INDEX_t, INDEX_t);
 
@@ -206,20 +195,20 @@ namespace ACL
     void crop(T const *, T *, MCL::TPoint2D<AXIS_t> const &, MCL::TPoint2D<AXIS_t> const &);
 
     template<typename T>
-    void floatImage(T *imagePlane, T *newImagePlane, AXIS_t newWidth, AXIS_t newHeight, long newBkgnd);
+    void floatImage(std::unique_ptr<T[]> &imagePlane, AXIS_t newWidth, AXIS_t newHeight, long newBkgnd);
 
     template<typename T>
-    T *mirrorAxisX(T *);
+    void mirrorAxisX(std::unique_ptr<T[]> &);
     template<typename T>
     void mirrorAxisXThread(AXIS_t rowBegin, AXIS_t rowEnd, T *, T *);
 
     template<typename T>
-    T *mirrorAxisY(T *);
+    void mirrorAxisY(std::unique_ptr<T[]> &);
     template<typename T>
     void mirrorAxisYThread(AXIS_t rowBegin, AXIS_t rowEnd, T *imagePlane, T *newImagePlane);
 
     template<typename T>
-    void rotate(T *imagePlane, T *newImagePlane, std::tuple<AXIS_t, AXIS_t, AXIS_t, AXIS_t>, FP_t, FP_t, FP_t, FP_t);
+    void rotate(std::unique_ptr<T[]> &imagePlane, std::tuple<AXIS_t, AXIS_t, AXIS_t, AXIS_t>, FP_t, FP_t, FP_t, FP_t);
     template<typename T>
     void rotateThread(std::tuple<AXIS_t, AXIS_t>, T *, T *, std::tuple<AXIS_t , AXIS_t, AXIS_t, AXIS_t>, FP_t, FP_t, FP_t, FP_t);
 

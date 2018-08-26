@@ -59,9 +59,11 @@
 
 namespace ACL
 {
-  FP_t Airmass(FP_t zenith);															// Airmass for zenith distance
+  FP_t airmass(FP_t zenith);															// Airmass for zenith distance
   char *ConstellationName(double, double, double);
   TJD convertEpoch(std::string const &);
+
+  FP_t keplersEquation(FP_t meanAnomoly, FP_t eccentricity);
 
   FP_t dms2deg(FP_t);
   FP_t dms2deg(FP_t, FP_t, FP_t);

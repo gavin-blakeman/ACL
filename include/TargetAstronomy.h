@@ -87,6 +87,7 @@ namespace ACL
     DTargetName objectName_;                        ///< List of object names. Object may have more than one name.
 
   public:
+    CTargetAstronomy();
     CTargetAstronomy(std::string const &);
     virtual ~CTargetAstronomy() {}
 
@@ -100,14 +101,12 @@ namespace ACL
     virtual std::string objectName() const;
     virtual void objectName(std::string const &);
 
-      // Get functions
-
-    virtual CAstronomicalCoordinates catalogueCoordinates(CAstroTime const &) const = 0;
-
       // Position Calculation functions.
 
-    virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &) {CODE_ERROR(ACL);}
-    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *);
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const = 0;
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) = 0;
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
   };
   typedef std::vector<std::shared_ptr<CTargetAstronomy>> DTargetAstronomy;
 

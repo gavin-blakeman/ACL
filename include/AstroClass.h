@@ -60,13 +60,7 @@
 #ifndef ACL_ASTROCLASS_H
 #define ACL_ASTROCLASS_H
 
-#include "config.h"
-#include "AstronomicalCoordinates.h"
-#include "AstronomicalTime.h"
-#include "geographicLocation.h"
-#include "observatoryInformation.h"
-
-  // Standard Libraries
+  // Standard C++ Library header files.
 
 #include <cmath>
 #include <cstdio>
@@ -75,6 +69,14 @@
 #include <optional>
 #include <ostream>
 #include <string>
+
+  // ACL library header files.
+
+#include "config.h"
+#include "AstronomicalCoordinates.h"
+#include "AstronomicalTime.h"
+#include "geographicLocation.h"
+#include "observatoryInformation.h"
 
   // Miscellaneous Libraries
 
@@ -156,9 +158,9 @@ namespace ACL
 
       // Value retrieval functions
 
-    std::optional<PCL::CTemperature> &temperature();
-    std::optional<PCL::CPressure> &pressure();
-    std::optional<float> &RH();
+    std::optional<PCL::CTemperature> const &temperature() const;
+    std::optional<PCL::CPressure> const &pressure() const;
+    std::optional<float> const &RH() const;
   };
 
   class CEarthOrientationData

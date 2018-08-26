@@ -157,7 +157,7 @@ namespace ACL
   /// @version 2015-09-17/GGB - Updated to use PCL::CPressure.
   /// @version 2011-07-09/GGB - Function created.
 
-  std::optional<PCL::CPressure> &CWeather::pressure()
+  std::optional<PCL::CPressure> const &CWeather::pressure() const
   {
     return pressure_;
   }
@@ -181,7 +181,7 @@ namespace ACL
   /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
   /// @version 2011-07-09/GGB - Function created.
 
-  std::optional<float> &CWeather::RH()
+  std::optional<float> const &CWeather::RH() const
   {
     return RH_;
   }
@@ -205,7 +205,7 @@ namespace ACL
   /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
   /// @version 2011-07-09/GGB - Function created.
 
-  std::optional<PCL::CTemperature> &CWeather::temperature()
+  std::optional<PCL::CTemperature> const &CWeather::temperature() const
   {
     return temperature_;
   }

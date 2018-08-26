@@ -260,9 +260,10 @@ namespace ACL
   /// @brief Gets the observation weather from the parent.
   /// @returns A pointer to a weather instance.
   /// @throws 0x1908 - HDB: parent cannot be == NULL.
+  /// @version 2018-08-25/GGB - Changed return value to a raw pointer.
   /// @version 2011-12-23/GGB - Function created.
 
-  std::unique_ptr<CWeather> &CHDB::getObservationWeather() const
+  CWeather *CHDB::getObservationWeather() const
   {
     if (parent_ != nullptr)
     {

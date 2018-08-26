@@ -176,9 +176,10 @@ namespace ACL
     virtual FP_t catalogRadialVelocity() { return *radialVelocity_; }
     virtual FP_t catalogParallax() { return *parallax_; }
 
-      // Observed place functions
+      // Posotion Functions
 
-    virtual CAstronomicalCoordinates const &calculateObservedPlace(PAstroTime &, PLocation &, PWeather &);
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
   };
 
 }  // namespace ACL

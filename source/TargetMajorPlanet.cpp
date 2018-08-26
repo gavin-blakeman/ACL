@@ -44,6 +44,7 @@
 
   // ACL header files.
 
+#include "../include/AstroFunctions.h"
 #include "../include/constants.h"
 #include "../include/error.h"
 
@@ -140,12 +141,11 @@ namespace ACL
   /// @throws ACL, 0x2600 - Keplers equation fails to converge.
   /// @version 2018-08-22/GGB - Function created.
 
-  CAstronomicalCoordinates CTargetMajorPlanet::catalogueCoordinates(CAstroTime const &Teph) const
+  CAstronomicalCoordinates CTargetMajorPlanet::positionICRS(CAstroTime const &Teph) const
   {
     double T;
     double a, e, I, L, wbar, W;
     double w, M;
-    double estar;
     double E;
     double xdash, ydash, zdash;
     double xecl, yecl, zecl;
@@ -178,31 +178,7 @@ namespace ACL
       // Step 3. Modulus the mean anomoly so that -180degrees <= M <= +180degrees and then obtain the eccentric anomoly
       //         E, from the solution of Kepler's equation M = e*sinE, where e* = 180/PIe = 57.29578e.
 
-    M = MCL::moduloR(M, 180);
-    estar = e * D_R2D;
-
-      // Solution to Kepler's equation in block below.
-
-    {
-      double const tol = 1e-6;
-      double deltaM, deltaE;
-      std::uint_fast16_t loopCounter = 0;
-      E = M + estar * std::sin(MCL::D2R(M));
-
-      do
-      {
-        deltaM = M - (E - estar * std::sin(MCL::D2R(E)));
-        deltaE = deltaM / (1 - e * std::cos(MCL::D2R(E)));
-        E = E + deltaE;
-        loopCounter ++;
-        if (loopCounter >= 255)       // Bailout if not converging.
-        {
-          ACL_ERROR(0x2600);
-        }
-      }
-      while (deltaE > tol);
-
-    };
+    E = keplersEquation(M, e);
 
       // Step 4. Compute the planet's heliocentric coordinates in it's orbital plane rdash with the xdash axis aligned from the
       //         focus to the perihelion

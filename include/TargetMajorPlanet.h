@@ -78,7 +78,10 @@ namespace ACL
     CTargetMajorPlanet(EPlanets const &);
     virtual ~CTargetMajorPlanet();
 
-    virtual CAstronomicalCoordinates catalogueCoordinates(CAstroTime const &) const;
+      // Position functions.
+
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
 
   };
 }

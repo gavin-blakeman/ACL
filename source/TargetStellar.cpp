@@ -263,7 +263,8 @@ namespace ACL
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support and immediate return.
   /// @version 2011-07-04/GGB
 
-  CAstronomicalCoordinates const &CTargetStellar::calculateObservedPlace(PAstroTime &tt, PLocation &location, PWeather &weather)
+  CAstronomicalCoordinates CTargetStellar::positionObserved(CAstroTime const &tt, CGeographicLocation const &location,
+                                                            CWeather const &weather)
   {
     FP_t utc1, utc2;
     FP_t dut1;
@@ -272,8 +273,8 @@ namespace ACL
 
       // Perform some error checking to ensure that the passed data is valid.
 
-    RUNTIME_ASSERT(ACL, !tt, "Need a valid time to calculate observed place.");
-    RUNTIME_ASSERT(ACL, !location, "Need a valid location to calculate observed place.");
+    //RUNTIME_ASSERT(ACL, !tt, "Need a valid time to calculate observed place.");
+    //RUNTIME_ASSERT(ACL, !location, "Need a valid location to calculate observed place.");
 
       // Calculate the ICRS coordinates
 
@@ -305,9 +306,9 @@ namespace ACL
     iauAtco13(rh, dh,
               drh, ddh, pxh, rvh,
               utc1, utc2, dut1,
-              location->longitude(), location->latitude(), location->altitude(),
+              location.longitude(), location.latitude(), location.altitude(),
               0, 0,
-              (*weather->pressure())(PCL::PU::PA) / 100, (*weather->temperature())(PCL::TU_C), *weather->RH(),
+              (*weather.pressure())(PCL::PU::PA) / 100, (*weather.temperature())(PCL::TU_C), *weather.RH(),
               495 * 1000,    // 495nm = wavelength of light. (Can be corrected in future.) (! I know it is a magic number)
               &aob, &zob, &hob, &dob, &rob, &eo);
 

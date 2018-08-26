@@ -157,6 +157,5 @@
 #include "include/SIMBAD.h"
 #include "include/SourceExtraction.h"
 #include "include/TargetStellar.h"
-#include "include/TargetSolar.h"
 #include "include/telescope.h"
 #endif

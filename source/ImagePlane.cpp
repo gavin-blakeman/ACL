@@ -39,12 +39,12 @@
 //
 //											While this library has been designed to be used from Qt, it makes no reference to the Qt library.
 //
-//
 // CLASSES INCLUDED:		CImagePlane					- A single plane image.
 //
 // CLASS HIERARCHY:     CImagePlane
 //
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2018-08-25 GGB - Changed imagePointer types to std::unique_ptr<>()
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-04-14 GGB - Changed filename from CImagePlane.cpp to ImagePlane.cpp
 //                      2013-03-22 GGB - astroManager 2013.03 release.
@@ -56,14 +56,14 @@
 
 #include "../include/ImagePlane.h"
 
-  // Standard Libraries
+  // Standard C++ Library header files
 
 #include <algorithm>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 
-  // ACL include files
+  // ACL library header files
 
 #include "../include/constants.h"
 #include "../include/error.h"
@@ -217,14 +217,15 @@ namespace ACL
   }
 
   /// @brief Creates a sub-image from an existing image.
-  /// @param[in] oldPlane The image plane to copy the data from.
-  /// @param[in] xStart The starting x-value fo the sub image.
-  /// @param[in] End The ending x-value of the sub image.
-  /// @param[in] yStart The starting y-value for the sub image.
-  /// @param[in] yEnd The ending y value for the sub image.
+  /// @param[in] oldPlane: The image plane to copy the data from.
+  /// @param[in] xStart: The starting x-value fo the sub image.
+  /// @param[in] xEnd: The ending x-value of the sub image.
+  /// @param[in] yStart: The starting y-value for the sub image.
+  /// @param[in] yEnd: The ending y value for the sub image.
   /// @throws CError(ACL::0x1002) - CCFITS: Invalid BITPIX value.
   /// @throws std::bad_alloc
   /// @throws CRuntimeAssert.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   ///                         @li Use C-style arrays as storage type.
   ///                         @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -255,56 +256,56 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        imagePlane8 = new std::uint8_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlane8, imagePlane8);
+        imagePlane8 = std::make_unique<std::uint8_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlane8, imagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
-        imagePlaneS8 = new std::int8_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlaneS8, imagePlaneS8);
+        imagePlaneS8 = std::make_unique<std::int8_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlaneS8, imagePlaneS8);
         break;
       };
       case USHORT_IMG:
       {
-        imagePlaneU16 = new std::uint16_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlaneU16, imagePlaneU16);
+        imagePlaneU16 = std::make_unique<std::uint16_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlaneU16, imagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
-        imagePlane16 = new std::int16_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlane16, imagePlane16);
+        imagePlane16 = std::make_unique<std::int16_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlane16, imagePlane16);
         break;
       };
       case ULONG_IMG:
       {
-        imagePlaneU32 = new std::uint32_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlaneU32, imagePlaneU32);
+        imagePlaneU32 = std::make_unique<std::uint32_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlaneU32, imagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
-        imagePlane32 = new std::int32_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlane32, imagePlane32);
+        imagePlane32 = std::make_unique<std::int32_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlane32, imagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
-        imagePlane64 = new std::int64_t[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlane64, imagePlane64);
+        imagePlane64 = std::make_unique<std::int64_t[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlane64, imagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
-        imagePlaneF = new float[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlaneF, imagePlaneF);
+        imagePlaneF = std::make_unique<float[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlaneF, imagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
-        imagePlaneD = new double[dimX * dimY];
-        copyImagePlane(oldPlane->imagePlaneD, imagePlaneD);
+        imagePlaneD = std::make_unique<double[]>(dimX * dimY);
+        //copyImagePlane(oldPlane->imagePlaneD, imagePlaneD);
         break;
       };
       default:
@@ -359,6 +360,7 @@ namespace ACL
 
   /// @brief Destructor for CImagePlane. Ensures all dynamically allocated memory is cleared.
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -369,56 +371,12 @@ namespace ACL
 
   CImagePlane::~CImagePlane()
   {
-    if (imagePlane8)
-    {
-      delete [] imagePlane8;
-      imagePlane8 = nullptr;
-    };
-    if (imagePlaneS8)
-    {
-      delete [] imagePlaneS8;
-      imagePlaneS8 = nullptr;
-    };
-    if (imagePlaneU16)
-    {
-      delete [] imagePlaneU16;
-      imagePlaneU16 = nullptr;
-    }
-    if (imagePlane16)
-    {
-      delete [] imagePlane16;
-      imagePlane16 = nullptr;
-    };
-    if (imagePlaneU32)
-    {
-      delete [] imagePlaneU32;
-      imagePlaneU32 = nullptr;
-    }
-    if (imagePlane32)
-    {
-      delete [] imagePlane32;
-      imagePlane32 = nullptr;
-    };
-    if (imagePlane64)
-    {
-      delete [] imagePlane64;
-      imagePlane64 = nullptr;
-    };
-    if (imagePlaneF)
-    {
-      delete [] imagePlaneF;
-      imagePlaneF = nullptr;
-    };
-    if (imagePlaneD)
-    {
-      delete [] imagePlaneD;
-      imagePlaneD = nullptr;
-    };
   }
 
   /// @brief Assignment operator
-  /// @param[in] rhs - The image plane to copy to this.
+  /// @param[in] rhs: The image plane to copy to this.
   /// @throws std::bad_alloc
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -459,56 +417,56 @@ namespace ACL
       {
         case BYTE_IMG:
         {
-          imagePlane8 = new std::uint8_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlane8, imagePlane8);
+          imagePlane8 = std::make_unique<std::uint8_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlane8.get(), imagePlane8.get());
           break;
         };
         case SBYTE_IMG:
         {
-          imagePlaneS8 = new std::int8_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlaneS8, imagePlaneS8);
+          imagePlaneS8 = std::make_unique<std::int8_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlaneS8.get(), imagePlaneS8.get());
           break;
         };
         case USHORT_IMG:
         {
-          imagePlaneU16 = new std::uint16_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlaneU16, imagePlaneU16);
+          imagePlaneU16 = std::make_unique<std::uint16_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlaneU16.get(), imagePlaneU16.get());
           break;
         };
         case SHORT_IMG:
         {
-          imagePlane16 = new std::int16_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlane16, imagePlane16);
+          imagePlane16 = std::make_unique<std::int16_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlane16.get(), imagePlane16.get());
           break;
         };
         case ULONG_IMG:
         {
-          imagePlaneU32 = new std::uint32_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlaneU32, imagePlaneU32);
+          imagePlaneU32 = std::make_unique<std::uint32_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlaneU32.get(), imagePlaneU32.get());
           break;
         };
         case LONG_IMG:
         {
-          imagePlane32 = new std::int32_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlane32, imagePlane32);
+          imagePlane32 = std::make_unique<std::int32_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlane32.get(), imagePlane32.get());
           break;
         };
         case LONGLONG_IMG:
         {
-          imagePlane64 = new std::int64_t[dimX * dimY];
-          copyImagePlane(rhs.imagePlane64, imagePlane64);
+          imagePlane64 = std::make_unique<std::int64_t[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlane64.get(), imagePlane64.get());
           break;
         };
         case FLOAT_IMG:
         {
-          imagePlaneF = new float[dimX * dimY];
-          copyImagePlane(rhs.imagePlaneF, imagePlaneF);
+          imagePlaneF = std::make_unique<float[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlaneF.get(), imagePlaneF.get());
           break;
         };
         case DOUBLE_IMG:
         {
-          imagePlaneD = new double[dimX * dimY];
-          copyImagePlane(rhs.imagePlaneD, imagePlaneD);
+          imagePlaneD = std::make_unique<double[]>(dimX * dimY);
+          copyImagePlane(rhs.imagePlaneD.get(), imagePlaneD.get());
           break;
         };
       };
@@ -1053,6 +1011,7 @@ namespace ACL
   /// @param[in] nSize - Number of pixels to bin together. (0 < nSize <= 10)
   /// @throws RuntimeAssert.
   /// @note Always converts the underlying data type to double when the pixels are binned.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -1072,12 +1031,11 @@ namespace ACL
     size_t threadNumber;
     boost::thread_group threadGroup;
     boost::thread *thread;
-    double *newImagePlaneD;
 
     AXIS_t newWidth = dimX / nSize;
     AXIS_t newHeight = dimY / nSize;
 
-    newImagePlaneD = new double[newWidth * newHeight];
+    std::unique_ptr<double[]> newImagePlaneD(new double[newWidth * newHeight]);
 
       // Ensure that we are using a reasonable number of threads. Maximise the number of threads to the number of rows
       // in the image.
@@ -1111,7 +1069,7 @@ namespace ACL
         yEnd += yStep;
       };
 
-      thread = new boost::thread(&CImagePlane::binPixelsThread<FP_t>, this, newImagePlaneD,
+      thread = new boost::thread(&CImagePlane::binPixelsThread<FP_t>, this, newImagePlaneD.get(),
                                  std::make_tuple(yBegin, yEnd), newWidth, nSize);
       threadGroup.add_thread(thread);
       thread = nullptr;
@@ -1119,11 +1077,10 @@ namespace ACL
 
     threadGroup.join_all();     // Wait for all the threads to finish.
 
-    deleteImagePlane();         // Delete the existing image plane.
+    //deleteImagePlane();         // Delete the existing image plane.
 
     bitpix_ = DOUBLE_IMG;          // Change data type to double
-    imagePlaneD = newImagePlaneD;
-    newImagePlaneD = nullptr;
+    imagePlaneD.swap(newImagePlaneD);
 
     dimX = newWidth;
     dimY = newHeight;
@@ -1175,6 +1132,7 @@ namespace ACL
   /// @brief Sets the value of BITPIX.
   /// @throws CError(ACL::0x1901) - HDB: Only supported BITPIX values are allowed
   /// @throws std::bad_alloc
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-03-09/GGB - Added code to convert between image plane types. (See also TO DO at top of file.)
   /// @version 2012-11-29/GGB - Function created.
@@ -1190,246 +1148,195 @@ namespace ACL
 
         switch(bp)
         {
-        case BYTE_IMG:
-          imagePlane8 = new std::uint8_t[dimX * dimY];
-          switch (bitpix_)
-          {
-          case SHORT_IMG:
-            convertImagePlane(imagePlane16, imagePlane8);
-            if (imagePlane16)
+          case BYTE_IMG:
+            imagePlane8 = std::make_unique<std::uint8_t[]>(dimX * dimY);
+            switch (bitpix_)
             {
-              delete imagePlane16;
-              imagePlane16 = nullptr;
+              case SHORT_IMG:
+              {
+                convertImagePlane(imagePlane16.get(), imagePlane8.get());
+                imagePlane16.reset(nullptr);
+                break;
+              };
+              case LONG_IMG:
+              {
+                convertImagePlane(imagePlane32.get(), imagePlane8.get());
+                imagePlane32.reset(nullptr);
+                break;
+              };
+              case LONGLONG_IMG:
+              {
+                convertImagePlane(imagePlane64.get(), imagePlane8.get());
+                imagePlane64.reset(nullptr);
+                break;
+              };
+              case BYTE_IMG:
+              {
+                convertImagePlane(imagePlaneF.get(), imagePlane8.get());
+                imagePlaneF.reset(nullptr);
+                break;
+              };
+              case DOUBLE_IMG:
+              {
+                convertImagePlane(imagePlaneD.get(), imagePlane8.get());
+                imagePlaneD.reset(nullptr);
+                break;
+              };
+            };
+            break;
+          case SHORT_IMG:    // (16)
+            imagePlane16 = std::make_unique<std::int16_t[]>(dimX * dimY);
+            switch (bitpix_)
+            {
+              case BYTE_IMG:
+              {
+                convertImagePlane(imagePlane8.get(), imagePlane16.get());
+                imagePlane8.reset(nullptr);
+                break;
+              };
+              case LONG_IMG:
+              {
+                convertImagePlane(imagePlane32.get(), imagePlane16.get());
+                imagePlane32.reset(nullptr);
+                break;
+              };
+              case LONGLONG_IMG:
+              {
+                convertImagePlane(imagePlane64.get(), imagePlane16.get());
+                imagePlane64.reset(nullptr);
+                break;
+              };
+              case FLOAT_IMG:
+              {
+                convertImagePlane(imagePlaneF.get(), imagePlane16.get());
+                imagePlaneF.reset(nullptr);
+                break;
+              };
+              case DOUBLE_IMG:
+              {
+                convertImagePlane(imagePlaneD.get(), imagePlane16.get());
+                imagePlaneD.reset(nullptr);
+                break;
+              };
             };
             break;
           case LONG_IMG:
-            convertImagePlane(imagePlane32, imagePlane8);
-            if (imagePlane32)
+            imagePlane32 = std::make_unique<std::int32_t[]>(dimX * dimY);
+            switch (bitpix_)
             {
-              delete imagePlane32;
-              imagePlane32 = nullptr;
+              case BYTE_IMG:
+                convertImagePlane(imagePlane8.get(), imagePlane32.get());
+                imagePlane8.reset(nullptr);
+                break;
+              case SHORT_IMG:
+                convertImagePlane(imagePlane16.get(), imagePlane32.get());
+                imagePlane16.reset(nullptr);
+                break;
+              case LONGLONG_IMG:
+              {
+                convertImagePlane(imagePlane64.get(), imagePlane32.get());
+                imagePlane64.reset(nullptr);
+                break;
+              };
+              case FLOAT_IMG:
+                convertImagePlane(imagePlaneF.get(), imagePlane32.get());
+                imagePlaneF.reset(nullptr);
+                break;
+              case DOUBLE_IMG:
+                convertImagePlane(imagePlaneD.get(), imagePlane32.get());
+                imagePlaneD.reset(nullptr);
+                break;
             };
             break;
           case LONGLONG_IMG:
-            convertImagePlane(imagePlane64, imagePlane8);
-            if (imagePlane64)
+            imagePlane64 = std::make_unique<std::int64_t[]>(dimX * dimY);
+            switch (bitpix_)
             {
-              delete imagePlane64;
-              imagePlane64 = nullptr;
-            };
-            break;
-          case BYTE_IMG:
-            convertImagePlane(imagePlaneF, imagePlane8);
-            if(imagePlaneF)
-            {
-              delete imagePlaneF;
-              imagePlaneF = nullptr;
-            };
-            break;
-          case DOUBLE_IMG:
-            convertImagePlane(imagePlaneD, imagePlane8);
-            if (imagePlaneD)
-            {
-              delete imagePlaneD;
-              imagePlaneD = nullptr;
-            };
-            break;
-          };
-          break;
-        case SHORT_IMG:    // (16)
-          imagePlane16 = new std::int16_t[dimX * dimY];
-          switch (bitpix_)
-          {
-          case BYTE_IMG:
-            convertImagePlane(imagePlane8, imagePlane16);
-            if (imagePlane8)
-            {
-              delete imagePlane8;
-              imagePlane8 = nullptr;
-            };
-            break;
-          case LONG_IMG:
-            convertImagePlane(imagePlane32, imagePlane16);
-            if (imagePlane32)
-            {
-              delete [] imagePlane32;
-              imagePlane32 = nullptr;
-            };
-            break;
-          case LONGLONG_IMG:
-            convertImagePlane(imagePlane64, imagePlane16);
-            if (imagePlane64)
-            {
-              delete imagePlane64;
-              imagePlane64 = nullptr;
+              case BYTE_IMG:
+                convertImagePlane(imagePlane8.get(), imagePlane64.get());
+                imagePlane8.reset(nullptr);
+                break;
+              case SHORT_IMG:
+                convertImagePlane(imagePlane16.get(), imagePlane64.get());
+                imagePlane16.reset(nullptr);
+                break;
+              case LONG_IMG:
+                convertImagePlane(imagePlane32.get(), imagePlane64.get());
+                imagePlane32.reset(nullptr);
+                break;
+              case FLOAT_IMG:
+                convertImagePlane(imagePlaneF.get(), imagePlane64.get());
+                imagePlaneF.reset(nullptr);
+                break;
+              case DOUBLE_IMG:
+                convertImagePlane(imagePlaneD.get(), imagePlane64.get());
+                imagePlaneD.reset(nullptr);
+                break;
             };
             break;
           case FLOAT_IMG:
-            convertImagePlane(imagePlaneF, imagePlane16);
-            if (imagePlaneF)
+            imagePlaneF = std::make_unique<float[]>(dimX * dimY);
+            switch (bitpix_)
             {
-              delete imagePlaneF;
-              imagePlaneF = nullptr;
+              case BYTE_IMG:
+                convertImagePlane(imagePlane8.get(), imagePlaneF.get());
+                imagePlane8.reset(nullptr);
+                break;
+              case USHORT_IMG:
+              {
+                convertImagePlane(imagePlaneU16.get(), imagePlaneF.get());
+                imagePlaneU16.reset(nullptr);
+                break;
+              };
+              case SHORT_IMG:
+              {
+                convertImagePlane(imagePlane16.get(), imagePlaneF.get());
+                imagePlane16.reset(nullptr);
+                break;
+              };
+              case LONG_IMG:
+              {
+                convertImagePlane(imagePlane32.get(), imagePlaneF.get());
+                imagePlane32.reset(nullptr);
+                break;
+              };
+              case LONGLONG_IMG:
+                convertImagePlane(imagePlane64.get(), imagePlaneF.get());
+                imagePlane64.reset(nullptr);
+                break;
+              case DOUBLE_IMG:
+                convertImagePlane(imagePlaneD.get(), imagePlaneF.get());
+                imagePlaneD.reset(nullptr);
+                break;
             };
             break;
           case DOUBLE_IMG:
-            convertImagePlane(imagePlaneD, imagePlane16);
-            if (imagePlaneD)
+            imagePlaneD = std::make_unique<double[]>(dimX * dimY);
+            switch (bitpix_)
             {
-              delete imagePlaneD;
-              imagePlaneD = nullptr;
+              case BYTE_IMG:
+                convertImagePlane(imagePlane8.get(), imagePlaneD.get());
+                imagePlane8.reset(nullptr);
+                break;
+              case SHORT_IMG:
+                convertImagePlane(imagePlane16.get(), imagePlaneD.get());
+                imagePlane16.reset(nullptr);
+                break;
+              case LONG_IMG:
+                convertImagePlane(imagePlane32.get(), imagePlaneD.get());
+                imagePlane32.reset(nullptr);
+                break;
+              case LONGLONG_IMG:
+                convertImagePlane(imagePlane64.get(), imagePlaneD.get());
+                imagePlane64.reset(nullptr);
+                break;
+              case FLOAT_IMG:
+                convertImagePlane(imagePlaneF.get(), imagePlaneD.get());
+                imagePlaneF.reset(nullptr);
+                break;
             };
             break;
-          };
-          break;
-        case LONG_IMG:
-          imagePlane32 = new std::int32_t[dimX * dimY];
-          switch (bitpix_)
-          {
-          case BYTE_IMG:
-            convertImagePlane(imagePlane8, imagePlane32);
-            if (imagePlane8)
-            {
-              delete imagePlane8;
-              imagePlane8 = nullptr;
-            };
-            break;
-          case SHORT_IMG:
-            convertImagePlane(imagePlane16, imagePlane32);
-            if (imagePlane16)
-            {
-              delete imagePlane16;
-              imagePlane16 = nullptr;
-            };
-            break;
-          case LONGLONG_IMG:
-            convertImagePlane(imagePlane64, imagePlane32);
-            delete imagePlane64;
-            imagePlane64 = nullptr;
-            break;
-          case FLOAT_IMG:
-            convertImagePlane(imagePlaneF, imagePlane32);
-            if (imagePlaneF)
-            {
-              delete imagePlaneF;
-              imagePlaneF = nullptr;
-            };
-            break;
-          case DOUBLE_IMG:
-            convertImagePlane(imagePlaneD, imagePlane32);
-            if (imagePlaneD)
-            {
-              delete imagePlaneD;
-              imagePlaneD = nullptr;
-            };
-            break;
-          };
-          break;
-        case LONGLONG_IMG:
-          imagePlane64 = new std::int64_t[dimX * dimY];
-          switch (bitpix_)
-          {
-          case BYTE_IMG:
-            convertImagePlane(imagePlane8, imagePlane64);
-            if (imagePlane8)
-            {
-              delete imagePlane8;
-              imagePlane8 = nullptr;
-            };
-            break;
-          case SHORT_IMG:
-            convertImagePlane(imagePlane16, imagePlane64);
-            delete imagePlane16;
-            imagePlane16 = nullptr;
-            break;
-          case LONG_IMG:
-            convertImagePlane(imagePlane32, imagePlane64);
-            delete imagePlane32;
-            imagePlane32 = nullptr;
-            break;
-          case FLOAT_IMG:
-            convertImagePlane(imagePlaneF, imagePlane64);
-            delete imagePlaneF;
-            imagePlaneF = nullptr;
-            break;
-          case DOUBLE_IMG:
-            convertImagePlane(imagePlaneD, imagePlane64);
-            delete imagePlaneD;
-            imagePlaneD = nullptr;
-            break;
-          };
-          break;
-        case FLOAT_IMG:
-          imagePlaneF = new float[dimX * dimY];
-          switch (bitpix_)
-          {
-          case BYTE_IMG:
-            convertImagePlane(imagePlane8, imagePlaneF);
-            delete imagePlane8;
-            imagePlane8 = nullptr;
-            break;
-            case USHORT_IMG:
-            {
-              convertImagePlane(imagePlaneU16, imagePlaneF);
-              delete imagePlaneU16;
-              imagePlane16 = nullptr;
-              break;
-            };
-          case SHORT_IMG:
-            convertImagePlane(imagePlane16, imagePlaneF);
-            delete imagePlane16;
-            imagePlane16 = nullptr;
-            break;
-          case LONG_IMG:
-            convertImagePlane(imagePlane32, imagePlaneF);
-            delete imagePlane32;
-            imagePlane32 = nullptr;
-            break;
-          case LONGLONG_IMG:
-            convertImagePlane(imagePlane64, imagePlaneF);
-            delete imagePlane64;
-            imagePlane64 = nullptr;
-            break;
-          case DOUBLE_IMG:
-            convertImagePlane(imagePlaneD, imagePlaneF);
-            delete imagePlaneD;
-            imagePlaneD = nullptr;
-            break;
-          };
-          break;
-        case DOUBLE_IMG:
-          imagePlaneD = new double[dimX * dimY];
-          switch (bitpix_)
-          {
-          case BYTE_IMG:
-            convertImagePlane(imagePlane8, imagePlaneD);
-            delete imagePlane8;
-            imagePlane8 = nullptr;
-            break;
-          case SHORT_IMG:
-            convertImagePlane(imagePlane16, imagePlaneD);
-            delete imagePlane16;
-            imagePlane16 = nullptr;
-            break;
-          case LONG_IMG:
-            convertImagePlane(imagePlane32, imagePlaneD);
-            delete imagePlane32;
-            imagePlane32 = nullptr;
-            break;
-          case LONGLONG_IMG:
-            convertImagePlane(imagePlane64, imagePlaneD);
-            delete imagePlane64;
-            imagePlane64 = nullptr;
-            break;
-          case FLOAT_IMG:
-            convertImagePlane(imagePlaneF, imagePlaneD);
-            delete imagePlaneF;
-            imagePlaneF = nullptr;
-            break;
-          };
-          break;
         };
-
         bitpix_ = bp;
       }
     }
@@ -1594,12 +1501,13 @@ namespace ACL
   /// @param[in] dest - The destination array
   /// @throws None.
   /// @details This function spawns the threads to do the actual conversion of the image plane data.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB - Moved into CImagePlane class.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-03-09/GGB - Function created.
 
   template<typename T, typename U>
-  void CImagePlane::convertImagePlane(T *src, U *dest)
+  void CImagePlane::convertImagePlane(T const *src, U *dest)
   {
     AXIS_t dim = dimX * dimY;
     size_t numberOfThreads;
@@ -1638,7 +1546,8 @@ namespace ACL
         indexEnd += indexStep;
       };
 
-      thread = new boost::thread(&CImagePlane::convertImagePlaneThread<T, U>, this, src, dest, indexBegin, indexEnd);
+      thread = new boost::thread(&CImagePlane::convertImagePlaneThread<T, U>, this,
+                                 src, dest, indexBegin, indexEnd);
       threadGroup.add_thread(thread);
       thread = nullptr;
     };
@@ -1652,6 +1561,7 @@ namespace ACL
   /// @param[in] start - The starting index for this thread
   /// @param[in] end - The ending index for this thread.
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB - Moved into class CImagePlane.
   /// @version 2013-03-09/GGB - Function created.
 
@@ -1660,7 +1570,7 @@ namespace ACL
   {
     INDEX_t index;
 
-    for (index = start; index < end; index++)
+    for (index = start; index < end; ++index)
     {
       dest[index] = static_cast<U>(src[index]);
     }
@@ -1674,7 +1584,6 @@ namespace ACL
   {
     ACL::copyImagePlane(std::make_tuple(src, AXIS_t(0), AXIS_t(0), dimX), std::make_tuple(dest, dimX, dimY));
   }
-
 
   /// @brief Templated function for performing the image crop.
   /// @throws None.
@@ -1713,6 +1622,7 @@ namespace ACL
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws CError(ACL::0x1203)
   /// @throws std::bad_alloc
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-03/GGB - (Bug 8) Corrected to work with all types of storage.
   /// @version 2015-08-29/GGB - Converted back to C-style arrays.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
@@ -1720,16 +1630,6 @@ namespace ACL
 
   void CImagePlane::crop(MCL::TPoint2D<AXIS_t> const &o, MCL::TPoint2D<AXIS_t> const &d)
   {
-    std::uint8_t  *newImagePlane8 = nullptr;
-    std::int8_t   *newImagePlaneS8 = nullptr;
-    std::uint16_t *newImagePlaneU16 = nullptr;
-    std::int16_t  *newImagePlane16 = nullptr;
-    std::uint32_t *newImagePlaneU32 = nullptr;
-    std::int32_t  *newImagePlane32 = nullptr;
-    std::int64_t  *newImagePlane64 = nullptr;
-    float         *newImagePlaneF = nullptr;
-    double        *newImagePlaneD= nullptr;
-
     RUNTIME_ASSERT(ACL, o.x() > 0, "Origin incorrect");
     RUNTIME_ASSERT(ACL, o.y() > 0, "Origin incorrect");
     RUNTIME_ASSERT(ACL, o.x() + d.x() < dimX, "Origin + dimension incorrect");
@@ -1739,83 +1639,65 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        newImagePlane8 = new std::uint8_t[d.x() * d.y()];
-        crop(imagePlane8, newImagePlane8, o, d);
-        delete [] imagePlane8;
-        imagePlane8 = newImagePlane8;
-        newImagePlane8 = nullptr;
+        std::unique_ptr<std::uint8_t[]> newImagePlane8(new std::uint8_t[d.x() * d.y()]);
+        crop(imagePlane8.get(), newImagePlane8.get(), o, d);
+        imagePlane8.swap(newImagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
-        newImagePlaneS8 = new std::int8_t[d.x() * d.y()];
-        crop(imagePlaneS8, newImagePlaneS8, o, d);
-        delete [] imagePlaneS8;
-        imagePlaneS8 = newImagePlaneS8;
-        newImagePlaneS8 = nullptr;
+        std::unique_ptr<std::int8_t[]> newImagePlaneS8(new std::int8_t[d.x() * d.y()]);
+        crop(imagePlaneS8.get(), newImagePlaneS8.get(), o, d);
+        imagePlaneS8.swap(newImagePlaneS8);
         break;
       }
       case USHORT_IMG:
       {
-        newImagePlaneU16 = new std::uint16_t[d.x() * d.y()];
-        crop(imagePlaneU16, newImagePlaneU16, o, d);
-        delete [] imagePlaneU16;
-        imagePlaneU16 = newImagePlaneU16;
-        newImagePlaneU16 = nullptr;
+        std::unique_ptr<std::uint16_t[]> newImagePlaneU16(new std::uint16_t[d.x() * d.y()]);
+        crop(imagePlaneU16.get(), newImagePlaneU16.get(), o, d);
+        imagePlaneU16.swap(newImagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
-        newImagePlane16 = new std::int16_t[d.x() * d.y()];
-        crop(imagePlane16, newImagePlane16, o, d);
-        delete [] imagePlane16;
-        imagePlane16 = newImagePlane16;
-        newImagePlane16 = nullptr;
+        std::unique_ptr<std::int16_t[]> newImagePlane16(new std::int16_t[d.x() * d.y()]);
+        crop(imagePlane16.get(), newImagePlane16.get(), o, d);
+        imagePlane16.swap(newImagePlane16);
         break;
       };
       case ULONG_IMG:
       {
-        newImagePlaneU32 = new std::uint32_t[d.x() * d.y()];
-        crop(imagePlaneU32, newImagePlaneU32, o, d);
-        delete [] imagePlaneU32;
-        imagePlaneU32 = newImagePlaneU32;
-        newImagePlaneU32 = nullptr;
+        std::unique_ptr<std::uint32_t[]> newImagePlaneU32(new std::uint32_t[d.x() * d.y()]);
+        crop(imagePlaneU32.get(), newImagePlaneU32.get(), o, d);
+        imagePlaneU32.swap(newImagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
-        newImagePlane32 = new std::int32_t[d.x() * d.y()];
-        crop(imagePlane32, newImagePlane32, o, d);
-        delete [] imagePlane32;
-        imagePlane32 = newImagePlane32;
-        newImagePlane32 = nullptr;
+        std::unique_ptr<std::int32_t[]> newImagePlane32(new std::int32_t[d.x() * d.y()]);
+        crop(imagePlane32.get(), newImagePlane32.get(), o, d);
+        imagePlane32.swap(newImagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
-        newImagePlane64 = new std::int64_t[d.x() * d.y()];
-        crop(imagePlane64, newImagePlane64, o, d);
-        delete [] imagePlane64;
-        imagePlane64 = newImagePlane64;
-        newImagePlane64 = nullptr;
+        std::unique_ptr<std::int64_t[]> newImagePlane64(new std::int64_t[d.x() * d.y()]);
+        crop(imagePlane64.get(), newImagePlane64.get(), o, d);
+        imagePlane64.swap(newImagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
-        newImagePlaneF = new float[d.x() * d.y()];
-        crop(imagePlaneF, newImagePlaneF, o, d);
-        delete [] imagePlaneF;
-        imagePlaneF = newImagePlaneF;
-        newImagePlaneF = nullptr;
+        std::unique_ptr<float[]> newImagePlaneF(new float[d.x() * d.y()]);
+        crop(imagePlaneF.get(), newImagePlaneF.get(), o, d);
+        imagePlaneF.swap(newImagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
-        newImagePlaneD = new double[d.x() * d.y()];
-        crop(imagePlaneD, newImagePlaneD, o, d);
-        delete [] imagePlaneD;
-        imagePlaneD = newImagePlaneD;
-        newImagePlaneD = nullptr;
+        std::unique_ptr<double[]> newImagePlaneD(new double[d.x() * d.y()]);
+        crop(imagePlaneD.get(), newImagePlaneD.get(), o, d);
+        imagePlaneD.swap(newImagePlaneD);
         break;
       };
       default:
@@ -1833,105 +1715,30 @@ namespace ACL
 
   /// @brief Deletes the current image plane. No matter what the type of the image plane is.
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB - Use C-style arrays as storage type.
   /// @version 2015-09-02/GGB - Removed default clause to prevent error is the bitpix value has not been assigned.
   /// @version 2013-01-27/GGB - Function created.
 
   void CImagePlane::deleteImagePlane()
   {
-    switch (bitpix_)
-    {
-      case BYTE_IMG:
-      {
-        if (imagePlane8)
-        {
-          delete [] imagePlane8;
-          imagePlane8 = nullptr;
-        };
-        break;
-      };
-      case SBYTE_IMG:
-      {
-        if (imagePlaneS8)
-        {
-          delete [] imagePlaneS8;
-          imagePlaneS8 = nullptr;
-        };
-        break;
-      }
-      case USHORT_IMG:
-      {
-        if (imagePlaneU16)
-        {
-          delete [] imagePlaneU16;
-          imagePlaneU16 = nullptr;
-        };
-        break;
-      };
-      case SHORT_IMG:
-      {
-        if (imagePlane16)
-        {
-          delete [] imagePlane16;
-          imagePlane16 = nullptr;
-        };
-        break;
-      };
-      case ULONG_IMG:
-      {
-        if (imagePlaneU32)
-        {
-          delete [] imagePlaneU32;
-          imagePlaneU32 = nullptr;
-        };
-        break;
-      };
-      case LONG_IMG:
-      {
-        if (imagePlane32)
-        {
-          delete [] imagePlane32;
-          imagePlane32 = nullptr;
-        };
-        break;
-      };
-      case LONGLONG_IMG:
-      {
-        if (imagePlane64)
-        {
-          delete [] imagePlane64;
-          imagePlane64 = nullptr;
-        };
-        break;
-      };
-      case FLOAT_IMG:
-      {
-        if (imagePlaneF)
-        {
-          delete [] imagePlaneF;
-          imagePlaneF = nullptr;
-        };
-        break;
-      };
-      case DOUBLE_IMG:
-      {
-        if (imagePlaneD)
-        {
-          delete [] imagePlaneD;
-          imagePlaneD = nullptr;
-        };
-        break;
-      };
-      default:
-      {
-        break;
-      };
-    };
+    imagePlane8.reset(nullptr);
+    imagePlaneS8.reset(nullptr);
+    imagePlaneU16.reset(nullptr);
+    imagePlane16.reset(nullptr);
+    imagePlaneU32.reset(nullptr);
+    imagePlane32.reset(nullptr);
+    imagePlane64.reset(nullptr);
+    imagePlaneF.reset(nullptr);
+    imagePlaneD.reset(nullptr);
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
   }
 
   /// @brief Source Extraction function using the findStars routines from libWCS
+  /// @param[out] sourceList:
+  /// @param[in] sourceParameters:
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -1940,58 +1747,58 @@ namespace ACL
 
   void CImagePlane::findStars(TImageSourceContainer &sourceList, SFindSources const &sourceParameters)
   {
-    double *tempImage = new double[dimX * dimY];
+    std::unique_ptr<double[]> tempImage(new double[dimX * dimY]);
 
     switch(bitpix_)
     {
       case BYTE_IMG:
       {
-        convertImagePlane(imagePlane8, tempImage);
+        convertImagePlane(imagePlane8.get(), tempImage.get());
         break;
       };
       case SBYTE_IMG:
       {
-        convertImagePlane(imagePlaneS8, tempImage);
+        convertImagePlane(imagePlaneS8.get(), tempImage.get());
         break;
       };
       case USHORT_IMG:
       {
-        convertImagePlane(imagePlaneU16, tempImage);
+        convertImagePlane(imagePlaneU16.get(), tempImage.get());
         break;
       };
       case SHORT_IMG:
       {
-        convertImagePlane(imagePlane16, tempImage);
+        convertImagePlane(imagePlane16.get(), tempImage.get());
         break;
       };
       case ULONG_IMG:
       {
-        convertImagePlane(imagePlaneU32, tempImage);
+        convertImagePlane(imagePlaneU32.get(), tempImage.get());
         break;
       };
       case LONG_IMG:
       {
-        convertImagePlane(imagePlane32, tempImage);
+        convertImagePlane(imagePlane32.get(), tempImage.get());
         break;
       };
       case LONGLONG_IMG:
       {
-        convertImagePlane(imagePlane64, tempImage);
+        convertImagePlane(imagePlane64.get(), tempImage.get());
         break;
       };
       case FLOAT_IMG:
       {
-        convertImagePlane(imagePlaneF, tempImage);
+        convertImagePlane(imagePlaneF.get(), tempImage.get());
         break;
       };
       case DOUBLE_IMG:
       {
-        copyImagePlane(imagePlaneD, tempImage);
+        copyImagePlane(imagePlaneD.get(), tempImage.get());
         break;
       };
     };
 
-    CFindSources sourceExtractor(tempImage, dimX, dimY);
+    CFindSources sourceExtractor(tempImage.get(), dimX, dimY);
 
     sourceExtractor.setParameters(sourceParameters);
 
@@ -2241,94 +2048,58 @@ namespace ACL
   /// @brief Mirrors the image vertically (about the X axis)
   /// @throws GCL::CError(ACL::0x1201) - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
   /// @throws GCL::CError(ACL::0x1203) - CIMAGEPLANE: Invalid BITPIX value.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2012-11-30/GGB - Added support for native FITS types
   /// @version 2010-12-28/GGB - Function created.
 
   void CImagePlane::mirrorAxisX()
   {
-    std::uint8_t  *newImagePlane8 = nullptr;
-    std::int8_t   *newImagePlaneS8 = nullptr;
-    std::uint16_t *newImagePlaneU16 = nullptr;
-    std::int16_t  *newImagePlane16 = nullptr;
-    std::uint32_t *newImagePlaneU32 = nullptr;
-    std::int32_t  *newImagePlane32 = nullptr;
-    std::int64_t  *newImagePlane64 = nullptr;
-    float         *newImagePlaneF = nullptr;
-    double        *newImagePlaneD= nullptr;
-
     switch (bitpix_)
     {
       case BYTE_IMG:
       {
-        newImagePlane8 = mirrorAxisX(imagePlane8);
-        delete [] imagePlane8;
-        imagePlane8 = newImagePlane8;
-        newImagePlane8 = nullptr;
+        mirrorAxisX(imagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
-        newImagePlaneS8 = mirrorAxisX(imagePlaneS8);
-        delete [] imagePlaneS8;
-        imagePlaneS8 = newImagePlaneS8;
-        newImagePlaneS8 = nullptr;
+        mirrorAxisX(imagePlaneS8);
         break;
       }
       case USHORT_IMG:
       {
-        newImagePlaneU16 = mirrorAxisX(imagePlaneU16);
-        delete [] imagePlaneU16;
-        imagePlaneU16 = newImagePlaneU16;
-        newImagePlaneU16 = nullptr;
+        mirrorAxisX(imagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
-        newImagePlane16 = mirrorAxisX(imagePlane16);
-        delete [] imagePlane16;
-        imagePlane16 = newImagePlane16;
-        newImagePlane16 = nullptr;
+        mirrorAxisX(imagePlane16);
         break;
       };
       case ULONG_IMG:
       {
-        newImagePlaneU32 = mirrorAxisX(imagePlaneU32);
-        delete [] imagePlaneU32;
-        imagePlaneU32 = newImagePlaneU32;
-        newImagePlaneU32 = nullptr;
+        mirrorAxisX(imagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
-        newImagePlane32 = mirrorAxisX(imagePlane32);
-        delete [] imagePlane32;
-        imagePlane32 = newImagePlane32;
-        newImagePlane32 = nullptr;
+        mirrorAxisX(imagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
-        newImagePlane64 = mirrorAxisX(imagePlane64);
-        delete [] imagePlane64;
-        imagePlane64 = newImagePlane64;
-        newImagePlane64 = nullptr;
+        mirrorAxisX(imagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
-        newImagePlaneF = mirrorAxisX(imagePlaneF);
-        delete [] imagePlaneF;
-        imagePlaneF = newImagePlaneF;
-        newImagePlaneF = nullptr;
+        mirrorAxisX(imagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
-        newImagePlaneD = mirrorAxisX(imagePlaneD);
-        delete [] imagePlaneD;
-        imagePlaneD = newImagePlaneD;
-        newImagePlaneD = nullptr;
+        mirrorAxisX(imagePlaneD);
         break;
       };
       default:
@@ -2340,18 +2111,20 @@ namespace ACL
   }
 
   /// @brief Templated function to mirror an image around the X axis.
-  /// @param[in] imagePlane - The imagePlane to mirror.
+  /// @param[in] imagePlane: The imagePlane to mirror.
   /// @throws std::bad_alloc
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2015-09-20/GGB - (Bug 18) - Added input parameter verification code.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2012-11-27/GGB - Function created.
 
   template<typename T>
-  T *CImagePlane::mirrorAxisX(T *imagePlane)
+  void CImagePlane::mirrorAxisX(std::unique_ptr<T[]> &imagePlane)
   {
     RUNTIME_ASSERT(ACL, imagePlane, "Paramter imagePlane cannot be nullptr");
 
-    T *newImagePlane = new T[dimX * dimY];
+    std::unique_ptr<T[]> newImagePlane(new T[dimX * dimY]);
     size_t numberOfThreads;
     size_t threadNumber;
     AXIS_t colStep;
@@ -2388,14 +2161,14 @@ namespace ACL
         colEnd += colStep;
       };
 
-      thread = new boost::thread(&CImagePlane::mirrorAxisXThread<T>, this, colBegin, colEnd, boost::ref(imagePlane), boost::ref(newImagePlane));
+      thread = new boost::thread(&CImagePlane::mirrorAxisXThread<T>, this, colBegin, colEnd, imagePlane.get(), newImagePlane.get());
       threadGroup.add_thread(thread);
       thread = nullptr;
     };
 
     threadGroup.join_all();     // Wait for all the threads to finish.
 
-    return newImagePlane;
+    imagePlane.swap(newImagePlane);
   }
 
   /// @brief Thread function to perform the mirror flip around the X axis.
@@ -2424,6 +2197,7 @@ namespace ACL
 
   /// @brief Procedure to float an image onto a larger canvas.
   /// @note The extra space is evenly added to the top/bottom and left/right of the image.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -2433,16 +2207,6 @@ namespace ACL
 
   void CImagePlane::floatImage(AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
   {
-    std::uint8_t *newImagePlane8 = nullptr;
-    std::int8_t *newImagePlaneS8 = nullptr;
-    std::uint16_t *newImagePlaneU16 = nullptr;
-    std::int16_t *newImagePlane16 = nullptr;
-    std::uint32_t *newImagePlaneU32 = nullptr;
-    std::int32_t *newImagePlane32 = nullptr;
-    std::int64_t *newImagePlane64 = nullptr;
-    float        *newImagePlaneF = nullptr;
-    double       *newImagePlaneD = nullptr;
-
     RUNTIME_ASSERT(ACL, newWidth >= dimX, "Cannot have the x-dimension smaller when floating.");
     RUNTIME_ASSERT(ACL, newHeight >= dimY, "Cannot have the y-dimension smaller when floating.");
 
@@ -2450,83 +2214,47 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        newImagePlane8 = new std::uint8_t[newWidth * newHeight];
-        floatImage(imagePlane8, newImagePlane8, newWidth, newHeight, newBkgnd);
-        delete [] imagePlane8;
-        imagePlane8 = newImagePlane8;
-        newImagePlane8 = nullptr;
+        floatImage(imagePlane8, newWidth, newHeight, newBkgnd);
         break;
       };
       case SBYTE_IMG:
       {
-        newImagePlaneS8 = new std::int8_t[newWidth * newHeight];
-        floatImage(imagePlaneS8, newImagePlaneS8, newWidth, newHeight, newBkgnd);
-        delete [] imagePlaneS8;
-        imagePlaneS8 = newImagePlaneS8;
-        newImagePlaneS8 = nullptr;
+        floatImage(imagePlaneS8, newWidth, newHeight, newBkgnd);
         break;
       };
       case USHORT_IMG:
       {
-        newImagePlaneU16 = new std::uint16_t[newWidth * newHeight];
-        floatImage(imagePlaneU16, newImagePlaneU16, newWidth, newHeight, newBkgnd);
-        delete [] imagePlaneU16;
-        imagePlaneU16 = newImagePlaneU16;
-        newImagePlaneU16 = nullptr;
+        floatImage(imagePlaneU16, newWidth, newHeight, newBkgnd);
         break;
       };
       case SHORT_IMG:
       {
-        newImagePlane16 = new std::int16_t[newWidth * newHeight];
-        floatImage(imagePlane16, newImagePlane16, newWidth, newHeight, newBkgnd);
-        delete [] imagePlane16;
-        imagePlane16 = newImagePlane16;
-        newImagePlane16 = nullptr;
+        floatImage(imagePlane16, newWidth, newHeight, newBkgnd);
         break;
       };
       case ULONG_IMG:
       {
-        newImagePlaneU32 = new std::uint32_t[newWidth * newHeight];
-        floatImage(imagePlaneU32, newImagePlaneU32, newWidth, newHeight, newBkgnd);
-        delete [] imagePlaneU32;
-        imagePlaneU32 = newImagePlaneU32;
-        newImagePlaneU32 = nullptr;
+        floatImage(imagePlaneU32, newWidth, newHeight, newBkgnd);
         break;
       };
       case LONG_IMG:
       {
-        newImagePlane32 = new std::int32_t[newWidth * newHeight];
-        floatImage(imagePlane32, newImagePlane32, newWidth, newHeight, newBkgnd);
-        delete [] imagePlane32;
-        imagePlane32 = newImagePlane32;
-        newImagePlane32 = nullptr;
+        floatImage(imagePlane32, newWidth, newHeight, newBkgnd);
         break;
       };
       case LONGLONG_IMG:
       {
-        newImagePlane64 = new std::int64_t[newWidth * newHeight];
-        floatImage(imagePlane64, newImagePlane64, newWidth, newHeight, newBkgnd);
-        delete [] imagePlane64;
-        imagePlane64 = newImagePlane64;
-        newImagePlane64 = nullptr;
+        floatImage(imagePlane64, newWidth, newHeight, newBkgnd);
         break;
       };
       case FLOAT_IMG:
       {
-        newImagePlaneF = new float[newWidth * newHeight];
-        floatImage(imagePlaneF, newImagePlaneF, newWidth, newHeight, newBkgnd);
-        delete [] imagePlaneF;
-        imagePlaneF = newImagePlaneF;
-        newImagePlaneF = nullptr;
+        floatImage(imagePlaneF, newWidth, newHeight, newBkgnd);
         break;
       };
       case DOUBLE_IMG:
       {
-        newImagePlaneD = new double[newWidth * newHeight];
-        floatImage(imagePlaneD, newImagePlaneD, newWidth, newHeight, newBkgnd);
-        delete [] imagePlaneD;
-        imagePlaneD = newImagePlaneD;
-        newImagePlaneD = nullptr;
+        floatImage(imagePlaneD, newWidth, newHeight, newBkgnd);
         break;
       };
     };
@@ -2537,11 +2265,16 @@ namespace ACL
   }
 
   /// @brief Internal float function
-  //
-  // 2013-03-11/GGB - Function created.
+  /// @param[in] imagePlane: The image to float.
+  /// @param[in] newWidth: The new width of the image.
+  /// @param[in] newHeight: The new height of the image.
+  /// @param[in] newBkgnd: The new background value.
+  /// @throws
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version 2013-03-11/GGB - Function created.
 
   template<typename T>
-  void CImagePlane::floatImage(T *imagePlane, T *newImagePlane, AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
+  void CImagePlane::floatImage(std::unique_ptr<T[]> &imagePlane, AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
   {
     AXIS_t lox, loy, xdiff, ydiff;
     AXIS_t xIndex, yIndex;
@@ -2550,8 +2283,9 @@ namespace ACL
     ydiff = newHeight - dimY;
 
     lox = xdiff / 2;
-
     loy = ydiff / 2;
+
+    std::unique_ptr<T[]> newImagePlane(new T[newWidth * newHeight]);
 
     for (xIndex = 0; xIndex < newWidth; xIndex++)
     {
@@ -2567,11 +2301,14 @@ namespace ACL
         }
       };
     };
+
+    imagePlane.swap(newImagePlane);
   }
 
   /// @brief Flops the image vertically (about the Y axis)
   /// @throws 0x1201 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
   /// @throws 0x1203 - CIMAGEPLANE: Invalid BITPIX value.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -2582,88 +2319,51 @@ namespace ACL
 
   void CImagePlane::mirrorAxisY()
   {
-    std::uint8_t  *newImagePlane8 = nullptr;
-    std::int8_t *newImagePlaneS8 = nullptr;
-    std::uint16_t *newImagePlaneU16 = nullptr;
-    std::int16_t *newImagePlane16 = nullptr;
-    std::uint32_t *newImagePlaneU32 = nullptr;
-    std::int32_t *newImagePlane32 = nullptr;
-    std::int64_t *newImagePlane64 = nullptr;
-    float           *newImagePlaneF = nullptr;
-    double          *newImagePlaneD = nullptr;
-
     switch (bitpix_)
     {
       case BYTE_IMG:
       {
-        newImagePlane8 = mirrorAxisY(imagePlane8);
-        delete [] imagePlane8;
-        imagePlane8 = newImagePlane8;
-        newImagePlane8 = nullptr;
+        mirrorAxisY(imagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
-        newImagePlaneS8 = mirrorAxisY(imagePlaneS8);
-        delete [] imagePlaneS8;
-        imagePlaneS8 = newImagePlaneS8;
-        newImagePlaneS8 = nullptr;
+        mirrorAxisY(imagePlaneS8);
         break;
       };
       case USHORT_IMG:
       {
-        newImagePlaneU16 = mirrorAxisY(imagePlaneU16);
-        delete [] imagePlaneU16;
-        imagePlaneU16 = newImagePlaneU16;
-        newImagePlaneU16 = nullptr;
+        mirrorAxisY(imagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
-        newImagePlane16 = mirrorAxisY(imagePlane16);
-        delete [] imagePlane16;
-        imagePlane16 = newImagePlane16;
-        newImagePlane16 = nullptr;
+        mirrorAxisY(imagePlane16);
         break;
       };
       case ULONG_IMG:
       {
-        newImagePlaneU32 = mirrorAxisY(imagePlaneU32);
-        delete [] imagePlaneU32;
-        imagePlaneU32 = newImagePlaneU32;
-        newImagePlaneU32 = nullptr;
+        mirrorAxisY(imagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
-        newImagePlane32 = mirrorAxisY(imagePlane32);
-        delete [] imagePlane32;
-        imagePlane32 = newImagePlane32;
-        newImagePlane32 = nullptr;
+        mirrorAxisY(imagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
-        newImagePlane64 = mirrorAxisY(imagePlane64);
-        delete [] imagePlane64;
-        imagePlane64 = newImagePlane64;
-        newImagePlane64 = nullptr;
+        mirrorAxisY(imagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
-        newImagePlaneF = mirrorAxisY(imagePlaneF);
-        delete [] imagePlaneF;
-        imagePlaneF = newImagePlaneF;
-        newImagePlaneF = nullptr;
+        mirrorAxisY(imagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
-        newImagePlaneD = mirrorAxisY(imagePlaneD);
-        delete [] imagePlaneD;
-        imagePlaneD = newImagePlaneD;
-        newImagePlaneD = nullptr;
+        mirrorAxisY(imagePlaneD);
         break;
       };
       default:
@@ -2678,17 +2378,18 @@ namespace ACL
   /// @param[in] imagePlane - The imagePlane to mirror.
   /// @returns The mirrored image plane.
   /// @throws std::bad_alloc
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-20/GGB - (Bug 19) Added check for valid parameters.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2012-12-01/GGB - Converted to multi-threaded
   /// @version 2012-11-30/GGB - Function created.
 
   template<typename T>
-  T *CImagePlane::mirrorAxisY(T *imagePlane)
+  void CImagePlane::mirrorAxisY(std::unique_ptr<T[]> &imagePlane)
   {
     RUNTIME_ASSERT(ACL, imagePlane, "Parameter imagePlane cannot be nullptr.");
 
-    T *newImagePlane = new T[dimX * dimY];
+    std::unique_ptr<T[]> newImagePlane(new T[dimX * dimY]);
     size_t numberOfThreads;
     size_t threadNumber;
     AXIS_t rowStep;
@@ -2725,14 +2426,14 @@ namespace ACL
         rowEnd += rowStep;
       };
 
-      thread = new boost::thread(&CImagePlane::mirrorAxisYThread<T>, this, rowBegin, rowEnd, boost::ref(imagePlane), boost::ref(newImagePlane));
+      thread = new boost::thread(&CImagePlane::mirrorAxisYThread<T>, this, rowBegin, rowEnd, imagePlane.get(), newImagePlane.get());
       threadGroup.add_thread(thread);
       thread = nullptr;
     };
 
     threadGroup.join_all();     // Wait for all the threads to finish.
 
-    return newImagePlane;
+    imagePlane.swap(newImagePlane);
   }
 
   /// @brief Thread function for mirroring about the Y axis.
@@ -2802,6 +2503,7 @@ namespace ACL
   /// @param[in] newWidth - The new width of the image.
   /// @param[in] newHeight - The new height of the image.
   /// @throws
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2013-07-02/GGB - Added code to invalidate the Min,Max,Mean values. (Bug #1193741)
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-01-27/GGB - Added support for multi-threading and support for native FITS data types.
@@ -2812,7 +2514,7 @@ namespace ACL
     FP_t xRatio = static_cast<FP_t>(newWidth) / static_cast<FP_t>(dimX);
     FP_t yRatio = static_cast<FP_t>(newHeight) / static_cast<FP_t>(dimY);
     AXIS_t yStep, yBegin, yEnd;
-    double *newImagePlane = new double[newWidth * newHeight];
+    std::unique_ptr<double[]> newImagePlane(new double[newWidth * newHeight]);
     size_t numberOfThreads;
     size_t threadNumber;
     boost::thread_group threadGroup;
@@ -2850,7 +2552,7 @@ namespace ACL
         yEnd += yStep;
       };
 
-      thread = new boost::thread(&CImagePlane::resampleThread, this, newImagePlane, boost::tuple<AXIS_t, AXIS_t>(yBegin, yEnd),
+      thread = new boost::thread(&CImagePlane::resampleThread, this, newImagePlane.get(), boost::tuple<AXIS_t, AXIS_t>(yBegin, yEnd),
                                  newWidth, boost::tuple<FP_t, FP_t>(xRatio, yRatio));
       threadGroup.add_thread(thread);
       thread = nullptr;
@@ -2860,8 +2562,7 @@ namespace ACL
 
     deleteImagePlane();
     bitpix_ = DOUBLE_IMG;
-    imagePlaneD = newImagePlane;		// Copy the new image plane.
-    newImagePlane = nullptr;
+    imagePlaneD.swap(newImagePlane);		// Copy the new image plane.
 
     dimX = newWidth;
     dimY = newHeight;
@@ -2969,6 +2670,7 @@ namespace ACL
   ///          multi-threaded with a number of rows being passed to the tranformThread routine.
   /// @note The function does not expand the image while performing the TRS operation.
   /// @throws None.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2013-07-08/GGB - Invalidate the average and min/max. (Bug #1193634)
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-01-27/GGB - Function created.
@@ -3006,7 +2708,7 @@ namespace ACL
 
     AXIS_t const yStep = dimY / numberOfThreads;  // Size of each portion for threading.
 
-    transformData.newImagePlane = new FP_t[dimX * dimY];
+    transformData.newImagePlane = std::make_unique<double[]>(dimX * dimY);
 
       // Spawn the threads.
 
@@ -3031,8 +2733,7 @@ namespace ACL
       // Complete the function
 
     deleteImagePlane();   // Delete the current image plane.
-    imagePlaneD = transformData.newImagePlane;
-    transformData.newImagePlane = nullptr;
+    imagePlaneD.swap(transformData.newImagePlane);
 
     bitpix_ = DOUBLE_IMG;    // Using the double image plane now.
     bMinMax = bMean = false;
@@ -3107,22 +2808,22 @@ namespace ACL
     };
   }
 
-  // Translates an image to the new position.
-  // This is the integer translation form. There is also a float translation function
-  // However, this is optimised for integer translations.
-  //
-  // INPUT:			xt - amount to translate in the x dim (can be negative)
-  //						yt - amount to translate in the y dim (can be negative)
-  //
-  // 2014-12-31/GGB - Changed types to make x64 compliant.
-  // 2013-03-11/GGB - Converted to use std::vector<> as storage type.
-  // 2010-12-28/GGB - Function created.
+  /// @brief  Translates an image to the new position.
+  /// @details This is the integer translation form. There is also a float translation function However, this is optimised for
+  ///          integer translations.
+  /// @param[in] xt: amount to translate in the x dim (can be negative)
+  /// @param[in] yt: amount to translate in the y dim (can be negative)
+  /// @throws
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version 2014-12-31/GGB - Changed types to make x64 compliant.
+  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
+  /// @version 2010-12-28/GGB - Function created.
 
   void CImagePlane::translate(AXIS_t const xt, AXIS_t const yt)
   {
     AXIS_t const newDimX = dimX + xt;
     AXIS_t const newDimY = dimY + yt;
-    double *newImagePlane = new double[newDimX * newDimY];
+    std::unique_ptr<double[]> newImagePlane(new double[newDimX * newDimY]);
     AXIS_t xIndex, yIndex;
     AXIS_t XO, YO;
 
@@ -3147,32 +2848,32 @@ namespace ACL
       };
 
       deleteImagePlane();   // Delete the current image plane.
-      imagePlaneD = newImagePlane;
-      newImagePlane = nullptr;
+      imagePlaneD.swap(newImagePlane);
       bitpix_ = DOUBLE_IMG;
     };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
   }
 
-  // Translation function using double values for the distance to be translated.
-  //
-  // 2013-03-11/GGB - Converted to use std::vector<> as storage type.
-  // 2011-03-13/GGB - Uses SCL::CArrray2DT
-  // 2010-12-29/GGB - Function created.
+  /// @brief Translation function using double values for the distance to be translated.
+  /// @param[in]
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
+  /// @version 2011-03-13/GGB - Uses SCL::CArrray2DT
+  /// @version 2010-12-29/GGB - Function created.
 
   void CImagePlane::translate(FP_t xt, FP_t yt)
   {
-
     AXIS_t xIndex, yIndex;
     AXIS_t const newDimX = static_cast<AXIS_t>(std::ceil(dimX + xt));
     AXIS_t const newDimY = static_cast<AXIS_t>(std::ceil(dimY + yt));
     FP_t XO, YO;
-    double *newImagePlane = new double[newDimX * newDimY];
+    std::unique_ptr<double[]> newImagePlane(new double[newDimX * newDimY]);
 
     if ( (xt != 0) && (yt != 0) )		// If both values are zero, this is a trivial case.
     {
       for (xIndex = 0; xIndex < newDimX; xIndex++)
+      {
         for (yIndex = 0; yIndex < newDimY; yIndex++)
         {
           XO = xIndex - xt;				// Correct the indexes to the old array indexes
@@ -3187,11 +2888,11 @@ namespace ACL
             newImagePlane[arrayIndex(xIndex, yIndex, newDimX)] = bilinear(XO, YO);
           }
         };
+      };
 
       deleteImagePlane();   // Delete the current image plane.
       bitpix_ = DOUBLE_IMG;
-      imagePlaneD = newImagePlane;
-      newImagePlane = nullptr;
+      imagePlaneD.swap(newImagePlane);
     };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
@@ -3201,6 +2902,7 @@ namespace ACL
   /// @details If the maximum needs to be rechecked, the min and max are done at the same time.
   /// @throws 0x1200 -
   /// @throws 0x1203 - Invalid BITPIX value.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -3216,7 +2918,7 @@ namespace ACL
       {
         case BYTE_IMG:
         {
-          boost::optional<boost::tuple<std::uint8_t, std::uint8_t> > returnValue = MCL::minmax(imagePlane8, dimX * dimY);
+          boost::optional<boost::tuple<std::uint8_t, std::uint8_t> > returnValue = MCL::minmax(imagePlane8.get(), dimX * dimY);
           if (returnValue)
           {
             fMin = (*returnValue).get<0>();
@@ -3226,7 +2928,7 @@ namespace ACL
         };
         case SBYTE_IMG:
         {
-          boost::optional<boost::tuple<std::int8_t, std::int8_t> > returnValue = MCL::minmax(imagePlaneS8, dimX * dimY);
+          boost::optional<boost::tuple<std::int8_t, std::int8_t> > returnValue = MCL::minmax(imagePlaneS8.get(), dimX * dimY);
           if (returnValue)
           {
             fMin = (*returnValue).get<0>();
@@ -3236,7 +2938,7 @@ namespace ACL
         };
         case USHORT_IMG:
         {
-          boost::optional<boost::tuple<std::uint16_t, std::uint16_t> > returnValue = MCL::minmax(imagePlaneU16, dimX * dimY);
+          boost::optional<boost::tuple<std::uint16_t, std::uint16_t> > returnValue = MCL::minmax(imagePlaneU16.get(), dimX * dimY);
           if (returnValue)
           {
             fMin = (*returnValue).get<0>();
@@ -3246,7 +2948,7 @@ namespace ACL
         };
       case SHORT_IMG:
       {
-        boost::optional<boost::tuple<std::int16_t, std::int16_t> > returnValue = MCL::minmax(imagePlane16, dimX * dimY);
+        boost::optional<boost::tuple<std::int16_t, std::int16_t> > returnValue = MCL::minmax(imagePlane16.get(), dimX * dimY);
         if (returnValue)
         {
           fMin = (*returnValue).get<0>();
@@ -3256,7 +2958,7 @@ namespace ACL
       };
         case ULONG_IMG:
         {
-          boost::optional<boost::tuple<boost::uint32_t, boost::uint32_t> > returnValue = MCL::minmax(imagePlaneU32, dimX * dimY);
+          boost::optional<boost::tuple<boost::uint32_t, boost::uint32_t> > returnValue = MCL::minmax(imagePlaneU32.get(), dimX * dimY);
           if (returnValue)
           {
             fMin = (*returnValue).get<0>();
@@ -3266,7 +2968,7 @@ namespace ACL
         };
       case LONG_IMG:
       {
-        boost::optional<boost::tuple<boost::int32_t, boost::int32_t> > returnValue = MCL::minmax(imagePlane32, dimX * dimY);
+        boost::optional<boost::tuple<boost::int32_t, boost::int32_t> > returnValue = MCL::minmax(imagePlane32.get(), dimX * dimY);
         if (returnValue)
         {
           fMin = (*returnValue).get<0>();
@@ -3277,7 +2979,7 @@ namespace ACL
 
       case LONGLONG_IMG:
       {
-        boost::optional<boost::tuple<std::int64_t, std::int64_t> > returnValue = MCL::minmax(imagePlane64, dimX * dimY);
+        boost::optional<boost::tuple<std::int64_t, std::int64_t> > returnValue = MCL::minmax(imagePlane64.get(), dimX * dimY);
         if (returnValue)
         {
           fMin = (*returnValue).get<0>();
@@ -3287,7 +2989,7 @@ namespace ACL
         break;
       case FLOAT_IMG:
       {
-        boost::optional<boost::tuple<float, float> > returnValue = MCL::minmax(imagePlaneF, dimX * dimY);
+        boost::optional<boost::tuple<float, float> > returnValue = MCL::minmax(imagePlaneF.get(), dimX * dimY);
         if (returnValue)
         {
           fMin = (*returnValue).get<0>();
@@ -3297,7 +2999,7 @@ namespace ACL
         break;
       case DOUBLE_IMG:
       {
-        boost::optional<boost::tuple<double, double> > returnValue = MCL::minmax(imagePlaneD, dimX * dimY);
+        boost::optional<boost::tuple<double, double> > returnValue = MCL::minmax(imagePlaneD.get(), dimX * dimY);
         if (returnValue)
         {
           fMin = (*returnValue).get<0>();
@@ -3336,6 +3038,7 @@ namespace ACL
   /// @brief Returns the mean of the values in the imagePlane.
   /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
   /// @throws 0x1201 - CIMAGEPLANE: Error when calculating image mean.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -3360,47 +3063,47 @@ namespace ACL
       {
         case BYTE_IMG:
         {
-          returnValue = MCL::mean(imagePlane8, dimX * dimY);
+          returnValue = MCL::mean(imagePlane8.get(), dimX * dimY);
           break;
         };
         case SBYTE_IMG:
         {
-          returnValue = MCL::mean(imagePlaneS8, dimX * dimY);
+          returnValue = MCL::mean(imagePlaneS8.get(), dimX * dimY);
           break;
         };
         case USHORT_IMG:
         {
-          returnValue = MCL::mean(imagePlaneU16, dimX * dimY);
+          returnValue = MCL::mean(imagePlaneU16.get(), dimX * dimY);
           break;
         };
         case SHORT_IMG:
         {
-          returnValue = MCL::mean(imagePlane16, dimX * dimY);
+          returnValue = MCL::mean(imagePlane16.get(), dimX * dimY);
           break;
         };
         case ULONG_IMG:
         {
-          returnValue = MCL::mean(imagePlaneU16, dimX * dimY);
+          returnValue = MCL::mean(imagePlaneU16.get(), dimX * dimY);
           break;
         };
         case LONG_IMG:
         {
-          returnValue = MCL::mean(imagePlane32, dimX * dimY);
+          returnValue = MCL::mean(imagePlane32.get(), dimX * dimY);
           break;
         };
         case LONGLONG_IMG:
         {
-          returnValue = MCL::mean(imagePlane64, dimX * dimY);
+          returnValue = MCL::mean(imagePlane64.get(), dimX * dimY);
           break;
         };
         case FLOAT_IMG:
         {
-          returnValue = MCL::mean(imagePlaneF, dimX * dimY);
+          returnValue = MCL::mean(imagePlaneF.get(), dimX * dimY);
           break;
         };
         case DOUBLE_IMG:
         {
-          returnValue = MCL::mean(imagePlaneD, dimX * dimY);
+          returnValue = MCL::mean(imagePlaneD.get(), dimX * dimY);
           break;
         };
         default:
@@ -3427,6 +3130,7 @@ namespace ACL
 
   /// @brief Returns the standard deviation of the values in the imagePlane.
   /// @throws 0x1203 - IMAGEPLANE: Invalid BITPIX value.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -3442,47 +3146,47 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        returnValue = *MCL::stdev(imagePlane8, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlane8.get(), dimX * dimY);
         break;
       };
       case SBYTE_IMG:
       {
-        returnValue = *MCL::stdev(imagePlaneS8, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlaneS8.get(), dimX * dimY);
         break;
       };
       case USHORT_IMG:
       {
-        returnValue = *MCL::stdev(imagePlaneU16, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlaneU16.get(), dimX * dimY);
         break;
       };
       case SHORT_IMG:
       {
-        returnValue = *MCL::stdev(imagePlane16, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlane16.get(), dimX * dimY);
         break;
       };
       case ULONG_IMG:
       {
-        returnValue = *MCL::stdev(imagePlaneU32, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlaneU32.get(), dimX * dimY);
         break;
       };
       case LONG_IMG:
       {
-        returnValue = *MCL::stdev(imagePlane32, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlane32.get(), dimX * dimY);
         break;
       };
       case LONGLONG_IMG:
       {
-        returnValue = *MCL::stdev(imagePlane64, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlane64.get(), dimX * dimY);
         break;
       };
       case FLOAT_IMG:
       {
-        returnValue = *MCL::stdev(imagePlaneF, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlaneF.get(), dimX * dimY);
         break;
       };
       case DOUBLE_IMG:
       {
-        returnValue = *MCL::stdev(imagePlaneD, dimX * dimY);
+        returnValue = *MCL::stdev(imagePlaneD.get(), dimX * dimY);
         break;
       };
       default:
@@ -3537,6 +3241,7 @@ namespace ACL
   /// @param[in] file - The FITS file to read from.
   /// @param[in] axis - The NAXIS3 value to read. (Ie the colour plane)
   /// @throws GCL::CError(ACL::0x1002)
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -3586,56 +3291,56 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        imagePlane8 = new std::uint8_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TBYTE, startPixel, readPixels, 0, imagePlane8, &anynul);
+        imagePlane8 = std::make_unique<std::uint8_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TBYTE, startPixel, readPixels, 0, imagePlane8.get(), &anynul);
         break;
       };
       case SBYTE_IMG:
       {
-        imagePlaneS8 = new std::int8_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TSBYTE, startPixel, readPixels, 0, imagePlaneS8, &anynul);
+        imagePlaneS8 = std::make_unique<std::int8_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TSBYTE, startPixel, readPixels, 0, imagePlaneS8.get(), &anynul);
         break;
       }
       case USHORT_IMG:
       {
-        imagePlaneU16 = new std::uint16_t[readPixels];
-        CFITSIO_TEST(fits_read_img, file, TUSHORT, startPixel, readPixels, 0, imagePlaneU16, &anynul);
+        imagePlaneU16 = std::make_unique<std::uint16_t[]>(readPixels);
+        CFITSIO_TEST(fits_read_img, file, TUSHORT, startPixel, readPixels, 0, imagePlaneU16.get(), &anynul);
         break;
       }
       case SHORT_IMG:
       {
-        imagePlane16 = new std::int16_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TSHORT, startPixel, readPixels, 0, imagePlane16, &anynul);
+        imagePlane16 = std::make_unique<std::int16_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TSHORT, startPixel, readPixels, 0, imagePlane16.get(), &anynul);
         break;
       }
       case ULONG_IMG:
       {
-        imagePlaneU32 = new std::uint32_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TULONG, startPixel, readPixels, 0, imagePlaneU32, &anynul);
+        imagePlaneU32 = std::make_unique<std::uint32_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TULONG, startPixel, readPixels, 0, imagePlaneU32.get(), &anynul);
         break;
       };
       case LONG_IMG:
       {
-        imagePlane32 = new std::int32_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TLONG, startPixel, readPixels, 0, imagePlane32, &anynul);
+        imagePlane32 = std::make_unique<std::int32_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TLONG, startPixel, readPixels, 0, imagePlane32.get(), &anynul);
         break;
       }
       case LONGLONG_IMG:
       {
-        imagePlane64 = new std::int64_t[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TLONGLONG, startPixel, readPixels, 0, imagePlane64, &anynul);
+        imagePlane64 = std::make_unique<std::int64_t[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TLONGLONG, startPixel, readPixels, 0, imagePlane64.get(), &anynul);
         break;
       }
       case FLOAT_IMG:
       {
-        imagePlaneF = new float[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TFLOAT, startPixel, readPixels, 0, imagePlaneF, &anynul);
+        imagePlaneF = std::make_unique<float[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TFLOAT, startPixel, readPixels, 0, imagePlaneF.get(), &anynul);
         break;
       }
       case DOUBLE_IMG:
       {
-        imagePlaneD = new double[dimX * dimY];
-        CFITSIO_TEST(fits_read_img, file, TDOUBLE, startPixel, readPixels, 0, imagePlaneD, &anynul);
+        imagePlaneD = std::make_unique<double[]>(dimX * dimY);
+        CFITSIO_TEST(fits_read_img, file, TDOUBLE, startPixel, readPixels, 0, imagePlaneD.get(), &anynul);
         break;
       }
       default:
@@ -4148,6 +3853,7 @@ namespace ACL
 
   /// @brief Rotates the image around the point (x0, y0) an amount of angle radians.
   /// @throws CError ACL::0x1203
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -4165,16 +3871,6 @@ namespace ACL
     FP_t X0, Y0, X1, Y1, X2, Y2, X3, Y3;
     FP_t  xMax, yMax, xMin, yMin;
     AXIS_t lxMax, lxMin, lyMax, lyMin, lxDim, lyDim;
-
-    std::uint8_t  *newImagePlane8 = nullptr;
-    std::int8_t *newImagePlaneS8 = nullptr;
-    std::uint16_t *newImagePlaneU16 = nullptr;
-    std::int16_t *newImagePlane16 = nullptr;
-    std::uint32_t *newImagePlaneU32 = nullptr;
-    std::int32_t *newImagePlane32 = nullptr;
-    std::int64_t *newImagePlane64 = nullptr;
-    float           *newImagePlaneF = nullptr;
-    double          *newImagePlaneD = nullptr;
 
       // Calculate the new image size. Work using the 4 corners to get the 4 coordinates of the new corners.
 
@@ -4232,83 +3928,47 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        newImagePlane8 = new std::uint8_t[lxDim * lyDim];
-        rotate(imagePlane8, newImagePlane8, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlane8;
-        imagePlane8 = newImagePlane8;
-        newImagePlane8 = nullptr;
+        rotate(imagePlane8, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case SBYTE_IMG:
       {
-        newImagePlaneS8 = new std::int8_t[lxDim * lyDim];
-        rotate(imagePlaneS8, newImagePlaneS8, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlaneS8;
-        imagePlaneS8 = newImagePlaneS8;
-        newImagePlaneS8 = nullptr;
+        rotate(imagePlaneS8, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case USHORT_IMG:
       {
-        newImagePlaneU16 = new std::uint16_t[lxDim * lyDim];
-        rotate(imagePlaneU16, newImagePlaneU16, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlaneU16;
-        imagePlaneU16 = newImagePlaneU16;
-        newImagePlane16 = nullptr;
+        rotate(imagePlaneU16, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case SHORT_IMG:
       {
-        newImagePlane16 = new std::int16_t[lxDim * lyDim];
-        rotate(imagePlane16, newImagePlane16, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlane16;
-        imagePlane16 = newImagePlane16;
-        newImagePlane16 = nullptr;
+        rotate(imagePlane16, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case ULONG_IMG:
       {
-        newImagePlaneU32 = new std::uint32_t[lxDim * lyDim];
-        rotate(imagePlaneU32, newImagePlaneU32, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlaneU32;
-        imagePlaneU32 = newImagePlaneU32;
-        newImagePlaneU32 = nullptr;
+        rotate(imagePlaneU32, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case LONG_IMG:
       {
-        newImagePlane32 = new std::int32_t[lxDim * lyDim];
-        rotate(imagePlane32, newImagePlane32, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlane32;
-        imagePlane32 = newImagePlane32;
-        newImagePlane32 = nullptr;
+        rotate(imagePlane32, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case LONGLONG_IMG:
       {
-        newImagePlane64 = new std::int64_t[lxDim * lyDim];
-        rotate(imagePlane64, newImagePlane64, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlane64;
-        imagePlane64 = newImagePlane64;
-        newImagePlane64 = nullptr;
+        rotate(imagePlane64, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
      };
       case FLOAT_IMG:
       {
-        newImagePlaneF = new float[lxDim * lyDim];
-        rotate(imagePlaneF, newImagePlaneF, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlaneF;
-        imagePlaneF = newImagePlaneF;
-        newImagePlaneF = nullptr;
+        rotate(imagePlaneF, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       case DOUBLE_IMG:
       {
-        newImagePlaneD = new double[lxDim * lyDim];
-        rotate(imagePlaneD, newImagePlaneD, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
-        delete [] imagePlaneD;
-        imagePlaneD = newImagePlaneD;
-        newImagePlane16 = nullptr;
+        rotate(imagePlaneD, std::make_tuple(lxMin, lxMax, lyMin, lyMax), xOrigen, yOrigen, cosa, sina);
         break;
       };
       default:
@@ -4325,11 +3985,12 @@ namespace ACL
 
   /// @brief Function for rotating an image. Uses native FITS formats.
   //
-  // 2013-03-11/GGB - Converted to use std::vector<> as storage type.
-  // 2012-12-01/GGB - Function created.
+  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
+  /// @version 2012-12-01/GGB - Function created.
 
   template<typename T>
-  void CImagePlane::rotate(T *imagePlane, T *newImagePlane,
+  void CImagePlane::rotate(std::unique_ptr<T[]> &imagePlane,
                            std::tuple<AXIS_t, AXIS_t, AXIS_t, AXIS_t> l, FP_t xOrigen, FP_t yOrigen, FP_t cosa, FP_t sina)
   {
     size_t numberOfThreads;
@@ -4339,6 +4000,8 @@ namespace ACL
     boost::thread *thread;
     AXIS_t rowBegin, rowEnd = std::get<2>(l);
     AXIS_t dy = std::get<3>(l) - std::get<2>(l);
+    AXIS_t dx = std::get<1>(l) - std::get<0>(l);
+    std::unique_ptr<T[]> newImagePlane(new T[dx * dy]);
 
       // Ensure that we are using a reasonable number of threads. Maximise the number of threads to the number of rows
 
@@ -4370,12 +4033,14 @@ namespace ACL
       };
 
       thread = new boost::thread(&CImagePlane::rotateThread<T>, this, std::make_tuple(rowBegin, rowEnd),
-                                 boost::ref(imagePlane), boost::ref(newImagePlane), l, xOrigen, yOrigen, cosa, sina);
+                                 imagePlane.get(), newImagePlane.get(), l, xOrigen, yOrigen, cosa, sina);
       threadGroup.add_thread(thread);
       thread = nullptr;
     };
 
     threadGroup.join_all();     // Wait for all the threads to finish.
+
+    imagePlane.swap(newImagePlane);
   }
 
   /// @brief Thread function for rotating an image.
@@ -4486,47 +4151,47 @@ namespace ACL
     {
       case BYTE_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TBYTE, startPixel, pixelCount, imagePlane8);
+        CFITSIO_TEST(fits_write_img, file, TBYTE, startPixel, pixelCount, imagePlane8.get());
         break;
       };
       case SBYTE_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TSBYTE, startPixel, pixelCount, imagePlaneS8);
+        CFITSIO_TEST(fits_write_img, file, TSBYTE, startPixel, pixelCount, imagePlaneS8.get());
         break;
       };
       case USHORT_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TUSHORT, startPixel, pixelCount, imagePlaneU16);
+        CFITSIO_TEST(fits_write_img, file, TUSHORT, startPixel, pixelCount, imagePlaneU16.get());
         break;
       };
       case SHORT_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TSHORT, startPixel, pixelCount, imagePlane16);
+        CFITSIO_TEST(fits_write_img, file, TSHORT, startPixel, pixelCount, imagePlane16.get());
         break;
       };
       case ULONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TULONG, startPixel, pixelCount, imagePlaneU32);
+        CFITSIO_TEST(fits_write_img, file, TULONG, startPixel, pixelCount, imagePlaneU32.get());
         break;
       };
       case LONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TLONG, startPixel, pixelCount, imagePlane32);
+        CFITSIO_TEST(fits_write_img, file, TLONG, startPixel, pixelCount, imagePlane32.get());
         break;
       };
       case LONGLONG_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TLONGLONG, startPixel, pixelCount, imagePlane64);
+        CFITSIO_TEST(fits_write_img, file, TLONGLONG, startPixel, pixelCount, imagePlane64.get());
         break;
       };
       case FLOAT_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TFLOAT, startPixel, pixelCount, imagePlaneF);
+        CFITSIO_TEST(fits_write_img, file, TFLOAT, startPixel, pixelCount, imagePlaneF.get());
         break;
       };
       case DOUBLE_IMG:
       {
-        CFITSIO_TEST(fits_write_img, file, TDOUBLE, startPixel, pixelCount, imagePlaneD);
+        CFITSIO_TEST(fits_write_img, file, TDOUBLE, startPixel, pixelCount, imagePlaneD.get());
         break;
       };
       default:

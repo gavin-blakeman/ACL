@@ -217,7 +217,7 @@ namespace ACL
     virtual int PEDESTAL() const { CODE_ERROR(ACL); }
 
     CAstroTime const &getObservationTime() const;
-    std::unique_ptr<CWeather> &getObservationWeather() const;
+    CWeather *getObservationWeather() const;
 
       // Keyword functions
 

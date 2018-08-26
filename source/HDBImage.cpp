@@ -985,7 +985,7 @@ namespace ACL
 
       intermediate.setEpoch(WCSInformation->epoch);
       intermediate.setEquinox(WCSInformation->equinox);
-      intermediate(ra * MCL::K_D2R, dec * MCL::K_D2R);        // CAngle stores in radians.
+      intermediate(ra * MCL::D_D2R, dec * MCL::D_D2R);        // CAngle stores in radians.
 
       returnValue = intermediate;
     };
