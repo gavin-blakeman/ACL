@@ -67,8 +67,9 @@
 
   // Miscellaneous Libraries
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+#include "boost/algorithm/string.hpp"
+#include "boost/filesystem/fstream.hpp"
+#include "boost/lexical_cast.hpp"
 #include <GCL>
 
 namespace ACL
@@ -95,17 +96,18 @@ namespace ACL
 
   void CAstroTime::load_dAT(boost::filesystem::path const &ifn)
   {
-    std::ifstream ifs;            // Input file stream
+    boost::filesystem::fstream ifs;            // Input file stream
     std::string textLine;
     size_t commaPosn;
     std::string szValue;
     unsigned long MJD;
     int offset;
 
-    ifs.open(ifn.string());
+    ifs.open(ifn);
 
     if (!ifs)
     {
+      ERRORMESSAGE("Unable to open dAT data file. '" + ifn.string() + "'");
       ERROR(ACL, 0x3205);    // ASTROTIME: Error opening TAI-UTC file.
     }
     else
@@ -145,17 +147,18 @@ namespace ACL
 
   void CAstroTime::load_dUT1(boost::filesystem::path const &ifn)
   {
-    std::ifstream ifs;            // Input file stream
+    boost::filesystem::fstream ifs;            // Input file stream
     std::string textLine;
     size_t commaPosn;
     std::string szValue;
     unsigned long MJD;
     FP_t dUT1;
 
-    ifs.open(ifn.string());
+    ifs.open(ifn);
 
     if (!ifs)
     {
+      ERRORMESSAGE("Unable to open dUT1 data file. '" + ifn.string() + "'");
       ERROR(ACL, 0x3206);  // ASTROTIME: Error opening UTC-UT1 file.
     }
     else
