@@ -40,19 +40,23 @@
 
 #include "../include/targetComet.h"
 
+  // ACL library header files
+
+#include "../include/error.h"
+
 namespace ACL
 {
   /// @brief Creates and loads a comet target including elements.
   /// @param[in] fileName: The path and filename for the CometEls.txt file.
-  /// @param[in] designation: The designation of the comet.
+  /// @param[in] targetName: The designation of the comet.
   /// @throws std::bad_alloc
   /// @throws 0x2800 - TargetComet: Comet specified not found.
   /// @version 2018-09-02/GGB - Function created.
 
-  CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &designation)
-    : CTargetAstronomy(designation)
+  CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &targetName)
+    : CTargetAstronomy(targetName)
   {
-    if (!COMETELS::loadMP(fileName, targetName, elements()))
+    if (!COMETELS::loadComet(fileName, targetName, elements_))
     {
       ACL_ERROR(0x2800);
     };

@@ -130,7 +130,7 @@ namespace ACL
     /// @throws
     /// @version 2018-08-25/GGB - Function created.
 
-    void parseLine(std::string const &szLine, SCometElements elements)
+    void parseLine(std::string const &szLine, SCometElements &elements)
     {
       std::vector<std::string> vectorValues;
 

@@ -72,7 +72,7 @@
 #ifndef ACL_TARGETSTELLAR_H
 #define ACL_TARGETSTELLAR_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <memory>
@@ -80,7 +80,7 @@
 #include <string>
 #include <vector>
 
-  // ACL Libraries
+  // ACL Library header files.
 
 #include "AstronomicalCoordinates.h"
 #include "TargetAstronomy.h"
@@ -88,7 +88,7 @@
 #include "config.h"
 #include "Photometry.h"
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files.
 
 #include <MCL>
 #include <PCL>
@@ -99,7 +99,7 @@ namespace ACL
   // Define the library to use for determining stellar object positions.
 
 #if !defined(USE_SOFA) && !defined(USE_NOVAS)
-#define USE_SOFA
+# define USE_SOFA
 #endif
 
   /// @brief This class is used to store stellar objects and the associated data.

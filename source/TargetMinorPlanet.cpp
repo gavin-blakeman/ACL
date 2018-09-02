@@ -68,7 +68,7 @@ namespace ACL
   CTargetMinorPlanet::CTargetMinorPlanet(boost::filesystem::path const &fileName, std::string const &targetName)
     : CTargetAstronomy(targetName), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
   {
-    if (!MPCORB::loadMP(fileName, targetName, elements()))
+    if (!MPCORB::loadMP(fileName, targetName, elements_))
     {
       ACL_ERROR(0x2700);
     };

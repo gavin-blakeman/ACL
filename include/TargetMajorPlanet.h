@@ -76,12 +76,12 @@ namespace ACL
   protected:
   public:
     CTargetMajorPlanet(EPlanets const &);
-    virtual ~CTargetMajorPlanet();
+    virtual ~CTargetMajorPlanet() {}
 
       // Position functions.
 
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
-    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) {}
 
       // Factory functions
 

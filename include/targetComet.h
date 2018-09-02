@@ -61,6 +61,8 @@ namespace ACL
   class CTargetComet : public CTargetAstronomy
   {
   private:
+    COMETELS::SCometElements elements_;
+
   protected:
   public:
     CTargetComet(boost::filesystem::path const &, std::string const &);

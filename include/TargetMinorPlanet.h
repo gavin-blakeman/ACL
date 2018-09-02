@@ -86,7 +86,7 @@ namespace ACL
   protected:
   public:
     CTargetMinorPlanet(boost::filesystem::path const &, std::string const &);
-    virtual ~CTargetMinorPlanet();
+    virtual ~CTargetMinorPlanet() {}
 
       // Getter functions
 
