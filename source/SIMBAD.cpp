@@ -40,17 +40,17 @@
 
 #include "../include/SIMBAD.h"
 
-  // Standard library
+  // Standard C++ library header files.
 
 #include <sstream>
 
-  // ACL Library
+  // ACL library header files
 
 #include "../include/AstroFunctions.h"
 #include "../include/common.h"
 #include "../include/error.h"
 
-  // Boost library
+  // Miscellaneous library header files.
 
 #include "boost/format.hpp"
 
@@ -165,7 +165,7 @@ namespace ACL
   }
 
   /// @brief Add the specified fields to the query.
-  /// @param[in] fld - The format strings to add.
+  /// @param[in] fld: The format strings to add.
   /// @returns (*this)
   /// @throws None.
   /// @version 2016-04-25/GGB - Function created.
@@ -181,8 +181,8 @@ namespace ACL
   }
 
   /// @brief Adds a region to the script.
-  /// @param[in] rt - The type of the region.
-  /// @param[in] values - The values to define the region. All in decimal degrees.
+  /// @param[in] rt: The type of the region.
+  /// @param[in] values: The values to define the region. All in decimal degrees.
   /// @returns (*this)
   /// @throws CError(0x0700) - Invalid region type.
   /// @note The dimensions are specified in decimal degrees (floating point type).
@@ -220,7 +220,7 @@ namespace ACL
   }
 
   /// @brief Function for adding a query parameter.
-  /// @param[in] toAdd - The query parameter to add.
+  /// @param[in] toAdd: The query parameter to add.
   /// @returns (*this)
   /// @throws None.
   /// @version 2016-04-24/GGB - Function created.

@@ -81,10 +81,11 @@ namespace ACL
     MCL::angle_t n_;                // Mean daily motion
 
     CTargetMinorPlanet() = delete;
+    CTargetMinorPlanet(CTargetMinorPlanet const &) = delete;
 
   protected:
   public:
-    CTargetMinorPlanet(std::string const &);
+    CTargetMinorPlanet(boost::filesystem::path const &, std::string const &);
     virtual ~CTargetMinorPlanet();
 
       // Getter functions

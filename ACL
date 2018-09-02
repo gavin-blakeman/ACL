@@ -156,6 +156,9 @@
 #include "include/observatoryInformation.h"
 #include "include/SIMBAD.h"
 #include "include/SourceExtraction.h"
+#include "include/targetComet.h"
+#include "include/TargetMajorPlanet.h"
+#include "include/TargetMinorPlanet.h"
 #include "include/TargetStellar.h"
 #include "include/telescope.h"
 #endif

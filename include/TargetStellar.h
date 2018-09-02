@@ -144,7 +144,7 @@ namespace ACL
       // Setting functions
 
     virtual void catalogueCoordinates(CAstronomicalCoordinates);
-    virtual void setEpoch(char *);
+    virtual void setEpoch(std::string const &);
     inline virtual void setEpoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch
     virtual void setEpoch(TJD const &);
     inline virtual void pm(FP_t dPMRA, FP_t dPMDEC) {pmRA_ = dPMRA; pmDec_ = dPMDEC;}

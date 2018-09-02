@@ -59,13 +59,19 @@
 namespace ACL
 {
   /// @brief Constructor constructs from an MPCORB 1 line record.
+  /// @param[in] mpcorbPath: The path and filename for the MPCORB.DAT file.
   /// @param[in] targetName: The name of the target.
   /// @throws CError(0x0600)
-  /// @version 2016-03-25/GGB - Functon created.
+  /// @version 2018-09-02/GGB - Added fileName parameter to constructor.
+  /// @version 2016-03-25/GGB - Function created.
 
-  CTargetMinorPlanet::CTargetMinorPlanet(std::string const &targetName)
+  CTargetMinorPlanet::CTargetMinorPlanet(boost::filesystem::path const &fileName, std::string const &targetName)
     : CTargetAstronomy(targetName), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
   {
+    if (!MPCORB::loadMP(fileName, targetName, elements()))
+    {
+      ACL_ERROR(0x2700);
+    };
   }
 
   /// @brief Calculates and returns the ICRS position of a minor planet.
@@ -147,14 +153,9 @@ namespace ACL
   /// @version 2018-08-24/GGB - Function created.
 
   std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(boost::filesystem::path const &fileName,
-                                                               std::string const &descriptor)
+                                                                 std::string const &descriptor)
   {
-    std::unique_ptr<CTargetMinorPlanet> returnValue(std::make_unique<CTargetMinorPlanet>(descriptor));
-
-    if (!MPCORB::loadMP(fileName, descriptor, returnValue->elements()))
-    {
-      ACL_ERROR(0x2700);
-    };
+    std::unique_ptr<CTargetMinorPlanet> returnValue(std::make_unique<CTargetMinorPlanet>(fileName, descriptor));
 
     return returnValue;
   }

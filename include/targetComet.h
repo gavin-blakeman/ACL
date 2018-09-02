@@ -1,8 +1,8 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:							ACL
-// FILE:								TargetMajorPlanet
-// SUBSYSTEM:						Major Planet Positions and Calculations
+// FILE:								targetComet
+// SUBSYSTEM:						Comet position calculations
 // LANGUAGE:						C++
 // TARGET OS:						NONE
 // LIBRARY DEPENDANCE:  MCL
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2018 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -24,70 +24,49 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
-// OVERVIEW:						These classes provide methods of handling planets
+// OVERVIEW:						This class provides methods of handling comets
 //
-// CLASSES INCLUDED:    CTargetPlanet - Class for managing planets.
+// CLASSES INCLUDED:    CTargetComet - Class for managing comets
 //
 // CLASS HIERARCHY:     CTargetAstronomy
 //                        CTargetStellar
-//                        CTargetSolar
-//                          CTargetMinorPlanet
-//                          CTargetPlanet
+//                        CTargetMinorPlanet
+//                        CTargetMajorPlanet
+//                        CTargetComet
 //
-// HISTORY:             2016-03-25 GGB - Development of classes for astroManager
+// HISTORY:             2018-09-01 GGB - File created.
 //
 //*********************************************************************************************************************************
 
-#ifndef ACL_TARGETMAJORPLANET_H
-#define ACL_TARGETMAJORPLANET_H
+#ifndef ACL_TARGETCOMET_H
+#define ACL_TARGETCOMET_H
 
   // Standard C++ library header files.
 
+#include <cstdint>
 #include <memory>
+#include <string>
 
-  // ACL library header files.
+  // ACL library header files
 
 #include "TargetAstronomy.h"
 
-  // Miscellaneous library header files.
+  // Miscellaneous library header files
+
+#include "boost/filesystem.hpp"
 
 namespace ACL
 {
-  class CTargetMajorPlanet : public CTargetAstronomy
+  class CTargetComet : public CTargetAstronomy
   {
-  public:
-    enum EPlanets
-    {
-      Mercury = 0,      // Note these enums are used for indexing the static array used for parameters. Do not change order!
-      Venus,
-      Mars,
-      Jupiter,
-      Saturn,
-      Uranus,
-      Neptune,
-      Pluto
-    };
-
   private:
-    EPlanets planet;
-
-    CTargetMajorPlanet() = delete;
-
   protected:
   public:
-    CTargetMajorPlanet(EPlanets const &);
-    virtual ~CTargetMajorPlanet();
+    CTargetComet(boost::filesystem::path const &, std::string const &);
 
-      // Position functions.
-
-    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
-    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
-
-      // Factory functions
-
-    static std::unique_ptr<CTargetMajorPlanet> create(EPlanets const &);
-
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
+    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) {}
   };
 }
 
-#endif // ACL_TARGETMAJORPLANET_H
+#endif // ACL_TARGETCOMET_H

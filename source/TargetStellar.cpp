@@ -81,27 +81,23 @@
   // NOVAS library (optional depending on DEFINES)
 
 #ifdef USE_NOVAS
-#ifndef _MSC_VER
-extern "C"
-{
-#endif
+# ifndef _MSC_VER
+    extern "C"
+    {
+# endif
 #include "novas.h"
 #include "novascon.h"
 #include "nutation.h"
-#ifndef _MSC_VER
-}
-#endif
+# ifndef _MSC_VER
+    }
+# endif
 #endif    // USE_NOVAS
-
-  // SOFA Library
-
-#include "sofa.h"
-#include "sofam.h"
-
 
   // Miscellaneous libraries
 
 #include <GCL>
+#include "sofa.h"
+#include "sofam.h"
 
 namespace ACL
 {
@@ -434,13 +430,14 @@ namespace ACL
   /// @brief Converts the passed string into a Julian day epoch
   /// @param[in] newEpoch: The epoch string to convert.
   /// @throws Several from convertEpoch
+  /// @version 2018-09-02/GGB - Changed parameter to std::string const &
   /// @version 2017-08-05/GGB - Use new style convertEpoch.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
   /// @version 2009-12-18/GGB - Function created.
 
-  void CTargetStellar::setEpoch(char *newEpoch)
+  void CTargetStellar::setEpoch(std::string const &newEpoch)
   {
-    epoch_ = convertEpoch(std::string(newEpoch));
+    epoch_ = convertEpoch(newEpoch);
   }
 
   /// @brief Stores the value of newEpoch into the Epoch value.

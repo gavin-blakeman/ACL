@@ -41,13 +41,7 @@
 #ifndef ACL_SIMBADPARSER_H
 #define ACL_SIMBADPARSER_H
 
-  // ACL library
-
-#include "AstronomicalCoordinates.h"
-#include "config.h"
-#include "TargetAstronomy.h"
-
-  // Standard library
+  // Standard C++ library header files.
 
 #include <cstdint>
 #include <initializer_list>
@@ -55,7 +49,13 @@
 #include <tuple>
 #include <vector>
 
-  // Other libraries
+  // ACL library header files
+
+#include "AstronomicalCoordinates.h"
+#include "config.h"
+#include "TargetAstronomy.h"
+
+  // Miscellaneous library header files.
 
 #include <SCL>
 
