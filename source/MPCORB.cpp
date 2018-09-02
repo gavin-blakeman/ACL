@@ -38,7 +38,6 @@
 
   // Standard C++ library header files.
 
-#include <cstdint>
 #include <vector>
 
   // ACL library header files.

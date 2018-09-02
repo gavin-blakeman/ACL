@@ -46,10 +46,15 @@ namespace ACL
   /// @param[in] fileName: The path and filename for the CometEls.txt file.
   /// @param[in] designation: The designation of the comet.
   /// @throws std::bad_alloc
+  /// @throws 0x2800 - TargetComet: Comet specified not found.
   /// @version 2018-09-02/GGB - Function created.
 
-  CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &designation) : CTargetAstronomy("")
+  CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &designation)
+    : CTargetAstronomy(designation)
   {
-
+    if (!COMETELS::loadMP(fileName, targetName, elements()))
+    {
+      ACL_ERROR(0x2800);
+    };
   }
 }

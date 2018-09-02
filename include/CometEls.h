@@ -40,7 +40,11 @@
   // Standard C++ library header files
 
 #include <cstdint>
-#include <cstring>
+#include <string>
+
+  // Miscellaneous library header files
+
+#include "boost/filesystem/fstream.hpp"
 
 namespace ACL
 {
@@ -52,16 +56,16 @@ namespace ACL
       std::string orbitType;
       std::string provisionalDesignation;
       std::uint16_t perihelionPassageYear;
-      std::uint8_t perihelionPassageMonth;
+      std::uint16_t perihelionPassageMonth;
       float perihelionPassageDay;
       double perihelionDistance;
       double orbitalEccentricity;
       double argumentOfPerihelion;
       double longitudeOfAscendingNode;
       double inclination;
-      std::uint8_t epochYear;
-      std::string epochMonth;
-      std::uint8_t epochDay;
+      std::uint16_t epochYear;
+      std::uint16_t epochMonth;
+      std::uint16_t epochDay;
       float absoluteMagnitude;
       float slopeParameter;
       std::string nameOfComet;

@@ -39,6 +39,7 @@
 
   // Standard C++ library header files
 
+#include <cstdint>
 #include <string>
 
   // Miscellaneous library header files

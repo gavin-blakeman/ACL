@@ -49,6 +49,7 @@
 
   // ACL library header files
 
+#include "CometEls.h"
 #include "TargetAstronomy.h"
 
   // Miscellaneous library header files
