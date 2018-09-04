@@ -77,6 +77,10 @@ namespace ACL
   /// objects.
   /// The class is not a proxy for an observation, but only for a target (object). The apparent place can be requested from the
   /// class, provided that a time, weather data and geographic location is provided.
+  ///
+  /// @note 1. It is important to reference the document sofa_ast_c.pdf in conjunction with this code. Particularly page 2,
+  ///          "The Chain of astrometric transformations". This is not detailed in this documentation, but can be found in the
+  ///          "TargetAstronomy.h" header file.
 
   class CTargetAstronomy
   {
@@ -85,6 +89,7 @@ namespace ACL
   private:
   protected:
     DTargetName objectName_;                        ///< List of object names. Object may have more than one name.
+    CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
 
   public:
     CTargetAstronomy();
@@ -96,10 +101,19 @@ namespace ACL
 //    virtual bool operator==(CTargetAstronomy const &) const;
     virtual bool operator==(std::string const &) const;
 
-      // Data manipulation functions
+      // Information functions
 
     virtual std::string objectName() const;
+    virtual std::string objectType() const = 0;
+
+      // Data manipulation functions
+
+
     virtual void objectName(std::string const &);
+
+      // Position functions
+
+    virtual CAstronomicalCoordinates catalogPosition() const;
 
       // Position Calculation functions.
 

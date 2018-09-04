@@ -111,14 +111,153 @@ namespace ACL
   /// motion, refraction etc. This is in contrast to solar objects where the position is determined by using an Ephemeris. The
   /// stellar object class includes the code necessary to reduce the catalog position to a observed position.
 
+
+  ////*******************************************************************************************************************************
+  //
+  // Chain of astrometric transformations (Referenced from sofa_ast_c.pdf)
+  //
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *  ICRS (RA, DEC, pmRA, pmDEC, parallax, radialVelocity)  *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                           space motion
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                     BCRS (RA, DEC, r)                   *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                            parallax
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                   astrometric (RA, DEC)                 *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                          light deflection
+  //                                            aberration
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                       GCRS (RA, DEC)                    *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                            frame bias
+  //                                          precession nutation
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                           CIRS                          *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                        Earth rotation angle
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                           TIRS                          *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                           polar motion
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                           ITRS                          *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                            longitude
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                        local apparent                   *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                  diurnal abberation and parallax
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                     topocentric (h, dec)                *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                            latitude
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                     topocentric (alt, az)               *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //                                                |
+  //                                            refraction
+  //                                                |
+  //                  ***********************************************************
+  //                  *                                                         *
+  //                  *                        observed (alt, az)               *
+  //                  *                                                         *
+  //                  ***********************************************************
+  //
+  //*******************************************************************************************************************************
+  //
+  // Catalog Coordinates: ICRS      (ICRS, FK5, FK4 etc)
+  // Current Coordinates:
+  // Observed Coordinates:  Direction to point a telescope.
+  // SOFA function iauAtco13: ICRS->observed
+  //
+  // iauApco13: Prepare star-independant astrometry parameters for transformations between ICRS and observed coordinates.
+  //      Inputs: UTC:  use function iadDtf2d to convert from calendar date to julian date.
+  //              dUT1: UT1-UTC (from IERS bulletins)
+  //              elong: longitude
+  //              phi: latitude
+  //              hm: height above ellipsoid
+  //              xp, yp: Polar motion (IERS)
+  //              phpa: Pressure at observer
+  //              tc: Temperature at observer
+  //              rh: Relative humidity at observer
+  //              wl: wavelength
+  //      Returned:
+  //              astrom: star-independant astronomy parameters.
+  //              pmt: PM time interval
+  //              eb: SSB to observer
+  //              eh: Sun to observer
+  //              em: Distance from sun to observer
+  //              v: barycentric observer velocity
+  //              bm1: Reciprical of lorenz factor.
+  //              bpn: Bias nutation matrix.
+  //              along: longiture+s'
+  //              xpl: polar motion
+  //              ypl: polar motion
+  //              sphi: sine of latitude
+  //              cphi: cosine of latitude
+  //              diurab: magnitude of diurnal abberation vector
+  //              eral: local earth rotation angle
+  //              refa: refraction constant A
+  //              refb: refraction constant B
+  //              eo: Equation of origins.
+
   class CTargetStellar : public CTargetAstronomy
   {
   public:
-      /// The possible reference systems that may be used for specifying a stellar objects position.
+      // The possible reference systems that may be used for specifying a stellar objects position.
+
+    enum EReferenceSystem
+    {
+      RS_NONE,      ///< No reference system specified
+      RS_ICRS,      ///< Using the ICRS reference system. This is the system in use today.
+      RS_FK4,       ///< Using the FK4 reference system. This is only used in older catalogs.
+      RS_FK5        ///< Using the FK5 reference system. This is used in more modern catalogs.
+    };
 
   private:
   protected:
-    CAstronomicalCoordinates catalogCoordinates_;     ///< Catalog Coordinates of the object.
+    CAstronomicalCoordinates catalogCoordinates_;     ///< Catalog Coordinates of the object. (Stored as ICRS)
     TJD catalogEquinox_;                              ///< JD of coordinate equinox.
     std::optional<FP_t> pmRA_;                        ///< Proper Motion RA (mas)
     std::optional<FP_t> pmDec_;                       ///< Proper Motion DEC (mas)
@@ -129,6 +268,7 @@ namespace ACL
     std::vector<std::string> identifiers_;            ///< Alternate identifiers for the object.
     std::vector<CPhotometryMeasurement> photometry_;  ///< Any photometry measurements associated with the object
     std::uint64_t oid_;                               ///< SIMBAD OID
+    std::string objectType_;
 
   public:
     explicit CTargetStellar();        // void form of the constructor.
@@ -137,13 +277,18 @@ namespace ACL
     CTargetStellar(const CTargetStellar &);
     virtual ~CTargetStellar();
 
+      // Information functions
+
+    virtual std::string objectType() const;
+
       // Operator functions
 
     virtual CTargetStellar &operator=(const CTargetStellar &);
 
       // Setting functions
 
-    virtual void catalogueCoordinates(CAstronomicalCoordinates);
+    virtual void objectType(std::string const &ot) { objectType_ = ot; }
+    virtual void catalogueCoordinates(CAstronomicalCoordinates, EReferenceSystem = RS_ICRS);
     virtual void setEpoch(std::string const &);
     inline virtual void setEpoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch
     virtual void setEpoch(TJD const &);

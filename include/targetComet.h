@@ -67,6 +67,10 @@ namespace ACL
   public:
     CTargetComet(boost::filesystem::path const &, std::string const &);
 
+      // Information functions
+
+    virtual std::string objectType() const { return "Comet"; }
+
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
     virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) {}
   };

@@ -138,7 +138,8 @@ SOURCES += \
     source/TargetMajorPlanet.cpp \
     source/MPCORB.cpp \
     source/targetComet.cpp \
-    source/CometEls.cpp
+    source/CometEls.cpp \
+    source/IERS.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -218,7 +219,8 @@ HEADERS += \
     include/TargetMajorPlanet.h \
     include/MPCORB.h \
     include/targetComet.h \
-    include/CometEls.h
+    include/CometEls.h \
+    include/IERS.h
 
 OTHER_FILES += \
     ACL \

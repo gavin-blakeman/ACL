@@ -78,6 +78,10 @@ namespace ACL
     CTargetMajorPlanet(EPlanets const &);
     virtual ~CTargetMajorPlanet() {}
 
+      // Information functions
+
+    virtual std::string objectType() const { return "Planet"; }
+
       // Position functions.
 
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;

@@ -88,6 +88,10 @@ namespace ACL
     CTargetMinorPlanet(boost::filesystem::path const &, std::string const &);
     virtual ~CTargetMinorPlanet() {}
 
+      // Information functions
+
+    virtual std::string objectType() const { return "Minor"; }
+
       // Getter functions
 
     MPCORB::SMPCORB &elements() { return elements_; }

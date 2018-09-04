@@ -97,14 +97,6 @@ namespace ACL
   ///
   ///
 
-  enum EReferenceSystem
-  {
-    RS_NONE,      ///< No reference system specified
-    RS_ICRS,      ///< Using the ICRS reference system. This is the system in use today.
-    RS_FK4,       ///< Using the FK4 reference system. This is only used in older catalogs.
-    RS_FK5        ///< Using the FK5 reference system. This is used in more modern catalogs.
-  };
-
   class CAstronomicalCoordinates
   {
   private:

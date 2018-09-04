@@ -26,7 +26,6 @@
 //
 // OVERVIEW:						This file provides a class for storing time and performing time conversions between different time scales.
 //
-//
 // CLASSES INCLUDED:		TJD           - Julian Date
 //                      CAstroTime    - Stores time (date/time) as a TT value. Can produce values converted to any of the other
 //                                      time scales on demand.

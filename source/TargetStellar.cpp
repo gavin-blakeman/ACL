@@ -68,14 +68,15 @@
 
 #include "../include/TargetStellar.h"
 
-  // Standard C++ library headers
+  // Standard C++ library header files
 
 #include <sstream>
 
   // ACL library header files.
 
-#include "../include/constants.h"
 #include "../include/AstroFunctions.h"
+#include "../include/constants.h"
+#include "../include/error.h"
 #include "../include/FITSStrings.h"
 
   // NOVAS library (optional depending on DEFINES)
@@ -160,7 +161,8 @@ namespace ACL
 
   CTargetStellar::CTargetStellar(CTargetStellar const &toCopy) :  CTargetAstronomy(toCopy.objectName()),
     catalogCoordinates_(toCopy.catalogCoordinates_), pmRA_(toCopy.pmRA_),
-    pmDec_(toCopy.pmDec_), radialVelocity_(toCopy.radialVelocity_), parallax_(toCopy.parallax_), epoch_(toCopy.epoch_)
+    pmDec_(toCopy.pmDec_), radialVelocity_(toCopy.radialVelocity_), parallax_(toCopy.parallax_), epoch_(toCopy.epoch_),
+    objectType_("")
   {
   }
 
@@ -189,6 +191,14 @@ namespace ACL
     return (*this);
   }
 
+  /// @brief Returns the type of the object.
+  /// @returns The type of the object.
+  /// @version 2018-09-03/GGB - Function created.
+
+  std::string CTargetStellar::objectType() const
+  {
+    return objectType_;
+  }
 
   /// Calculates the observedPlace of an object that is specified in ICRS coordinates.
   /// Each step of the reduction is calculated by a different routine. Intermediate results are stored in the class.
@@ -417,14 +427,36 @@ namespace ACL
 
   /// @brief Function to set the catalog coordinates and reference system.
   /// @param[in] ncc: The new catalogue coordinates.
+  /// @param[in] referenceSytem: The reference system to use.
   /// @throws None.
+  /// @note 1. The coordinates are converted to ICRS before being stored.
+  /// @version 2018-09-04/GGB - Added referenceSystem parameter.
   /// @version 2017-08-03/GGB - Removed referenceSystem_ member.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
   /// @version 2011-07-02/GGB - Function created.
 
-  void CTargetStellar::catalogueCoordinates(CAstronomicalCoordinates ncc)
+  void CTargetStellar::catalogueCoordinates(CAstronomicalCoordinates ncc, EReferenceSystem referenceSystem)
   {
-    catalogCoordinates_ = ncc;
+    switch (referenceSystem)
+    {
+      case RS_ICRS:
+      {
+        catalogCoordinates_ = ncc;
+        break;
+      };
+      case RS_FK4:
+      case RS_FK5:
+      {
+        ERRORMESSAGE("Coordniate reference system FK4 and FK5 are not implemented.");
+        ACL_CODE_ERROR;
+        break;
+      };
+      case RS_NONE:
+      default:
+      {
+        ACL_CODE_ERROR;
+      };
+    };
   }
 
   /// @brief Converts the passed string into a Julian day epoch

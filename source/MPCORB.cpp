@@ -48,7 +48,7 @@
 
 #include "boost/algorithm/string.hpp"
 #include "boost/filesystem/fstream.hpp"
-#include <boost/lexical_cast.hpp>
+#include "boost/lexical_cast.hpp"
 
 namespace ACL
 {

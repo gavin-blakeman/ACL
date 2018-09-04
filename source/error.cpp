@@ -195,6 +195,8 @@ namespace ACL
       {0x3207, "ASTROTIME: Cannot get TAI-UTC before 1973."},
       {0x3300, "MPCORB: Unable to open MPCORB.DAT"},
       {0x3310, "CometElements: Unable to open ComEls.txt"},
+      {0x3320, "IERS: Unable to open Bulletin A file specified."},
+      {0x3321, "IERS: Unable to parse file. Is the file name and type correct."},
       {0x4000, "PhotometryFilters: Repeated Database ID"},
       {0x4001, "PhotometryFilters: All available filterID used."},
       {0x4100, ""},
