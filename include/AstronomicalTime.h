@@ -103,7 +103,7 @@ namespace ACL
   class CAstroTime
   {
   private:
-    TJD TT_;  ///< The time value. Stored in terrestrial time (TT) format.
+    TJD TT_;                                          ///< The time value. Stored in terrestrial time (TT) format.
     static std::map<unsigned long, FP_t> dUT1Array;   ///< The dUT1 values. Stored as a <MJD, value> in the @a std::map
     static std::map<unsigned long, int> dATArray;     ///< The dAT values. Stored as a <MJD, value> in the @a std::map
 

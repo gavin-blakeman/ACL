@@ -159,7 +159,7 @@ namespace ACL
       //         element = element0 + elementdot x T
       //         T = number of centuries past J2000.0
 
-    T = (static_cast<double>(Teph.TT()) - static_cast<double>(D_J2000)) / 36525;
+    T = (static_cast<double>(Teph.TT()) - static_cast<double>(J2000)) / 36525;
 
       /// @todo This may be able to be done using a valarray for speedup.
 
@@ -210,7 +210,7 @@ namespace ACL
     yeq = coseta * yecl - sineta * zecl;
     zeq = sineta * yecl + coseta * zecl;
 
-    return CAstronomicalCoordinates(MCL::TVector3D<FP_t>(xeq, yeq, zeq), RS_ICRS, J2000);
+    return CAstronomicalCoordinates(MCL::TVector3D<FP_t>(xeq, yeq, zeq));
 
   }
 

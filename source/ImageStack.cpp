@@ -147,7 +147,7 @@ namespace ACL
 
   void CImageStack::addFile(PAstroFile toAdd, MCL::TPoint2D<FP_t> &newa1, MCL::TPoint2D<FP_t> &newA2)
   {
-    PStackImageInformation newImage(new CStackImageInformation(toAdd, 0, newa1, newA2) );
+    std::shared_ptr<CStackImageInformation> newImage(new CStackImageInformation(toAdd, 0, newa1, newA2) );
 
     inputFiles.push_back(newImage);
   }
@@ -229,7 +229,14 @@ namespace ACL
       // This also copies all the data, including the WCS data that will be valid for the output image.
       // This is valid as the output image is a dimensional and positional copy of the first input image.
 
-    resultFile.reset((*inputFiles.begin())->astroFile->createCopy());
+      // Note the following line is non-intuitive. As the returned value is a copy and not a reference, it cannot
+      // be used as the argument of the swap function. However the resultFile can be used as a reference, so
+      // to enable compilation, the reversal of logic is required.
+      // The outcome is the same as the two pointers are swapped and when the copy goes out of scope, it should be
+      // destructed.
+
+    (*inputFiles.begin())->astroFile->createCopy().swap(resultFile);
+
     resultFile->keywordWrite(0, HEASARC_CREATOR, "ACL::ImageStack", HEASARC_COMMENT_CREATOR); // Add a comment that we have added
 
     switch (stackMode)

@@ -93,9 +93,8 @@ namespace ACL
   /// If this macro is defined then the code for the determination of stellar positions will use the SOFA library.
   /// Only one of the macros USE_NOVAS and USE_SOFA must be defined.
 
-#define USE_NOVAS
+//#define USE_NOVAS
 #define USE_SOFA
-#undef USE_SOFA
 
 #if defined(USE_NOVAS) && defined(USE_SOFA)
 #error "Cannot have USE_SOFA and USE_NOVAS defined at the same time."

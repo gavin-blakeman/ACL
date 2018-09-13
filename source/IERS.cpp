@@ -137,6 +137,15 @@ namespace ACL
 
                 // Don't need to read all the columns.
 
+              SPredictions predictionsValues;
+
+              predictionsValues.JD = boost::lexical_cast<double>(szTokens[3]);
+              predictionsValues.x = boost::lexical_cast<float>(szTokens[4]);
+              predictionsValues.y = boost::lexical_cast<float>(szTokens[5]);
+              predictionsValues.UT1_UTC = boost::lexical_cast<float>(szTokens[6]);
+
+              predictions.emplace_back(predictionsValues);
+
             }
             while ( (!ifs.eof()) && (szLine.find("These predictions are based on all announced leap seconds.") == std::string::npos));
           }

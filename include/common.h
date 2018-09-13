@@ -105,6 +105,16 @@ namespace ACL
     std::uint8_t B;
   };
 
+  struct SObservedPlace
+  {
+    double azimuth;
+    double zenithDistance;
+    double hourAngle;
+    double declination;
+    double rightAscension;
+    double eo;
+  };
+
   size_t const HDU_PRIMARY            = 0;
 
 #endif // __XC32

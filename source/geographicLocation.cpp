@@ -36,6 +36,8 @@
 
 #include "../include/geographicLocation.h"
 
+  // Miscellaneous library header files.
+
 #include <GCL>
 
 namespace ACL

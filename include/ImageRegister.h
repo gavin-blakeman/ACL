@@ -44,15 +44,17 @@
 #ifndef ACL_IMAGEREGISTER_H
 #define ACL_IMAGEREGISTER_H
 
-#include "AstroFile.h"
+  // Standard C++ library header files
 
-  // Standard include files
-
+#include <memory>
 #include <vector>
 
-  // Miscellaneouslibrary header files
+  // ACL library header files.
 
-#include "boost/shared_ptr.hpp"
+#include "AstroFile.h"
+
+  // Miscellaneous library header files
+
 #include <GCL>
 #include <MCL>
 
@@ -61,8 +63,8 @@ namespace ACL
   class CRegisterImageInformation
   {
   public:
-    PAstroFile inputFile;
-    PAstroFile outputFile;
+    std::shared_ptr<CAstroFile> inputFile;
+    std::unique_ptr<CAstroFile> outputFile;
     std::vector<CHDB>::size_type HDB;
     CImagePlane *mask;			        // Mask used for masking out incomplete areas of the image.
     MCL::TPoint2D<FP_t> align1;
@@ -79,12 +81,14 @@ namespace ACL
     MCL::TPoint2D<FP_t> pixSize;    // Pixel size
 
     CRegisterImageInformation();
-    CRegisterImageInformation(PAstroFile, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
+    CRegisterImageInformation(std::shared_ptr<CAstroFile>, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
     CRegisterImageInformation(CRegisterImageInformation const &);
-    ~CRegisterImageInformation();
+
+    virtual CRegisterImageInformation &operator=(CRegisterImageInformation);
+
+    friend void swap(CRegisterImageInformation &, CRegisterImageInformation &);
   };
-  typedef boost::shared_ptr<CRegisterImageInformation> PRegisterImageInformation;
-  typedef std::vector<PRegisterImageInformation> DRegisterImageStore;
+  typedef std::vector<std::shared_ptr<CRegisterImageInformation>> DRegisterImageStore;
 
   class CRegisterImages
   {
@@ -94,9 +98,9 @@ namespace ACL
   protected:
   public:
     CRegisterImages();
-    virtual ~CRegisterImages();
+    virtual ~CRegisterImages() {}
 
-    void addImage(PAstroFile, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
+    void addImage(std::shared_ptr<CAstroFile>, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
     DRegisterImageStore const &getImages() const;
     void clearImages();
 

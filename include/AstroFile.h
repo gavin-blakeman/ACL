@@ -62,7 +62,7 @@
 #ifndef ACL_ASTROFILE_H
 #define ACL_ASTROFILE_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <memory>
@@ -70,7 +70,7 @@
 #include <string>
 #include <vector>
 
-  // ACL header files
+  // ACL library header files
 
 #include "AstroClass.h"
 #include "AstroImage.h"
@@ -87,13 +87,10 @@
 #include "SourceExtraction.h"
 #include "telescope.h"
 
-  // fitsio Library
-
-#include "fitsio.h"
-
   // Miscellaneous libraries
 
 #include "boost/filesystem.hpp"
+#include "fitsio.h"
 #include <MCL>
 #include <SCL>
 
@@ -181,8 +178,7 @@ namespace ACL
     std::unique_ptr<CObservatory> observationLocation;                              ///< The location of the observation location
     std::unique_ptr<CWeather> observationWeather;                                   ///< Weather at time of observation
     std::unique_ptr<CAstroTime> observationTime;                                    ///< Time of the observation
-    std::unique_ptr<CAstronomicalCoordinates> targetCoordinates;                    ///< Coordinates of the observation.
-    bool targetCoordinatesValid;
+    std::unique_ptr<CTargetAstronomy> observationTarget;                            ///< Coordinates of the observation.
     std::unique_ptr<CTelescope> observationTelescope;                               ///< Inforrmation about the telescope used.
     DHDBStore HDB;                                                                  ///< All the data blocks (HDU) in the file.
     mutable bool bDirty;                                                            ///< Has the data changed since the last save?
@@ -228,7 +224,11 @@ namespace ACL
     CAstroFile(CAstroImage *);
     virtual ~CAstroFile();		// Ensure that this is a virtual class.
 
-    virtual CAstroFile *createCopy() const;
+      // Factory functions.
+
+    virtual std::unique_ptr<CAstroFile> createCopy() const;
+
+
     void copyKeywords(CAstroFile const &, DHDBStore::size_type);
 
     std::string getImageName();

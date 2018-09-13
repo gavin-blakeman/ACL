@@ -277,6 +277,10 @@ namespace ACL
     CTargetStellar(const CTargetStellar &);
     virtual ~CTargetStellar();
 
+      // Factory functions
+
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const {}
+
       // Information functions
 
     virtual std::string objectType() const;
@@ -324,7 +328,7 @@ namespace ACL
       // Posotion Functions
 
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
-    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &);
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
   };
 
 }  // namespace ACL

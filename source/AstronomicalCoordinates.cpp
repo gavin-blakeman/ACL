@@ -48,12 +48,19 @@
 
 #include "../include/AstroFunctions.h"
 
-  // Miscellaneous librariy header files.
+  // Miscellaneous library header files.
 
 #include <GCL>
 
 namespace ACL
 {
+  /// @brief Function to write coordinates to stream.
+  /// @param[in] out: The output stream.
+  /// @param[in] rhs: The coordinates to write.
+  /// @returns Reference to the stream.
+  /// @throws None.
+  /// @version 2018-09-05/GGB - Function created.
+
   std::ostream &operator<<(std::ostream &out, CAstronomicalCoordinates const &rhs)
   {
     out << rhs.RA() << ", " << rhs.DEC() << ", ";
@@ -63,69 +70,66 @@ namespace ACL
 
   /// @brief Null constructor for the class.
   /// @throws std::bad_alloc
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Function created.
 
-  CAstronomicalCoordinates::CAstronomicalCoordinates() : coordinates_(0, 0), referenceSystem_(RS_NONE), epoch_(J2000), equinox_(J2000)
+  CAstronomicalCoordinates::CAstronomicalCoordinates() : coordinates_(0, 0)
   {
   }
 
   /// @brief Copy constructor for the class.
   /// @param[in] toCopy: The instance to copy.
   /// @throws None.
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle
   /// @version 2013-03-03/GGB - Underlying storage changed from double to MCL::TPoint2D<>
   /// @version 2005-07-01/GGB - Function created
 
-  CAstronomicalCoordinates::CAstronomicalCoordinates(CAstronomicalCoordinates const &toCopy) : coordinates_(toCopy.coordinates_),
-    referenceSystem_(toCopy.referenceSystem_), epoch_(toCopy.epoch_), equinox_(toCopy.equinox_)
+  CAstronomicalCoordinates::CAstronomicalCoordinates(CAstronomicalCoordinates const &toCopy) : coordinates_(toCopy.coordinates_)
   {
   }
 
   /// @brief Class constructor
   /// @param[in] ra: The Right ascension (hms)
   /// @param[in] dec: The declination (dms)
-  /// @param[in] referenceSystem: The reference system to assign.
-  /// @param[in] referenceSystem: The reference system to assign.
   /// @throws None.
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle
   /// @version 2013-03-03/GGB - Underlying storage changed from double to MCL::TPoint2D<>
   /// @version 2011-07-03/GGB - Function created.
 
-  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::CAngle RA, MCL::CAngle DEC, EReferenceSystem referenceSystem, FP_t epoch)
-    : coordinates_(RA, DEC), referenceSystem_(referenceSystem), epoch_(epoch), equinox_(J2000)
+  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::CAngle RA, MCL::CAngle DEC)
+    : coordinates_(RA, DEC)
   {
   }
 
   /// @brief Class constructor
   /// @param[in] coords: The RA/Dec pair of coordinates.
-  /// @param[in] referenceSystem: The reference system to assign.
-  /// @param[in] epoch: The epoch of the coordinates.
   /// @throws None.
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle
   /// @version 2013-03-03/GGB - Function created.
 
-  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::TPoint2D<MCL::CAngle> const &toCopy, EReferenceSystem referenceSystem,
-                                                     FP_t epoch)
-    : coordinates_(toCopy), referenceSystem_(referenceSystem), epoch_(epoch), equinox_(J2000)
+  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::TPoint2D<MCL::CAngle> const &toCopy)
+    : coordinates_(toCopy)
   {
   }
 
-  /// @brief Constructoru using cartesian coordinate forms.
+  /// @brief Constructor using cartesian coordinate forms.
   /// @param[in] cart: The cartesian coordinates.
-  /// @param[in] referenceSystem: The reference system
-  /// @param[in] epoch: THe epoch.
   /// @throws std::bad_alloc
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2018-08-23/GGB - Function created.
 
-  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &cart, EReferenceSystem referenceSystem, FP_t epoch)
-    : coordinates_(), referenceSystem_(referenceSystem), epoch_(epoch), equinox_(J2000)
+  CAstronomicalCoordinates::CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &cart)
+    : coordinates_()
   {
     coordinates_.x() = std::acos(cart.z() / cart.length());
     coordinates_.y() = std::atan2(cart.y(), cart.x());
@@ -134,6 +138,7 @@ namespace ACL
   /// @brief Copy operator for the class.
   /// @param[in] toCopy: The instance to copy.
   /// @throws None.
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle
@@ -143,15 +148,13 @@ namespace ACL
   CAstronomicalCoordinates &CAstronomicalCoordinates::operator=(CAstronomicalCoordinates const &toCopy)
   {
     coordinates_ = toCopy.coordinates_;
-    referenceSystem_ = toCopy.referenceSystem_;
-    epoch_ = toCopy.epoch_;
-    equinox_ = toCopy.equinox_;
 
     return (*this);
   }
 
   /// @brief Copy operator for a set of coordinates.
   /// @param[in] toCopy: The coordinates to use.
+  /// @version 2018-09-05/GGB - Removed Reference system, epoch and equinox.
   /// @version 2017-09-22/GGB - Updated to use MCL::CAngle
   /// @version 2017-08-01/GGB - Changed back to two values with specified storage and included reference system and epoch.
   /// @version 2015-09-27/GGB - Converted class to use MCL::CAngle

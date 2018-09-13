@@ -66,9 +66,7 @@ namespace ACL
   FP_t const HOUR_PER_DEGREE    = 1.0/15.0;                   ///< Hours per degree
   FP_t const SECONDS_PER_DAY    = 24 * 60 * 60;               ///< Number of seconds in a day.
 
-  JD_t const D_J2000(2451545);                                ///< JD of standard epoch
-
-
+  JD_t const J2000(2451545);                                  ///< JD of standard epoch J2000.0
 
 }  // namesapace ACL
 

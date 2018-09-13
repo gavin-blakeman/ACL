@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								geographicLocation
@@ -37,11 +37,13 @@
 #ifndef ACL_GEOGRAPHICCOORDINATES_H
 #define ACL_GEOGRAPHICCOORDINATES_H
 
-#include "config.h"
-
-  // Standard library
+  // Standard C++ library header files
 
 #include <cstdint>
+
+  // ACL library header files.
+
+#include "config.h"
 
 namespace ACL
 {

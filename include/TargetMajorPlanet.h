@@ -78,6 +78,10 @@ namespace ACL
     CTargetMajorPlanet(EPlanets const &);
     virtual ~CTargetMajorPlanet() {}
 
+      // Factory functions
+
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const  {}
+
       // Information functions
 
     virtual std::string objectType() const { return "Planet"; }
@@ -85,7 +89,7 @@ namespace ACL
       // Position functions.
 
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
-    virtual CAstronomicalCoordinates positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) {}
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
 
       // Factory functions
 

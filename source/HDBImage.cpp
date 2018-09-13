@@ -61,7 +61,7 @@
 
 #include "../include/HDBImage.h"
 
-  // ACL header files.
+  // ACL library header files.
 
 #include "../include/AstroImageFunctions.hpp"
 #include "../include/AstroImageMono.h"
@@ -70,22 +70,19 @@
 #include "../include/FITS.h"
 #include "../include/FITSException.h"
 
-  // libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment out K&R prototypes.)
-
-#include "wcs.h"
-
-  // Miscellaneous headers
+  // Miscellaneous library header files
 
 #include <GCL>
+#include "wcs.h"      // libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment out K&R prototypes.)
 
 namespace ACL
 {
    struct SRawData8
   {
-    boost::uint16_t R;
-    boost::uint16_t G;
-    boost::uint16_t B;
-    boost::uint16_t G2;
+    std::uint16_t R;
+    std::uint16_t G;
+    std::uint16_t B;
+    std::uint16_t G2;
   };
 
   //*******************************************************************************************************************************
@@ -983,8 +980,8 @@ namespace ACL
 
       ::pix2wcs(WCSInformation, toConvert.x(), toConvert.y(), &ra, &dec);
 
-      intermediate.setEpoch(WCSInformation->epoch);
-      intermediate.setEquinox(WCSInformation->equinox);
+      //intermediate.setEpoch(WCSInformation->epoch);
+      //intermediate.setEquinox(WCSInformation->equinox);
       intermediate(ra * MCL::D_D2R, dec * MCL::D_D2R);        // CAngle stores in radians.
 
       returnValue = intermediate;

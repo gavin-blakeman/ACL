@@ -59,12 +59,12 @@
 
 #include "../include/AstroClass.h"
 
-  // ACL library include files
+  // ACL library header files
 
 #include "../include/constants.h"
 #include "../include/AstroFunctions.h"
 
-  // SOFA include files
+  // Miscellaneous library header files.
 
 #include "sofa.h"
 

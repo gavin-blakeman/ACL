@@ -91,9 +91,7 @@ namespace ACL
   /// Member functions are also provided to precess the objects location to specific time/dates/locations, change coordinate types
   /// (Alt-Az etc) and to parse information from the SIMBAD database.
 
-  FP_t const J2000 = 2451545.0;   ///< J2000.0 Epoch Date
-
-  /// @brief Coordinate class
+    /// @brief Coordinate class
   ///
   ///
 
@@ -101,26 +99,17 @@ namespace ACL
   {
   private:
     MCL::TPoint2D<MCL::CAngle> coordinates_;          ///< The coordinates that are represented.
-    EReferenceSystem referenceSystem_;                ///< The reference system that the coordinates refer to
-    TJD epoch_;                                       ///< Epoch specified in Julian Days.
-    TJD equinox_;                                     ///< The equinox of the system (if required)
 
   protected:
   public:
     CAstronomicalCoordinates();
     CAstronomicalCoordinates(CAstronomicalCoordinates const &);
-    CAstronomicalCoordinates(MCL::CAngle, MCL::CAngle, EReferenceSystem = RS_FK5, FP_t = J2000);
-    CAstronomicalCoordinates(MCL::TPoint2D<MCL::CAngle> const &, EReferenceSystem = RS_FK5, FP_t = J2000);
-    CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &, EReferenceSystem = RS_ICRS, FP_t = J2000);
+    CAstronomicalCoordinates(MCL::CAngle, MCL::CAngle);
+    CAstronomicalCoordinates(MCL::TPoint2D<MCL::CAngle> const &);
+    CAstronomicalCoordinates(MCL::TVector3D<FP_t> const &);
 
     virtual CAstronomicalCoordinates &operator=(CAstronomicalCoordinates const &);
     virtual CAstronomicalCoordinates &operator=(MCL::TPoint2D<FP_t> const &);
-
-    inline void setReferenceSystem(EReferenceSystem newReferenceSystem) { referenceSystem_ = newReferenceSystem;}
-    inline void setEpoch(TJD const &ne) { epoch_ = ne; }
-    inline void setEquinox(TJD const ne) { equinox_ = ne; }
-
-    EReferenceSystem getReferenceSystem() const { return referenceSystem_; }
 
     virtual void operator()(FP_t, FP_t);
     virtual void operator()(MCL::CAngle const &, MCL::CAngle const &);
@@ -135,9 +124,6 @@ namespace ACL
 
     friend std::ostream &operator<<(std::ostream &, CAstronomicalCoordinates const &);
   };
-
-
-
 }
 
 #endif // COORDINATES_H

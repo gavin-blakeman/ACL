@@ -54,14 +54,11 @@
 #include "../include/AstronomicalCoordinates.h"
 #include "../include/AstroFunctions.h"
 
-  // SOFA Library
-
-#include "sofa.h"
-#include "sofam.h"
-
-  // Miscellaneous Libraries
+  // Miscellaneous Library header files
 
 #include <GCL>
+#include "sofa.h"
+#include "sofam.h"
 
 namespace ACL
 {

@@ -57,11 +57,11 @@
 
 #include "../include/AstroFile.h"
 
-  // Standard Libraries
+  // Standard C++ Library header files.
 
 
 
-  // ACL Library
+  // ACL Library header files.
 
 #include "../include/AstroFunctions.h"
 #include "../include/FITSException.h"
@@ -75,7 +75,7 @@
 #include "../include/HDB.h"
 #include "../include/HDBPrimary.h"
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files.
 
 #include <boost/algorithm/string.hpp>
 #include "csbigimg.h"
@@ -93,13 +93,14 @@ namespace ACL
 
   /// @brief Constructor for the class.
   /// @throws std::bad_alloc
+  /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
   /// @version 2016-04-02/GGB - Added keywordCount members.
   /// @version 2016-03-31/GGB - Added creation of the TLocation object to the constructor.
   /// @version 2011-05-03/GGB - Function created.
 
   CAstroFile::CAstroFile() : imageName_(), HDB(), astrometryHDB_(), photometryHDB_(), observationLocation(new CObservatory()),
-    observationWeather(), observationTime(), targetCoordinates(new CAstronomicalCoordinates()), targetCoordinatesValid(false),
+    observationWeather(), observationTime(), observationTarget(),
     observationTelescope(new CTelescope), bDirty(false), bHasData(false)
   {
   }
@@ -107,6 +108,7 @@ namespace ACL
   /// @brief Constructor for the class.
   /// @param[in] nin - Image Name to associate with the class.
   /// @throws std::bad_alloc
+  /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
   /// @version 2016-04-02/GGB - Added keywordCount members.
   /// @version 2016-03-31/GGB - Added creation of the TLocation object to the constructor.
@@ -114,8 +116,7 @@ namespace ACL
 
   CAstroFile::CAstroFile(std::string const &imageName) : imageName_(imageName), HDB(), astrometryHDB_(), photometryHDB_(),
     observationLocation(new CObservatory()), observationWeather(), observationTime(),
-    targetCoordinates(new CAstronomicalCoordinates()), targetCoordinatesValid(false),
-    observationTelescope(new CTelescope), bDirty(false), bHasData(false)
+    observationTarget(), observationTelescope(new CTelescope), bDirty(false), bHasData(false)
   {
   }
 
@@ -126,6 +127,7 @@ namespace ACL
   /// @note 2. This function is not multi-threaded.
   /// @details This function copies the class. This is done by copying all the stored information and then calling each HDB in turn
   ///          to perform it's own copy.
+  /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
   /// @version 2016-04-02/GGB - Added keywordCount members.
   /// @version 2013-06-07/GGB - Updated to reflect changes to class.
@@ -134,10 +136,8 @@ namespace ACL
   CAstroFile::CAstroFile(CAstroFile const &toCopy) : astrometryHDB_(), photometryHDB_(), imageName_(toCopy.imageName_),
     observationLocation(toCopy.observationLocation->createCopy()), observationWeather(),
     observationTime(new CAstroTime(*toCopy.observationTime)),
-    targetCoordinates(new CAstronomicalCoordinates(*toCopy.targetCoordinates)),
-    targetCoordinatesValid(toCopy.targetCoordinatesValid), observationTelescope(toCopy.observationTelescope->createCopy()),
-    HDB(), bDirty(false), bHasData(toCopy.bHasData)
-
+    observationTarget((toCopy.observationTarget) ? toCopy.observationTarget->createCopy() : nullptr),
+    observationTelescope(toCopy.observationTelescope->createCopy()), HDB(), bDirty(false), bHasData(toCopy.bHasData)
   {
     DHDBStore::const_iterator hdbIterator;
 
@@ -168,6 +168,7 @@ namespace ACL
   /// @param[in] ai - pointer to the astroimage to create the astrofile from.
   /// @throws None.
   /// @todo Implement this function.
+  /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
   /// @version 2016-04-02/GGB - Added keywordCount members.
   /// @version 2016-03-31/GGB - Added creation of the TLocation object to the constructor.
@@ -246,8 +247,8 @@ namespace ACL
   }
 
   /// @brief Adds a comment to the list of comments.
-  /// @param[in] hdb - The number of the hdb that the comment must be written to. (0 base)
-  /// @param[in] comment - The comment to be written to the HDB.
+  /// @param[in] hdb: The number of the hdb that the comment must be written to. (0 base)
+  /// @param[in] comment: The comment to be written to the HDB.
   /// @post isDirty == true
   /// @post hasData == true
   /// @throws GCL::CRuntimeAssert
@@ -268,9 +269,9 @@ namespace ACL
   }
 
   /// @brief Copies the keywords from an HDB in an astroFile to an HDB in another astrofile.
-  /// @param[in] reference - The astrofile instance to copy the HDB from.
-  /// @param[in] hdb - The HDB number to copy. The same HDB is copied from and to.
-  /// @throws 0x2001  - Invalid HDB
+  /// @param[in] reference: The astrofile instance to copy the HDB from.
+  /// @param[in] hdb: The HDB number to copy. The same HDB is copied from and to.
+  /// @throws 0x2001 - Invalid HDB
   /// @note If the HDB does not exist in @a this instance, then it will be created.
   /// @todo It may be worth further generalising this function to allow keywords to be copied within the astrofile as well.
   /// @version 2014-05-31/GGB - Function created
@@ -296,18 +297,19 @@ namespace ACL
   }
 
   /// @brief Creates a copy of this astroFile.
-  /// @returns A shared pointer to the newly created copy.
+  /// @returns A unique pointer to the newly created copy.
   /// @throws None.
   /// @details Simply creates a new copy by calling the copy constructor.
+  /// @version 2018-09-05/GGB - Changed return value to a unique_ptr.
   /// @version 2013-06-07/GGB - Function created.
 
-  CAstroFile *CAstroFile::createCopy() const
+  std::unique_ptr<CAstroFile> CAstroFile::createCopy() const
   {
-    return (new CAstroFile(*this));
+    return std::make_unique<CAstroFile>(*this);
   }
 
   /// @brief Copies the HDB and adds it as an HDB to the list of HDB in this object
-  /// @param[in] toAdd - Smart pointer to the HDB to add.
+  /// @param[in] toAdd: Smart pointer to the HDB to add.
   /// @throws None.
   /// @post isDirty == true
   /// @post hasData == true
@@ -325,6 +327,7 @@ namespace ACL
   }
 
   /// @brief Passthrough to the astrometryHDB to check if the requisites are met.
+  /// @returns
   /// @throws 0x200C - ASTROFILE: Astrometry HDB does not exist.
   /// @version 2012-01-13/GGB - Function created.
 
@@ -341,6 +344,7 @@ namespace ACL
   }
 
   /// @brief Adds a reference to the astrometry HDB.
+  /// @param[in] toAdd: The astrometry reference to add.
   /// @returns true - Object added
   /// @returns false - Object not added
   /// @throws None.
@@ -1364,11 +1368,12 @@ namespace ACL
   /// @brief returns the observation coordinates. (IE center of the image.)
   /// @returns The observation coordinates as an RA/Dec pair.
   /// @throws None.
+  /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-07-30/GGB - Function created.
 
   CAstronomicalCoordinates const &CAstroFile::getTargetCoordinates() const
   {
-    return (*targetCoordinates);
+    //return (*targetCoordinates);
   }
 
   /// @brief Retrieves the stdev image value from the specified HDB.
@@ -2445,15 +2450,15 @@ namespace ACL
 
       if (system == "FK5")
       {
-        targetCoordinates->setReferenceSystem(RS_FK5);
+        //targetCoordinates->setReferenceSystem(RS_FK5);
       }
       else if (system == "ICRS")
       {
-        targetCoordinates->setReferenceSystem(RS_ICRS);
+        //targetCoordinates->setReferenceSystem(RS_ICRS);
       }
       else if (system == "FK4")
       {
-        targetCoordinates->setReferenceSystem(RS_FK4);
+        //targetCoordinates->setReferenceSystem(RS_FK4);
       }
       else
       {
@@ -2471,7 +2476,7 @@ namespace ACL
 
       try
       {
-        targetCoordinates->setEpoch(convertEpoch(epoch));
+        //targetCoordinates->setEpoch(convertEpoch(epoch));
       }
       catch(...)
       {
@@ -2489,7 +2494,7 @@ namespace ACL
       equinox = static_cast<std::string>(keywordData(0, FITS_EQUINOX));
       try
       {
-        targetCoordinates->setEquinox(convertEpoch(equinox));
+        //targetCoordinates->setEquinox(convertEpoch(equinox));
       }
       catch(...)
       {
@@ -2505,23 +2510,23 @@ namespace ACL
     {
       if (keywordExists(0, MAXIM_RA))
       {
-        targetCoordinates->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
+        //observationTarget->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
         bRA = true;
       }
       else if (keywordExists(0, MAXIM_OBJECTRA))
       {
-        targetCoordinates->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
+        //observationTarget->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
         bRA = true;
       };
 
       if (keywordExists(0, MAXIM_DEC))
       {
-        targetCoordinates->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
+        //observationTarget->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
         bDEC = true;
       }
       else if (keywordExists(0, MAXIM_OBJECTDEC))
       {
-        targetCoordinates->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
+        //observationTarget->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
         bDEC = true;
       };
     }
@@ -2529,8 +2534,6 @@ namespace ACL
     {
         // Catch any errors generated by the parsing functions.
     };
-
-    targetCoordinatesValid = (bRA && bDEC);
   }
 
   /// @brief Processes weather keywords.
@@ -2582,9 +2585,11 @@ namespace ACL
     return photometryHDB_;
   }
 
-  /// Returns true of the photometry HDB already exists.
-  //
-  // 2012-11-11/GGB - Function created.
+  /// @brief Tests of the photometry HDB already exists.
+  /// @returns true - If the photometry HDB exists.
+  /// @returns false - The photometry HDB does not exist.
+  /// @throws None.
+  /// @version 2012-11-11/GGB - Function created.
 
   bool CAstroFile::hasPhotometryHDB() const
   {

@@ -41,13 +41,13 @@
 #ifndef ACL_IMAGESTACK_H
 #define ACL_IMAGESTACK_H
 
-  // Standard header files
+  // Standard C++ library header files
 
 #include <list>
 #include <memory>
 #include <vector>
 
-  // ACL Header files
+  // ACL library header files
 
 #include "AstroFile.h"
 #include "AstroImage.h"
@@ -58,28 +58,26 @@ namespace ACL
   struct CStackImageInformation
   {
   public:
-    PAstroFile astroFile;                 ///< The astroFile to be stacked.
-    std::vector<CHDB>::size_type HDB;     ///< The HDB to be used.
-    MCL::TPoint2D<FP_t> align1;           ///< First alignment point.
-    MCL::TPoint2D<FP_t> align2;           ///< Second alignment point.
-    FP_t dist;                            ///< Distance between the points.
-    FP_t th;                              ///< Reference angle
-    MCL::TPoint2D<FP_t> tr;               ///< Translation amount
-    FP_t dth;                             ///< rotation angle
-    FP_t sc;                              ///< scale amount
-    AXIS_t xMax;                          ///< Size of the x-axis
-    AXIS_t yMax;                          ///< size of the y-axis
-    AXIS_t x0;                            ///< x origen
-    AXIS_t y0;                            ///< y origen
-    MCL::TPoint2D<FP_t> pixSize;          ///< Pixel size
+    std::shared_ptr<CAstroFile> astroFile;  ///< The astroFile to be stacked.
+    std::vector<CHDB>::size_type HDB;       ///< The HDB to be used.
+    MCL::TPoint2D<FP_t> align1;             ///< First alignment point.
+    MCL::TPoint2D<FP_t> align2;             ///< Second alignment point.
+    FP_t dist;                              ///< Distance between the points.
+    FP_t th;                                ///< Reference angle
+    MCL::TPoint2D<FP_t> tr;                 ///< Translation amount
+    FP_t dth;                               ///< rotation angle
+    FP_t sc;                                ///< scale amount
+    AXIS_t xMax;                            ///< Size of the x-axis
+    AXIS_t yMax;                            ///< size of the y-axis
+    AXIS_t x0;                              ///< x origen
+    AXIS_t y0;                              ///< y origen
+    MCL::TPoint2D<FP_t> pixSize;            ///< Pixel size
 
     CStackImageInformation();
-    CStackImageInformation(PAstroFile, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
+    CStackImageInformation(std::shared_ptr<CAstroFile>, std::vector<CHDB>::size_type, MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &);
     ~CStackImageInformation();
   };
-  typedef std::shared_ptr<CStackImageInformation> PStackImageInformation;
-
-  typedef std::vector<PStackImageInformation> DStackImagesStore;
+  typedef std::vector<std::shared_ptr<CStackImageInformation>> DStackImagesStore;
   typedef std::list<CAstroImage *> DImageStore;
 
   class CImageStack

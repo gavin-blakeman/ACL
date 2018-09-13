@@ -24,7 +24,8 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
-// HISTORY:             2018-08-21 GGB - Added RST support
+// HISTORY:             2018-09-13 GGB - Updated library links.
+//                      2018-08-21 GGB - Added RST support
 //                      2016-04-11 GGB - Added FITSKeyword hierarchy
 //                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-26 GGB - Rename to Astronomy Class Library (ACL)
@@ -52,10 +53,10 @@
  * @arg SOFA <a href="http://www.iausofa.org">Standards of Fundamental Astronomy</a>
  * @arg CFitsIO <a href="http://heasarc.gsfc.nasa.gov/fitsio/fitsio.html">A FITS File Subroutine Library</a>
  * @arg Boost Library <a href="http//www.boost.org">Boost C++ Libraries</a>
- * @arg GCL <a href="http://www.theroboticobservatory.org">General Class Library</a>
- * @arg MCL <a href="http://www.theroboticobservatory.org">Maths Class Library</a>
- * @arg PCL <a href="http://www.theroboticobservatory.org">Physics Class Library</a>
- * @arg SCL <a href="http://www.theroboticobservatory.org">Storage Class Library</a>
+ * @arg GCL <a href="https://github.com/gavin-blakeman/GCL">General Class Library</a>
+ * @arg MCL <a href="https://github.com/gavin-blakeman/MCL">Maths Class Library</a>
+ * @arg PCL <a href="https://github.com/gavin-blakeman/PCL">Physics Class Library</a>
+ * @arg SCL <a href="https://github.com/gavin-blakeman/SCL">Storage Class Library</a>
  *
  * @section Compilation Control
  * The following macros control how the code will be compiled for various applications.
@@ -71,30 +72,26 @@
  * @section Projects
  * The Astronomy Class Library is used as the Astronomy Library by the following projects.
  * @li Astronomical Image Reduction and Data Analysis Software.  (<a href="http://www.astroManager.net">astroManager</a>)
- * @li The Robotic Observatory Project (<a href="http://www.theroboticobservatory.org">The Robotic Observatory</a>)
  *
  * @section Development
  * The library is still under active development and is being expanded and improved along with the development of the astroManager
  * application.
  * @par Note
  * The classes within this library have been in development from 2005. As a result, all the code is not written using the
- * C++14 functionality. There is an opportunity to "clean" up the code by updating the code to reflect the C++14 standard.
- * All new code that is being developed is written to the C++14 standard.<br>
+ * C++17 functionality. There is an opportunity to "clean" up the code by updating the code to reflect the C++17 standard.
+ * All new code that is being developed is written using the C++17 standard language and idioms.<br>
  * All C string functions will be phased out over time. Any new code should not include C string functions, but should rather use
  * the C++ std::string classes.
  * @par Reporting Bugs
  * Bugs are tracked on the bugzilla database used by <a href="https://bugzilla.theroboticobservatory.org">The Robotic
  * Observatory project.</a>. The bugs should be entered against the ACL project.
  * @par Source Code
- * The source code can be downloaded as a zipped file from the <a href="https://bugzilla.theroboticobservatory.org">The Robotic
- * Observatory project.</a>.<br>
- * The source code is also included in the source package for the <a href="http://www.astroManager.net">astroManager Project</a>. Where it
- * can be downloaded from the project site, or from the project site on Launchpad.
+ * The source code can be downloaded from github <a href="https://github.com/gavin-blakeman/ACL"></a>.<br>
  *
  * @section Legal
  * @author Gavin Blakeman (GGB)
- * @version 2013.09
- * @copyright 2005-2017 Gavin Blakeman
+ * @version 2018.09
+ * @copyright 2005-2018 Gavin Blakeman
  * @par Licence
  * The Astronomy Class Library is licensed under the GPLv2. The full text of the GPLv2 can be found in the file license.txt that
  * is distributed with the source of the library.<br>

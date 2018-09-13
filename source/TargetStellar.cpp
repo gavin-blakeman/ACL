@@ -200,127 +200,46 @@ namespace ACL
     return objectType_;
   }
 
-  /// Calculates the observedPlace of an object that is specified in ICRS coordinates.
-  /// Each step of the reduction is calculated by a different routine. Intermediate results are stored in the class.
-  /// This routine calls each routine in turn to provide the reduction from ICRS coordinate frame to the observed frame.
-  /// EXCEPTIONS:  0x2300 - STELLAROBJECTS: Must have valid location for detemining observed position.
-  ///              0x2301 - STELLAROBJECTS: Must have valid time for determining observed position.
-  //
-  // 2012-01-12/GGB - Added observedPlaceValid() support.
-  // 2011-07-09/GGB - Function created.
-
-//  CAstronomicalCoordinates const &CTargetStellar::calculateICRSObservedPlace(PAstroTime &tt, PLocation &location, PWeather &weather)
-//  {
-//#ifdef USE_SOFA
-//    ICRSPlace = object;
-
-//    icrsSpaceMotion();
-//    icrsParallax();
-//    icrsLightDeflection();
-//    icrsAberration();
-//    icrsFrameBias();
-//    icrsERA();
-//    icrsPolarMotion();
-//    icrsLongitude();              // Calculates the local apparent place.
-//    DiurnalAberration();
-//    DiurnalParallax();
-//    Latitude();
-//    Refraction();
-
-//    return observedPlace;
-//#elif defined USE_NOVAS
-//    cat_entry star;
-//    on_surface geo_loc;
-//    double xp, yp;
-//    double rat, dect, zd, az;
-
-//    ICRSPlace = catalogCoordinates;
-//    make_cat_entry("", "ICRS", 1, ICRSPlace.RA(), ICRSPlace.Dec(), pmRA(), pmDec(), parallax(), radialVelocity(), &star);
-
-//    make_on_surface(location->latitude(), location->longitude(), location->altitude(),
-//      weather->temperature()(PCL::TU_C), weather->pressure()(PCL::PU::BAR) / 1000, &geo_loc);
-
-//    topo_star((double) tt->TT(), tt->dT(), &star, &geo_loc, 0, &rat, &dect);
-
-//    CEarthOrientationData::getData((*tt), xp, yp);
-
-//  FP_t ra, dec;
-
-//    equ2hor((double) tt->UT1(), tt->dT(), 0, xp, yp, &geo_loc, rat, dect, 2, &zd, &az, &ra, &dec);
-
-//  observedPlace_.set(ra, dec);
-
-//    return observedPlace_;
-//#endif
-//  }
-
   /// @brief Calculates the observed position of the stellar object.
   /// @details Different methods of calculation are used depending on the coordinate system in use (FK4, FK5, ICRS)
   ///          The first step is always to convert the coordinates into ICRS coordinates.
-  /// @param[in] tt:
+  /// @param[in] UTC: The UTC of the observation.
   /// @param[in] location: The location of the observer (needed to calculate the observed place)
   /// @param[in] weather: The weather associated with the observer location (needed to calculate observed place)
   /// @note This routine makes use of the SOFA routines to convert the ICRS coordinates to the observed coordinates.
   /// @note The routine always calculates the current place of the object.
   /// @throws RUNTIME_ASSERT
+  /// @version 2018-09-05/GGB - Updat
   /// @version 2016-03-23/GGB - 1. Removed observedPlaceValid support.
   ///                           2. Removed location, weather and time from class members.
   ///                           3. Use SOFA routine for calculation.
   /// @version 2012-01-12/GGB - Added observedPlaceValid() support and immediate return.
   /// @version 2011-07-04/GGB
 
-  CAstronomicalCoordinates CTargetStellar::positionObserved(CAstroTime const &tt, CGeographicLocation const &location,
-                                                            CWeather const &weather)
+  SObservedPlace CTargetStellar::positionObserved(CAstroTime const &UTC, CGeographicLocation const &location,
+                                                  CWeather const *weather)
   {
-    FP_t utc1, utc2;
-    FP_t dut1;
-    FP_t aob, zob, hob, dob, rob, eo;
-    FP_t rh, dh, drh, ddh, pxh, rvh;
-
-      // Perform some error checking to ensure that the passed data is valid.
-
-    //RUNTIME_ASSERT(ACL, !tt, "Need a valid time to calculate observed place.");
-    //RUNTIME_ASSERT(ACL, !location, "Need a valid location to calculate observed place.");
-
-      // Calculate the ICRS coordinates
-
-    switch (catalogCoordinates_.getReferenceSystem())
-    {
-      case RS_NONE:
-        CODE_ERROR(ACL);     // Should not be able to get here.
-        break;
-      case RS_ICRS:
-        //return currentPlace = calculateCurrentPlaceICRS(tt, location, weather);
-        break;
-      case RS_FK4:
-        //return currentPlace = calculateCurrentPlaceFK4O(tt, location, weather);
-        break;
-      case RS_FK5:
-      {
-        //iauFk52h(meanPlace.RA(), meanPlace.Dec(),
-                 //pmRA_, pmDec_, parallax_, radialVelocity_,
-                 //&rh, &dh, &drh, &ddh, &pxh, &rvh);
-        break;
-      };
-      default:
-        CODE_ERROR(ACL);     // Should not be able to get here.
-        break;
-    };
+    SObservedPlace observedPlace;
 
       // Perform the transform using the IAU SOFA functions.
 
-    iauAtco13(rh, dh,
-              drh, ddh, pxh, rvh,
-              utc1, utc2, dut1,
+    iauAtco13(catalogCoordinates_.RA().radians(), catalogCoordinates_.DEC().radians(),
+              (pmRA_) ? *pmRA_ : 0,
+              (pmDec_) ? *pmDec_ : 0,
+              (parallax_) ? *parallax_ : 0,
+              (radialVelocity_) ? *radialVelocity_ : 0,
+              UTC.UTC().decompose().first, UTC.UTC().decompose().second,
+              1,
               location.longitude(), location.latitude(), location.altitude(),
               0, 0,
-              (*weather.pressure())(PCL::PU::PA) / 100, (*weather.temperature())(PCL::TU_C), *weather.RH(),
-              495 * 1000,    // 495nm = wavelength of light. (Can be corrected in future.) (! I know it is a magic number)
-              &aob, &zob, &hob, &dob, &rob, &eo);
+              (weather) ? (weather->pressure()) ? (*(weather->pressure()))() : 1013.25 : 1013.25,
+              (weather) ? (weather->temperature()) ? (*(weather->temperature()))() : 30 : 30,
+              (weather) ? *weather->RH() : 0.6,
+              100,
+              &observedPlace.azimuth, &observedPlace.zenithDistance, &observedPlace.hourAngle,
+              &observedPlace.declination, &observedPlace.rightAscension, &observedPlace.eo);
 
-    CAstronomicalCoordinates currentPlace(rob, dob);
-
-    return currentPlace;
+    return observedPlace;
 
   }
 
@@ -333,33 +252,33 @@ namespace ACL
   {
     std::string returnValue;
 
-    switch (catalogCoordinates_.getReferenceSystem())
-    {
-      case RS_NONE:
-      {
-        returnValue = COORDINATESYSTEM_NONE;
-        break;
-      };
-      case RS_ICRS:
-      {
-        returnValue = COORDINATESYSTEM_ICRS;
-        break;
-      };
-      case RS_FK4:
-      {
-        returnValue = COORDINATESYSTEM_FK4;
-        break;
-      };
-      case RS_FK5:
-      {
-        returnValue = COORDINATESYSTEM_FK5;
-        break;
-      };
-      default:
-      {
-        CODE_ERROR(ACL);
-      };
-    };
+//    switch (catalogCoordinates_.getReferenceSystem())
+//    {
+//      case RS_NONE:
+//      {
+//        returnValue = COORDINATESYSTEM_NONE;
+//        break;
+//      };
+//      case RS_ICRS:
+//      {
+//        returnValue = COORDINATESYSTEM_ICRS;
+//        break;
+//      };
+//      case RS_FK4:
+//      {
+//        returnValue = COORDINATESYSTEM_FK4;
+//        break;
+//      };
+//      case RS_FK5:
+//      {
+//        returnValue = COORDINATESYSTEM_FK5;
+//        break;
+//      };
+//      default:
+//      {
+//        CODE_ERROR(ACL);
+//      };
+//    };
 
     return returnValue;
   }

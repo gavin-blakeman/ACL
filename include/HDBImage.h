@@ -62,11 +62,17 @@
 #ifndef ACL_HDBIMAGE_H
 #define ACL_HDBIMAGE_H
 
+  // Standard C++ library header files.
+
+#include <cstdint>
+#include <memory>
+#include <optional>
+
+  // ACL library header files.
+
 #include "HDB.h"
 
-  // Standard libraries
 
-#include <memory>
 
 struct WorldCoor;
 

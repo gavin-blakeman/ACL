@@ -135,8 +135,8 @@ namespace ACL
 
   /// @brief Loads the dUT1 information from the file and stores it in the CAstroTime class.
   /// @details The dUT1 value is required to convert UT1 to UTC using the formuala dUT1 = UTC - UT1. All values are converted to
-  /// Modified Julian Days (MJD).
-  /// @param[in] ifn File Name of the text file that contains the dUT1 data values.
+  ///          Modified Julian Days (MJD).
+  /// @param[in] ifn: Path and file Name of the text file that contains the dUT1 data values.
   /// @throws ACL::CACLError(0x3206) - ASTROTIME: Error opening UTC-UT1 file.
   /// @post The dUT1 values are loaded and available to any instance of the CAstroTime class.
   /// @version 2015-06-20/GGB - Moved function into CAstroTime class.

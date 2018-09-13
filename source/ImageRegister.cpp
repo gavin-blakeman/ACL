@@ -43,7 +43,11 @@
 
 #include "../include/ImageRegister.h"
 
+  // Standard C++ library header files.
+
 #include <string>
+
+  // Miscellaneous library header files.
 
 #include "sofam.h"
 
@@ -56,45 +60,81 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// Default constructor for the class.
-  //
-  // 2013-06-09/GGB - Changed to use smart pointers and added outputFile.
-  // 2011-07-07/GGB - Function created
+  /// @brief Default constructor for the class.
+  /// @throws none.
+  /// @version 2013-06-09/GGB - Changed to use smart pointers and added outputFile.
+  /// @version 2011-07-07/GGB - Function created
 
   CRegisterImageInformation::CRegisterImageInformation() : inputFile(), outputFile(), HDB(0), mask(nullptr), align1(),
     align2(), dist(0), th(0), tr(0, 0), dth(0), sc(1), xMax(0), yMax(0), x0(0), y0(0), pixSize(1,1)
   {
   }
 
-  /// Constructor for the class.
-  //
-  // 2013-06-09/GGB - Changed astroFile to a smart pointer.
-  // 2011-07-07/GGB - Function created
+  /// @brief Constructor for the class.
+  /// @param[in] af:
+  /// @param[in] hdb:
+  /// @param[in] a1:
+  /// @param[in] a2:
+  /// @throws None.
+  /// @version 2013-06-09/GGB - Changed astroFile to a smart pointer.
+  /// @version 2011-07-07/GGB - Function created
 
-  CRegisterImageInformation::CRegisterImageInformation(PAstroFile af, std::vector<CHDB>::size_type hdb,
+  CRegisterImageInformation::CRegisterImageInformation(std::shared_ptr<CAstroFile> af, std::vector<CHDB>::size_type hdb,
                                                        MCL::TPoint2D<FP_t> const &a1, MCL::TPoint2D<FP_t> const &a2) :
     inputFile(af), outputFile(), HDB(hdb), mask(nullptr), align1(a1), align2(a2), dist(0), th(0), tr(0, 0), dth(0), sc(1),
     xMax(0), yMax(0), x0(0), y0(0), pixSize(1,1)
   {
   }
 
-  /// Copy constructor.
-  //
-  // 2013-08-04/GGB - Function created.
+  /// @brief Copy constructor.
+  /// @throws None.
+  /// @version 2018-09-13/GGB - Updated outputFile to be a std::unique_ptr.
+  /// @version 2013-08-04/GGB - Function created.
 
   CRegisterImageInformation::CRegisterImageInformation(CRegisterImageInformation const &toCopy) : inputFile(toCopy.inputFile),
-    outputFile(toCopy.outputFile), HDB(toCopy.HDB), mask(toCopy.mask), align1(toCopy.align1), align2(toCopy.align2),
+    outputFile(toCopy.outputFile->createCopy()), HDB(toCopy.HDB), mask(toCopy.mask), align1(toCopy.align1), align2(toCopy.align2),
     dist(toCopy.dist), th(toCopy.th), tr(toCopy.tr), dth(toCopy.dth), sc(toCopy.sc), xMax(toCopy.xMax), yMax(toCopy.yMax),
     x0(toCopy.x0), y0(toCopy.y0), pixSize(toCopy.pixSize)
   {
   }
 
-  // Class destructor.
-  //
-  // 2011-07-07/GGB - Function created
+  /// @brief Assignment operator for the class.
+  /// @param[in] rhs: The value to copy.
+  /// @returns (*this) The value of rhs copied to *this.
+  /// @throws None.
+  /// @version 2018-09-13/GGB - Function created.
 
-  CRegisterImageInformation::~CRegisterImageInformation()
+  CRegisterImageInformation &CRegisterImageInformation::operator=(CRegisterImageInformation rhs)
   {
+    swap(*this, rhs);
+
+    return *this;
+  }
+
+  /// @brief Swaps the two objects.
+  /// @param[in] first: The first instance.
+  /// @param[in] second: The second paramter.
+  /// @throws None.
+  /// @version 2018-09-13/GGB - Function created.
+
+  void swap(CRegisterImageInformation &first, CRegisterImageInformation &second)
+  {
+    std::swap(first.inputFile, second.inputFile);
+    std::swap(first.outputFile, second.outputFile);
+    std::swap(first.HDB, second.HDB);
+    std::swap(first.mask, second.mask);
+    std::swap(first.align1, second.align1);
+    std::swap(first.align2, second.align1);
+    std::swap(first.dist, second.dist);
+    std::swap(first.th, second.th);
+    std::swap(first.tr, second.tr);
+    std::swap(first.dth, second.dth);
+    std::swap(first.sc, second.sc);
+    std::swap(first.xMax, second.xMax);
+    std::swap(first.yMax, second.yMax);
+    std::swap(first.x0, second.x0);
+    std::swap(first.y0, second.y0);
+    std::swap(first.pixSize, second.pixSize);
   }
 
   //*******************************************************************************************************************************
@@ -103,28 +143,19 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  // Class constructor.
-  //
-  // 2011-07-07/GGB - Function created.
+  /// @brief Class constructor.
+  /// @throws None.
+  /// @version 2011-07-07/GGB - Function created.
 
   CRegisterImages::CRegisterImages() : imageStore()
   {
   }
 
-  // Class destructor.
-  // Ensure all dynamically allocated memory is freed up.
-  //
-  // 2011-07-07/GGB - Function created.
-
-  CRegisterImages::~CRegisterImages()
-  {
-  }
-
   /// @brief Adds an image to the list of images.
-  /// @param[in] astroFile - The astrofile to add to the list.
-  /// @param[in] hdb - The HDB number to add to the list.
-  /// @param[in] alignPoint1 - The first alignment point.
-  /// @param[in] alignPoint2 - The second alignment point.
+  /// @param[in] astroFile: The astrofile to add to the list.
+  /// @param[in] hdb: The HDB number to add to the list.
+  /// @param[in] alignPoint1: The first alignment point.
+  /// @param[in] alignPoint2: The second alignment point.
   /// @throws None.
   /// @version 2013-06-09/GGB - Changed astroFile to a smart pointer.
   /// @version 2011-08-27/GGB - Function created
@@ -132,7 +163,7 @@ namespace ACL
   void CRegisterImages::addImage(PAstroFile astroFile, std::vector<CHDB>::size_type hdb, MCL::TPoint2D<FP_t> const &alignPoint1,
     MCL::TPoint2D<FP_t> const &alignPoint2)
   {
-    PRegisterImageInformation newInformation(new CRegisterImageInformation(astroFile, hdb, alignPoint1, alignPoint2) );
+    std::shared_ptr<CRegisterImageInformation> newInformation(new CRegisterImageInformation(astroFile, hdb, alignPoint1, alignPoint2) );
 
     imageStore.push_back(newInformation);
   }
@@ -226,7 +257,13 @@ namespace ACL
       // Now have the reference origen, angle and distance.
       // For each of the images calculate the rotation angle.
 
-    (*fileIterator)->outputFile.reset((*fileIterator)->inputFile->createCopy());
+      // Note the following line is non-intuitive. As the returned value is a copy and not a reference, it cannot
+      // be used as the argument of the swap function. However the resultFile can be used as a reference, so
+      // to enable compilation, the reversal of logic is required.
+      // The outcome is the same as the two pointers are swapped and when the copy goes out of scope, it should be
+      // destructed.
+
+    (*fileIterator)->inputFile->createCopy().swap((*fileIterator)->outputFile);
     (*fileIterator)->dist = refDist;
     (*fileIterator)->th = refAngle;
     (*fileIterator)->dth = 0;
@@ -285,7 +322,13 @@ namespace ACL
 
         // Now do the TRS function on the image.
 
-      (*fileIterator)->outputFile.reset((*fileIterator)->inputFile->createCopy());
+        // Note the following line is non-intuitive. As the returned value is a copy and not a reference, it cannot
+        // be used as the argument of the swap function. However the resultFile can be used as a reference, so
+        // to enable compilation, the reversal of logic is required.
+        // The outcome is the same as the two pointers are swapped and when the copy goes out of scope, it should be
+        // destructed.
+
+      (*fileIterator)->inputFile->createCopy().swap((*fileIterator)->outputFile);
       (*fileIterator)->outputFile->TRS((*fileIterator)->HDB, align1, (*fileIterator)->tr, (*fileIterator)->dth,
                                        (*fileIterator)->sc, MCL::TPoint2D<FP_t>(1,1), maskPlane);
     };

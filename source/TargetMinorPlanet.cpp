@@ -88,7 +88,7 @@ namespace ACL
   /// @brief Calculates the observed place of a minor planet.
   /// @param[in] t: Time to calculate the observed place.
 
-  CAstronomicalCoordinates CTargetMinorPlanet::positionObserved(CAstroTime const &t, CGeographicLocation const &, CWeather const &)
+  SObservedPlace CTargetMinorPlanet::positionObserved(CAstroTime const &t, CGeographicLocation const &, CWeather const *)
   {
     MCL::CAngle M(0);
     CAstroTime deltaT = epoch_ - t;
