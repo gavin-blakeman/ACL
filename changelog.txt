@@ -1,5 +1,6 @@
 ﻿2018-09
 ------------------------------------------------------------------------------------------------------------------------------------
+CHANGE: Use std::unique_ptr for CAstroImage factory function returns.
 CHANGE: Use std::unique_ptr for factory function returns.
 
 2017-06 (2017-06-30)

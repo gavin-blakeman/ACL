@@ -71,7 +71,6 @@
 
   // Miscellaneous Library header files.
 
-#include "boost/shared_array.hpp"
 #include "fitsio.h"
 #include <GCL>
 #include <MCL>
@@ -495,8 +494,6 @@ namespace ACL
 
     virtual boost::shared_array<FP_t> objectProfile2D(const MCL::TPoint2D<AXIS_t> &center, AXIS_t halfLength, FP_t angle);
   };
-
-  typedef boost::shared_ptr<CImagePlane> PImagePlane;
 
 }  // namespace ACL
 

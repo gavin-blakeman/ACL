@@ -37,10 +37,10 @@
 //
 //*********************************************************************************************************************************
 
-#ifndef CFITSIOERROR_H
-#define CFITSIOERROR_H
+#ifndef ACL_CFITSIOERROR_H
+#define ACL_CFITSIOERROR_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <stdexcept>
 #include <string>
@@ -67,4 +67,4 @@ namespace ACL
 
 }    // namespace ACL
 
-#endif // CFITSIOERROR_H
+#endif // ACL_FITSIOERROR_H

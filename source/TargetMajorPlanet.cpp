@@ -133,6 +133,27 @@ namespace ACL
     }
   }
 
+  /// @brief Copy constructor.
+  /// @param[in] toCopy: Instance to copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-15/GGB - Function created.
+
+  CTargetMajorPlanet::CTargetMajorPlanet(CTargetMajorPlanet const &toCopy) : CTargetAstronomy(toCopy), planet(toCopy.planet)
+  {
+  }
+
+  /// @brief Creates a copy of this instance.
+  /// @returns Pointer to a new copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-15/GGB - Function created.
+
+  std::unique_ptr<CTargetAstronomy> CTargetMajorPlanet::createCopy() const
+  {
+    std::unique_ptr<CTargetAstronomy> returnValue(new CTargetMajorPlanet(*this));
+
+    return returnValue;
+  }
+
   /// @brief Returns the coordinates of the object at the date/time specified.
   /// @param[in] Teph: The date/time to return the catalogueCoordinates.
   /// @returns

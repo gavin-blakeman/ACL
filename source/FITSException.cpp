@@ -39,11 +39,11 @@
 
 #include "../include/FITSException.h"
 
-  // Standard C++
+  // Standard C++ library header files
 
 #include <algorithm>
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files.
 
 #include "cfitsio/fitsio.h"
 #include <GCL>
@@ -71,6 +71,7 @@ namespace ACL
 
   /// @brief Returns the string of the error message.
   /// @returns The error message.
+  /// @throws None.
   /// @version 2015-09-05/GGB - Function created.
 
   std::string CFITSException::errorMessage() const
@@ -87,8 +88,9 @@ namespace ACL
 
   /// @brief Function to write the error message to a logFile.
   /// @details This is not automatically done in the library when an exception is thrown as the library may be able to recover from
-  /// the exception without having to terminate.
-  /// @brief 2015-09-05/GGB - Function created.
+  ///          the exception without having to terminate.
+  /// @throws None.
+  /// @version 2015-09-05/GGB - Function created.
 
   void CFITSException::logErrorMessage() const
   {

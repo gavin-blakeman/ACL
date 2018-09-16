@@ -119,21 +119,23 @@ namespace ACL
   /// @brief Multiplies the image by a fixed value.
   /// @returns Reference to this.
   /// @throws None.
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-07-28/GGB - Updated to reflect new method of storing image planes.
   /// @version 2011-05-12/GGB - Function created.
 
   CAstroImage &CAstroImage::operator*=(FP_t dbl)
   {
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane ip) { *ip *= dbl; });
+                  [&] (std::unique_ptr<CImagePlane> const &ip) { *ip *= dbl; });
 
     return (*this);
   }
 
   /// @brief Division by a fixed value.
-  /// @param[in] dbl - Factor to divide each point by.
+  /// @param[in] dbl: Factor to divide each point by.
   /// @returns Reference to this.
   /// @throws 0x2200 - Division by zero.
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-07-28/GGB - Updated to reflect new method of storing image planes.
   /// @version 2011-05-12/GGB - Function created.
 
@@ -146,7 +148,7 @@ namespace ACL
     else
     {
       std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                    [&] (PImagePlane ip) { *ip /= dbl; });
+                    [&] (std::unique_ptr<CImagePlane> const &ip) { *ip /= dbl; });
     };
     return (*this);
   }
@@ -186,9 +188,10 @@ namespace ACL
 
   /// @brief Function to bin pixels in the required range.
   /// @details All the imagePlanes in the storage are iterated and binned. The statistical values are also recalculated.
-  /// @param[in] nsize - The binning parameter size. (1 <= nsize <= 10)
+  /// @param[in] nsize: The binning parameter size. (1 <= nsize <= 10)
   /// @throws GCL::CRuntimeAssert
   /// @throws std::bad_alloc
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2013-06-23/GGB - Added code to recalculate the mean and standard deviation.. (Bug # 1193740)
   /// @version 2011-06-10/GGB - Function created.
 
@@ -198,7 +201,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, nsize <= 10, "Bin Pixels is only valid with a binning value of <= 10.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->binPixels(nsize); p->getMeanValue(); p->getStDevValue(); } );
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->binPixels(nsize); p->getMeanValue(); p->getStDevValue(); } );
 
       // Calculate the image dimensions.
 
@@ -228,20 +231,21 @@ namespace ACL
   }
 
   /// @brief Factory function to create a CAstroImage object.
-  /// @param[in] naxisn - dimension of axis[n]
-  /// @returns Pointer to a new AstroImage of the relevant class.
+  /// @param[in] naxisn: dimension of axis[n]
+  /// @returns Unique pointer to a new AstroImage of the relevant class.
   /// @details Calls the relevant creation function for a poly image or a mono image. A number of axises greater that 3 is not
-  /// supported. (Will throw an error)
+  ///          supported. (Will throw an error)
   /// @throws std::bad_alloc
   /// @throws 0x0008 - Naxis == 1 not allowed.
   /// @throws 0x0007 - Naxis > 3 not supported.
+  /// @version 2018-09-14/GGB - Changed return type to unique_ptr.
   /// @version 2015-08-13/GGB - removed parameter for number of axes.
   /// @version 2013-03-13/GGB - Changed parameters and simplified function to work with readFromFITS() functions better.
   /// @version 2011-03-20/GGB - Function created.
 
-  CAstroImage *CAstroImage::CreateAstroImage(std::vector<AXIS_t> const &naxisn)
+  std::unique_ptr<CAstroImage> CAstroImage::CreateAstroImage(std::vector<AXIS_t> const &naxisn)
   {
-    CAstroImage *retVal = nullptr;
+    std::unique_ptr<CAstroImage> returnValue;
 
     if (naxisn.size() == 1)
     {
@@ -249,26 +253,27 @@ namespace ACL
     }
     else if (naxisn.size() == 2)
     {
-      retVal = new CAstroImageMono(naxisn[0], naxisn[1]);
+      returnValue = std::make_unique<CAstroImageMono>(naxisn[0], naxisn[1]);
     }
     else if (naxisn.size() == 3)
     {
-      retVal = new CAstroImagePoly(naxisn[0], naxisn[1], naxisn[2]);
+      returnValue = std::make_unique<CAstroImagePoly>(naxisn[0], naxisn[1], naxisn[2]);
     }
     else
     {
       ACL_ERROR(0x0007);
     };
 
-    return retVal;
+    return returnValue;
   }
 
   /// @brief Function to crop an image.
-  /// @param[in] o - Crop Origin
-  /// @param[in] d - Crop dimensions.
+  /// @param[in] o: Crop Origin
+  /// @param[in] d: Crop dimensions.
   /// @throws std::bad_alloc
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws GCL::CCodeError(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-02/GGB - Removed check for no image planes.
   /// @version 2013-03-08/GGB - Changed TPoint from <float> to <double>
   /// @version 2011-08-15/GGB - Function created.
@@ -279,7 +284,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, o.y() + d.y() <= dimY, "Cropped image extents will exceed current image extents.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->crop(o, d); p->getMeanValue(); p->getStDevValue(); });
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->crop(o, d); p->getMeanValue(); p->getStDevValue(); });
 
     dimX = d.x();
     dimY = d.y();
@@ -302,6 +307,7 @@ namespace ACL
 
   /// @brief Flips the image plane
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-02/GGB - Changed check for no image planes to a runtime assert.
   /// @version 2011-05-29/GGB - Function created.
 
@@ -309,11 +315,16 @@ namespace ACL
   {
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
-    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(), [] (PImagePlane p) { p->mirrorAxisY(); } );
+    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
+                  [] (std::unique_ptr<CImagePlane> const &p) { p->mirrorAxisY(); } );
   }
 
   /// @brief Floats the image onto a larger image plane.
+  /// @param[in] newWidth: The new width of the image.
+  /// @param[in] newHeight: The new height of the image.
+  /// @param[in] newBkgnd: The new background colour to use.
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-02/GGB - Changed check for no image planes to a runtime assert.
   /// @version 2011-06-04/GGB - Function created.
 
@@ -322,18 +333,19 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->floatImage(newWidth, newHeight, newBkgnd); });
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->floatImage(newWidth, newHeight, newBkgnd); });
 
-    // Get the new image dimensions
+      // Get the new image dimensions
 
-      dimX = newWidth;
-      dimY = newHeight;
+    dimX = newWidth;
+    dimY = newHeight;
 
-      deleteRenderImageArray();
+    deleteRenderImageArray();
   }
 
   /// @brief Flops the image plane.
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-02/GGB - Changed check for no image planes to a runtime assert.
   /// @version 2011-05-29/GGB - Function created.
 
@@ -341,10 +353,12 @@ namespace ACL
   {
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
-    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(), [] (PImagePlane p) { p->mirrorAxisX(); } );
+    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
+                  [] (std::unique_ptr<CImagePlane> const &p) { p->mirrorAxisX(); } );
   }
 
   /// @brief Returns the maximum value from the indicated image plane.
+  /// @param[in] ip: The image plane to return the maximum value for. (zero = first image plane)
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-07-30/GGB - Added runtime assertions and changed to new style image planes.
   /// @version 2010-10-30/GGB - Function created.
@@ -449,6 +463,19 @@ namespace ACL
     return imagePlaneStorage[ip]->getValue(lx, ly);
   }
 
+  /// @brief Inserts the image plane into the image plane list.
+  /// @param[in] newPlane: The imageplane to insert at the back of the list.
+  /// @throws CRuntimeAssert
+  /// @version 2018-09-15/GGB - Moved function from CAstroImagePoly and changed parameter to unique_ptr
+  /// @version 2011-12-26/GGB - Function created.
+
+  void CAstroImage::insertImagePlane(std::unique_ptr<CImagePlane> &newPlane)
+  {
+    RUNTIME_ASSERT(ACL, newPlane != nullptr, "A valid image plane must be passed in newPlane.");
+
+    imagePlaneStorage.push_back(std::move(newPlane));
+  }
+
   /// @brief Returns the size of NAXISn(NAXIS)
   /// @note According to the FITS standard, the first axis is 1. This convention is followed in the Astronomy Class Library. The
   /// normal C use of the first axis being zero (0) is not followed for naxisn.
@@ -535,6 +562,7 @@ namespace ACL
   /// @version 2011-05-29/GGB @li Store values for the blackPoint and whitePoint in the class.<br>
   /// @li If blackPoint == whitePoint, the output value is set to zero.<br>
   /// @li Store the invert value<br>
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2011-03-07/GGB - Added parameter bInvert to header.
   /// @version 2010-10-17/GGB - Function created.
 
@@ -548,7 +576,8 @@ namespace ACL
 
     renderedImage = new renderImage_t[dimX * dimY];
 
-    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(), [&] (PImagePlane p) {p->renderImageGrey8(renderedImage);});
+    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
+                  [&] (std::unique_ptr<CImagePlane> const &p) {p->renderImageGrey8(renderedImage);});
   }
 
   void CAstroImage::renderImageRGB32()
@@ -562,8 +591,9 @@ namespace ACL
   }
 
   /// @brief Rotates the image around the origin.
-  /// @param[in] angle - The angle to rotate (radians)
+  /// @param[in] angle: The angle to rotate (radians)
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-09-20/GGB - (Bug 85) Corrected incorrect image sizeing code.
   /// @version 2015-07-29/GGB - Corrected bug where this function was rotating about the center, not the origin.
   /// @version 2015-06-30/GGB - Removed the outputImage member. (Bug 6)
@@ -574,7 +604,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->rotate(0, 0, angle); p->getMeanValue(); p->getStDevValue(); });
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->rotate(0, 0, angle); p->getMeanValue(); p->getStDevValue(); });
 
       // Update the image dimensions
 
@@ -621,8 +651,10 @@ namespace ACL
   }
 
   /// @brief Function to resample the image.
-  /// @param[in] w - The new width.
-  /// @param[in] h - The new height.
+  /// @param[in] w: The new width.
+  /// @param[in] h: The new height.
+  /// @throws CRuntimeAssert
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-02/GGB - Use runtime assert to check for no image planes.
   /// @version 2011-06-07/GGB - Function created.
 
@@ -631,7 +663,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->resample(w, h); p->getMeanValue(); p->getStDevValue(); });
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->resample(w, h); p->getMeanValue(); p->getStDevValue(); });
 
       // Update the image dimensions
 
@@ -679,14 +711,15 @@ namespace ACL
   }
 
   /// @brief Function to transform an image.
-  /// @param[in] c0 - Rotation center.
-  /// @param[in] ct -
-  /// @param[in] th - Rotation angle (radians)
-  /// @param[in] sc - Scaling parameter
-  /// @param[in] pix - Pixel size.
-  /// @param[in] maskPlane - The mask plane (may be nullptr)
+  /// @param[in] c0: Rotation center.
+  /// @param[in] ct:
+  /// @param[in] th: Rotation angle (radians)
+  /// @param[in] sc: Scaling parameter
+  /// @param[in] pix: Pixel size.
+  /// @param[in] maskPlane: The mask plane (may be nullptr)
   /// @note The image dimenions do not change when the image is transformed.
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2017-09-02/GGB - Updated to support image masking.
   /// @version 2016-03-28/GGB - Removed code to resize the image as the image does not resize.
   /// @version 2011-08-08/GGB - Function created.
@@ -697,13 +730,16 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end
-                  (), [&] (PImagePlane p) { p->transform(c0, ct, th, sc, pix, maskPlane); p->getMeanValue(); p->getStDevValue(); });
+                  (), [&] (std::unique_ptr<CImagePlane> const &p)
+                  { p->transform(c0, ct, th, sc, pix, maskPlane); p->getMeanValue(); p->getStDevValue(); });
   }
 
   /// @brief Pass through function to save the image plane to a FITS file.
-  /// @param[in] file - The FITS file to read the data from.
+  /// @param[in] file: The FITS file to read the data from.
   /// @throws CError - ACL::0x2202 -No Image Plane available.
-  /// @throws CRuntimeAssert
+  /// @throws CRuntimeAssert (directly and propogates???)
+  /// @throws CFITSException (propogates)
+  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
   /// @version 2015-08-13/GGB - Updated to use cfitsio.
   /// @version 2015-07-28/GGB - Changed imagePlane storage method.
   /// @version 2013-03-10/GGB - Function created.
@@ -715,7 +751,7 @@ namespace ACL
     AXIS_t imagePlane = 1;
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                  [&] (PImagePlane p) { p->writeToFITS(file, imagePlane++);});
+                  [&] (std::unique_ptr<CImagePlane> const &p) { p->writeToFITS(file, imagePlane++);});
   }
 
 

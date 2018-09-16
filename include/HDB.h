@@ -264,7 +264,7 @@ namespace ACL
     virtual AXIS_t height() const { CODE_ERROR(ACL); }
     virtual bool isMonoImage() const { CODE_ERROR(ACL); }
     virtual bool isPolyImage() const { CODE_ERROR(ACL); }
-    virtual void imageSet(CAstroImage *) { CODE_ERROR(ACL); }
+    virtual void imageSet(std::unique_ptr<CAstroImage> &) { CODE_ERROR(ACL); }
     virtual CAstroImage *imageGet() { CODE_ERROR(ACL); }
     virtual MCL::TPoint2D<FP_t> &getPixelSize() { CODE_ERROR(ACL); }
     virtual FP_t imageExposure() const = 0;

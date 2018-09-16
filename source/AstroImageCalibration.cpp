@@ -72,15 +72,11 @@ namespace ACL
 
   /// @brief Class destructor. Ensures that all owned objects are correctly deleted when the class is destroyed.
   /// @throws None
+  /// @version 2018-09-15/GGG - Changed masterFrame to unique_ptr.
   /// @version 2011-05-21/GGB - Function created.
 
   CMasterFrame::~CMasterFrame()
   {
-    if (masterFrame)
-    {
-      delete masterFrame;
-      masterFrame = nullptr;
-    };
   }
 
   /// @brief Procedure to create the master frame. Calls the relevant (virtual) funtions
@@ -233,32 +229,32 @@ namespace ACL
     darkFrames.push_back(toAdd);
   }
 
-  // Returns the master dark frame.
-  // If the master dark frame is not valid then NULL is returned.
-  //
-  // 2011-05-21/GGB - Function created.
+  /// @brief Returns a pointer to the master dark frame.
+  /// @returns If the master dark frame is not valid then NULL is returned.
+  /// @throws None.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
+  /// @version 2011-05-21/GGB - Function created.
 
   CAstroFile *CMasterDarkFrame::getMasterDarkFile()
   {
-    return masterFrame;
+    return masterFrame.get();
   }
 
   /// @brief Combines the frames in a median fashion.
   /// @throws
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
   /// @version 2011-05-08/GGB - Function created.
 
   void CMasterDarkFrame::meanCombine()
   {
-    CAstroImage *masterDarkImage;
     PAstroFile darkFrame;
-    CAstroImage *biasImage;
     boost::filesystem::path filePath;
 
     darkFrameIterator = darkFrames.begin();
 
     darkFrame.reset(new CAstroFile());
     darkFrame->loadFromFile(*darkFrameIterator);    // Load the file
-    masterDarkImage = darkFrame->getAstroImage(0)->createCopy();
+    std::unique_ptr<CAstroImage> masterDarkImage(std::move(darkFrame->getAstroImage(0)->createCopy()));
 
     darkFrameIterator++;
 
@@ -278,7 +274,7 @@ namespace ACL
     {
         // This works as a mean combine is a commutative type of combine.
 
-      biasImage = masterBiasFile->getAstroImage(0)->createCopy();
+      std::unique_ptr<CAstroImage> biasImage(std::move(masterBiasFile->getAstroImage(0)->createCopy()));
 
       (*biasImage) *= darkFrames.size();
       (*masterDarkImage) -= (*biasImage);
@@ -292,7 +288,7 @@ namespace ACL
 
     if (!masterFrame)
     {
-      masterFrame = new CAstroFile(masterDarkImage);
+      masterFrame.reset(new CAstroFile(masterDarkImage.get()));
     }
     else
     {
@@ -350,29 +346,26 @@ namespace ACL
     masterBiasFile = newFile;
   }
 
-  // Procedure to set the master dark frame with a specified master dark frame.
-  // The class takes ownership of the new master dark frame and will delete it on destructor.
-  // If the newImage == NULL, then the old image is not deleted, but is passed out as the
-  // return value. Otherwise the return value is NULL.
-  //
-  // 2011-05-21/GGB - Function created.
+  /// @brief  Procedure to set the master dark frame with a specified master dark frame.
+  /// @details The class takes ownership of the new master dark frame and will delete it on destructor. The old image is deleted.
+  /// @returns If the newImage == nullptr, then the old image is not deleted, but is passed out as the return value.
+  /// @returns Otherwise the return value is NULL.
+  /// @throws None
+  /// @version 2018-09-15/GGGB - Updated to use std::unique_ptr
+  /// @version 2011-05-21/GGB - Function created.
 
   CAstroFile *CMasterDarkFrame::setMasterDarkFile(CAstroFile *newImage)
   {
-    CAstroFile *retVal = nullptr;
+    CAstroFile *returnValue = nullptr;
 
     if (newImage == nullptr)
-      retVal = masterFrame;
-    else
     {
-      retVal = nullptr;
-      if (masterFrame)
-        delete masterFrame;
+      returnValue = masterFrame.get();
     };
 
-    masterFrame = newImage;
+    masterFrame.reset(newImage);
 
-    return retVal;
+    return returnValue;
   }
 
   /// @brief Checks each of the files that have been passed as dark frames. Uses the common CMasterFrame routine.
@@ -407,14 +400,14 @@ namespace ACL
     flatFrames.push_back(toAdd);
   }
 
-  // Creates the master flat using a median combine.
-  //
-  // 2013-06-09/GGB - Change to smart pointers for astroFile.
-  // 2011-05-19/GGB - Function created.
+  /// @brief Creates the master flat using a median combine.
+  /// @throws
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
+  /// @version 2013-06-09/GGB - Change to smart pointers for astroFile.
+  /// @version 2011-05-19/GGB - Function created.
 
   void CMasterFlatFrame::meanCombine()
   {
-    CAstroImage *masterFlatImage = nullptr;
     CAstroImage *masterDarkImage = nullptr;
     PAstroFile flatFrame;
     boost::filesystem::path filePath;
@@ -424,7 +417,7 @@ namespace ACL
     flatFrame.reset(new CAstroFile());
     flatFrame->loadFromFile(*flatFrameIterator);    // Load the file
 
-    masterFlatImage =  flatFrame->getAstroImage(0)->createCopy();
+    std::unique_ptr<CAstroImage> masterFlatImage(std::move(flatFrame->getAstroImage(0)->createCopy()));
 
     flatFrameIterator++;
 
@@ -455,7 +448,7 @@ namespace ACL
     }
     else
     {
-      masterFrame = new CAstroFile(masterFlatImage);
+      masterFrame.reset(new CAstroFile(masterFlatImage.get()));
     };
 
     masterFlatImage = nullptr;
@@ -527,16 +520,16 @@ namespace ACL
     biasFrames.push_back(toAdd);
   }
 
-  // Performs a mean combination of the frames.
-  // This does not save the astrofile at the end of the process.
-  //
-  // 2013-06-09/GGB - Use smart pointers for astroFile.
-  // 2011-05-22/GGB - Function created.
+  /// @brief Performs a mean combination of the frames.
+  /// @throws None.
+  /// @note This does not save the astrofile at the end of the process.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
+  /// @version 2013-06-09/GGB - Use smart pointers for astroFile.
+  /// @version 2011-05-22/GGB - Function created.
 
   void CMasterBiasFrame::meanCombine()
   {
     PAstroFile biasFrame;
-    CAstroImage *biasImage;
     boost::filesystem::path filePath;
 
     biasFrameIterator = biasFrames.begin();
@@ -544,7 +537,7 @@ namespace ACL
     biasFrame.reset(new CAstroFile());
     biasFrame->loadFromFile(*biasFrameIterator);    // Load the file
 
-    biasImage =  biasFrame->getAstroImage(0)->createCopy();
+    std::unique_ptr<CAstroImage> biasImage(std::move(biasFrame->getAstroImage(0)->createCopy()));
 
     biasFrameIterator++;
 
@@ -568,7 +561,7 @@ namespace ACL
 
     if (!masterFrame)
     {
-       masterFrame = new CAstroFile(biasImage);
+       masterFrame.reset(new CAstroFile(biasImage.get()));
     }
     else
     {
@@ -590,32 +583,29 @@ namespace ACL
   {
   }
 
-  // Procedure to set the master dark frame with a specified master dark frame.
-  // The class takes ownership of the new master dark frame and will delete it on destructor.
-  // If the newImage == NULL, then the old image is not deleted, but is passed out as the
-  // return value. Otherwise the return value is NULL.
-  //
-  // 2011-05-22/GGB - Function created.
+  /// @brief Procedure to set the master dark frame with a specified master dark frame.
+  /// @details The class takes ownership of the new master dark frame and will delete it on destructor.
+  /// @returns If the newImage == NULL, then the old image is not deleted, but is passed out as the return value. Otherwise the
+  ///          return value is NULL.
+  /// @throws None.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
+  /// @version 2011-05-22/GGB - Function created.
 
   CAstroFile *CMasterBiasFrame::setMasterBiasFile(CAstroFile *newImage)
   {
-    CAstroFile *retVal = nullptr;
+    CAstroFile *returnValue = nullptr;
 
-    if (newImage == NULL)
-      retVal = masterFrame;
-    else
+    if (!newImage)
     {
-      retVal = NULL;
-      if ( masterFrame )
-        delete masterFrame;
-    };
+      returnValue = masterFrame.get();
+    }
 
-    masterFrame = newImage;
+    masterFrame.reset(newImage);
 
-    return retVal;
+    return returnValue;
   }
 
-  // Verifys the bias frames. Uses the common routine to verify the group of frames.
+  /// @brief Verifies the bias frames. Uses the common routine to verify the group of frames.
   //
   // 2011-05-17/GGB - Function created.
 
@@ -647,12 +637,16 @@ namespace ACL
     frameList.push_back(toAdd);
   }
 
-  // Calibrates a single frame
-  //
+  /// @brief Calibrates a single frame
+  /// @param[in] cFile:
+  /// @param[in] dFile: Dark frame file.
+  /// @param[in] fFile:
+  /// @param[in] bFile: Bias frame file
+  /// @param[out] oFile: Output file.
   // 2011-05-27/GGB - Function created.
 
   void CCalibrateFrame::calibrateFrame(CAstroFile *cFile, CAstroFile *dFile, CAstroFile *fFile, CAstroFile *bFile,
-    CAstroFile *oFile) const
+                                       CAstroFile *oFile) const
   {
     CAstroImage *oImage;
     CAstroImage *sdImage;
@@ -678,7 +672,7 @@ namespace ACL
     //if (fFile)
       //(*oImage) /= *(fFile->getAstroImage(0));
 
-    oFile->setAstroImage(0, oImage);
+    //oFile->setAstroImage(0, oImage);
 
     oImage = NULL;
 

@@ -65,7 +65,7 @@
 #ifndef ACL_ASTROIMAGE_H
 #define ACL_ASTROIMAGE_H
 
-// Standard libraries
+  // Standard C++ library header files.
 
 #include <cstdint>
 #include <list>
@@ -74,19 +74,16 @@
 #include <valarray>
 #include <vector>
 
-  // ACL header files.
+  // ACL library header files.
 
 #include "common.h"
 #include "config.h"
 #include "ImagePlane.h"
 #include "PhotometryObservation.h"
 
-  // cfitsio library
+  // Miscellaneous library header files.
 
 #include "fitsio.h"
-
-  // Maths class library
-
 #include <MCL>
 
 #ifdef _MSC_VER
@@ -96,7 +93,7 @@
 namespace ACL
 {
 
-typedef std::vector<PImagePlane> DImagePlaneStorage;
+typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
 
   class CAstroImageMono;
   class CAstroImagePoly;
@@ -144,7 +141,10 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
   public:
     virtual ~CAstroImage();
 
-    static CAstroImage *CreateAstroImage(std::vector<AXIS_t> const &naxisn);
+      // Factory functions
+
+    virtual std::unique_ptr<CAstroImage> createCopy() const = 0;
+    static std::unique_ptr<CAstroImage> CreateAstroImage(std::vector<AXIS_t> const &naxisn);
 
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) = 0;
 
@@ -152,6 +152,8 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
 
     virtual void readFromFITS(fitsfile *) = 0;
     virtual void writeToFITS(fitsfile *);
+
+      // imagePlane functions
 
     virtual int BITPIX() const = 0;
     virtual void BITPIX(int) = 0;
@@ -167,7 +169,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
 
     virtual int PEDESTAL() const = 0;
 
-    virtual CAstroImage *createCopy() const = 0;
+    virtual void insertImagePlane(std::unique_ptr<CImagePlane> &);
 
     virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const = 0;
     virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const = 0;
@@ -210,7 +212,7 @@ typedef std::vector<PImagePlane> DImagePlaneStorage;
     template<typename T>
     void setValue(INDEX_t index, T value)
     {
-      for (auto imagePlane : imagePlaneStorage)
+      for (std::unique_ptr<CImagePlane> const &imagePlane : imagePlaneStorage)
       {
         imagePlane->setValue(index, value);
       }

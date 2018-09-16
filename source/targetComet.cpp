@@ -61,4 +61,25 @@ namespace ACL
       ACL_ERROR(0x2800);
     };
   }
+
+  /// @brief Copy constructor for the class.
+  /// @param[in] toCopy: The instance to make a copy of.
+  /// @throws None.
+  /// @version 2018-08-14/GGB - Function created.
+
+  CTargetComet::CTargetComet(CTargetComet const &toCopy) : CTargetAstronomy(toCopy), elements_(toCopy.elements_)
+  {
+  }
+
+  /// @brief Creates a copy of this.
+  /// @returns A constructed object with the same data as this.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-14/GGB - Function created
+
+  std::unique_ptr<CTargetAstronomy> CTargetComet::createCopy() const
+  {
+    std::unique_ptr<CTargetAstronomy> returnValue = std::make_unique<CTargetComet>(*this);
+
+    return returnValue;
+  }
 }

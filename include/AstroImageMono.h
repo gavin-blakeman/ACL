@@ -63,7 +63,7 @@
 #ifndef ACL_ASTROIMAGEMONO_H
 #define ACL_ASTROIMAGEMONO_H
 
-  // ACL header files.
+  // ACL library header files.
 
 #include "AstroImage.h"
 #include "common.h"
@@ -77,16 +77,16 @@ namespace ACL
   {
   private:
   protected:
-
-    CAstroImageMono(const CAstroImageMono &);
-
   public:
-      // Constructor
-
+    CAstroImageMono(const CAstroImageMono &);
     CAstroImageMono(AXIS_t newX, AXIS_t newY);
 
-    virtual CAstroImage *createCopy() const;
-//    template<typename T>
+      // Factory functions
+
+    virtual std::unique_ptr<CAstroImage> createCopy() const override;
+
+
+    //    template<typename T>
 //    void setImageData(std::valarray<T> const &data)
 //    {
 //      if (imagePlane)

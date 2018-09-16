@@ -87,18 +87,6 @@ namespace ACL
   {
   }
 
-  /// @brief Inserts the image plane and colour information into the image plane list.
-  /// @throws CRuntimeAssert
-  //
-  // 2011-12-26/GGB - Function created.
-
-  void CAstroImagePoly::insertImagePlane(PImagePlane newPlane)
-  {
-    RUNTIME_ASSERT(ACL, newPlane != nullptr, "A valid image plane must be passed in newPlane.");
-
-    imagePlaneStorage.push_back(newPlane);
-  }
-
   // Loads the image from a set of RGB data. The image loaded depends on the colour passed to the function.
    //
    //

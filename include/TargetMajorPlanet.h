@@ -75,12 +75,13 @@ namespace ACL
 
   protected:
   public:
+    CTargetMajorPlanet(CTargetMajorPlanet const &);
     CTargetMajorPlanet(EPlanets const &);
     virtual ~CTargetMajorPlanet() {}
 
       // Factory functions
 
-    virtual std::unique_ptr<CTargetAstronomy> createCopy() const  {}
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
 
       // Information functions
 

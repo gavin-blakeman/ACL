@@ -84,7 +84,7 @@ namespace ACL
     CAstroImagePoly(AXIS_t, AXIS_t, AXIS_t);
     CAstroImagePoly(CAstroImage const *);
 
-    virtual CAstroImage *createCopy() const { ACL_CODE_ERROR; }
+    virtual std::unique_ptr<CAstroImage> createCopy() const override { ACL_CODE_ERROR; }
 
       // Operators
 
@@ -111,16 +111,12 @@ namespace ACL
     virtual NAXIS_t NAXIS() const { return 3;}
     virtual AXIS_t NAXISn(NAXIS_t) const {ACL_CODE_ERROR;}
 
-
-
     virtual std::valarray<double> *imageValarray() const {ACL_CODE_ERROR;}
 
       // Image Plane functions
 
     virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
     virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const { ACL_CODE_ERROR;}
-
-    virtual void insertImagePlane(PImagePlane);
 
     virtual bool isMonoImage() const {return false;}  ///< @brief Checks for a monochrome image.
                                                       ///< @details A monochrome image has only one colour plane.

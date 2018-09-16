@@ -65,11 +65,12 @@ namespace ACL
 
   protected:
   public:
+    CTargetComet(CTargetComet const &);
     CTargetComet(boost::filesystem::path const &, std::string const &);
 
       // Factory functions
 
-    virtual std::unique_ptr<CTargetAstronomy> createCopy() const {}
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
 
       // Information functions
 

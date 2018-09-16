@@ -106,18 +106,13 @@ namespace ACL
   /// @brief Class destructor. Ensures that all dynamically allocated memory is deleted correctly. Checks all the results and
   ///        deletes as required.
   /// @throws None.
+  /// @version 2018-09-14/GGB - Changed resultImage to a smart pointer.
   /// @version 2013-06-09/GGB - Changed resultFile to smart pointer.
   /// @version 2013-03-07/GGB - Added code to clean up the result file and result image.
   /// @version 2011-03-02/GGB - Function created.
 
   CImageStack::~CImageStack()
   {
-    if (resultImage)
-    {
-      delete resultImage;
-      resultImage = nullptr;
-    };
-
     if (darkFrame)
     {
       delete darkFrame;
@@ -138,9 +133,9 @@ namespace ACL
   }
 
   /// @brief Adds the new image plane into the planes to be stacked. New image is always added to the end of the stack.
-  /// @param[in] toAdd - The image to add.
-  /// @param[in] newa1 - Alignment point 1
-  /// @param[in] news2 - Alignment point 2
+  /// @param[in] toAdd: The image to add.
+  /// @param[in] newa1: Alignment point 1
+  /// @param[in] news2: Alignment point 2
   /// @throws None.
   /// @version 2013-03-02/GGB - Changed list type to smart pointers.
   /// @version 2011-03-05/GGB - Function created.
@@ -189,12 +184,13 @@ namespace ACL
   /// Step 4 -	Rotate the images using Align1 as the rotation point and Align2 as the angle reference.
   /// Step 5 - Stack the images
   /// Step 6 - Store the results in addResult.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
   /// @version 2014-12-26/GGB - Changed all usages of std::clog to use the GCL::logger functions.
   /// @version 2013-03-07/GGB - Function created.
 
   void CImageStack::combineSum()
   {
-    resultImage = inputImages.front();    // First image becomes the result.
+    inputImages.front()->createCopy().swap(resultImage);    // First image becomes the result.
     resultImage->BITPIX(DOUBLE_IMG);       // Change to double representation.
     inputImages.pop_front();
 
@@ -208,10 +204,9 @@ namespace ACL
       GCL::logger::defaultLogger().logMessage(GCL::logger::info,
                                               "Processing image " + std::to_string((imageCounter)) + " of " +
                                               std::to_string(imageCount) + ".");
-      tempImage = inputImages.front();
+      tempImage = inputImages.front().get();
       (*resultImage) += (*tempImage);
       inputImages.pop_front();
-      delete tempImage;
       imageCounter++;
     };
 
@@ -221,6 +216,7 @@ namespace ACL
   /// @brief Computes the result image after the images have been TRS.
   /// @param[in] stackMode - Specifies the algorithm to use for stacking.
   /// @throws GCL::CCodeError(ACL)
+  /// @version 2018-09-14/GGB - Updated to reflect std::unique_ptr return values.
   /// @version 2013-03-07/GGB - Function created.
 
   void CImageStack::computeResult(EStackMode stackMode)
@@ -275,8 +271,9 @@ namespace ACL
 
   /// @brief Performs a mean (average) combination of the image stack.
   /// @note This has been written differently to the approach used in the median combine to (hopefully) make this function quicker
-  /// than the median combine function.
+  ///       than the median combine function.
   /// @throws GCL::CCodeError(ACL, 0x0400) - IMAGESTACK: No Images, or Images zero size.
+  /// @version 2018-09-14/GGB - Updated to reflect use of std::unique_ptr in function returns.
   /// @version 2017-08-26/GGB - Changed c-style casting to static_cast<>()
   /// @version 2014-12-26/GGB - Changed all std::clog logging to GCL::logger
   /// @version 2013-03-07/GGB - Function created.
@@ -292,7 +289,7 @@ namespace ACL
 
     LOGMESSAGE(info, "Starting MEAN combine...");
 
-    resultImage = inputImages.front()->createCopy();
+    inputImages.front()->createCopy().swap(resultImage);
     resultImage->BITPIX(DOUBLE_IMG);       // Change to double representation.
     dimX = resultImage->width();
     dimY = resultImage->height();
@@ -317,10 +314,9 @@ namespace ACL
 
     while (inputImages.size() > 0)
     {
-      tempImage = inputImages.front();
+      tempImage = inputImages.front().get();
       inputImages.pop_front();
-      delete tempImage;
-      tempImage = 0;
+      tempImage = nullptr;
     };
 
     LOGMESSAGE(info, "Completed MEAN combine.");
@@ -444,6 +440,7 @@ namespace ACL
   ///           5. TRS the image.
   ///          The first image is always used as the reference image. All the other images are rotated/scaled to fit the first
   ///          image.
+  /// @version 2018-09-15/GGB - Updated to use unique_ptr.
   /// @version 2014-12-26/GGB - Changed all uses of std::clog to GCL::logger classes and functions.
   /// @version 2013-03-02/GGB - Function created
 
@@ -454,7 +451,7 @@ namespace ACL
     FP_t refDist;
     FP_t xdiff, ydiff;
     MCL::TPoint2D<FP_t> align1, align2;
-    CAstroImage *newImage = nullptr;
+    std::unique_ptr<CAstroImage> newImage;
     DStackImagesStore::size_type imageCounter = 1;
 
     GCL::logger::defaultLogger().logMessage(GCL::logger::info, "Starting register images function...");
@@ -495,9 +492,9 @@ namespace ACL
       // Now have the reference origen, angle and distance.
       // For each of the images calculate the rotation angle.
 
-    newImage = (*fileIterator)->astroFile->getAstroImage(0)->createCopy();
+    (*fileIterator)->astroFile->getAstroImage(0)->createCopy().swap(newImage);
     //newImage->resampleImage(200);   // Resample image to 200%
-    inputImages.push_back(newImage);
+    inputImages.push_back(std::move(newImage));
 
     fileIterator++;
 
@@ -560,7 +557,7 @@ namespace ACL
 
       //newImage->resampleImage(200);   // Resample image to 200%
       newImage->transform(align1, (*fileIterator)->tr, (*fileIterator)->dth, (*fileIterator)->sc, MCL::TPoint2D<FP_t>(1,1), maskPlane);
-      inputImages.push_back(newImage);
+      inputImages.push_back(std::move(newImage));
       newImage = nullptr;
     };
 
@@ -576,16 +573,13 @@ namespace ACL
   ///          this function.
   /// @throws GCL::CCodeError(ACL, 0x0400) - IMAGESTACK: No Images, or Images zero size.
   /// @throws GCL::CCodeError(ACL, 0x0401) - IMAGESTACK: Invalid stacking mode.
+  /// @version 2018-09-15/GGB - Updated to use unique_ptr/
   /// @version 2014-12-26/GGB - Changed all uses of std::clog to GCL::logger classes and functions.
   /// @version 2013-03-02/GGB - Function created
 
   std::unique_ptr<CAstroFile> &CImageStack::stackImages(EStackMode stackMode)
   {
-    if (resultImage)
-    {
-      delete resultImage;
-      resultImage = nullptr;
-    };
+    resultImage.reset(nullptr);
 
     if (stackMode == SM_NONE)
     {

@@ -72,8 +72,6 @@
 
 #include "HDB.h"
 
-
-
 struct WorldCoor;
 
 namespace ACL
@@ -85,7 +83,7 @@ namespace ACL
   class CImageHDB : public CHDB
   {
   private:
-    CAstroImage *data;                      ///< The actual image data in the block.
+    std::unique_ptr<CAstroImage> data;      ///< The actual image data in the block.
     MCL::TPoint2D<FP_t> pixelSize;          ///< Pixel size in microns. If specified.
     struct WorldCoor *WCSInformation;       ///< WCS information structure
 
@@ -146,7 +144,7 @@ namespace ACL
     virtual AXIS_t height() const;
     virtual bool isMonoImage() const;
     virtual bool isPolyImage() const;
-    virtual void imageSet(CAstroImage *);
+    virtual void imageSet(std::unique_ptr<CAstroImage> &) override;
     virtual CAstroImage *imageGet();
     virtual MCL::TPoint2D<FP_t> &getPixelSize() { return pixelSize; }
     virtual FP_t imageExposure() const;

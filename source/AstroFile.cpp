@@ -517,19 +517,21 @@ namespace ACL
   }
 
   /// @brief Performs the calibration using a dark frame.
-  /// @param[in] df - Dark image
-  /// @param[in] bf - Bias image.
-  /// @param[in] ci - Data for the function.
+  /// @param[in] df: Dark image
+  /// @param[in] bf: Bias image.
+  /// @param[in] ci: Data for the function.
   /// @throws None.
   /// @details Checks if the bias is selected, scales the dark frame as required and applies the dark frame
-  /// to the image.
+  ///          to the image.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr.
   /// @version 2012-01-28/GGB - Function created.
 
   void CAstroFile::calibrateDark(PAstroFile df, PAstroFile bf, SCalibrateImage_Ptr ci)
   {
     FP_t imageExposure, darkExposure;
     FP_t darkScale;
-    CAstroImage *di, *bi, *ti = nullptr;
+    CAstroImage *di, *bi;
+    std::unique_ptr<CAstroImage> ti;
 
     if (ci->useBiasFrame)
     {
@@ -543,18 +545,12 @@ namespace ACL
       di = df->HDB[0]->imageGet();
       bi = df->HDB[0]->imageGet();
 
-      ti = di->createCopy();
+      di->createCopy().swap(ti);
 
       *ti *= darkScale;
       *ti -= *bi;
 
       HDB[0]->calibrationApplyDark(*ti);
-
-      if (ti)
-      {
-        delete ti;
-        ti = nullptr;
-      };
     };
 
       // Subtract the dark frame from the image.
@@ -2916,14 +2912,15 @@ namespace ACL
   }
 
   /// @brief Changes the image in the astro file's HDB to a new image.
-  /// @param[in] hdb - The number of the HDB
-  /// @param[in] newImage - Pointer to the new image.
+  /// @param[in] hdb: The number of the HDB
+  /// @param[in] newImage: Pointer to the new image.
+  /// @post This instance takes ownership of the unique_ptr.
   /// @throws 0x2001 - Invalid HDB number
   /// @throws 0x2005 - Block Type should be BT_IMAGE
   /// @version 2011-11-27/GGB - Change to smart pointers, smart HDB's
   /// @version 2011-05-22/GGB - Function created.
 
-  void CAstroFile::setAstroImage(DHDBStore::size_type hdb, CAstroImage *newImage)
+  void CAstroFile::setAstroImage(DHDBStore::size_type hdb, std::unique_ptr<CAstroImage> &newImage)
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
@@ -2932,7 +2929,7 @@ namespace ACL
   }
 
   /// Sets the observation location.
-  /// @param[in] newLocation - The new location to set.
+  /// @param[in] newLocation: The new location to set.
   /// @throws CRuntimeAssert() Prevents reset to a NULL pointer.
   /// @version 2011-12-17/GGB - Smart pointer implmentation
   /// @version 2011-07-15/GGB - Function created.

@@ -76,21 +76,20 @@ namespace ACL
     MCL::angle_t i_;                // Inclination
     MCL::angle_t OMEGA_;            // Longitude of ascending node
 
-
-
     MCL::angle_t n_;                // Mean daily motion
 
     CTargetMinorPlanet() = delete;
-    CTargetMinorPlanet(CTargetMinorPlanet const &) = delete;
 
   protected:
   public:
+    CTargetMinorPlanet(CTargetMinorPlanet const &);
     CTargetMinorPlanet(boost::filesystem::path const &, std::string const &);
+
     virtual ~CTargetMinorPlanet() {}
 
       // Factory functions
 
-    virtual std::unique_ptr<CTargetAstronomy> createCopy() const {}
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
 
       // Information functions
 

@@ -63,7 +63,7 @@
 
 #include "../include/AstroImageMono.h"
 
-  // Standard library
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <limits>
@@ -83,8 +83,8 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Class constructor
-  /// @param[in] newX - The new X dimension.
-  /// @param[in] newY - The new Y dimension.
+  /// @param[in] newX: The new X dimension.
+  /// @param[in] newY: The new Y dimension.
   /// @throws std::bad_alloc
   /// @details Creates the image plane with valid data in the image plane.
   /// @version 2015-06-30/GGB - Removed the outputImage member. (Bug 6)
@@ -100,15 +100,15 @@ namespace ACL
   }
 
   /// @brief Copy constructor for the class.
+  /// @param[in] toCopy: The instance to make a copy of.
   /// @throws std::bad_alloc
-  //
-  // 2015-06-30/GGB - Removed the outputImage member. (Bug 6)
-  // 2011-05-13/GGB - Function created.
+  /// @version 2018-09-15/GGB - Updated to use std::unique_ptr
+  /// @version 2015-06-30/GGB - Removed the outputImage member. (Bug 6)
+  /// @version 2011-05-13/GGB - Function created.
 
-  CAstroImageMono::CAstroImageMono(CAstroImageMono const &ai) : CAstroImage(ai.width(), ai.height())
+  CAstroImageMono::CAstroImageMono(CAstroImageMono const &toCopy) : CAstroImage(toCopy.width(), toCopy.height())
   {
-    PImagePlane imagePlane(new CImagePlane(*(ai.imagePlaneStorage[0])));
-    imagePlaneStorage.push_back(imagePlane);
+    imagePlaneStorage.emplace_back(std::make_unique<CImagePlane>(*(toCopy.imagePlaneStorage[0])));
   }
 
   /// @brief Simply add the two image planes together.
@@ -334,15 +334,14 @@ namespace ACL
   /// @brief Creates a copy of this.
   /// @returns A new copy of this.
   /// @throws std::bad_alloc
+  /// @version 2018-08-14/GGB - Changed return value to std::unique_ptr
   /// @version 2011-05-13/GGB - Function created.
 
-  CAstroImage *CAstroImageMono::createCopy() const
+  std::unique_ptr<CAstroImage> CAstroImageMono::createCopy() const
   {
-    CAstroImageMono *retVal = nullptr;
+    std::unique_ptr returnValue = std::make_unique<CAstroImageMono>(*this);
 
-    retVal = new CAstroImageMono(*this);
-
-    return retVal;
+    return returnValue;
   }
 
   /// @brief Identifies all the point sources (objects) in the image. These would typically be stars, planets or asteroids

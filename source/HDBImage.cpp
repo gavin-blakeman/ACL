@@ -147,17 +147,12 @@ namespace ACL
   /// @brief Destructor for the class.
   /// @details Delete any WCS information.
   /// @throws None.
+  /// @version 2018-09-14/GGB - Changed data to smart pointer.
   /// @version 2013-07-02/GGB - Added code to delete (Bug #1197373)
   /// @version 2013-02-10/GGB - Function created.
 
   CImageHDB::~CImageHDB()
   {
-    if (data)
-    {
-      delete data;
-      data = nullptr;
-    };
-
     if (WCSInformation)
     {
       wcsfree(WCSInformation);
@@ -565,17 +560,22 @@ namespace ACL
       ACL_ERROR(0x2007);  // Data pointer == NULL
   }
 
-  // Returns a valid pointer to image data.
-  // EXCEPTIONS:  0x2007 - Data pointer == NULL
-  //
-  // 2011-12-10/GGB - Function created.
+  /// @brief Returns a pointer to image data.
+  /// @returns Pointer to the image data.
+  /// @throws 0x2007 - Data pointer == NULL
+  /// @version 2018-09-14/GGB - Changed data to unique_ptr.
+  /// @version 2011-12-10/GGB - Function created.
 
   CAstroImage *CImageHDB::imageGet()
   {
     if (data)
-      return data;
+    {
+      return data.get();
+    }
     else
+    {
       ACL_ERROR(0x2007);
+    }
   }
 
   // Function to float the image.
@@ -737,8 +737,9 @@ namespace ACL
   }
 
   /// @brief Function to bin the pixels.
-  /// @param[in] p - Binning parameter.
+  /// @param[in] p: Binning parameter.
   /// @throws 0x2007 - Data pointer == NULL
+  /// @version 2018-09-14/GGB - Changed data to unique_ptr and cleaned up code logic.
   /// @version 2013-06-29/GGB - Added history functions.
   /// @version 2013-06-23/GGB - Added code to update black and white keywords. (Bug#1193740)
   /// @version 2011-11-27/GGB - Function created
@@ -755,21 +756,17 @@ namespace ACL
 
       if (data->isMonoImage())
       {
-        CAstroImageMono *mono = dynamic_cast<CAstroImageMono *>(data);
         ACL::FP_t mean = data->getMean();
         ACL::FP_t stdev = data->getStDev();
 
-        if (mono)
-        {
-          keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
-          keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
-        }
-        else
-          ACL_CODE_ERROR;
+        keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
+        keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
       };
     }
     else
+    {
       ACL_ERROR(0x2007);    // Data pointer == NULL
+    };
   }
 
   /// @brief Returns the rendered image.
@@ -784,8 +781,10 @@ namespace ACL
   }
 
   /// @brief Transforms the image.
+  /// @param[in] c0:
   /// @throws 0x2007 - Data pointer == NULL
   /// @throws CCodeError
+  /// @version 2018-09-14/GGB - Changed data to unique_ptr and cleaned up logic.
   /// @version 2013-07-08/GGB - Added code to update the min/max, average and black and white point. (Bug #1193634)
   /// @version 2013-06-29/GGB - Added history functions.
   /// @version 2011-11-27/GGB - Function created.
@@ -804,31 +803,26 @@ namespace ACL
 
       if (data->isMonoImage())
       {
-        CAstroImageMono *mono = dynamic_cast<CAstroImageMono *>(data);
         ACL::FP_t mean = data->getMean();
         ACL::FP_t stdev = data->getStDev();
 
-        if (mono)
-        {
-          keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
-          keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
-        }
-        else
-        {
-          ACL_CODE_ERROR;
-        };
+        keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
+        keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
       };
     }
     else
       ACL_ERROR(0x2007);    // Data pointer == NULL
   }
 
-  /// @brief Sets the new astro image. The sizes of the images must be the same, otherwise an exception will be thrown.
+  /// @brief Sets the new astro image.
+  /// @note The sizes of the images must be the same, otherwise an exception will be thrown.
+  /// @param[in] newImage: The new image to set.
   /// @throws CError ACL::0x2006 - Incorrect image size
   /// @throws CRuntimeAssert
+  /// @version 2018-09-14/GGB - Changed parameter type to std::unique_ptr<>
   /// @version 2011-11-27/GGB - Function created.
 
-  void CImageHDB::imageSet(CAstroImage *newImage)
+  void CImageHDB::imageSet(std::unique_ptr<CAstroImage> &newImage)
   {
     RUNTIME_ASSERT(ACL, newImage != nullptr, "The new image cannot be a nullptr.");
 
@@ -839,11 +833,9 @@ namespace ACL
       {
         ACL_ERROR(0x2006);
       };
-
-      delete data;
     };
 
-    data = newImage;
+    data.swap(newImage);
   }
 
   // Loads an image from a RAW file.

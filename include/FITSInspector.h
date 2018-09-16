@@ -39,12 +39,12 @@
 #ifndef ACL_FITSINSPECTOR_H
 #define ACL_FITSINSPECTOR_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <string>
 #include <vector>
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files
 
 #include "boost/filesystem.hpp"
 

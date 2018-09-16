@@ -78,7 +78,7 @@ namespace ACL
     ~CStackImageInformation();
   };
   typedef std::vector<std::shared_ptr<CStackImageInformation>> DStackImagesStore;
-  typedef std::list<CAstroImage *> DImageStore;
+  typedef std::list<std::unique_ptr<CAstroImage>> DImageStore;
 
   class CImageStack
   {
@@ -101,7 +101,7 @@ namespace ACL
     DStackImagesStore inputFiles;
     DImageStore inputImages;
     std::unique_ptr<CAstroFile> resultFile;
-    CAstroImage *resultImage;
+    std::unique_ptr<CAstroImage> resultImage;
 
     CAstroFile *darkFrame;
     CAstroFile *flatFrame;

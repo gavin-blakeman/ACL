@@ -76,18 +76,15 @@ namespace ACL
     objectName_.push_front(n);
   }
 
-  /// @brief Tests for equality between this object and the passed object. Only the object name is tested.
-  /// @param[in] rhs - The object to test.
-  /// @returns true - The objects are the same
-  /// @returns false - The objects are not the same.
-  /// @note 1. The object has a list of possible names. The names should be searched for any entries being the same.
-  /// @throws None.
-  /// @version 2012-01-12/GGB - Function created.
+  /// @brief Copy constructor for the class.
+  /// @param[in] toCopy: The instance to copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-15/GGB - Function created.
 
-//  bool CTargetAstronomy::operator==(CTargetAstronomy const &rhs) const
-//  {
-//    return ( (*this) == rhs.objectName_);
-//  }
+  CTargetAstronomy::CTargetAstronomy(CTargetAstronomy const &toCopy) : objectName_(toCopy.objectName_),
+    catalogCoordinates_(toCopy.catalogCoordinates_)
+  {
+  }
 
   /// @brief Tests for equality between this objects name and the passed string.
   /// @param[in] rhs - The object to test.

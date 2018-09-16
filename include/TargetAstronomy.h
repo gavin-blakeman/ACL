@@ -60,14 +60,14 @@
 #include <memory>
 #include <string>
 
-  // ACL header files
+  // ACL library header files
 
 #include "AstroClass.h"
 #include "common.h"
 #include "geographicLocation.h"
 #include "RST.h"
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files.
 
 #include <GCL>
 
@@ -81,19 +81,18 @@ namespace ACL
   ///
   /// @note 1. It is important to reference the document sofa_ast_c.pdf in conjunction with this code. Particularly page 2,
   ///          "The Chain of astrometric transformations". This is not detailed in this documentation, but can be found in the
-  ///          "TargetAstronomy.h" header file.
+  ///          "TargetStellar.h" header file.
 
   class CTargetAstronomy
   {
-    typedef std::list<std::string> DTargetName;
-
   private:
   protected:
-    DTargetName objectName_;                        ///< List of object names. Object may have more than one name.
+    std::list<std::string> objectName_;             ///< List of object names. Object may have more than one name.
     CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
 
   public:
     CTargetAstronomy();
+    CTargetAstronomy(CTargetAstronomy const &);
     CTargetAstronomy(std::string const &);
     virtual ~CTargetAstronomy() {}
 
@@ -103,7 +102,6 @@ namespace ACL
 
       // Operators
 
-//    virtual bool operator==(CTargetAstronomy const &) const;
     virtual bool operator==(std::string const &) const;
 
       // Information functions
@@ -115,10 +113,6 @@ namespace ACL
 
 
     virtual void objectName(std::string const &);
-
-      // Position functions
-
-    //virtual CAstronomicalCoordinates catalogPosition() const;
 
       // Position Calculation functions.
 

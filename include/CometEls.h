@@ -52,6 +52,7 @@ namespace ACL
   {
     struct SCometElements
     {
+    public:
       std::string cometNumber;
       std::string orbitType;
       std::string provisionalDesignation;

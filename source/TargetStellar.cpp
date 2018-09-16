@@ -156,11 +156,11 @@ namespace ACL
   /// @brief Copy contructor for class.
   /// @param[in] toCopy: The object to make a copy of.
   /// @throws None.
+  /// @version 2018-09-15/GGB - Updated to use CTargetAstronomy copy constructor.
   /// @version 2009-12-16/GGB - Updated to reflect changes to class members.
   /// @version 2005-09-19/GGB - Function created.
 
-  CTargetStellar::CTargetStellar(CTargetStellar const &toCopy) :  CTargetAstronomy(toCopy.objectName()),
-    catalogCoordinates_(toCopy.catalogCoordinates_), pmRA_(toCopy.pmRA_),
+  CTargetStellar::CTargetStellar(CTargetStellar const &toCopy) :  CTargetAstronomy(toCopy), pmRA_(toCopy.pmRA_),
     pmDec_(toCopy.pmDec_), radialVelocity_(toCopy.radialVelocity_), parallax_(toCopy.parallax_), epoch_(toCopy.epoch_),
     objectType_("")
   {
@@ -189,6 +189,18 @@ namespace ACL
     epoch_ = toCopy.epoch_;
 
     return (*this);
+  }
+
+  /// @brief Creates a copy of this instance.
+  /// @returns Pointer to a new copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-15/GGB - Function created.
+
+  std::unique_ptr<CTargetAstronomy> CTargetStellar::createCopy() const
+  {
+    std::unique_ptr<CTargetAstronomy> returnValue(new CTargetStellar(*this));
+
+    return returnValue;
   }
 
   /// @brief Returns the type of the object.

@@ -86,7 +86,7 @@ namespace ACL
   private:
   protected:
     mutable bool masterFrameValid;
-    CAstroFile *masterFrame;
+    std::unique_ptr<CAstroFile> masterFrame;
 
     std::string outputFileName;
 

@@ -228,7 +228,6 @@ namespace ACL
 
     virtual std::unique_ptr<CAstroFile> createCopy() const;
 
-
     void copyKeywords(CAstroFile const &, DHDBStore::size_type);
 
     std::string getImageName();
@@ -289,7 +288,7 @@ namespace ACL
       // Drill down access
 
     CAstroImage *getAstroImage(DHDBStore::size_type) const;
-    void setAstroImage(DHDBStore::size_type, CAstroImage *);
+    void setAstroImage(DHDBStore::size_type, std::unique_ptr<CAstroImage> &);
 
       // Comments and history.
 

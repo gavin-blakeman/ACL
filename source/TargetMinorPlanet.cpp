@@ -74,6 +74,29 @@ namespace ACL
     };
   }
 
+  /// @brief Copy constructor.
+  /// @param[in] toCopy: Instance to make a copy of.
+  /// @throws None.
+  /// @version 2018-09-15/GGB - Function created.
+
+  CTargetMinorPlanet::CTargetMinorPlanet(CTargetMinorPlanet const &toCopy) : CTargetAstronomy(toCopy),
+    designation_(toCopy.designation_), elements_(toCopy.elements_), epoch_(toCopy.epoch_), M0_(toCopy.M0_), omega_(toCopy.omega_),
+    a_(toCopy.a_), e_(toCopy.e_), i_(toCopy.i_), OMEGA_(toCopy.OMEGA_), n_(toCopy.n_)
+  {
+  }
+
+  /// @brief Creates a copy of this instance.
+  /// @returns Pointer to a new copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-15/GGB - Function created.
+
+  std::unique_ptr<CTargetAstronomy> CTargetMinorPlanet::createCopy() const
+  {
+    std::unique_ptr<CTargetAstronomy> returnValue(new CTargetMinorPlanet(*this));
+
+    return returnValue;
+  }
+
   /// @brief Calculates and returns the ICRS position of a minor planet.
   /// @param[in] time: The time to compute the position.
   /// @returns The ICRS coordinates at the specified time.

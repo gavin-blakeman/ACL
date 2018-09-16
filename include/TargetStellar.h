@@ -272,14 +272,15 @@ namespace ACL
 
   public:
     explicit CTargetStellar();        // void form of the constructor.
+    CTargetStellar(const CTargetStellar &);
     CTargetStellar(std::string const &, CAstronomicalCoordinates const &);
     CTargetStellar(std::string const &, CAstronomicalCoordinates const &, FP_t, FP_t, FP_t, FP_t, FP_t);
-    CTargetStellar(const CTargetStellar &);
+
     virtual ~CTargetStellar();
 
       // Factory functions
 
-    virtual std::unique_ptr<CTargetAstronomy> createCopy() const {}
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
 
       // Information functions
 
