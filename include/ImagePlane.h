@@ -183,7 +183,7 @@ namespace ACL
     std::unique_ptr<double[]> imagePlaneD;
 
     template<typename T>
-    void copyImagePlane(T const *, T*);
+    void copyImagePlane(T const *, T *);
 
     template<typename T, typename U>
     void convertImagePlane(T const *, U *);
@@ -216,7 +216,7 @@ namespace ACL
     void plusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
     void minusThread(CImagePlane const &, std::tuple<AXIS_t, AXIS_t> const &);
     void transformThread(AXIS_t yStart, AXIS_t yEnd, SThreadData const &);
-    void resampleThread(double *newImagePlane, boost::tuple<AXIS_t, AXIS_t> yVals, AXIS_t newWidth, boost::tuple<FP_t, FP_t>);
+    void resampleThread(double *newImagePlane, std::tuple<AXIS_t, AXIS_t> yVals, AXIS_t newWidth, std::tuple<FP_t, FP_t>);
 
     template<typename T>
     void binPixelsThread(T *newImagePlane, std::tuple<AXIS_t, AXIS_t>, AXIS_t, unsigned int nsize);
@@ -232,14 +232,14 @@ namespace ACL
 
       // Rendering functions
 
-    void renderImageGrey8CbrtThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8CbrtThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
     void renderImageGrey8LinearThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8GammaThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8GammaLogThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8SigmoidThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8SqrtThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8SquareThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
-    void renderImageGrey8LogThread(renderImage_t *outputImage, boost::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8GammaThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8GammaLogThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8SigmoidThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8SqrtThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8SquareThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
+    void renderImageGrey8LogThread(renderImage_t *outputImage, std::tuple<INDEX_t, INDEX_t> const &startEnd);
 
   public:
     explicit CImagePlane();                                     // Default constructor.
@@ -484,7 +484,7 @@ namespace ACL
     MCL::TPoint2D<FP_t> starCentroid(MCL::TPoint2D<AXIS_t> const &) const;
     std::optional<MCL::TPoint2D<AXIS_t> > brightWalk(MCL::TPoint2D<AXIS_t> const &guess, AXIS_t rmax, int sensitivity) const;
     std::optional<FP_t> FWHM(MCL::TPoint2D<AXIS_t> const &, AXIS_t radius) const;
-    void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
+    void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const;
 
       // Image Analysis functions
 

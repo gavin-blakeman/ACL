@@ -184,6 +184,6 @@ namespace ACL
   #endif  // ACL_NOBOOST
 #endif // _cplusplus
 
-}
+} // namespace ACL
 
 #endif  // ACL_ASTRONOMICALTIME_H

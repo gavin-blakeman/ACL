@@ -214,4 +214,4 @@ namespace ACL
     std::for_each(errors.begin(), errors.end(),
                   [] (std::pair<GCL::TErrorCode, std::string> p) { GCL::CError::addErrorMessage("ACL", p.first, p.second); });
   }
-}
+} // namespace ACL
