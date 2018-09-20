@@ -116,7 +116,7 @@ namespace ACL
       // Image Plane functions
 
     virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const { ACL_CODE_ERROR;}
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const override { ACL_CODE_ERROR;}
 
     virtual bool isMonoImage() const {return false;}  ///< @brief Checks for a monochrome image.
                                                       ///< @details A monochrome image has only one colour plane.

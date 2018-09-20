@@ -2304,8 +2304,9 @@ namespace ACL
     else if (keywordExists(0, SBIG_APTAREA))
     {
         // Convert from area to diameter. (Area = PI * r^2)
+
       observationTelescope->aperture(static_cast<double>(keywordData(0, SBIG_APTAREA)));
-      observationTelescope->aperture() /= MCL::D_PI;
+      observationTelescope->aperture() /= MCL::PI;
       observationTelescope->aperture() = std::sqrt(observationTelescope->aperture());
       observationTelescope->aperture() *= 2;
     };
@@ -3288,7 +3289,7 @@ namespace ACL
   /// @version 2013-05-18/GGB - Function created.
 
   void CAstroFile::objectProfile(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> centroid,
-                                 AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const
+                                 AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");

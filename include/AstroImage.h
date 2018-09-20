@@ -172,7 +172,7 @@ typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
     virtual void insertImagePlane(std::unique_ptr<CImagePlane> &);
 
     virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const = 0;
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const = 0;
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const = 0;
 
       // Image information functions
 

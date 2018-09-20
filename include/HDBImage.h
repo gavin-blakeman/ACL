@@ -161,7 +161,7 @@ namespace ACL
     virtual FP_t getMeanValue() const;
     virtual FP_t getStDevValue() const;
     virtual FP_t getMinValue() const;
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const override;
 
       // Image manipulation functions
 

@@ -51,8 +51,8 @@
 namespace ACL
 {
   FP_t const GAUSSK             = 0.01720209895;              ///< Gaussian gravitational constant
-  FP_t const D_R2D              = 180 / MCL::D_PI;            ///< Radians to degrees
-  FP_t const D_D2R              = MCL::D_PI / 180;            ///< Degrees to radians.
+  FP_t const D_R2D              = 180 / MCL::PI;              ///< Radians to degrees
+  FP_t const D_D2R              = MCL::PI / 180;              ///< Degrees to radians.
   FP_t const RAD_PER_ARCMIN     = 0.00029088820866572158;     ///< pi / (180. * 60.)
   FP_t const ONE_OVER_SIXTY     = 0.016666666666666666;       ///< 1/60
   FP_t const DEG_PER_ARCMIN     = 0.016666666666666666;       ///< degrees in an arcminute

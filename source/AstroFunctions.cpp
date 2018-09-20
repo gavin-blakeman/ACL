@@ -520,7 +520,7 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     FP_t secz;
     FP_t secx;
 
-    if ( (z >= MCL::D_PIDIV2) || (z < 0) )
+    if ( (z >= MCL::PI_DIV_2) || (z < 0) )
     {
       return 0;		// Invalid number
     }

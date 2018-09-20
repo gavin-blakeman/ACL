@@ -384,7 +384,7 @@ namespace ACL
   /// @throws GCL::CError(ACL::0x2202) - ASTROIMAGE: No Image Plane available.
   /// @version 2013-05-18/GGB - Function created.
 
-  void CAstroImageMono::objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const
+  void CAstroImageMono::objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const
   {
     if (imagePlaneStorage.empty())
     {

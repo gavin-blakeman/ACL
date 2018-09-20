@@ -130,7 +130,7 @@ namespace ACL
       // f'(E) = 1 - e cos(E)
       // Use Newton-Raphson iteration
 
-    E0 = MCL::D_PI;
+    E0 = MCL::PI;
     E1 = 0;
 
       // Iterate with a maxumun of 100,000 iterations looking for an accuracy of seven places.

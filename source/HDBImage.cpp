@@ -917,7 +917,7 @@ namespace ACL
   /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
   /// @version 2013-05-18/GGB - Function created.
 
-  void CImageHDB::objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &profileData) const
+  void CImageHDB::objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &profileData) const
   {
     if (data)
     {

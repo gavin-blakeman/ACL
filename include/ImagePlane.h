@@ -79,9 +79,9 @@
 namespace ACL
 {
   /// @brief Function to calculate an array offset.
-  /// @param[in] x - x-coordinate
-  /// @param[in] y - y-coordinate
-  /// @param[in] xd - The x dimension
+  /// @param[in] x: x-coordinate
+  /// @param[in] y: y-coordinate
+  /// @param[in] xd: The x dimension
   /// @returns The index in the array.
   /// @throws None.
   /// @version 2013-04-21/GGB - Moved out of class CImagePlane
@@ -183,7 +183,7 @@ namespace ACL
     std::unique_ptr<double[]> imagePlaneD;
 
     template<typename T>
-    void copyImagePlane(T const *, T *);
+    void copyImagePlane(T const *, T*);
 
     template<typename T, typename U>
     void convertImagePlane(T const *, U *);

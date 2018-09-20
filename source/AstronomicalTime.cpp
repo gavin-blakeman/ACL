@@ -88,8 +88,6 @@ namespace ACL
   /// @param[in] ifn File Name of the text file that contains the dAT data values.
   /// @throws ACL::CACLError(0x3205) - ASTROTIME: Error opening TAI-UTC file.
   /// @post The dAT values are loaded and available to any instance of the CAstroTime class.
-  /// @version 2018-09-19/GGB - Bug #154 - Allow use of different seperators.
-  ///                           Improved error handling.
   /// @version 2015-06-20/GGB - Moved function into CAstroTime class.
   /// @version 2014-12-25/GGB - Removed std::clog error reporting. Exception should be sufficient.
   /// @version 2013-09-16/GGB - Changed MJD to an unsigned long.
@@ -116,33 +114,21 @@ namespace ACL
     {
       std::getline(ifs, textLine);   // First line of file is headers
 
-      try
+      while (ifs.good())
       {
-        while (ifs.good())
+        std::getline(ifs, textLine);
+        if (textLine.size() > 1)
         {
-          std::getline(ifs, textLine);
-          if (textLine.size() > 1)
-          {
-            commaPosn = textLine.find_first_of(",; \t",0);
-            szValue = textLine.substr(0, commaPosn);
-            boost::trim(szValue);
-            MJD = boost::lexical_cast<unsigned long>(szValue);
-            szValue = textLine.substr(commaPosn+1, textLine.npos);
-            boost::trim(szValue);
-            offset = boost::lexical_cast<int>(szValue);
-            ACL::CAstroTime::add_dAT(MJD, offset);
-          };
+          commaPosn = textLine.find_first_of(',',0);
+          szValue = textLine.substr(0, commaPosn);
+          boost::trim(szValue);
+          MJD = boost::lexical_cast<unsigned long>(szValue);
+          szValue = textLine.substr(commaPosn+1, textLine.npos);
+          boost::trim(szValue);
+          offset = boost::lexical_cast<int>(szValue);
+          ACL::CAstroTime::add_dAT(MJD, offset);
         };
-      }
-      catch(boost::bad_lexical_cast &)
-      {
-        ERRORMESSAGE("TAI-UTC file format is incorrect, unable to open TAI-UTC file.");
-        ERRORMESSAGE("All time conversions are likely to be incorrect until this is resolved.");
-      }
-      catch(...)
-      {
-        ERROR(ACL, 0x3205);    // ASTROTIME: Error opening TAI-UTC file.
-      }
+      };
       ifs.close();
     };
   }
@@ -153,8 +139,6 @@ namespace ACL
   /// @param[in] ifn: Path and file Name of the text file that contains the dUT1 data values.
   /// @throws ACL::CACLError(0x3206) - ASTROTIME: Error opening UTC-UT1 file.
   /// @post The dUT1 values are loaded and available to any instance of the CAstroTime class.
-  /// @version 2018-09-19/GGB - Expanded seperators to use ' ' and '\t'
-  ///                           Improved error handling when loading the file.
   /// @version 2015-06-20/GGB - Moved function into CAstroTime class.
   /// @version 2014-12-25/GGB - Removed std::clog error reporting and rely on exception.
   /// @version 2013-09-16/GGB - Changed MJD to an unsigned long.
@@ -169,7 +153,6 @@ namespace ACL
     std::string szValue;
     unsigned long MJD;
     FP_t dUT1;
-    std::string const seperators(",; \t");
 
     ifs.open(ifn);
 
@@ -182,46 +165,34 @@ namespace ACL
     {
       std::getline(ifs, textLine);   // First line of file is headers
 
-      try
+      while (ifs.good())
       {
-        while (ifs.good())
+        std::getline(ifs, textLine);
+        if (textLine.size() > 1)
         {
-          std::getline(ifs, textLine);
-          if (textLine.size() > 1)
-          {
-            commaPosn = textLine.find_first_of(seperators, 0);
-            szValue = textLine.substr(0, commaPosn);
-            boost::trim(szValue);
-            MJD = boost::lexical_cast<unsigned long>(szValue);
+          commaPosn = textLine.find_first_of(",;",0);
+          szValue = textLine.substr(0, commaPosn);
+          boost::trim(szValue);
+          MJD = boost::lexical_cast<unsigned long>(szValue);
 
             // Now need the 5th value after the MJD
 
-            commaPosn = textLine.find_first_of(seperators, commaPosn+1);
-            commaPosn = textLine.find_first_of(seperators, commaPosn+1);
-            commaPosn = textLine.find_first_of(seperators, commaPosn+1);
-            commaPosn = textLine.find_first_of(seperators, commaPosn+1);
+          commaPosn = textLine.find_first_of(",;", commaPosn+1);
+          commaPosn = textLine.find_first_of(",;", commaPosn+1);
+          commaPosn = textLine.find_first_of(",;", commaPosn+1);
+          commaPosn = textLine.find_first_of(",;", commaPosn+1);
 
-            textLine = textLine.substr(commaPosn+1, textLine.npos);
-            commaPosn = textLine.find_first_of(seperators,0);
-            szValue = textLine.substr(0, commaPosn);
-            boost::trim(szValue);
-            if (szValue.size() > 0)
-            {
-              dUT1 = boost::lexical_cast<double>(szValue);
-              ACL::CAstroTime::add_dUT1(MJD, dUT1);
-            };
+          textLine = textLine.substr(commaPosn+1, textLine.npos);
+          commaPosn = textLine.find_first_of(",;",0);
+          szValue = textLine.substr(0, commaPosn);
+          boost::trim(szValue);
+          if (szValue.size() > 0)
+          {
+            dUT1 = boost::lexical_cast<double>(szValue);
+            ACL::CAstroTime::add_dUT1(MJD, dUT1);
           };
         };
-      }
-      catch(boost::bad_lexical_cast &)
-      {
-        ERRORMESSAGE("UTC-UT1 file format is incorrect, unable to open UTC-UT1 file.");
-        ERRORMESSAGE("All time conversions are likely to be incorrect until this is resolved.");
-      }
-      catch(...)
-      {
-        ERROR(ACL, 0x3206);  // ASTROTIME: Error opening UTC-UT1 file.
-      }
+      };
       ifs.close();
     };
   }
@@ -844,4 +815,4 @@ namespace ACL
     return returnValue;
   }
 
-}  // namespace ACL
+}  // namespace LibAstroClass8

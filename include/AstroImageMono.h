@@ -115,7 +115,7 @@ namespace ACL
 
     virtual bool isMonoImage() const {return true;}
     virtual bool isPolyImage() const {return false;}
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<boost::tuple<FP_t, FP_t> > &data) const;
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const override;
 
       // Operators
 

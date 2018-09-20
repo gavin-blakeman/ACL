@@ -42,13 +42,12 @@
 
   // Miscellaneous libraries
 
-#include <GCL>
+#include "../GCL/include/error.h" //!!! If the full GCL package is included at this point, it creates cicular references and errors.
 
 namespace ACL
 {
 #define ACL_ERROR(ERR) (ERROR(ACL, ERR))
 #define ACL_CODE_ERROR CODE_ERROR(ACL)
-#define ACL_RUNTIME_ASSERT(EXPRESSION, MESSAGE) (RUNTIME_ASSERT(ACL, EXPRESSION, MESSAGE))
 }
 
 #endif // ACL_ERROR_H

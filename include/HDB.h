@@ -281,7 +281,7 @@ namespace ACL
     virtual FP_t getMeanValue() const { CODE_ERROR(ACL); }
     virtual FP_t getStDevValue() const { CODE_ERROR(ACL); }
     virtual FP_t getMinValue() const { CODE_ERROR(ACL); }
-    virtual void objectProfile(MCL::TPoint2D<FP_t> /*centroid*/, long /*radius*/, std::vector<boost::tuple<FP_t, FP_t> > &/*data*/) const {CODE_ERROR(ACL); }
+    virtual void objectProfile(MCL::TPoint2D<FP_t>, AXIS_t, std::vector<std::tuple<FP_t, FP_t> > &) const {CODE_ERROR(ACL); }
 
       // Image manipulation functions
 

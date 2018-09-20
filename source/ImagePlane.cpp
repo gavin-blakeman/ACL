@@ -119,13 +119,13 @@ namespace ACL
   /// @details This is a templated function that can copy any type of image plane. This function starts the thread functions that
   /// perform the actual copy. The work is divided evenly over the threads.<br>
   /// The types of the source and destination image planes must be the same.
-  /// @param[in] srcData<0>: imagePlane
-  /// @param[in] srcData<1>: startX
-  /// @param[in] srcData<2>: startY
-  /// @param[in] srcData<3>: dimX
-  /// @param[in,out] destData<0>: imagePlane
-  /// @param[in] destData<1>: dimX
-  /// @param[in] destData<2> :dimY
+  /// @param[in] srcData<0> imagePlane
+  /// @param[in] srcData<1> startX
+  /// @param[in] srcData<2> startY
+  /// @param[in] srcData<3> dimX
+  /// @param[in,out] destData<0> imagePlane
+  /// @param[in] destData<1> dimX
+  /// @param[in] destData<2> dimY
   /// @throws None.
   /// @version 2013-04-21/GGB - Function created.
 
@@ -159,13 +159,9 @@ namespace ACL
     {
       rowBegin = rowEnd;
       if (threadNumber == (numberOfThreads -1) )
-      {
         rowEnd = rows;
-      }
       else
-      {
         rowEnd += rowStep;
-      };
 
       thread = new boost::thread(&copyImagePlaneThread<T>, srcData, std::tuple<T *, AXIS_t, AXIS_t, AXIS_t>(std::get<0>(destData),
                                                                                                               std::get<1>(destData),
@@ -261,55 +257,55 @@ namespace ACL
       case BYTE_IMG:
       {
         imagePlane8 = std::make_unique<std::uint8_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlane8.get(), imagePlane8.get());
+        //copyImagePlane(oldPlane->imagePlane8, imagePlane8);
         break;
       };
       case SBYTE_IMG:
       {
         imagePlaneS8 = std::make_unique<std::int8_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlaneS8.get(), imagePlaneS8.get());
+        //copyImagePlane(oldPlane->imagePlaneS8, imagePlaneS8);
         break;
       };
       case USHORT_IMG:
       {
         imagePlaneU16 = std::make_unique<std::uint16_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlaneU16.get(), imagePlaneU16.get());
+        //copyImagePlane(oldPlane->imagePlaneU16, imagePlaneU16);
         break;
       };
       case SHORT_IMG:
       {
         imagePlane16 = std::make_unique<std::int16_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlane16.get(), imagePlane16.get());
+        //copyImagePlane(oldPlane->imagePlane16, imagePlane16);
         break;
       };
       case ULONG_IMG:
       {
         imagePlaneU32 = std::make_unique<std::uint32_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlaneU32.get(), imagePlaneU32.get());
+        //copyImagePlane(oldPlane->imagePlaneU32, imagePlaneU32);
         break;
       };
       case LONG_IMG:
       {
         imagePlane32 = std::make_unique<std::int32_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlane32.get(), imagePlane32.get());
+        //copyImagePlane(oldPlane->imagePlane32, imagePlane32);
         break;
       };
       case LONGLONG_IMG:
       {
         imagePlane64 = std::make_unique<std::int64_t[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlane64.get(), imagePlane64.get());
+        //copyImagePlane(oldPlane->imagePlane64, imagePlane64);
         break;
       };
       case FLOAT_IMG:
       {
         imagePlaneF = std::make_unique<float[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlaneF.get(), imagePlaneF.get());
+        //copyImagePlane(oldPlane->imagePlaneF, imagePlaneF);
         break;
       };
       case DOUBLE_IMG:
       {
         imagePlaneD = std::make_unique<double[]>(dimX * dimY);
-        copyImagePlane(oldPlane->imagePlaneD.get(), imagePlaneD.get());
+        //copyImagePlane(oldPlane->imagePlaneD, imagePlaneD);
         break;
       };
       default:
@@ -670,10 +666,8 @@ namespace ACL
   }
 
   /// @brief Thread function for subtracting two image planes.
-  /// @param[in] rhs: The right hand operand image plane.
-  /// @param[in[ rows: Data containing the rows to copy by this thread.
-  /// @throws None.
-  /// @version 2013-04-26/GGB - Function created.
+  //
+  // 2013-04-26/GGB - Function created.
 
   void CImagePlane::minusThread(CImagePlane const &rhs, std::tuple<AXIS_t, AXIS_t> const &rows)
   {
@@ -691,10 +685,9 @@ namespace ACL
   }
 
   /// @brief operator -=
-  /// @param[in] rhs: The right hand operator.
-  /// @throws ACL::CError(0x0004)
-  /// @version 2013-08-31/GGB - Added code to ensure that maxThreads cannot be zero.
-  /// @version 2010-12-10/GGB - Function created.
+  //
+  // 2013-08-31/GGB - Added code to ensure that maxThreads cannot be zero.
+  // 2010-12-10/GGB - Function created.
 
   CImagePlane &CImagePlane::operator-=(const CImagePlane &rhs)
   {
@@ -746,9 +739,7 @@ namespace ACL
       threadGroup.join_all();     // Wait for all the threads to finish.
     }
     else
-    {
       ACL_ERROR(0x0004);    // Inconsistent image sizes.
-    };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
 
@@ -756,9 +747,10 @@ namespace ACL
   }
 
   /// @brief Multiplication operator
-  /// @param[in] rhs: The right hand side image plane.
+  /// @param[in] rhs - The right hand side image plane.
   /// @throws GCL::CRuntimeAssert
-  /// @version 2010-12-28/GGB - Function created.
+  //
+  // 2010-12-28/GGB - Function created.
 
   CImagePlane &CImagePlane::operator*=(CImagePlane const &rhs)
   {
@@ -792,9 +784,8 @@ namespace ACL
   }
 
   /// @brief Multiplication by a constant value operator
-  /// @param[in] dbl: The value to multiply by.
-  /// @throws None.
-  /// @version 2011-05-12/GGB - Function created.
+  //
+  // 2011-05-12/GGB - Function created.
 
   CImagePlane &CImagePlane::operator*=(double dbl)
   {
@@ -812,10 +803,9 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief operator \=
-  /// @param[in] rhs: The image plane to divide by.
-  /// @throws None.
-  /// @version 2010-12-11/GGB - Function created.
+  // /= operator
+  //
+  // 2010-12-11/GGB - Function created.
 
   CImagePlane &CImagePlane::operator/=(const CImagePlane &rhs)
   {
@@ -827,16 +817,12 @@ namespace ACL
         // Self assignment. Makes all values equal to 1.Use a fast approach.
 
       for (index = 0; index < count; index++)
-      {
         imagePlaneD[index] = 1;
-      };
     }
     else
     {
       for (index = 0; index < count; index++)
-      {
         imagePlaneD[index] /= rhs.imagePlaneD[index];
-      };
     };
 
     bMinMax = false;
@@ -845,10 +831,9 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Performs division by a fixed value.
-  /// @param[in] dbl: The value to divide the image plane by.
-  /// @throws ACL::CError(0x2200) - Divide by zero.
-  /// @version 2011-05-12/GGB - Function created.
+  // Performs division by a fixed value.
+  //
+  // 2011-05-12/GGB - Function created.
 
   CImagePlane &CImagePlane::operator/=(double dbl)
   {
@@ -862,9 +847,7 @@ namespace ACL
     else
     {
       for (index = 0; index < count; index++)
-      {
         imagePlaneD[index] /= dbl;
-      };
 
       bMinMax = false;
       bMean = false;
@@ -874,9 +857,8 @@ namespace ACL
   }
 
   /// @brief Performs the absolute difference function
-  /// @param[in] rhs: The right hand image plane.
-  /// @throws None.
-  /// @version 2010-12-28/GGB - Function created.
+  //
+  // 2010-12-28/GGB - Function created.
 
   CImagePlane &CImagePlane::operator%=(CImagePlane const &rhs)
   {
@@ -888,16 +870,12 @@ namespace ACL
       // Self assignment. Make all values = 0.
 
       for(index = 0; index < count; index++)
-      {
         imagePlaneD[index] = 0;
-      };
     }
     else
     {
       for(index = 0; index < count; index++)
-      {
         imagePlaneD[index] = abs(imagePlaneD[index] - rhs.imagePlaneD[index]);
-      };
     };
 
     bMinMax = false;
@@ -926,10 +904,9 @@ namespace ACL
     return CImagePlane(*this) -= rhs;
   }
 
-  /// @brief Multiplication operator
-  /// @param[in] rhs: Right hand operator.
-  /// @throws None.
-  /// @version 2010-12-28/GGB - Function created.
+  // Multiplication operator
+  //
+  // 2010-12-28/GGB - Function created.
 
   const CImagePlane CImagePlane::operator*(CImagePlane const &rhs)
   {
@@ -1035,10 +1012,10 @@ namespace ACL
   /// @throws RuntimeAssert.
   /// @note Always converts the underlying data type to double when the pixels are binned.
   /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
-  /// @version 2015-09-02/GGB -
-  ///                           @li Use C-style arrays as storage type.
-  ///                           @li Use cfitsio rather than CCfits for accessing FITS files.
-  ///                           @li Add additional data types as supported by cfitsio V3.3
+  /// @version 2015-09-02/GGB
+  /// @li Use C-style arrays as storage type.
+  /// @li Use cfitsio rather than CCfits for accessing FITS files.
+  /// @li Add additional data types as supported by cfitsio V3.3
   /// @version 2013-08-31/GGB - Added code to force maxThreads to not be zero.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-01-27/GGB - Introduce multi-threading and solve bugs around native FITS types.
@@ -1111,12 +1088,6 @@ namespace ACL
   }
 
   /// @brief Thread function for binning pixels.
-  /// @param[in] newImagePlane:
-  /// @param[in] vals:
-  /// @param[in] newWidth:
-  /// @param[in] nsize:
-  /// @throws None.
-  /// @version 2018-09-19/GGB - modified loop indexes to unsigned int.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-01-27/GGB - Function created.
 
@@ -1125,7 +1096,7 @@ namespace ACL
   {
     AXIS_t xIndex, yIndex;
     AXIS_t xTemp, yTemp;
-    unsigned int x_, y_;
+    int x_, y_;
     FP_t accum;
 
     for (xIndex = 0; xIndex < newWidth; xIndex++)
@@ -1606,18 +1577,11 @@ namespace ACL
   }
 
   /// @brief Function to copy an image plane.
-  /// @param[in] src: The source of the copy.
-  /// @param[out] dest: The destination of the copy.
-  /// @throws CRunTimeAssert.
-  /// @version 2018-09-19/GGB - Added nullptr checks.
   /// @version 2015-09-02/GGB - Function created.
 
   template<typename T>
   void CImagePlane::copyImagePlane(T const *src, T *dest)
   {
-    ACL_RUNTIME_ASSERT(src != nullptr, "Source of Function cannot be nullptr.");
-    ACL_RUNTIME_ASSERT(dest != nullptr, "Source of Function cannot be nullptr.");
-
     ACL::copyImagePlane(std::make_tuple(src, AXIS_t(0), AXIS_t(0), dimX), std::make_tuple(dest, dimX, dimY));
   }
 
@@ -1643,8 +1607,9 @@ namespace ACL
 
   /// @brief Function to crop an image. Calls the alternate function to perform the work.
   /// @throws None.
-  /// @version 2015-07-06/GGB - Remove unrequired try{} catch(...) throw; block
-  /// @version 2011-08-15/GGB - Function created.
+  //
+  // 2015-07-06/GGB - Remove unrequired try{} catch(...) throw; block
+  // 2011-08-15/GGB - Function created.
 
   void CImagePlane::crop(AXIS_t xo, AXIS_t yo, AXIS_t xd, AXIS_t yd)
   {
@@ -2628,7 +2593,7 @@ namespace ACL
         yVal = yp / std::get<1>(ratios);
         xFP = modf(xVal, &xIP);
         yFP = modf(yVal, &yIP);
-        a = getValue(static_cast<AXIS_t>(xIP), static_cast<AXIS_t>(yIP) );
+        a = getValue(static_cast<long>(xIP), static_cast<AXIS_t>(yIP) );
         if (yIP >= (dimY-1))
         {
           b = 0;
@@ -2664,10 +2629,8 @@ namespace ACL
   }
 
   /// @brief Compute the fine location of the star peaking at [x0,y0]
-  /// @param[in] guess: The initial guess of the star centroid.
-  /// @returns The star centroid.
   /// @note Adopted from findstar.c (By Doug Mink, after Elwood Downey)
-  /// @throws None.
+  //
   /// @version 2014-01-31/GGB - Ported to C++ and moved to findstar.cpp
   /// @version 2012-07-20/GGB - Function converted to C++.
 
@@ -3034,21 +2997,19 @@ namespace ACL
         };
       };
         break;
-        case DOUBLE_IMG:
+      case DOUBLE_IMG:
+      {
+        std::optional<std::tuple<double, double> > returnValue = MCL::minmax(imagePlaneD.get(), dimX * dimY);
+        if (returnValue)
         {
-          std::optional<std::tuple<double, double> > returnValue = MCL::minmax(imagePlaneD.get(), dimX * dimY);
-          if (returnValue)
-          {
-            fMin = std::get<0>(*returnValue);
-            fMax = std::get<1>(*returnValue);
-          };
-          break;
+          fMin = std::get<0>(*returnValue);
+          fMax = std::get<1>(*returnValue);
         };
-        default:
-        {
-          ACL_ERROR(0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
-          break;
-        };
+      };
+        break;
+      default:
+        ACL_ERROR(0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        break;
       };
 
       bMinMax = true;
@@ -3591,9 +3552,7 @@ namespace ACL
       };
 
       if (invert)
-      {
         outputImage[lIndex] = outputImage[lIndex] ^ maximumImageValue;
-      };
     };
   }
 
@@ -3625,17 +3584,11 @@ namespace ACL
       currentValue = getValue(lIndex);
 
       if (fRange == 0)
-      {
         outputImage[lIndex] = minimumImageValue;
-      }
       else if (currentValue <= blackPoint)
-      {
         outputImage[lIndex] = minimumImageValue;
-      }
       else if (currentValue >= whitePoint)
-      {
         outputImage[lIndex] = maximumImageValue;
-      }
       else
       {
         currentValue = std::pow(std::log(currentValue - blackPoint) / fRange, exponent) * maxVal;
@@ -3643,9 +3596,7 @@ namespace ACL
       };
 
       if (invert)
-      {
         outputImage[lIndex] = outputImage[lIndex] ^ maximumImageValue;
-      }
     };
   }
 
