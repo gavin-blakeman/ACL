@@ -85,6 +85,16 @@ namespace ACL
 
   class CTargetAstronomy
   {
+  public:
+    enum ETargetType
+    {
+      TT_NONE,
+      TT_STELLAR,
+      TT_MINORPLANET,
+      TT_MAJORPLANET,
+      TT_COMET
+    };
+
   private:
   protected:
     std::list<std::string> objectName_;             ///< List of object names. Object may have more than one name.
@@ -107,7 +117,7 @@ namespace ACL
       // Information functions
 
     virtual std::string objectName() const;
-    virtual std::string objectType() const = 0;
+    virtual ETargetType targetType() const = 0;
 
       // Data manipulation functions
 

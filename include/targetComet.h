@@ -75,10 +75,10 @@ namespace ACL
 
       // Information functions
 
-    virtual std::string objectType() const { return "Comet"; }
+    virtual ETargetType targetType() const override { return TT_COMET; }
 
     virtual CAstronomicalCoordinates positionCatalog() const { ACL_CODE_ERROR; }
-    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const { ACL_CODE_ERROR; }
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
   };
 }

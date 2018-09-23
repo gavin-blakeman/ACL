@@ -115,7 +115,9 @@ namespace ACL
     virtual void operator()(MCL::CAngle const &, MCL::CAngle const &);
 
     virtual void RA(FP_t const &ra) { coordinates_.x(ra); }
+    virtual void RA(MCL::CAngle const &ra) { coordinates_.x(ra); }
     virtual void DEC(FP_t const &dec) { coordinates_.y(dec); }
+    virtual void DEC(MCL::CAngle const &dec) { coordinates_.y(dec); }
 
     virtual MCL::CAngle RA() const;
     virtual MCL::CAngle DEC() const;

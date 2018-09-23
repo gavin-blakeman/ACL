@@ -162,7 +162,7 @@ namespace ACL
 
   CTargetStellar::CTargetStellar(CTargetStellar const &toCopy) :  CTargetAstronomy(toCopy), pmRA_(toCopy.pmRA_),
     pmDec_(toCopy.pmDec_), radialVelocity_(toCopy.radialVelocity_), parallax_(toCopy.parallax_), epoch_(toCopy.epoch_),
-    objectType_("")
+    stellarType_("")
   {
   }
 
@@ -207,9 +207,9 @@ namespace ACL
   /// @returns The type of the object.
   /// @version 2018-09-03/GGB - Function created.
 
-  std::string CTargetStellar::objectType() const
+  std::string CTargetStellar::stellarType() const
   {
-    return objectType_;
+    return stellarType_;
   }
 
   /// @brief Calculates the observed position of the stellar object.

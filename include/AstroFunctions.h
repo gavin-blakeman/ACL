@@ -41,19 +41,19 @@
 #ifndef ACL_ASTROFUNCTIONS_H
 #define ACL_ASTROFUNCTIONS_H
 
-// Standard C++ libraries
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <string>
 
-  // Other ACL libraries.
+  // ACL library header files
 
 #include "AstronomicalTime.h"
 #include "constants.h"
 #include "config.h"
 #include "julianDay.h"
 
-  // MCL Library
+  // Miscellaneous Library header files.
 
 #include <MCL>
 

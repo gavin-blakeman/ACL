@@ -60,18 +60,12 @@
 #include <cmath>
 #include <cstdio>
 
-  // SOFA library
-
-#include "sofam.h"
-
-  // Boost library
-
-#include "boost/thread/thread.hpp"
-#include "boost/scoped_array.hpp"
-
   // Miscellaneous Libraries
 
+#include "boost/thread/thread.hpp"
+//#include "boost/scoped_array.hpp"
 #include <GCL>
+#include "sofam.h"
 
 namespace ACL
 {

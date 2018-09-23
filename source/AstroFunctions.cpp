@@ -40,7 +40,7 @@
 
 #include "../include/AstroFunctions.h"
 
-// Standard C++ libraries
+  // Standard C++ library header files.
 
 #include <cctype>
 #include <cmath>
@@ -48,14 +48,13 @@
 #include <cstdlib>
 #include <iostream>
 #include <locale>
-#include <string>
 
-// ACL Libraries
+  // ACL Library header files
 
 #include "../include/common.h"
 #include "../include/error.h"
 
-// Miscellaneous libraries
+  // Miscellaneous library header files.
 
 #include "boost/format.hpp"
 #include "boost/date_time/gregorian/gregorian.hpp"

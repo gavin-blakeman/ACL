@@ -86,7 +86,7 @@ namespace ACL
 
       // Information functions
 
-    virtual std::string objectType() const { return "Planet"; }
+    virtual ETargetType targetType() const override { return TT_MAJORPLANET; }
 
       // Position functions.
 

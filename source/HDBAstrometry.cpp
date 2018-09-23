@@ -503,13 +503,13 @@ namespace ACL
 
   bool CHDBAstrometry::specialKeyword(std::unique_ptr<CFITSKeyword> &kwd)
   {
-    if ( ((*kwd) == astroManager_COMMENT_PLATE_FL) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_A) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_B) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_C) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_D) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_E) ||
-         ((*kwd) == astroManager_COMMENT_PLATE_F) )
+    if ( ((*kwd) == ASTROMANAGER_COMMENT_PLATE_FL) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_A) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_B) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_C) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_D) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_E) ||
+         ((*kwd) == ASTROMANAGER_COMMENT_PLATE_F) )
     {
       loadKeywordPlateConstant(kwd);
       return true;

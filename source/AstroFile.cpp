@@ -2243,15 +2243,15 @@ namespace ACL
       }
     }
 
-    if (keywordExists(0, astroManager_ALTITUDE))
+    if (keywordExists(0, ASTROMANAGER_ALTITUDE))
     {
       try
       {
-        observationLocation->altitude(static_cast<int>(std::stod(keywordData(0, astroManager_ALTITUDE))));
+        observationLocation->altitude(static_cast<int>(std::stod(keywordData(0, ASTROMANAGER_ALTITUDE))));
       }
       catch(...)
       {
-        WARNINGMESSAGE("Invalid format for keyword: " + astroManager_ALTITUDE);
+        WARNINGMESSAGE("Invalid format for keyword: " + ASTROMANAGER_ALTITUDE);
       }
     }
     else if (keywordExists(0, MAXIM_ALTITUDE))
@@ -2380,11 +2380,11 @@ namespace ACL
       };
     };
 
-    if (keywordExists(0, astroManager_JD))
+    if (keywordExists(0, ASTROMANAGER_JD))
     {
         // This is easy, just reset and construct with the JD and the relevant timeSystem.
 
-      observationTime.reset(new CAstroTime(static_cast<double>(keywordData(0, astroManager_JD)), timeSystem));
+      observationTime.reset(new CAstroTime(static_cast<double>(keywordData(0, ASTROMANAGER_JD)), timeSystem));
     }
 
     // DATE-OBS should be in the format "YYYY-MM-DDTHH:mm:ss"
@@ -2393,7 +2393,7 @@ namespace ACL
     {
       observationTime.reset(new CAstroTime(&time, (timeSystem == ACL::TS_NONE) ? ACL::TS_UTC : timeSystem));
     }
-    else if ((keywordExists(0, astroManager_DATEHP)) && (parseDATE_OBS(static_cast<std::string>(keywordData(0, FITS_DATEOBS)), &time)))
+    else if ((keywordExists(0, ASTROMANAGER_DATEHP)) && (parseDATE_OBS(static_cast<std::string>(keywordData(0, FITS_DATEOBS)), &time)))
     {
       observationTime.reset(new CAstroTime(&time, (timeSystem == ACL::TS_NONE) ? ACL::TS_UTC : timeSystem));
     }
@@ -2424,6 +2424,7 @@ namespace ACL
   /// @brief Reads target coordinate values until a valid target coordinate value is obtained.
   /// @throws None.
   /// @pre 1. The file must have been loaded before this is called.
+  /// @version 2018-09-23/GGB - Added imageCenter member.
   /// @version 2017-08-01/GGB - Function created.
 
   void CAstroFile::processTargetCoordinates()
@@ -2504,23 +2505,27 @@ namespace ACL
     {
       if (keywordExists(0, MAXIM_RA))
       {
-        //observationTarget->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
+        imageCenter_.RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
+        observationTarget->positionCatalog().RA(imageCenter_.RA());
         bRA = true;
       }
       else if (keywordExists(0, MAXIM_OBJECTRA))
       {
-        //observationTarget->RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
+        imageCenter().RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
+        observationTarget->positionCatalog().RA(imageCenter_.RA());
         bRA = true;
       };
 
       if (keywordExists(0, MAXIM_DEC))
       {
-        //observationTarget->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
+        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
+        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
         bDEC = true;
       }
       else if (keywordExists(0, MAXIM_OBJECTDEC))
       {
-        //observationTarget->DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
+        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
+        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
         bDEC = true;
       };
     }

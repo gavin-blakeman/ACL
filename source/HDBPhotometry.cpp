@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Class to support a photometry HDU
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, cfitsio, boost.
+// LIBRARY DEPENDANCE:	SCL, cfitsio.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2

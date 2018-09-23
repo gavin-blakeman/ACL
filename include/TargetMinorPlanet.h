@@ -94,7 +94,7 @@ namespace ACL
 
       // Information functions
 
-    virtual std::string objectType() const { return "Minor"; }
+    virtual ETargetType targetType() const override { return TT_MINORPLANET; }
 
       // Getter functions
 

@@ -175,6 +175,7 @@ namespace ACL
     std::unique_ptr<CWeather> observationWeather;                                   ///< Weather at time of observation
     std::unique_ptr<CAstroTime> observationTime;                                    ///< Time of the observation
     std::unique_ptr<CTargetAstronomy> observationTarget;                            ///< Coordinates of the observation.
+    CAstronomicalCoordinates imageCenter_;                                          ///< Center of the image as retrieved from the FITS keywords.
     std::unique_ptr<CTelescope> observationTelescope;                               ///< Inforrmation about the telescope used.
     DHDBStore HDB;                                                                  ///< All the data blocks (HDU) in the file.
     mutable bool bDirty;                                                            ///< Has the data changed since the last save?
@@ -311,6 +312,7 @@ namespace ACL
     void objectProfile(DHDBStore::size_type, MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const;
     virtual std::string imageFilter() const;
     virtual FP_t imageExposure(DHDBStore::size_type = 0) const;
+    virtual CAstronomicalCoordinates imageCenter() const { return imageCenter_; }
 
       // Image transform actions
 

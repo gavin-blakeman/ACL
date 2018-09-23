@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Class to support a photometry HDU
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, cfitsio, boost.
+// LIBRARY DEPENDANCE:	SCL, cfitsio.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
@@ -67,7 +67,7 @@ namespace ACL
 
   /// @brief The CHDBPhotometry class is used to store photometry observation data within a FITS file structure.
   /// @details The photometry observation data related to the image is stored in a binary table. This class specialises the binary
-  /// table HDB to represent photometry observational data.<br>
+  ///          table HDB to represent photometry observational data.<br>
   /// When the FITS file is saved, the data is saved into a binary table. This allows the photometry data to be automatically
   /// reloaded when the FITS file is opened from disk again.
 

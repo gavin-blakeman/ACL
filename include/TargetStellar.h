@@ -269,7 +269,7 @@ namespace ACL
     std::vector<std::string> identifiers_;            ///< Alternate identifiers for the object.
     std::vector<CPhotometryMeasurement> photometry_;  ///< Any photometry measurements associated with the object
     std::uint64_t oid_;                               ///< SIMBAD OID
-    std::string objectType_;
+    std::string stellarType_;
 
   public:
     explicit CTargetStellar();        // void form of the constructor.
@@ -285,7 +285,7 @@ namespace ACL
 
       // Information functions
 
-    virtual std::string objectType() const;
+    virtual ETargetType targetType() const override { return TT_STELLAR; }
 
       // Operator functions
 
@@ -293,7 +293,8 @@ namespace ACL
 
       // Setting functions
 
-    virtual void objectType(std::string const &ot) { objectType_ = ot; }
+    virtual void stellarType(std::string const &st) { stellarType_ = st; }
+    virtual std::string stellarType() const;
     virtual void catalogueCoordinates(CAstronomicalCoordinates, EReferenceSystem = RS_ICRS);
     virtual void setEpoch(std::string const &);
     inline virtual void setEpoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch

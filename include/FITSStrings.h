@@ -43,7 +43,7 @@
 #ifndef ACL_FITSSTRINGS_H
 #define ACL_FITSSTRINGS_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <string>
 
@@ -156,90 +156,90 @@ namespace ACL
 
     // Location information
 
-  std::string const NOAO_OBSERVATORY              ("OBSERVAT");
+  std::string const NOAO_OBSERVATORY                    ("OBSERVAT");
 
-  std::string const UCOLICK_LATITUDE              ("LATITUDE");
-  std::string const SBIG_LATITUDE                 ("SITELAT");
-  std::string const MAXIM_LATITUDE                ("LAT-OBS");
+  std::string const UCOLICK_LATITUDE                    ("LATITUDE");
+  std::string const SBIG_LATITUDE                       ("SITELAT");
+  std::string const MAXIM_LATITUDE                      ("LAT-OBS");
 
-  std::string const UCOLICK_LONGITUDE             ("LONGITUD");
-  std::string const SBIG_LONGITUDE                ("SITELONG");
-  std::string const MAXIM_LONGITUDE               ("LONG-OBS");
+  std::string const UCOLICK_LONGITUDE                   ("LONGITUD");
+  std::string const SBIG_LONGITUDE                      ("SITELONG");
+  std::string const MAXIM_LONGITUDE                     ("LONG-OBS");
 
-  std::string const astroManager_ALTITUDE               ("ALTITUDE");
-  std::string const MAXIM_ALTITUDE                ("ALT-OBS");
+  std::string const ASTROMANAGER_ALTITUDE               ("ALTITUDE");
+  std::string const MAXIM_ALTITUDE                      ("ALT-OBS");
 
     // Date/Time information
 
-  std::string const astroManager_JD                     ("JD");
-  std::string const astroManager_DATEHP                 ("DATE-HP");
-  std::string const astroManager_TIME                   ("TIME-OBS");
-  std::string const astroManager_UT                     ("UT");
+  std::string const ASTROMANAGER_JD                     ("JD");
+  std::string const ASTROMANAGER_DATEHP                 ("DATE-HP");
+  std::string const ASTROMANAGER_TIME                   ("TIME-OBS");
+  std::string const ASTROMANAGER_UT                     ("UT");
 
     // Weather information
 
-  std::string const NOAO_ENVTIME                  ("ENVMJD");
-  std::string const NOAO_ENVTEM                   ("ENVTEM");
-  std::string const NOAO_ENVPRE                   ("ENVPRE");
-  std::string const NOAO_ENVHUM                   ("ENVHUM");
+  std::string const NOAO_ENVTIME                        ("ENVMJD");
+  std::string const NOAO_ENVTEM                         ("ENVTEM");
+  std::string const NOAO_ENVPRE                         ("ENVPRE");
+  std::string const NOAO_ENVHUM                         ("ENVHUM");
 
-  std::string const MAXIM_BOLTAMBT                ("BOLTAMBT");     // Boltwood Ambient temperature degrees C
-  std::string const MAXIM_BOLTHUM                 ("BOLTHUM");      // Boltwod Humidity %
+  std::string const MAXIM_BOLTAMBT                      ("BOLTAMBT");     // Boltwood Ambient temperature degrees C
+  std::string const MAXIM_BOLTHUM                       ("BOLTHUM");      // Boltwod Humidity %
 
-  std::string const MAXIM_DAVAMBT                 ("DAVAMBT");      // Davis Ambient temperature deg C
-  std::string const MAXIM_DAVHUM                  ("DAVHUM");       // Davis Humidity in percent
-  std::string const MAXIM_DAVBAROM                ("DAVBAROM");     // Davis Ambient Pressure in hPa
+  std::string const MAXIM_DAVAMBT                       ("DAVAMBT");      // Davis Ambient temperature deg C
+  std::string const MAXIM_DAVHUM                        ("DAVHUM");       // Davis Humidity in percent
+  std::string const MAXIM_DAVBAROM                      ("DAVBAROM");     // Davis Ambient Pressure in hPa
 
-  std::string const astroManager_AMBTEM                 ("AMBTEM");       // Ambient temperature deg C
-  std::string const astroManager_AMBPRE                 ("AMBPRE");       // Ambient pressure hPa
-  std::string const astroManager_AMBHUM                 ("AMBHUM");       // Ambient humidity %
+  std::string const ASTROMANAGER_AMBTEM                 ("AMBTEM");       // Ambient temperature deg C
+  std::string const ASTROMANAGER_AMBPRE                 ("AMBPRE");       // Ambient pressure hPa
+  std::string const ASTROMANAGER_AMBHUM                 ("AMBHUM");       // Ambient humidity %
 
     // Pixel information
 
-  std::string const SBIG_PIXELSIZEX               ("XPIXSZ");
-  std::string const SBIG_PIXELSIZEY               ("YPIXSZ");
-  std::string const SBIG_XBINNING                 ("XBINNING");
-  std::string const SBIG_YBINNING                 ("YBINNING");
+  std::string const SBIG_PIXELSIZEX                     ("XPIXSZ");
+  std::string const SBIG_PIXELSIZEY                     ("YPIXSZ");
+  std::string const SBIG_XBINNING                       ("XBINNING");
+  std::string const SBIG_YBINNING                       ("YBINNING");
 
     // Exposure information
 
-  std::string const NOAO_EXPTIME                  ("EXPTIME");
-  std::string const HEASARC_EXPOSURE              ("EXPOSURE");
-  std::string const SBIG_CCDTEMP                  ("CCD-TEMP");
-  std::string const HEASARC_FILTER                ("FILTER");
-  std::string const SBIG_EGAIN                    ("EGAIN");
+  std::string const NOAO_EXPTIME                        ("EXPTIME");
+  std::string const HEASARC_EXPOSURE                    ("EXPOSURE");
+  std::string const SBIG_CCDTEMP                        ("CCD-TEMP");
+  std::string const HEASARC_FILTER                      ("FILTER");
+  std::string const SBIG_EGAIN                          ("EGAIN");
 
     // Telescope information
 
-  std::string const SBIG_FOCALLEN                 ("FOCALLEN");
-  std::string const SBIG_APTDIA                   ("APTDIA");
-  std::string const SBIG_APTAREA                  ("APTAREA");
-  std::string const ITELESCOPE_TELESCOPE          ("iTELESCOPE");
+  std::string const SBIG_FOCALLEN                       ("FOCALLEN");
+  std::string const SBIG_APTDIA                         ("APTDIA");
+  std::string const SBIG_APTAREA                        ("APTAREA");
+  std::string const ITELESCOPE_TELESCOPE                ("iTELESCOPE");
 
     // General information
 
-  std::string const HEASARC_CREATOR               ("CREATOR");
-  std::string const astroManager_UUID                   ("UUID");
+  std::string const HEASARC_CREATOR                     ("CREATOR");
+  std::string const ASTROMANAGER_UUID                   ("UUID");
 
     // Display information
 
-  std::string const SBIG_CWHITE                   ("CWHITE");
-  std::string const SBIG_CBLACK                   ("CBLACK");
+  std::string const SBIG_CWHITE                         ("CWHITE");
+  std::string const SBIG_CBLACK                         ("CBLACK");
 
     // Other known and used keywords
 
-  std::string const astroManager_ZMAG                   ("ZMAG");
-  std::string const SBIG_PEDESTAL                 ("PEDESTAL");
+  std::string const ASTROMANAGER_ZMAG                   ("ZMAG");
+  std::string const SBIG_PEDESTAL                       ("PEDESTAL");
 
     // libAstrometry information
 
-  std::string const LA_PPMXL                      ("PPMXL");
-  std::string const LA_ANFILE                     ("AN-FILE");
-  std::string const LA_HEALPIX                    ("HEALPIX");
-  std::string const LA_NSTART                     ("NSTARS");
-  std::string const LA_HPNSIDE                    ("HPNSIDE");
-  std::string const LA_NSIDE                      ("NSIDE");
-  std::string const LA_ALLSKY                     ("ALLSKY");
+  std::string const LA_PPMXL                            ("PPMXL");
+  std::string const LA_ANFILE                           ("AN-FILE");
+  std::string const LA_HEALPIX                          ("HEALPIX");
+  std::string const LA_NSTART                           ("NSTARS");
+  std::string const LA_HPNSIDE                          ("HPNSIDE");
+  std::string const LA_NSIDE                            ("NSIDE");
+  std::string const LA_ALLSKY                           ("ALLSKY");
 
     // Photometry
 
@@ -247,110 +247,110 @@ namespace ACL
 
     // Maxim keywords
 
-  std::string const MAXIM_FLIPSTAT                ("FLIPSTAT");
-  std::string const MAXIM_SET_TEMP                ("SET-TEMP");
-  std::string const MAXIM_CCD_TEMP                ("CCD-TEMP");
-  std::string const MAXIM_CALSTAT                 ("CALSTAT");
-  std::string const MAXIM_RA                      ("RA");
-  std::string const MAXIM_OBJECTRA                ("OBJCTRA");
-  std::string const MAXIM_DEC                     ("DEC");
-  std::string const MAXIM_OBJECTDEC               ("OBJDCDEC");
-  std::string const MAXIM_SWMODIFY                ("SWMODIFY");
-  std::string const MAXIM_SWCREATE                ("SWCREATE");
-  std::string const MAXIM_SWOWNER                 ("SWOWNER");
-  std::string const MAXIM_XORGSUBF                ("XORGSUBF");
-  std::string const MAXIM_YORGSUBF                ("YORGSUBF");
-  std::string const MAXIM_POSITIONANGLE           ("PA");
-  std::string const MAXIM_PIERSIDE                ("PIERSIDE");
-  std::string const MAXIM_CLRBAND                 ("CLRBAND");
+  std::string const MAXIM_FLIPSTAT                      ("FLIPSTAT");
+  std::string const MAXIM_SET_TEMP                      ("SET-TEMP");
+  std::string const MAXIM_CCD_TEMP                      ("CCD-TEMP");
+  std::string const MAXIM_CALSTAT                       ("CALSTAT");
+  std::string const MAXIM_RA                            ("RA");
+  std::string const MAXIM_OBJECTRA                      ("OBJCTRA");
+  std::string const MAXIM_DEC                           ("DEC");
+  std::string const MAXIM_OBJECTDEC                     ("OBJDCDEC");
+  std::string const MAXIM_SWMODIFY                      ("SWMODIFY");
+  std::string const MAXIM_SWCREATE                      ("SWCREATE");
+  std::string const MAXIM_SWOWNER                       ("SWOWNER");
+  std::string const MAXIM_XORGSUBF                      ("XORGSUBF");
+  std::string const MAXIM_YORGSUBF                      ("YORGSUBF");
+  std::string const MAXIM_POSITIONANGLE                 ("PA");
+  std::string const MAXIM_PIERSIDE                      ("PIERSIDE");
+  std::string const MAXIM_CLRBAND                       ("CLRBAND");
 
     // SBIG Keywords
 
-  std::string const SBIG_SBSTDVER                 ("SBSTDVER");
-  std::string const SBIG_IMAGETYP                 ("IMAGETYP");
-  std::string const SBIG_AIRMASS                  ("AIRMASS");
+  std::string const SBIG_SBSTDVER                       ("SBSTDVER");
+  std::string const SBIG_IMAGETYP                       ("IMAGETYP");
+  std::string const SBIG_AIRMASS                        ("AIRMASS");
 
   //*******************************************************************************************************************************
 
     // Pre-determined comments
 
-  std::string const FITS_COMMENT_SIMPLE_TRUE      ("File does conform to FITS standard");
-  std::string const FITS_COMMENT_SIMPLE_FALSE     ("File does not conform to FITS standard");
+  std::string const FITS_COMMENT_SIMPLE_TRUE            ("File does conform to FITS standard");
+  std::string const FITS_COMMENT_SIMPLE_FALSE           ("File does not conform to FITS standard");
 
-  std::string const FITS_COMMENT_XTENSION         ("The type of extension");
+  std::string const FITS_COMMENT_XTENSION               ("The type of extension");
 
-  std::string const FITS_COMMENT_DATEOBS          ("Date/Time of the observation");
-  std::string const FITS_COMMENT_DATE             ("The date on which the HDU was created.");
+  std::string const FITS_COMMENT_DATEOBS                ("Date/Time of the observation");
+  std::string const FITS_COMMENT_DATE                   ("The date on which the HDU was created.");
 
-  std::string const FITS_COMMENT_BITPIX           ("8,16,32,64 - Integer; -32,-64 - Floating");
-  std::string const FITS_COMMENT_BITPIX_8         ("Character or unsigned binary integer");
-  std::string const FITS_COMMENT_BITPIX_16        ("16-bit two's complement binary integer");
-  std::string const FITS_COMMENT_BITPIX_32        ("32-bit two's complement binary integer");
-  std::string const FITS_COMMENT_BITPIX_64        ("64-bit two's complement binary integer");
-  std::string const FITS_COMMENT_BITPIX_N32       ("IEEE single precision floating-point");
-  std::string const FITS_COMMENT_BITPIX_N64       ("IEEE double precision floating-point");
+  std::string const FITS_COMMENT_BITPIX                 ("8,16,32,64 - Integer; -32,-64 - Floating");
+  std::string const FITS_COMMENT_BITPIX_8               ("Character or unsigned binary integer");
+  std::string const FITS_COMMENT_BITPIX_16              ("16-bit two's complement binary integer");
+  std::string const FITS_COMMENT_BITPIX_32              ("32-bit two's complement binary integer");
+  std::string const FITS_COMMENT_BITPIX_64              ("64-bit two's complement binary integer");
+  std::string const FITS_COMMENT_BITPIX_N32             ("IEEE single precision floating-point");
+  std::string const FITS_COMMENT_BITPIX_N64             ("IEEE double precision floating-point");
 
-  std::string const FITS_COMMENT_NAXIS            ("NUMBER OF AXES IN HDU");
-  std::string const FITS_COMMENT_NAXISN           ("NAXISn SIZE of AXIS n");
-  std::string const FITS_COMMENT_PCOUNT           ("");
-  std::string const FITS_COMMENT_GCOUNT           ("");
+  std::string const FITS_COMMENT_NAXIS                  ("NUMBER OF AXES IN HDU");
+  std::string const FITS_COMMENT_NAXISN                 ("NAXISn SIZE of AXIS n");
+  std::string const FITS_COMMENT_PCOUNT                 ("");
+  std::string const FITS_COMMENT_GCOUNT                 ("");
 
-  std::string const FITS_COMMENT_BSCALE           ("");
-  std::string const FITS_COMMENT_BZERO            ("");
+  std::string const FITS_COMMENT_BSCALE                 ("");
+  std::string const FITS_COMMENT_BZERO                  ("");
 
-  std::string const FITS_COMMENT_INSTRUMENT       ("Camera model acquiring the image.");
+  std::string const FITS_COMMENT_INSTRUMENT             ("Camera model acquiring the image.");
 
-  std::string const FITS_COMMENT_HEALPIX          ("The healpix number of this catalog.");
+  std::string const FITS_COMMENT_HEALPIX                ("The healpix number of this catalog.");
 
-  std::string const SBIG_COMMENT_CCDTEMP          ("CCD Temperature.");
-  std::string const SBIG_COMMENT_EXPTIME          ("Image exposure duration");
-  std::string const SBIG_COMMENT_XBINNING         ("Binning factor in width");
-  std::string const SBIG_COMMENT_YBINNING         ("Binning factor in height");
-  std::string const SBIG_COMMENT_EGAIN            ("Electronic gain in e-/ADU");
-  std::string const SBIG_COMMENT_FOCALLEN         ("Focal Length of the Telescope used in mm");
-  std::string const SBIG_COMMENT_APTDIA           ("Aperture Diameter of the Telescope used in mm");
-  std::string const SBIG_COMMENT_APTAREA          ("Aperture Area of the telescope used in mm^2");
-  std::string const SBIG_COMMENT_PEDESTAL         ("Correction to add for a zero-based ADU");
-  std::string const SBIG_COMMENT_CBLACK           ("Black point for the image.");
-  std::string const SBIG_COMMENT_CWHITE           ("White point for the image.");
+  std::string const SBIG_COMMENT_CCDTEMP                ("CCD Temperature.");
+  std::string const SBIG_COMMENT_EXPTIME                ("Image exposure duration");
+  std::string const SBIG_COMMENT_XBINNING               ("Binning factor in width");
+  std::string const SBIG_COMMENT_YBINNING               ("Binning factor in height");
+  std::string const SBIG_COMMENT_EGAIN                  ("Electronic gain in e-/ADU");
+  std::string const SBIG_COMMENT_FOCALLEN               ("Focal Length of the Telescope used in mm");
+  std::string const SBIG_COMMENT_APTDIA                 ("Aperture Diameter of the Telescope used in mm");
+  std::string const SBIG_COMMENT_APTAREA                ("Aperture Area of the telescope used in mm^2");
+  std::string const SBIG_COMMENT_PEDESTAL               ("Correction to add for a zero-based ADU");
+  std::string const SBIG_COMMENT_CBLACK                 ("Black point for the image.");
+  std::string const SBIG_COMMENT_CWHITE                 ("White point for the image.");
 
-  std::string const HEASARC_COMMENT_FILTER        ("Name of the filter used during the observation");
-  std::string const HEASARC_COMMENT_CREATOR       ("the name of the software task that created the file");
-  std::string const HEASARC_COMMENT_EXPOSURE      ("[s] Exposure time in seconds");
+  std::string const HEASARC_COMMENT_FILTER              ("Name of the filter used during the observation");
+  std::string const HEASARC_COMMENT_CREATOR             ("the name of the software task that created the file");
+  std::string const HEASARC_COMMENT_EXPOSURE            ("[s] Exposure time in seconds");
 
-  std::string const NOAO_COMMENT_EXPTIME          ("[s] Exposure time in seconds");
+  std::string const NOAO_COMMENT_EXPTIME                ("[s] Exposure time in seconds");
 
-  std::string const astroManager_COMMENT_FWHM           ("[pixels] Mean Full-Width-Half-Max of image star");
-  std::string const astroManager_COMMENT_PLATE_FL       ("Astrometry: Plate Constant - Focal Length");
-  std::string const astroManager_COMMENT_PLATE_A        ("Astrometry: Plate Constant - a");
-  std::string const astroManager_COMMENT_PLATE_B        ("Astrometry: Plate Constant - b");
-  std::string const astroManager_COMMENT_PLATE_C        ("Astrometry: Plate Constant - c");
-  std::string const astroManager_COMMENT_PLATE_D        ("Astrometry: Plate Constant - d");
-  std::string const astroManager_COMMENT_PLATE_E        ("Astrometry: Plate Constant - e");
-  std::string const astroManager_COMMENT_PLATE_F        ("Astrometry: Plate Constant - f");
+  std::string const ASTROMANAGER_COMMENT_FWHM           ("[pixels] Mean Full-Width-Half-Max of image star");
+  std::string const ASTROMANAGER_COMMENT_PLATE_FL       ("Astrometry: Plate Constant - Focal Length");
+  std::string const ASTROMANAGER_COMMENT_PLATE_A        ("Astrometry: Plate Constant - a");
+  std::string const ASTROMANAGER_COMMENT_PLATE_B        ("Astrometry: Plate Constant - b");
+  std::string const ASTROMANAGER_COMMENT_PLATE_C        ("Astrometry: Plate Constant - c");
+  std::string const ASTROMANAGER_COMMENT_PLATE_D        ("Astrometry: Plate Constant - d");
+  std::string const ASTROMANAGER_COMMENT_PLATE_E        ("Astrometry: Plate Constant - e");
+  std::string const ASTROMANAGER_COMMENT_PLATE_F        ("Astrometry: Plate Constant - f");
 
-  std::string const astroManager_COMMENT_LATITUDE       ("Geographic latitude where the observation was made");
-  std::string const astroManager_COMMENT_LONGITUDE      ("Geographic longitude where the observation was made");
-  std::string const astroManager_COMMENT_ALTITUDE       ("Geographic altitude where the observation was taken");
-  std::string const astroManager_COMMENT_UUID           ("UUID file identifier");
+  std::string const ASTROMANAGER_COMMENT_LATITUDE       ("Geographic latitude where the observation was made");
+  std::string const ASTROMANAGER_COMMENT_LONGITUDE      ("Geographic longitude where the observation was made");
+  std::string const ASTROMANAGER_COMMENT_ALTITUDE       ("Geographic altitude where the observation was taken");
+  std::string const ASTROMANAGER_COMMENT_UUID           ("UUID file identifier");
 
-  std::string const astroManager_COMMENT_AMBTEM         ("Ambient temperature deg C");
-  std::string const astroManager_COMMENT_AMBPRE         ("Ambient pressure hPa");
-  std::string const astroManager_COMMENT_AMBHUM         ("Ambient RH %");
+  std::string const ASTROMANAGER_COMMENT_AMBTEM         ("Ambient temperature deg C");
+  std::string const ASTROMANAGER_COMMENT_AMBPRE         ("Ambient pressure hPa");
+  std::string const ASTROMANAGER_COMMENT_AMBHUM         ("Ambient RH %");
 
     // ACL comments
 
-  std::string const LA_PPMXL_COMMENT              ("This is a PPMXL catalog.");
-  std::string const LA_ANFILE_COMMENT             ("libAstrometry file type");
-  std::string const LA_ALLSKY_COMMENT             ("All-sky catalog.");
-  std::string const HEALPIX_NSIDE_COMMENT         ("The healpix resolution.");
-  std::string const LA_HEALPIX_COMMENT            ("Healpix covered by this catalog, with Nside=HPNSIDE");
-  std::string const LA_NSTARS_COMMENT             ("Number of stars.");
-  std::string const LA_HPNSIDE_COMMENT            ("Nside of HEALPIX.");
+  std::string const LA_PPMXL_COMMENT                    ("This is a PPMXL catalog.");
+  std::string const LA_ANFILE_COMMENT                   ("libAstrometry file type");
+  std::string const LA_ALLSKY_COMMENT                   ("All-sky catalog.");
+  std::string const HEALPIX_NSIDE_COMMENT               ("The healpix resolution.");
+  std::string const LA_HEALPIX_COMMENT                  ("Healpix covered by this catalog, with Nside=HPNSIDE");
+  std::string const LA_NSTARS_COMMENT                   ("Number of stars.");
+  std::string const LA_HPNSIDE_COMMENT                  ("Nside of HEALPIX.");
 
     // IMAGETYP Comments
 
-  std::string const IMAGETYP_SYNTHETIC_COMMENT    ("Type of image");
+  std::string const IMAGETYP_SYNTHETIC_COMMENT          ("Type of image");
 
   //*******************************************************************************************************************************
 
@@ -362,16 +362,16 @@ namespace ACL
 
   // Time strings
 
-  std::string const FITS_TIMESYS_UTC              ("UTC");
-  std::string const FITS_TIMESYS_UT               ("UT");
-  std::string const FITS_TIMESYS_TAI              ("TAI");
-  std::string const FITS_TIMESYS_AT               ("AT");
-  std::string const FITS_TIMESYS_ET               ("ET");
-  std::string const FITS_TIMESYS_TT               ("TT");
-  std::string const FITS_TIMESYS_TDT              ("TDT");
-  std::string const FITS_TIMESYS_TDB              ("TDB");
-  std::string const FITS_TIMESYS_TCG              ("TCG");
-  std::string const FITS_TIMESYS_TCB              ("TCB");
+  std::string const FITS_TIMESYS_UTC                    ("UTC");
+  std::string const FITS_TIMESYS_UT                     ("UT");
+  std::string const FITS_TIMESYS_TAI                    ("TAI");
+  std::string const FITS_TIMESYS_AT                     ("AT");
+  std::string const FITS_TIMESYS_ET                     ("ET");
+  std::string const FITS_TIMESYS_TT                     ("TT");
+  std::string const FITS_TIMESYS_TDT                    ("TDT");
+  std::string const FITS_TIMESYS_TDB                    ("TDB");
+  std::string const FITS_TIMESYS_TCG                    ("TCG");
+  std::string const FITS_TIMESYS_TCB                    ("TCB");
 
   // XTENSION strings
 
@@ -392,8 +392,8 @@ namespace ACL
 
     // Reserved Celestial Coordinate Algorithm Codes
 
-  std::string const FITS_WCS_AZP    ("AZP");
-  std::string const FITS_WCS_SZP    ("SZP");
+  std::string const FITS_WCS_AZP                        ("AZP");
+  std::string const FITS_WCS_SZP                        ("SZP");
   std::string const FITS_WCS_TAN    ("TAN");
   std::string const FITS_WCS_STG    ("STG");
   std::string const FITS_WCS_SIN    ("SIN");
