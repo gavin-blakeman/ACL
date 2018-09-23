@@ -88,38 +88,38 @@ namespace ACL
     struct WorldCoor *WCSInformation;       ///< WCS information structure
 
   protected:
-    virtual void keywordPixelSize(PFITSKeyword);
+    virtual void keywordPixelSize(std::unique_ptr<CFITSKeyword> &);
 
       // Special keyword function
 
-    virtual bool specialKeyword(PFITSKeyword);
+    virtual bool specialKeyword(std::unique_ptr<CFITSKeyword> &) override;
     virtual void WCSProcess();
 
   public:
-    static PHDB createHDB(CAstroFile *);
+    static std::unique_ptr<CHDB> createHDB(CAstroFile *);
 
     CImageHDB(CAstroFile *, std::string const &);
     explicit CImageHDB(CImageHDB const &);
     virtual ~CImageHDB();
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
       // FITS functions
 
-    virtual void readFromFITS(fitsfile *);
-    virtual void writeToFITS(fitsfile *);
+    virtual void readFromFITS(fitsfile *) override;
+    virtual void writeToFITS(fitsfile *) override;
 
-    virtual int BITPIX() const;
-    virtual void BITPIX(int);
+    virtual int BITPIX() const override;
+    virtual void BITPIX(int) override;
 
     using CHDB::NAXIS;      // Functions are hidden.
-    virtual NAXIS_t NAXIS() const;
+    virtual NAXIS_t NAXIS() const override;
 
     using CHDB::NAXISn;   // Functions are hidden.
-    virtual AXIS_t NAXISn(NAXIS_t) const;
+    virtual AXIS_t NAXISn(NAXIS_t) const override;
 
     virtual FP_t BSCALE() const;
-    virtual void BSCALE(FP_t);
+    virtual void BSCALE(FP_t) ;
 
     virtual FP_t BZERO() const;
     virtual void BZERO(FP_t);
@@ -140,12 +140,12 @@ namespace ACL
 
       // Image information functions
 
-    virtual AXIS_t width() const;
-    virtual AXIS_t height() const;
-    virtual bool isMonoImage() const;
-    virtual bool isPolyImage() const;
+    virtual AXIS_t width() const override;
+    virtual AXIS_t height() const override;
+    virtual bool isMonoImage() const override;
+    virtual bool isPolyImage() const override;
     virtual void imageSet(std::unique_ptr<CAstroImage> &) override;
-    virtual CAstroImage *imageGet();
+    virtual CAstroImage *imageGet() override;
     virtual MCL::TPoint2D<FP_t> &getPixelSize() { return pixelSize; }
     virtual FP_t imageExposure() const;
 
@@ -197,8 +197,6 @@ namespace ACL
     virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const;
     virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const;
   };
-
-  typedef std::shared_ptr<CImageHDB> CImageHDB_Ptr;
 
 }   // namespace ACL
 

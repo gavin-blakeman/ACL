@@ -47,6 +47,7 @@
 
   // ACL library header files.
 
+#include "error.h"
 #include "TargetAstronomy.h"
 
   // Miscellaneous library header files.
@@ -89,6 +90,7 @@ namespace ACL
 
       // Position functions.
 
+    virtual CAstronomicalCoordinates positionCatalog() const { ACL_CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
 

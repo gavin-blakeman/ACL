@@ -120,12 +120,11 @@ namespace ACL
     bool bnaxis = false;
     bool bnaxisn = false;
     bool bExptimeValid = false;
-    PAstroFile astroFrame;
+    std::unique_ptr<CAstroFile> astroFrame(new CAstroFile());
     CFITSKeyword *keywordData = nullptr;
     DStringVector::const_iterator iter;
 
     iter = frames.begin();
-    astroFrame.reset(new CAstroFile());
     astroFrame->loadFromFile(*iter);
 
     naxis = astroFrame->NAXIS(0);
@@ -247,12 +246,11 @@ namespace ACL
 
   void CMasterDarkFrame::meanCombine()
   {
-    PAstroFile darkFrame;
+    std::unique_ptr<CAstroFile> darkFrame(new CAstroFile());
     boost::filesystem::path filePath;
 
     darkFrameIterator = darkFrames.begin();
 
-    darkFrame.reset(new CAstroFile());
     darkFrame->loadFromFile(*darkFrameIterator);    // Load the file
     std::unique_ptr<CAstroImage> masterDarkImage(std::move(darkFrame->getAstroImage(0)->createCopy()));
 
@@ -409,12 +407,10 @@ namespace ACL
   void CMasterFlatFrame::meanCombine()
   {
     CAstroImage *masterDarkImage = nullptr;
-    PAstroFile flatFrame;
+    std::unique_ptr<CAstroFile> flatFrame(new CAstroFile());
     boost::filesystem::path filePath;
 
     flatFrameIterator = flatFrames.begin();
-
-    flatFrame.reset(new CAstroFile());
     flatFrame->loadFromFile(*flatFrameIterator);    // Load the file
 
     std::unique_ptr<CAstroImage> masterFlatImage(std::move(flatFrame->getAstroImage(0)->createCopy()));
@@ -529,12 +525,11 @@ namespace ACL
 
   void CMasterBiasFrame::meanCombine()
   {
-    PAstroFile biasFrame;
+    std::unique_ptr<CAstroFile> biasFrame(new CAstroFile());
     boost::filesystem::path filePath;
 
     biasFrameIterator = biasFrames.begin();
 
-    biasFrame.reset(new CAstroFile());
     biasFrame->loadFromFile(*biasFrameIterator);    // Load the file
 
     std::unique_ptr<CAstroImage> biasImage(std::move(biasFrame->getAstroImage(0)->createCopy()));

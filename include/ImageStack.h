@@ -125,7 +125,7 @@ namespace ACL
     CImageStack();
     virtual ~CImageStack();
 
-    virtual void addFile(PAstroFile, MCL::TPoint2D<FP_t> &, MCL::TPoint2D<FP_t> &);
+    virtual void addFile(std::shared_ptr<CAstroFile>, MCL::TPoint2D<FP_t> &, MCL::TPoint2D<FP_t> &);
     virtual void clearFiles();
 
     /*inline void setDarkFrame(CImagePlane *newDark) { darkFrame = newDark;};

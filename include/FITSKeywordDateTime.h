@@ -63,7 +63,7 @@ namespace ACL
 
     virtual operator std::string() const;
 
-    virtual CFITSKeyword *createCopy() const;
+    virtual std::unique_ptr<CFITSKeyword> createCopy() const override;
 
     virtual KWType type() const;
 

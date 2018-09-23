@@ -60,19 +60,19 @@
 
 #include "../include/HDBAstrometry.h"
 
+  // ACL library header files.
+
 #include "../include/AstroFile.h"
 #include "../include/AstroImageFunctions.hpp"
 
-  // Boost library
-
-#include "boost/assign.hpp"
+  // Miscellaneous library header files
 
 namespace ACL
 {
 
   //std::vector<CCfits::ValueType> colType = boost::assign::list_of(CCfits::Tstring)(CCfits::Tdouble)(CCfits::Tdouble)(CCfits::Tdouble)(CCfits::Tdouble);
-  std::vector<std::string> colNames = boost::assign::list_of("OBJECT NAME")("CCD (X)")("CCD (Y)")("RA")("DEC");
-  std::vector<int> colWidth = boost::assign::list_of(40)(1)(1)(1)(1);
+  std::vector<std::string> colNames = { "OBJECT NAME", "CCD (X)", "CCD (Y)", "RA", "DEC" };
+  std::vector<int> colWidth = { 40, 1, 1, 1, 1 };
 
   char *tunit[] = {(""), ("pixels"), ("pixels"), ("dd.ddd"), ("dd.ddd")};
 
@@ -83,22 +83,24 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Default constructor.
-  /// @param[in] aParent - The new parent object.
+  /// @param[in] aParent: The new parent object.
   /// @throws None.
   /// @details Initialise all variables to reasonable default values,
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2011-11-25/GGB - Function created.
 
-  CHDBAstrometry::CHDBAstrometry(CAstroFile *aParent) : CHDBBinTable(aParent, astroManager_HDB_ASTROMETRY),
+  CHDBAstrometry::CHDBAstrometry(CAstroFile *aParent) : CHDBBinaryTable(aParent, ASTROMANAGER_HDB_ASTROMETRY),
     astrometryObservationsIterator(astrometryObservations.begin())
   {
   }
 
   /// @brief Copy constructor
-  /// @param[in] toCopy - The instance to copy to this.
+  /// @param[in] toCopy: The instance to copy to this.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  CHDBAstrometry::CHDBAstrometry(CHDBAstrometry const &toCopy) : CHDBBinTable(toCopy)
+  CHDBAstrometry::CHDBAstrometry(CHDBAstrometry const &toCopy) : CHDBBinaryTable(toCopy)
   {
     DAstrometryObservationStore::const_iterator iterator;
 
@@ -120,8 +122,8 @@ namespace ACL
   }
 
   /// @brief Passthrough function to calculate the plate constants.
-  //
-  // 2012-01-13/GGB - Function created.
+  ///
+  /// @version 2012-01-13/GGB - Function created.
 
   void CHDBAstrometry::astrometryCalculatePlateConstants()
   {
@@ -250,13 +252,12 @@ namespace ACL
   /// @brief Create a copy of *this.
   /// @returns A copy of this.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  PHDB CHDBAstrometry::createCopy() const
+  std::unique_ptr<CHDB> CHDBAstrometry::createCopy() const
   {
-    PHDB returnValue(new CHDBAstrometry(*this));
-
-    return returnValue;
+    return std::make_unique<CHDBAstrometry>(*this);
   }
 
   /// @brief Mirror image around y-axis, the list of targets and references must also be flipped.
@@ -286,6 +287,7 @@ namespace ACL
   /// @brief Loads the HDB from the FITS HDB. All the keywords and data are loaded.
   /// @param[in] file - Pointer to the FITS file to load from.
   /// @throws 0x1905 - HDB: Cannot dynamic_cast to AsciiTable.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-08-11/GGB - Converted to use cfitsio.
   /// @version 2013-08-29/GGB - Added code for when there are no objects in the HDU. (Bug #1213104)
   /// @version 2013-03-13/GGB - Changed parameter to pointer.
@@ -304,7 +306,7 @@ namespace ACL
     DAstrometryObservationStore::size_type index;
     SPAstrometryObservation newRecord;
 
-    CHDBBinTable::readFromFITS(file);   // Call the parent to load all the common stuff as well as the keywords.
+    CHDBBinaryTable::readFromFITS(file);   // Call the parent to load all the common stuff as well as the keywords.
 
     if ( NAXISn(2) > 0 )
     {
@@ -339,11 +341,11 @@ namespace ACL
     };
   }
 
-  // Sets the relevant plate constants.
+  /// @brief Sets the relevant plate constants.
   //
-  // 2011-12-20/GGB - Function created.
+  /// @version 2011-12-20/GGB - Function created.
 
-  void CHDBAstrometry::loadKeywordPlateConstant(PFITSKeyword kwd)
+  void CHDBAstrometry::loadKeywordPlateConstant(std::unique_ptr<CFITSKeyword> &kwd)
   {
     /*double value = (double) (*kwd);
 
@@ -388,7 +390,7 @@ namespace ACL
   }
 
   /// @brief Function for rotating an image.
-  /// @param[in] theta - Rotation angle (radians)
+  /// @param[in] theta: Rotation angle (radians)
   /// @throws None.
   /// @details Ensures that the ccd coordinates are rotated in the astrometry object.
   /// @version 2013-03-17/GGB - Updated to storage in this class.
@@ -402,32 +404,40 @@ namespace ACL
       (*iterator)->CCDCoordinates(ACL::imageRotate(MCL::TPoint2D<double>(0, 0), (*iterator)->CCDCoordinates(), theta));
   }
 
-  /// Updates the coordinates when the image is floated.
-  //
-  // 2013-03-17/GGB - Function created.
+  /// @brief Updates the coordinates when the image is floated.
+  /// @param[in] oldDim:
+  /// @param[in] newDim:
+  /// @version 2013-03-17/GGB - Function created.
 
-  void CHDBAstrometry::imageFloat(boost::tuple<AXIS_t, AXIS_t> const &oldDim, boost::tuple<AXIS_t, AXIS_t> const &newDim)
+  void CHDBAstrometry::imageFloat(std::tuple<AXIS_t, AXIS_t> const &oldDim, std::tuple<AXIS_t, AXIS_t> const &newDim)
   {
     DAstrometryObservationStore::iterator iterator;
 
     for (iterator = astrometryObservations.begin(); iterator != astrometryObservations.end(); iterator++)
+    {
       (*iterator)->CCDCoordinates(ACL::imageFloat((*iterator)->CCDCoordinates(), oldDim, newDim));
+    };
   }
 
-  /// Updates all the coordinates to reflect that the image has been resampled.
-  //
-  // 2013-03-17/GGB - Function created.
+  /// @brief Updates all the coordinates to reflect that the image has been resampled.
+  /// @param[in] rx: New x-size
+  /// @param[in] ry: New y-size
+  /// @version 2018-09-22/GGB - Update to use std::tuple.
+  /// @version 2013-03-17/GGB - Function created.
 
   void CHDBAstrometry::imageResample(AXIS_t rx, AXIS_t ry)
   {
     DAstrometryObservationStore::iterator iterator;
 
     for (iterator = astrometryObservations.begin(); iterator != astrometryObservations.end(); iterator++)
-      (*iterator)->CCDCoordinates(ACL::imageResample((*iterator)->CCDCoordinates(), rx, ry));
+    {
+      (*iterator)->CCDCoordinates(ACL::imageResample((*iterator)->CCDCoordinates(),
+                                                     std::make_tuple(naxisn_[0], naxisn_[1]),std::make_tuple(rx, ry)));
+    };
   }
 
   /// @brief Updates all the CCD coordinates with the recalculated coordinates based on the binning of the pixels.
-  /// @param[in] p - The binning factor.
+  /// @param[in] p: The binning factor.
   /// @throws None.
   /// @version 2015-09-16/GGB - Updated to C++14
   /// @version 2013-03-17/GGB - Function created.
@@ -439,6 +449,11 @@ namespace ACL
   }
 
   /// @brief Updates all the coordinates when an image is transformed (TRS)
+  /// @param[in] center:
+  /// @param[in] ct:
+  /// @param[in] angle: The rotation angle.
+  /// @param[in] scale: The scaling factor.
+  /// @param[in] pixelSize: The size of the pixels.
   /// @throws None.
   /// @version 2015-09-16/GGB - Use C++14 function std::for_each
   /// @version 2013-03-17/GGB - Function created.
@@ -447,14 +462,15 @@ namespace ACL
                                       FP_t scale, MCL::TPoint2D<FP_t> const &pixelSize, std::unique_ptr<bool> &)
   {
     std::for_each(astrometryObservations.begin(), astrometryObservations.end(),
-                  [&] (SPAstrometryObservation ao) { ao->CCDCoordinates(ACL::imageTransformForward(ao->CCDCoordinates(),
-                                                                                                  center, ct, angle, scale,
-                                                                                                  pixelSize));});
+                  [&] (SPAstrometryObservation ao)
+                    { ao->CCDCoordinates(ACL::imageTransformForward(ao->CCDCoordinates(),
+                                                                    center, ct, angle, scale,
+                                                                    pixelSize));});
   }
 
   /// @brief Performs a crop function on the astrometry data
-  /// @param[in] origen - The origen of the crop (bottom left)
-  /// @param[in] dims - The dimensions of the final image.
+  /// @param[in] origin: The origen of the crop (bottom left)
+  /// @param[in] dims: The dimensions of the final image.
   /// @throws None.
   /// @version 2015-09-19/GGB - Function created.
 
@@ -464,7 +480,7 @@ namespace ACL
 
     for (iter =  astrometryObservations.begin(); iter != astrometryObservations.end(); iter++)
     {
-      boost::optional<MCL::TPoint2D<FP_t> > temp = ACL::imageCrop( (*iter)->CCDCoordinates(), origin, dims);
+      std::optional<MCL::TPoint2D<FP_t>> temp = ACL::imageCrop( (*iter)->CCDCoordinates(), origin, dims);
       if (temp)
       {
         (*iter)->CCDCoordinates() = *temp;
@@ -485,7 +501,7 @@ namespace ACL
   /// @details If the keyword is a special keyword, then the appropriate handler is called to manage the loading of the keyword.
   /// @version 2011-12-20/GGB - Function created.
 
-  bool CHDBAstrometry::specialKeyword(PFITSKeyword kwd)
+  bool CHDBAstrometry::specialKeyword(std::unique_ptr<CFITSKeyword> &kwd)
   {
     if ( ((*kwd) == astroManager_COMMENT_PLATE_FL) ||
          ((*kwd) == astroManager_COMMENT_PLATE_A) ||
@@ -500,17 +516,17 @@ namespace ACL
     }
     else
     {
-      return CHDBBinTable::specialKeyword(kwd);
+      return CHDBBinaryTable::specialKeyword(kwd);
     };
   }
 
   /// @brief Function to write data to the FITS file.
-  /// @param[in] file - The FITS file to write to.
-  /// The data relevant to the astrometry HDB must be written. The CHDB::writeToFITS
-  /// function must also be called to ensure that the keywords are correctly written to the FITS file.
-  //
-  // 2013-03-15/GGB - Updated to manage information directly.
-  // 2012-01-16/GGB - Function created.
+  /// @param[in] file: The FITS file to write to.
+  /// @details The data relevant to the astrometry HDB must be written. The CHDB::writeToFITS function must also be called to
+  ///          ensure that the keywords are correctly written to the FITS file.
+  /// @throws
+  /// @version 2013-03-15/GGB - Updated to manage information directly.
+  /// @version 2012-01-16/GGB - Function created.
 
   void CHDBAstrometry::writeToFITS(fitsfile *file)
   {

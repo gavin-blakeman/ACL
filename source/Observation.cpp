@@ -125,9 +125,10 @@ namespace ACL
     return CCDCoordinates_;
   }
 
-  /// Sets the value of the CCDCoordinates.
-  //
-  // 2013-04-07/GGB - Function created.
+  /// @brief Sets the value of the CCDCoordinates.
+  /// @param[in] newCoordinates: The new CCD coordinates for the observation.
+  /// @throws None.
+  /// @version 2013-04-07/GGB - Function created.
 
   void CObservation::CCDCoordinates(MCL::TPoint2D<FP_t> const &newCoordinates)
   {

@@ -71,7 +71,7 @@
 #include "../include/FITSKeywordUInt16.h"
 #include "../include/FITSKeywordUInt32.h"
 
-  // Boost Library
+  // Miscellaneous library header files.
 
 #include <boost/algorithm/string.hpp>
 #include "boost/lexical_cast.hpp"
@@ -106,7 +106,7 @@ namespace ACL
   }
 
   /// @brief Copy constructor
-  /// @param[in] toCopy - HDB to be copied.
+  /// @param[in] toCopy: HDB to be copied.
   /// @throws None.
   /// @version 2013-06-07/GGB - Function created.
 
@@ -120,15 +120,13 @@ namespace ACL
 
     for (keywordIterator = toCopy.keywords_.begin(); keywordIterator != toCopy.keywords_.end(); ++keywordIterator)
     {
-      PFITSKeyword newKeyword((*keywordIterator)->createCopy());
-
-      keywords_.push_back(newKeyword);
+      keywords_.emplace_back((*keywordIterator)->createCopy());
     };
   }
 
   /// @brief Equality operator. Check for the name of the HDB being the same as the passed string. A case insensitive comparison is
-  /// done.
-  /// @param[in] name - name of HDB to check.
+  ///        done.
+  /// @param[in] name: name of HDB to check.
   /// @throws None.
   /// @version 2011-12-11/GGB - Function created.
 
@@ -141,7 +139,7 @@ namespace ACL
   }
 
   /// @brief Adds a comment to the list of comments
-  /// @param[in] newComment - The copy to add to the list of comments.
+  /// @param[in] newComment: The copy to add to the list of comments.
   /// @throws GCL::CRuntimeAssert
   /// @details The comments are not sorted and the new comment is simply added to the end of the comment list.
   /// @version 2015-08-10/GGB - Updated to use std::vector.
@@ -172,17 +170,18 @@ namespace ACL
   }
 
   /// @brief Copies the keywords from the reference HDB.
-  /// @param[in] toCopy - Pointer to the HBD to copy.
+  /// @param[in] toCopy: Pointer to the HBD to copy.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2014-05-31/GGB - Function created.
 
-  void CHDB::copyKeywords(PHDB const &toCopy)
+  void CHDB::copyKeywords(CHDB const *toCopy)
   {
     DKeywordStore::const_iterator iter = toCopy->keywords_.begin();
 
     for (; iter != toCopy->keywords_.end(); iter++)
     {
-      keywordWrite(*iter);
+      keywordWrite((*iter)->createCopy());
     };
   }
 
@@ -231,7 +230,7 @@ namespace ACL
   }
 
   /// @brief Sets the GCOUNT value.
-  /// @param[in] gcount - The new GCOUNT value.
+  /// @param[in] gcount: The new GCOUNT value.
   /// @throws None.
   /// @version 2012-01-12/GGB - Function created.
 
@@ -276,7 +275,7 @@ namespace ACL
   }
 
   /// @brief Adds a new line to the history
-  /// @param[in] newHistory - New history line to add.
+  /// @param[in] newHistory: New history line to add.
   /// @throws None.
   /// @version 2013-06-29/GGB - Changed history_ to a std::vector<>.
   /// @version 2011-12-10/GGB - Function created.
@@ -292,8 +291,7 @@ namespace ACL
   /// @returns The history string.
   /// @throws None.
   /// @version 2015-09-07/GGB - Use C++14 labda function and std::for_each
-  /// @version 2013-06-29/GGB - Changed history_ to a std::vector<>. Changed return value to a "std::string" from a "std::string
-  /// const &"
+  /// @version 2013-06-29/GGB - Changed history_ to a std::vector<>.
   /// @version 2011-12-10/GGB - Function created.
 
   std::string CHDB::historyGet() const
@@ -315,9 +313,9 @@ namespace ACL
     return keywords_.size();
   }
 
-  /// @brief Returns the requested keyword.
+  /// @brief Returns a reference the requested keyword.
+  /// @param[in] kwd: The keyword to return.
   /// @details The list of keywords is searched for the first matching keyword and the pointer to the keyword is returned.
-  /// @param[in] kwd - The keyword to return.
   /// @returns a constant reference to the keyword structure.
   /// @throws None.
   /// @version 2017-08-04/GGB - Removed all support for special keywords. Not required.
@@ -329,27 +327,28 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !kwd.empty(), "Parameter kwd is empty.");
 
     DKeywordStore::const_iterator iter;
-    PFITSKeyword returnPtr;
+    CFITSKeyword *returnPointer;
     bool bFound = false;
 
     for (iter = keywords_.begin(); (iter != keywords_.end()) && !bFound; ++iter)
     {
       if ( (*(*iter)) == kwd)
       {
-        returnPtr = (*iter);
+        returnPointer = (*iter).get();
         bFound = true;
       };
     };
 
-    return *returnPtr;
+    return *returnPointer;
   }
 
   /// @brief Deletes the specified keyword.
-  /// @param[in] kwd - The keyword name to delete.
+  /// @param[in] kwd: The keyword name to delete.
   /// @returns true - The keyword was deleted
   /// @returns false - The keyword was not deleted.
   /// @note Calling with a keyword that does not exist will not result in an error.
   /// @throws GCL::CRuntimeAssert(ACL, "...")
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2017-07-23/GGB - Function created.
 
   bool CHDB::keywordDelete(std::string const &kwd)
@@ -358,7 +357,9 @@ namespace ACL
 
     bool returnValue = false;
 
-    auto iter = std::find_if(keywords_.begin(), keywords_.end(), [&kwd](PFITSKeyword keyword)->bool { return (*keyword == kwd);});
+    auto iter = std::find_if(keywords_.begin(), keywords_.end(),
+                             [&kwd](std::unique_ptr<CFITSKeyword> const &keyword)->bool
+                                { return (*keyword == kwd);});
 
     if (iter != keywords_.end())
     {
@@ -370,7 +371,7 @@ namespace ACL
   }
 
   /// @brief Checks if the specified keyword exists in the HDB list of keywords.
-  /// @param[in] kwd - The keyword to check for.
+  /// @param[in] kwd:  The keyword to check for.
   /// @returns true - keyword exists
   /// @returns false - keyword is not in the list of keywords
   /// @throws GCL::CRuntimeAssert(ACL, "...")
@@ -395,98 +396,98 @@ namespace ACL
     return bFound;
   }
 
-  /// @brief Moves the iterator to the first position and returns a valid keyword pointer.
-  /// @returns Smart pointer to the first keyword.
-  /// @throws None.
-  /// @version 2011-12-10/GGB - Function created.
+//  /// @brief Moves the iterator to the first position and returns a valid keyword pointer.
+//  /// @returns Smart pointer to the first keyword.
+//  /// @throws None.
+//  /// @version 2011-12-10/GGB - Function created.
 
-  PFITSKeyword CHDB::keywordIteratorFirst()
-  {
-    static PFITSKeyword nullPtr;
+//  CFITSKeyword CHDB::keywordIteratorFirst()
+//  {
+//    static PFITSKeyword nullPtr;
 
-    keywordIterator_ = keywords_.begin();
-    if ( (*keywordIterator_) )
-    {
-      return *keywordIterator_;
-    }
-    else
-    {
-      return nullPtr;
-    };
-  }
+//    keywordIterator_ = keywords_.begin();
+//    if ( (*keywordIterator_) )
+//    {
+//      return *keywordIterator_;
+//    }
+//    else
+//    {
+//      return nullPtr;
+//    };
+//  }
 
-  /// @brief Moves the iterator to the last position and returns a valid keyword pointer.
-  /// @returns Smart pointer to last keyword.
-  /// @throws None.
-  /// @version 2011-12-10/GGB - Function created.
+//  /// @brief Moves the iterator to the last position and returns a valid keyword pointer.
+//  /// @returns Smart pointer to last keyword.
+//  /// @throws None.
+//  /// @version 2011-12-10/GGB - Function created.
 
-  PFITSKeyword CHDB::keywordIteratorLast()
-  {
-    static PFITSKeyword nullPtr;
+//  PFITSKeyword CHDB::keywordIteratorLast()
+//  {
+//    static PFITSKeyword nullPtr;
 
-    keywordIterator_ = keywords_.end();
+//    keywordIterator_ = keywords_.end();
 
-    if ( keywordIterator_ != keywords_.begin())
-    {
-      keywordIterator_--;
-    };
+//    if ( keywordIterator_ != keywords_.begin())
+//    {
+//      keywordIterator_--;
+//    };
 
-    if ( *keywordIterator_ )
-    {
-      return *keywordIterator_;
-    }
-    else
-    {
-      return nullPtr;
-    };
-  }
+//    if ( *keywordIterator_ )
+//    {
+//      return *keywordIterator_;
+//    }
+//    else
+//    {
+//      return nullPtr;
+//    };
+//  }
 
-  /// @brief Returns the next keyword from the collection of keywords.
-  /// @returns Smart pointer to the next keyword.
-  /// @throws None.
-  /// @version 2011-12-10/GGB - Function created.
+//  /// @brief Returns the next keyword from the collection of keywords.
+//  /// @returns Smart pointer to the next keyword.
+//  /// @throws None.
+//  /// @version 2011-12-10/GGB - Function created.
 
-  PFITSKeyword CHDB::keywordIteratorNext()
-  {
-    static PFITSKeyword nullPtr;
+//  PFITSKeyword CHDB::keywordIteratorNext()
+//  {
+//    static PFITSKeyword nullPtr;
 
-    if (keywordIterator_ != keywords_.end() )
-    {
-      keywordIterator_++;
-      if ( keywordIterator_ != keywords_.end() )
-      {
-        return *keywordIterator_;
-      }
-      else
-      {
-        return nullPtr;
-      };
-    }
-    else
-    {
-      return nullPtr;
-    };
-  }
+//    if (keywordIterator_ != keywords_.end() )
+//    {
+//      keywordIterator_++;
+//      if ( keywordIterator_ != keywords_.end() )
+//      {
+//        return *keywordIterator_;
+//      }
+//      else
+//      {
+//        return nullPtr;
+//      };
+//    }
+//    else
+//    {
+//      return nullPtr;
+//    };
+//  }
 
-  /// @brief Returns the previous keyword.
-  /// @returns Smart pointer to previous keyword.
-  /// @throws None.
-  /// @version 2011-12-10/GGB - Function created.
+//  /// @brief Returns the previous keyword.
+//  /// @returns Smart pointer to previous keyword.
+//  /// @throws None.
+//  /// @version 2011-12-10/GGB - Function created.
 
-  PFITSKeyword CHDB::keywordIteratorPrev()
-  {
-    static PFITSKeyword nullPtr;
+//  PFITSKeyword CHDB::keywordIteratorPrev()
+//  {
+//    static PFITSKeyword nullPtr;
 
-    if (keywordIterator_ == keywords_.begin() )
-    {
-      return nullPtr;
-    }
-    else
-    {
-      keywordIterator_--;
-      return *keywordIterator_;
-    };
-  }
+//    if (keywordIterator_ == keywords_.begin() )
+//    {
+//      return nullPtr;
+//    }
+//    else
+//    {
+//      keywordIterator_--;
+//      return *keywordIterator_;
+//    };
+//  }
 
   /// @brief Returns a reference to the vector that stores the keywords.
   /// @throws None.
@@ -499,7 +500,7 @@ namespace ACL
   }
 
   /// @brief Returns the type of a keyword.
-  /// @param[in] kwd - The keyword to return the type of.
+  /// @param[in] kwd: The keyword to return the type of.
   /// @returns The type of the keyword.
   /// @throws None.
   /// @version 2011-12-04/GGB - Function created.
@@ -576,52 +577,49 @@ namespace ACL
   }
 
   /// @brief Adds a double keyword to the HDB.
-  /// @param[in] keyword - The keyword to write.
-  /// @param[in] value - The value of the keyword.
-  /// @param[in] comment - The comment for the keyword.
+  /// @param[in] keyword: The keyword to write.
+  /// @param[in] value: The value of the keyword.
+  /// @param[in] comment: The comment for the keyword.
   /// @throws None.
   /// @version 2016-04-11/GGB - Function created.
 
   void CHDB::keywordWrite(std::string const &keyword, double const &value, std::string const &comment)
   {
-    PFITSKeyword kwd(new CFITSKeywordDouble(keyword, value, comment));
-
-    keywordWrite(kwd);
+    keywordWrite(std::make_unique<CFITSKeywordDouble>(keyword, value, comment));
   }
 
   /// @brief Adds a string keyword to the HDB.
-  /// @param[in] keyword - The keyword to write.
-  /// @param[in] value - The value of the keyword.
-  /// @param[in] comment - The comment for the keyword.
+  /// @param[in] keyword: The keyword to write.
+  /// @param[in] value: The value of the keyword.
+  /// @param[in] comment: The comment for the keyword.
   /// @throws None.
   /// @version 2016-04-11/GGB - Function created.
 
   void CHDB::keywordWrite(std::string const &keyword, std::string const &value, std::string const &comment)
   {
-    PFITSKeyword kwd(new CFITSKeywordString(keyword, value, comment));
-
-    keywordWrite(kwd);
+    keywordWrite(std::make_unique<CFITSKeywordString>(keyword, value, comment));
   }
 
   /// @brief Writes the passed information to the keyword array.
+  /// @param[in] kwd: The keyword to add or update.
   /// @details If the keyword already exists in the keyword store, then the keyword is updated.
-  /// If the keyword does not exist in the keyword store, then it is added to the keyword store.
-  /// @param[in] kwd - pointer to the keyword to add or update.
+  ///          If the keyword does not exist in the keyword store, then it is added to the keyword store.
+  /// @post 1. This function takes ownership of the keyword.
   /// @throws None.
   /// @post hasData == true
   /// @post isDirty == true
   /// @version 2011-12-18/GGB - Function created.
 
-  void CHDB::keywordWrite(PFITSKeyword const &kwd)
+  void CHDB::keywordWrite(std::unique_ptr<CFITSKeyword> kwd)
   {
     if ( keywordExists(kwd->keyword()) )
     {
       keywordDelete(kwd->keyword());
-      keywords_.push_back(kwd);
+      keywords_.push_back(std::move(kwd));
     }
     else
     {
-      keywords_.push_back(kwd);
+      keywords_.push_back(std::move(kwd));
     };
 
     parent_->hasData(true);
@@ -629,7 +627,7 @@ namespace ACL
   }
 
 //  /// @brief Loads the comments from the FITS file.
-//  /// @param[in] keyword - Keyword to check.
+//  /// @param[in] keyword: Keyword to check.
 //  /// @returns true - Keyword was a comment keyword and been processed.
 //  /// @returns false - Keyword is not a comment keyword.
 //  /// @throws None.
@@ -674,10 +672,9 @@ namespace ACL
 //  }
 
   /// @brief Loads all the common FITS HDU information.
-  /// @param[in] file - The FITS file to open from.
+  /// @param[in] file: The FITS file to open from.
   /// @pre The file must be pointed to the HDB to load.
-  /// @throws None.
-  /// @details This includes some keywords, as well as the keyword information. This function never loads data of any sort.
+  /// @throws CFITSException
   /// @version 2013-03-13/GGB - Changed name to readFromFITS() and changed to pointer to HDU.
   /// @version 2012-12-30/GGB - Removed the check on the number of axes.
   /// @version 2011-12-13/GGB - Function created.
@@ -707,11 +704,12 @@ namespace ACL
   }
 
   /// @brief Loads the keywords into the HDB.
-  /// @param[in] file - The FITS file to load from.
+  /// @param[in] file: The FITS file to load from.
   /// @throws CODE_ERROR
   /// @throws 0x000C
   /// @throws std::bad_alloc
   /// @throws boost::bad_lexical_cast
+  /// @throws CFITSException
   /// @version 2015-09-12/GGB - Updated to cfitsio.
   /// @version 2013-04-07/GGB - Changed return type to void
   /// @version 2013-03-13/GGB - name changed to readKeywords and parameter changed to pointer.
@@ -719,7 +717,7 @@ namespace ACL
 
   void CHDB::readKeywords(fitsfile *file)
   {
-    PFITSKeyword keyword;
+    std::unique_ptr<CFITSKeyword> keyword;
     char szKeyword[FLEN_KEYWORD];
     char szValue[FLEN_VALUE];
     char szComment[FLEN_COMMENT];
@@ -747,7 +745,7 @@ namespace ACL
             keyword.reset(new CFITSKeywordString(szKeyword, std::string(szValue), szComment));
             if ( !specialKeyword(keyword) )
             {
-              keywords_.push_back(keyword);
+              keywords_.push_back(std::move(keyword));
             };
             break;
           };
@@ -757,7 +755,7 @@ namespace ACL
 
             if ( !specialKeyword(keyword) )
             {
-              keywords_.push_back(keyword);
+              keywords_.push_back(std::move(keyword));
             };
             break;
           };
@@ -775,7 +773,7 @@ namespace ACL
                 keyword.reset(new CFITSKeywordInt16(szKeyword, value, szComment));
                 if (!specialKeyword(keyword))
                 {
-                  keywords_.push_back(keyword);
+                  keywords_.push_back(std::move(keyword));
                 }
                 break;
               };
@@ -787,7 +785,7 @@ namespace ACL
                 keyword.reset(new CFITSKeywordUInt16(szKeyword, value, szComment));
                 if (!specialKeyword(keyword))
                 {
-                  keywords_.push_back(keyword);
+                  keywords_.push_back(std::move(keyword));
                 }
                 break;
               };
@@ -798,7 +796,7 @@ namespace ACL
                 keyword.reset(new CFITSKeywordInt32(szKeyword, value, szComment));
                 if (!specialKeyword(keyword))
                 {
-                  keywords_.push_back(keyword);
+                  keywords_.push_back(std::move(keyword));
                 }
                 break;
               };
@@ -809,7 +807,7 @@ namespace ACL
                 keyword.reset(new CFITSKeywordUInt32(szKeyword, value, szComment));
                 if (!specialKeyword(keyword))
                 {
-                  keywords_.push_back(keyword);
+                  keywords_.push_back(std::move(keyword));
                 }
                 break;
               };
@@ -820,7 +818,7 @@ namespace ACL
                 keyword.reset(new CFITSKeywordInt64(szKeyword, value, szComment));
                 if (!specialKeyword(keyword))
                 {
-                  keywords_.push_back(keyword);
+                  keywords_.push_back(std::move(keyword));
                 }
                 break;
               };
@@ -839,7 +837,7 @@ namespace ACL
             keyword.reset(new CFITSKeywordDouble(szKeyword, value, szComment));
             if (!specialKeyword(keyword))
             {
-              keywords_.push_back(keyword);
+              keywords_.push_back(std::move(keyword));
             }
             break;
           };
@@ -973,10 +971,10 @@ namespace ACL
   }
 
   /// @brief Checks if the passed keyword has any special meaning.
+  /// @param[in] keyword: The keyword instance to check
   /// @details If there is a special meaning for the keyword, the appropriate routine is called to set the special data value.
-  /// Special data values are stored directly in the HDB and not as keywords.
-  /// The keyword value is explicitely discarded from the list of keywords when the data is loaded.
-  /// @param[in] keyword
+  ///          Special data values are stored directly in the HDB and not as keywords.
+  ///          The keyword value is explicitely discarded from the list of keywords when the data is loaded.
   /// @returns true - keyword was special and was handled.
   /// @returns false - keyword was not special and was not handled.
   /// @throws None.
@@ -984,7 +982,7 @@ namespace ACL
   /// @version 2015-08-10/GGB - Added checks for SIMPLE and XTENSION, as well as history and comments. (Update to cfitsio)
   /// @version 2011-09-28/GGB - Function created.
 
-  bool CHDB::specialKeyword(PFITSKeyword keyword)
+  bool CHDB::specialKeyword(std::unique_ptr<CFITSKeyword> &keyword)
   {
     bool returnValue = false;
 
@@ -992,7 +990,7 @@ namespace ACL
     {
       bSimple = static_cast<bool>(*keyword);
       bPrimary_ = true;
-      extname_ = astroManager_HDB_PRIMARY;
+      extname_ = ASTROMANAGER_HDB_PRIMARY;
       keyword.reset();
       returnValue = true;
     }
@@ -1017,7 +1015,7 @@ namespace ACL
   }
 
   /// @brief Writes the comments to a FITS file.
-  /// @param[in] file - The FITS file to write to.
+  /// @param[in] file: The FITS file to write to.
   /// @throws None.
   /// @version 2015-09-07/GGB - Function created.
 
@@ -1028,7 +1026,7 @@ namespace ACL
   }
 
   /// @brief Writes the history to a FITS file.
-  /// @param[in] file - The FITS file to write to.
+  /// @param[in] file: The FITS file to write to.
   /// @throws None.
   /// @version 2015-09-07/GGB - Function created.
 
@@ -1039,10 +1037,10 @@ namespace ACL
   }
 
   /// @brief Writes the keywords to the passed HDU.
-  /// @param[in] file - The FITS file to write to.
+  /// @param[in] file: The FITS file to write to.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @details All the keywords are iterated, and the keywords already handled in the CCfits code are stripped out and not passed
-  /// as keywords.
+  ///          as keywords.
   /// @version 2015-08-11/GGB - Converted to cfitsio.
   /// @version 2013-03-14/GGB - Added function writeToFITS() to TKeyword class.
   /// @version 2012-01-15/GGB - Function created.
@@ -1073,7 +1071,7 @@ namespace ACL
   }
 
   /// @brief Writes the HDB to the passed FITS data structure.
-  /// @param[in] file - Pointer to the FITS file to write to.
+  /// @param[in] file: Pointer to the FITS file to write to.
   /// @throws 0x1906 - HDB: Invalid HDU passed to function
   /// @details If this is the primary extension, then the data is written to the primary extension, otherwise a new extension is
   /// created.

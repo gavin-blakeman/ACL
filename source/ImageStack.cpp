@@ -66,10 +66,11 @@ namespace ACL
 
   /// @brief Constructor for the class.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-09/GGB - Changed astroFile to a smart pointer.
   /// @version 2011-07-07/GGB - Function created
 
-  CStackImageInformation::CStackImageInformation(PAstroFile af, std::vector<CHDB>::size_type hdb, MCL::TPoint2D<FP_t> const &a1,
+  CStackImageInformation::CStackImageInformation(std::shared_ptr<CAstroFile> af, std::vector<CHDB>::size_type hdb, MCL::TPoint2D<FP_t> const &a1,
                                                  MCL::TPoint2D<FP_t> const &a2) :
     astroFile(af), HDB(hdb), align1(a1), align2(a2)
   {
@@ -137,10 +138,11 @@ namespace ACL
   /// @param[in] newa1: Alignment point 1
   /// @param[in] news2: Alignment point 2
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-03-02/GGB - Changed list type to smart pointers.
   /// @version 2011-03-05/GGB - Function created.
 
-  void CImageStack::addFile(PAstroFile toAdd, MCL::TPoint2D<FP_t> &newa1, MCL::TPoint2D<FP_t> &newA2)
+  void CImageStack::addFile(std::shared_ptr<CAstroFile> toAdd, MCL::TPoint2D<FP_t> &newa1, MCL::TPoint2D<FP_t> &newA2)
   {
     std::shared_ptr<CStackImageInformation> newImage(new CStackImageInformation(toAdd, 0, newa1, newA2) );
 

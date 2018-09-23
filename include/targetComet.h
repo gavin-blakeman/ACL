@@ -50,6 +50,7 @@
   // ACL library header files
 
 #include "CometEls.h"
+#include "error.h"
 #include "TargetAstronomy.h"
 
   // Miscellaneous library header files
@@ -76,7 +77,8 @@ namespace ACL
 
     virtual std::string objectType() const { return "Comet"; }
 
-    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
+    virtual CAstronomicalCoordinates positionCatalog() const { ACL_CODE_ERROR; }
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
   };
 }

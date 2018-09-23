@@ -60,24 +60,21 @@
 #ifndef ACL_KEYWORD_H
 #define ACL_KEYWORD_H
 
-  // Standard library files
+  // Standard C++ library header files
 
 #include <memory>
 #include <string>
 #include <sstream>
 
-  // ACL Files
+  // ACL library header files
 
-#include "../include/FITSException.h"
-#include "../include/FITSStrings.h"
+#include "error.h"
+#include "FITSException.h"
+#include "FITSStrings.h"
 
-  // Miscellaneous libraries
+  // Miscellaneous library header files
 
 #include "fitsio.h"
-
-
-  // GCL Library
-
 #include <GCL>
 
 namespace ACL
@@ -116,8 +113,8 @@ namespace ACL
     std::string comment_;
 
   public:
-    CFITSKeyword(std::string const &keyword);
-    CFITSKeyword(std::string const &keyword, std::string const &comment);
+    CFITSKeyword(std::string const &);
+    CFITSKeyword(std::string const &, std::string const &);
 
     virtual ~CFITSKeyword() {}
 
@@ -125,40 +122,38 @@ namespace ACL
     virtual bool operator==(std::string const &) const;
     virtual bool operator!=(std::string const toTest) { return (!((*this) == toTest)) ;}
 
-    virtual CFITSKeyword &operator=(double) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(float) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::int8_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::int16_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::int32_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::int64_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::string)  { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::uint8_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::uint16_t) { CODE_ERROR(ACL); }
-    virtual CFITSKeyword &operator=(std::uint32_t) { CODE_ERROR(ACL); }
+    virtual CFITSKeyword &operator=(double) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(float) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::int8_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::int16_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::int32_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::int64_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::string)  { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::uint8_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::uint16_t) { ACL_CODE_ERROR; }
+    virtual CFITSKeyword &operator=(std::uint32_t) { ACL_CODE_ERROR; }
 
-    virtual operator bool() const { CODE_ERROR(ACL); }
-    virtual operator std::int8_t() const { CODE_ERROR(ACL); }
-    virtual operator std::int16_t() const { CODE_ERROR(ACL); }
-    virtual operator std::int32_t() const { CODE_ERROR(ACL); }
-    virtual operator std::int64_t() const { CODE_ERROR(ACL); }
-    virtual operator std::uint8_t() const { CODE_ERROR(ACL); }
-    virtual operator std::uint16_t() const { CODE_ERROR(ACL); }
-    virtual operator std::uint32_t() const { CODE_ERROR(ACL); }
-    virtual operator float() const { CODE_ERROR(ACL); }
-    virtual operator double() const { CODE_ERROR(ACL); }
-    virtual operator std::string() const { CODE_ERROR(ACL); }
+    virtual operator bool() const { ACL_CODE_ERROR; }
+    virtual operator std::int8_t() const { ACL_CODE_ERROR; }
+    virtual operator std::int16_t() const { ACL_CODE_ERROR; }
+    virtual operator std::int32_t() const { ACL_CODE_ERROR; }
+    virtual operator std::int64_t() const { ACL_CODE_ERROR; }
+    virtual operator std::uint8_t() const { ACL_CODE_ERROR; }
+    virtual operator std::uint16_t() const { ACL_CODE_ERROR; }
+    virtual operator std::uint32_t() const { ACL_CODE_ERROR; }
+    virtual operator float() const { ACL_CODE_ERROR; }
+    virtual operator double() const { ACL_CODE_ERROR; }
+    virtual operator std::string() const { ACL_CODE_ERROR; }
 
     inline virtual std::string keyword() const { return keyword_;}
     inline virtual std::string comment() const { return comment_;}
 
-    virtual CFITSKeyword *createCopy() const = 0;
+    virtual std::unique_ptr<CFITSKeyword> createCopy() const = 0;
 
     virtual KWType type() const { return KWT_NONE; }
 
     virtual void writeToFITS(fitsfile *) const = 0;
   };
-  typedef std::shared_ptr<CFITSKeyword> PFITSKeyword;
-
 
 }	// namespace
 

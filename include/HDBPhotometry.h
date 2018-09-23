@@ -49,14 +49,17 @@
 #ifndef ACL_HDBPHOTOMETRY_H
 #define ACL_HDBPHOTOMETRY_H
 
-#include "PhotometryObservation.h"
-#include "HDBBinTable.h"
-
-  // Standard C++ header files.
+  // Standard C++ library header files.
 
 #include <cstddef>
 #include <memory>
+#include <tuple>
 #include <vector>
+
+  // ACL library header files.
+
+#include "PhotometryObservation.h"
+#include "HDBBinaryTable.h"
 
 namespace ACL
 {
@@ -68,7 +71,7 @@ namespace ACL
   /// When the FITS file is saved, the data is saved into a binary table. This allows the photometry data to be automatically
   /// reloaded when the FITS file is opened from disk again.
 
-  class CHDBPhotometry : public CHDBBinTable
+  class CHDBPhotometry : public CHDBBinaryTable
   {
   private:
     DPhotometryObservationStore photometryObservations;
@@ -79,22 +82,22 @@ namespace ACL
     CHDBPhotometry(CAstroFile *);
     explicit CHDBPhotometry(CHDBPhotometry const &);
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
-    virtual EBlockType HDBType() const { return HDB_PHOTOMETRY;}
+    virtual EBlockType HDBType() const override { return HDB_PHOTOMETRY;}
 
       // FITS file functions
 
-    virtual void readFromFITS(fitsfile *);
-    virtual void writeToFITS(fitsfile *);
+    virtual void readFromFITS(fitsfile *) override;
+    virtual void writeToFITS(fitsfile *) override;
 
       // Image manipulation functions
 
-    virtual void imageFlip();
-    virtual void imageFlop();
-    virtual void imageRotate(FP_t);
-    virtual void imageFloat(boost::tuple<AXIS_t, AXIS_t> const &, boost::tuple<AXIS_t, AXIS_t> const &);
-    virtual void imageResample(long, long);
+    virtual void imageFlip() override;
+    virtual void imageFlop() override;
+    virtual void imageRotate(FP_t) override;
+    virtual void imageFloat(std::tuple<AXIS_t, AXIS_t> const &, std::tuple<AXIS_t, AXIS_t> const &);
+    virtual void imageResample(AXIS_t, AXIS_t) override;
     virtual void binPixels(unsigned int);
     virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t, FP_t, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &);
     virtual void imageCrop(MCL::TPoint2D<AXIS_t> origen, MCL::TPoint2D<AXIS_t> dims);
@@ -113,8 +116,6 @@ namespace ACL
     virtual SPPhotometryObservation photometryObjectFirst();
     virtual SPPhotometryObservation photometryObjectNext();
   };
-
-  typedef std::shared_ptr<CHDBPhotometry> PHDBPhotometry;
 }
 
 

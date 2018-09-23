@@ -59,7 +59,7 @@
 
   // Standard C++ Library header files.
 
-
+#include <tuple>
 
   // ACL Library header files.
 
@@ -106,7 +106,7 @@ namespace ACL
   }
 
   /// @brief Constructor for the class.
-  /// @param[in] nin - Image Name to associate with the class.
+  /// @param[in] imageName: Image Name to associate with the class.
   /// @throws std::bad_alloc
   /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
@@ -121,7 +121,7 @@ namespace ACL
   }
 
   /// @brief Copy constructor.
-  /// @param[in] toCopy - The Astrofile object to make a copy of.
+  /// @param[in] toCopy: The Astrofile object to make a copy of.
   /// @throws std::bad_alloc
   /// @note 1. On a large file, (multi-megabyte), this process could take a long-time.
   /// @note 2. This function is not multi-threaded.
@@ -143,17 +143,15 @@ namespace ACL
 
     for (hdbIterator = toCopy.HDB.begin(); hdbIterator != toCopy.HDB.end(); ++hdbIterator)
     {
-      PHDB newHDB = (*hdbIterator)->createCopy();
+      HDB.push_back((*hdbIterator)->createCopy());
 
-      HDB.push_back(newHDB);
-
-      if (newHDB->HDBType() == HDB_ASTROMETRY)
+      if (HDB.back()->HDBType() == HDB_ASTROMETRY)
       {
-        astrometryHDB_  = std::dynamic_pointer_cast<CHDBAstrometry>(newHDB);
+        astrometryHDB_ = dynamic_cast<CHDBAstrometry *>(HDB.back().get());
       }
-      else if (newHDB->HDBType() == HDB_PHOTOMETRY)
+      else if (HDB.back()->HDBType() == HDB_PHOTOMETRY)
       {
-        photometryHDB_ = std::dynamic_pointer_cast<CHDBPhotometry>(newHDB);
+        photometryHDB_ = dynamic_cast<CHDBPhotometry *>(HDB.back().get());
       };
     };
 
@@ -164,8 +162,7 @@ namespace ACL
   }
 
   /// @brief Constructor to create an instance from an astroImage.
-  /// @param[in] nfm - File name of the image to create.
-  /// @param[in] ai - pointer to the astroimage to create the astrofile from.
+  /// @param[in] ai: pointer to the astroimage to create the astrofile from.
   /// @throws None.
   /// @todo Implement this function.
   /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
@@ -274,6 +271,7 @@ namespace ACL
   /// @throws 0x2001 - Invalid HDB
   /// @note If the HDB does not exist in @a this instance, then it will be created.
   /// @todo It may be worth further generalising this function to allow keywords to be copied within the astrofile as well.
+  /// @version 2019-08-22/GGB - Updated to use std::unique_ptr idiom.
   /// @version 2014-05-31/GGB - Function created
 
   void CAstroFile::copyKeywords(CAstroFile const &reference, DHDBStore::size_type hdb)
@@ -286,12 +284,11 @@ namespace ACL
     {
       if ( hdb >= HDB.size() )
       {
-        PHDB newHDB = reference.getHDB(hdb)->createCopy();
-        HDBAdd(newHDB);
+        HDBAdd(reference.getHDB(hdb)->createCopy());
       }
       else
       {
-        HDB[hdb]->copyKeywords(reference.HDB[hdb]);
+        HDB[hdb]->copyKeywords(reference.HDB[hdb].get());
       };
     };
   }
@@ -311,17 +308,19 @@ namespace ACL
   /// @brief Copies the HDB and adds it as an HDB to the list of HDB in this object
   /// @param[in] toAdd: Smart pointer to the HDB to add.
   /// @throws None.
-  /// @post isDirty == true
-  /// @post hasData == true
+  /// @post 1. isDirty == true
+  /// @post 2. hasData == true
+  /// @post 3. Ownership of toAdd passess to (*this).
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-06-23/GGB - Added code to make the instance dirty and that it has data.
   /// @version 2011-11-27/GGB - Changed to use smart pointers (boost::shared_ptr)
   /// @version 2011-05-27/GGB - Function created.
 
-  void CAstroFile::HDBAdd(PHDB toAdd)
+  void CAstroFile::HDBAdd(std::unique_ptr<CHDB> toAdd)
   {
     RUNTIME_ASSERT(ACL, toAdd != nullptr, "HDB to add cannot be a nullptr.")
 
-    HDB.push_back(toAdd);
+    HDB.push_back(std::move(toAdd));
     isDirty(true);
     hasData(true);
   }
@@ -430,10 +429,11 @@ namespace ACL
   }
 
   /// @brief Returns the astrometryHDB pointer.
+  /// @returns Raw pointer to the astrometryHDB.
   /// @throws None.
   /// @version 2012-01-09/GGB - Function created.
 
-  PHDBAstrometry CAstroFile::astrometryHDB()
+  CHDBAstrometry *CAstroFile::astrometryHDB()
   {
     return astrometryHDB_;
   }
@@ -450,6 +450,7 @@ namespace ACL
   }
 
   /// @brief Removes a refernce from the astrometryHDB
+  /// @param[in] toRemove: The astrometry object to remove.
   /// @returns true - reference removed
   /// @returns false - reference not found
   /// @throws 0x200C - Astrometry HDB does not exist.
@@ -472,12 +473,12 @@ namespace ACL
   }
 
   /// @brief Bins the image.
-  /// @param[in] hdb - The HDB to address.
-  /// @param[in] nsize - The binning parameter.
+  /// @param[in] hdb: The HDB to address.
+  /// @param[in] nsize: The binning parameter.
   /// @throws GCL::CRuntimeAssert
   /// @throws 0x2005 - Incorrect type of HDB.
   /// @details As the image size is changed when a bin-pixels is executed. All the HDB's need to be updated to reflect the
-  /// bin pixels.
+  ///          bin pixels.
   /// @version 2015-08-08/GGB - USe runtime assertion for parameter hdb.
   /// @version 2011-11-27/GGB - Use boost::shared_ptr, smart HDB's and astrometryHDB and photometryHDB
   /// @version 2011-06-10/GGB - Function created.
@@ -502,7 +503,7 @@ namespace ACL
   }
 
   /// @brief Returns the calculated or stored blackPoint from the relevant HDB.
-  /// @param[in] hdb - The number of the HDB to get the black point from.
+  /// @param[in] hdb: The number of the HDB to get the black point from.
   /// @returns The black point value.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-09-03/GGB - Added GCL::CRuntimeAssert to check hdb range.
@@ -526,7 +527,7 @@ namespace ACL
   /// @version 2018-09-15/GGB - Updated to use std::unique_ptr.
   /// @version 2012-01-28/GGB - Function created.
 
-  void CAstroFile::calibrateDark(PAstroFile df, PAstroFile bf, SCalibrateImage_Ptr ci)
+  void CAstroFile::calibrateDark(CAstroFile *df, CAstroFile *bf, SCalibrateImage *ci)
   {
     FP_t imageExposure, darkExposure;
     FP_t darkScale;
@@ -562,18 +563,18 @@ namespace ACL
   /// @brief Applies the calibration frame to the image.
   /// @version 2012-01-28/GGB - Function created.
 
-  void CAstroFile::calibrateFlat(PAstroFile ff, SCalibrateImage_Ptr ci)
+  void CAstroFile::calibrateFlat(CAstroFile *ff, SCalibrateImage *ci)
   {
     HDB[0]->calibrationApplyFlat(*ff->HDB[0]->imageGet());
   }
 
-  /// Function to calibrate an image by applying a dark frame.
-  /// The dark frame file path is passed to the function. The additional parameters allow the overriding of the checks on
-  /// temperature and duration.
-  /// The dark frame needs to be verified to be applicable for the application.
-  /// 1. The dimensions of the dark frame must be the the same as the dimensions of the image.
-  /// 2. The temperature of the dark frame should be the same as the temperature of the image.
-  /// 3. The duration of the dark frame should be the same as the duration of the image.
+  /// @brief Function to calibrate an image by applying a dark frame.
+  /// @details The dark frame file path is passed to the function. The additional parameters allow the overriding of the checks on
+  ///          temperature and duration.<br>
+  ///          The dark frame needs to be verified to be applicable for the application.
+  ///          1. The dimensions of the dark frame must be the the same as the dimensions of the image.<br>
+  ///          2. The temperature of the dark frame should be the same as the temperature of the image.<br>
+  ///          3. The duration of the dark frame should be the same as the duration of the image.<br>
   /// @throws 0x200F - ASTROFILE: Calibration needs a valid dark frame name.
   /// @throws 0x2010 - ASTROFILE: Dark Calibration Frame must be same dimensions as image.
   /// @throws 0x2011 - ASTROFILE: Dark calibration frame must be same duration as image.
@@ -584,11 +585,11 @@ namespace ACL
   /// @throws 0x2016 - ASTROFILE: Flat calibration frame must be same dimensions as image.
   /// @version 2012-01-27/GGB - Function created.
 
-  void CAstroFile::calibrateImage(SCalibrateImage_Ptr calibrateData)
+  void CAstroFile::calibrateImage(SCalibrateImage *calibrateData)
   {
-     PAstroFile darkFile;
-     PAstroFile biasFile;
-     PAstroFile flatFile;
+     std::unique_ptr<CAstroFile> darkFile;
+     std::unique_ptr<CAstroFile> biasFile;
+     std::unique_ptr<CAstroFile> flatFile;
 
       // First check the dark frame is correct. There must always be a dark frame present, otherwise an image cannot
       // be calibrated.
@@ -596,109 +597,122 @@ namespace ACL
     if (calibrateData->useDarkFrame)
     {
       if (!boost::filesystem::exists(calibrateData->darkFramePath))
+      {
         ERROR(ACL, 0x200F);    // ASTROFILE: Calibration needs a valid dark frame name.
+      };
 
       //darkFile = CreateFromFile(calibrateData->darkFramePath);    // Will throw on failure.
 
-      if ( !validateImageDimensions(darkFile) )
+      if ( !validateImageDimensions(darkFile.get()) )
+      {
         ERROR(ACL, 0x2010);    // ASTROFILE: Dark Calibration Frame must be same dimensions as image.
+      };
 
       if (!calibrateData->overrideDarkExposure || !calibrateData->useBiasFrame)
       {
-        if (!validateDarkDuration(darkFile) )
+        if (!validateDarkDuration(darkFile.get()) )
+        {
           ERROR(ACL, 0x2011);    // ASTROFILE: Dark calibration frame must be same duration as image.
+        };
       };
 
       if (!calibrateData->overrideDarkTemperature)
       {
-        if (!validateDarkTemperature(darkFile) )
+        if (!validateDarkTemperature(darkFile.get()) )
+        {
           ERROR(ACL, 0x2012);    // ASTROFILE: Dark calibration frame should be same temperature as image.
+        };
       };
     };
 
     if (calibrateData->useBiasFrame)
     {
       if (!boost::filesystem::exists(calibrateData->biasFramePath))
+      {
         ACL_ERROR(0x2013);    // ASTROFILE: Bias calibration frame needs a valid file name.
+      };
 
       //biasFile = CreateFromFile(calibrateData->biasFramePath);
 
-      if ( !validateImageDimensions(biasFile))
+      if ( !validateImageDimensions(biasFile.get()))
+      {
         ACL_ERROR(0x2014);    //ASTROFILE: Bias calibration frame must be same dimenstions as image.
+      };
     };
 
     if (calibrateData->useFlatFrame)
     {
       if (boost::filesystem::exists(calibrateData->flatFramePath))
+      {
         ACL_ERROR(0x2015);    // ASTROFILE: Flat calibration frame needs a valid file name.
+      };
 
       //flatFile = CreateFromFile(calibrateData->flatFramePath);
 
-      if ( !validateImageDimensions(flatFile))
+      if ( !validateImageDimensions(flatFile.get()))
+      {
         ACL_ERROR(0x2016);    //ASTROFILE: Flat calibration frame must be same dimenstions as image.
+      };
     };
 
     if (calibrateData->useDarkFrame)
-      calibrateDark(darkFile, biasFile, calibrateData);
+    {
+      calibrateDark(darkFile.get(), biasFile.get(), calibrateData);
+    };
 
     if (calibrateData->useFlatFrame)
-      calibrateFlat(flatFile, calibrateData);
-
+    {
+      calibrateFlat(flatFile.get(), calibrateData);
+    };
   }
 
   /// @brief Create an astrometry HDB.
-  /// @returns Smart pointer to astrometryHDB
+  /// @returns Raw pointer to astrometryHDB
   /// @throws 0x200A - Unable to create HDB
   /// @post isDirty = true
   /// @post hasData = true
-  /// @details This will create the data structure, append it to the list of HDB's at the end of the vector and return the index of the HDB.
-  /// If there is already an astrometryHDB defined, then an error will be thrown. (If an astrometryHDB exists, then another one
-  /// does not need to be created.) Creates the astrometryHDB instance if it does not already exist.
+  /// @details This will create the data structure, append it to the list of HDB's at the end of the vector and return the index of
+  ///          the HDB. If there is already an astrometryHDB defined, then no error will occur. (If an astrometryHDB exists,
+  ///          then another one does not need to be created.) Creates the astrometryHDB instance if it does not already exist.
+  /// @version 2018-09-22/GGB - Updated to use smart pointers and idioms.
   /// @version 2013-08-30/GGB - Added code to update hasData() and isDirty().
   /// @version 2013-04-12/GGB - Changed return value to the HDB that was created, or already exists.
   /// @version 2011-11-27/GGB - Function created.
 
-  PHDBAstrometry CAstroFile::createAstrometryHDB()
+  CHDBAstrometry *CAstroFile::createAstrometryHDB()
   {
     if (!astrometryHDB_)
     {
-      astrometryHDB_.reset(new CHDBAstrometry(this));
+      HDB.emplace_back(std::make_unique<CHDBAstrometry>(this));
+
+      astrometryHDB_ = dynamic_cast<CHDBAstrometry *>(HDB.back().get());
       isDirty(true);
       hasData(true);
-
-      if (astrometryHDB_)
-      {
-        HDB.push_back(astrometryHDB_);
-      }
-      else
-      {
-        ACL_ERROR(0x200A);      // Unable to create HDB. Function new returned NULL.
-      };
     };
 
     return astrometryHDB_;
   }
 
   /// @brief Creates an image HDB and adds it to the HDB list. Returns a shared pointer to the image HDB.
-  /// @param[in] name - The name of the HDB to create.
+  /// @param[in] name: The name of the HDB to create.
+  /// @returns Pointer to the created image.
   /// @throws std::bad_alloc
   /// @throws 0x200B - Cannot create HDB with duplicate name.
   /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
   /// @version 2015-09-04/GGB - Updated search loop to use std::any_of.
   /// @version 2011-12-10/GGB - Function created.
 
-  CImageHDB_Ptr CAstroFile::createImageHDB(std::string const &name)
+  CImageHDB *CAstroFile::createImageHDB(std::string const &name)
   {
     RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
 
-    if (!std::any_of(HDB.begin(), HDB.end(), [&] (PHDB phdb) {return *phdb == name;}) )
+    if (!std::any_of(HDB.begin(), HDB.end(),
+                     [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
     {
-      CImageHDB_Ptr imageHDB(new CImageHDB(this, name));
-
-      HDB.push_back(imageHDB);
+      HDB.emplace_back(std::make_unique<CImageHDB>(this, name));
       isDirty(true);
       hasData(true);
-      return imageHDB;
+      return dynamic_cast<CImageHDB *>(HDB.back().get());
     }
     else
     {
@@ -711,27 +725,27 @@ namespace ACL
   /// @returns A shared pointer to the image HDB.
   /// @throws std::bad_alloc
   /// @throws 0x200B - Cannot create HDB with duplicate name.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
   /// @version 2015-09-04/GGB - Updated search loop to use std::any_of.
   /// @version 2013-08-30/GGB - Added code to update isDirty and hasData.
   /// @version 2011-12-11/GGB - Function created.
 
-  CATableHDB_Ptr CAstroFile::createATableHDB(std::string const &name)
+  CHDBAsciiTable *CAstroFile::createATableHDB(std::string const &name)
   {
     RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
 
-    if (std::any_of(HDB.begin(), HDB.end(), [&] (PHDB phdb) {return *phdb == name;}) )
+    if (std::any_of(HDB.begin(), HDB.end(),
+                    [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
     {
       ACL_ERROR(0x200B);    // Cannot create HDB with duplicate name.
     }
     else
     {
-      CATableHDB_Ptr ATableHDB(new CHDBAsciiTable(this, name));
-
-      HDB.push_back(ATableHDB);
+      HDB.emplace_back(std::make_unique<CHDBAsciiTable>(this, name));
       isDirty(true);
       hasData(true);
-      return ATableHDB;
+      return dynamic_cast<CHDBAsciiTable *>(HDB.back().get());
     };
   }
 
@@ -742,6 +756,7 @@ namespace ACL
   /// @throws 0x200B - Cannot create HDB with duplicate name.
   /// @post isDirty = true
   /// @post hasData = true
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
   /// @version 2015-09-04/GGB
   ///   @li Updated search loop to use std::any_of.
@@ -749,22 +764,21 @@ namespace ACL
   /// @version 2013-08-30/GGB - Added code to update isDirty() and hasData().
   /// @version 2011-12-11/GGB - Function created.
 
-  CBTableHDB_Ptr CAstroFile::createBTableHDB(std::string const &name)
+  CHDBBinaryTable *CAstroFile::createBTableHDB(std::string const &name)
   {
     RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
 
-    if (std::any_of(HDB.begin(), HDB.end(), [&] (PHDB phdb) {return *phdb == name;}) )
+    if (std::any_of(HDB.begin(), HDB.end(),
+                    [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
     {
       ACL_ERROR(0x200B);    // Cannot create HDB with duplicate name.
     }
     else
     {
-      CBTableHDB_Ptr BTableHDB(new CHDBBinTable(this, name));
-
-      HDB.push_back(BTableHDB);
+      HDB.emplace_back(std::make_unique<CHDBBinaryTable>(this, name));
       isDirty(true);
       hasData(true);
-      return BTableHDB;
+      return dynamic_cast<CHDBBinaryTable *>(HDB.back().get());
       };
   }
 
@@ -823,13 +837,14 @@ namespace ACL
 //  }
 
   /// @brief Create a photometry HDB.
-  /// @returns photometryHDB pointer.
+  /// @returns Raw photometryHDB pointer.
   /// @throws std::bad_alloc
   /// @post isDirty = true
   /// @post hasData = true
-  /// @details This will create the data structure, append it to the list of HDB's at the end of the vector and return the index of the HDB.
-  /// If there is already an photometryHDB defined, then an error will be thrown. (If an aphotoometryHDB exists, then another one
-  /// does not need to be created.) Creates the astrometryHDB instance if it does not already exist.
+  /// @details This will create the data structure, append it to the list of HDB's at the end of the vector and return the index of
+  ///          the HDB. If there is already an photometryHDB defined, then no error will occur. (If an aphotoometryHDB exists, then
+  ///          another one does not need to be created.) Creates the astrometryHDB instance if it does not already exist.
+  /// @version 2018-09-22/GGB - Updated to use smart pointer idioms.
   /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
   /// @version 2015-08-09/GGB - Changed c-style casts to static_cast.
   /// @version 2013-08-30/GGB - Added code to update isDirty() and hasData().
@@ -837,15 +852,16 @@ namespace ACL
   /// @version 2013-04-12/GGB - Changed the return type to PHDBPhotometry.
   /// @version 2011-12-11/GGB - Function created.
 
-  PHDBPhotometry CAstroFile::createPhotometryHDB()
+  CHDBPhotometry *CAstroFile::createPhotometryHDB()
   {
     TRACEENTER;
 
     if (!photometryHDB_)
     {
-      photometryHDB_.reset(new CHDBPhotometry(this));
+      HDB.emplace_back(std::make_unique<CHDBPhotometry>(this));
 
-      HDB.push_back(photometryHDB_);
+      photometryHDB_ = dynamic_cast<CHDBPhotometry *>(HDB.back().get());
+
       isDirty(true);
       hasData(true);
       try
@@ -1028,6 +1044,7 @@ namespace ACL
   /// @param[in] newBkgnd - The new background to use.
   /// @throws 0x2001 -
   /// @throws 0x2005 -
+  /// @version 2018-09-22/GGB - Updated to use std::tuple.
   /// @version 2013-05-14/GGB
   ///   @li Changed function name from floatImage to imageFloat.
   ///   @li Changed parameters in astrometry and photometry call to boost::tuple<long, long> const &
@@ -1039,19 +1056,19 @@ namespace ACL
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
     RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
-    boost::tuple<AXIS_t, AXIS_t> oldDim(HDB[hdb]->width(), HDB[hdb]->height());
+    std::tuple<AXIS_t, AXIS_t> oldDim(HDB[hdb]->width(), HDB[hdb]->height());
 
     HDB[hdb]->imageFloat(newWidth, newHeight, newBkgnd);
     isDirty(true);
 
     if (astrometryHDB_)
     {
-      astrometryHDB_->imageFloat(oldDim, boost::tuple<AXIS_t, AXIS_t>(newWidth, newHeight));
+      astrometryHDB_->imageFloat(oldDim, std::tuple<AXIS_t, AXIS_t>(newWidth, newHeight));
     };
 
     if (photometryHDB_)
     {
-      photometryHDB_->imageFloat(oldDim, boost::tuple<AXIS_t, AXIS_t>(newWidth, newHeight));
+      photometryHDB_->imageFloat(oldDim, std::tuple<AXIS_t, AXIS_t>(newWidth, newHeight));
     };
   }
 
@@ -1176,7 +1193,7 @@ namespace ACL
 
   bool CAstroFile::createPrimaryImageHDB()
   {
-    PHDB newHDB;
+    CHDB *newHDB;
 
     if ( !HDB.empty() )
     {
@@ -1194,20 +1211,19 @@ namespace ACL
   /// @returns false - Primary HDB already exists.
   /// @returns true - Success
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-06/GGB - Changed logic flow and introduced returnValue variable.
   /// @version 2015-06-28/GGB - Make file dirty and hasData.
   /// @version 2012-12-30/GGB - Function created.
 
   bool CAstroFile::createPrimaryHDB()
   {
-    PHDB newHDB;
     bool returnValue = false;
 
     if ( HDB.empty() )
     {
-      newHDB.reset(new CHDBPrimary(this));
-      HDB.push_back(newHDB);
-      newHDB->PRIMARY(true);
+      HDB.emplace_back(std::make_unique<CHDBPrimary>(this));
+      HDB.back()->PRIMARY(true);
       hasData(true);
       isDirty(true);
       returnValue = true;
@@ -1256,14 +1272,15 @@ namespace ACL
   /// @param[in] hdb - The HDB to get the pointer of
   /// @returns Pointer to the requested HDB
   /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2011-12-17/GGB - Convert to smart pointers
   /// @version 2011-05-06/GGB - Function created.
 
-  PHDB &CAstroFile::getHDB(DHDBStore::size_type hdb) const
+  CHDB *CAstroFile::getHDB(DHDBStore::size_type hdb) const
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
-    return (PHDB &) HDB[hdb];
+    return HDB[hdb].get();
   }
 
   /// @brief Retrieves the maximum image value from the specified HDB.
@@ -1369,7 +1386,7 @@ namespace ACL
 
   CAstronomicalCoordinates const &CAstroFile::getTargetCoordinates() const
   {
-    //return (*targetCoordinates);
+    return observationTarget->positionCatalog();
   }
 
   /// @brief Retrieves the stdev image value from the specified HDB.
@@ -1426,10 +1443,11 @@ namespace ACL
   /// @returns Pointer to the newly created HDB.
   /// @throws 0x2018 - HDB Type not registered.
   /// @details If no class claims to be the HDB type, then a null pointer will be called.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-06-30/GGB - Function changed to throw if correct HDB type is not registered. (bug 32)
   /// @version 2012-12-23/GGB - Function created
 
-  PHDB CAstroFile::HDBCreateClass(fitsfile *file)
+  std::unique_ptr<CHDB> CAstroFile::HDBCreateClass(fitsfile *file)
   {
     std::vector<SHDBRegister>::iterator iterator;
     bool found = false;
@@ -1543,6 +1561,7 @@ namespace ACL
   /// @param[in] hdbName - The name of the HDB to return the block type of.
   /// @returns The Block Type
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-08-08/GGB - Updated to use std::find_if(...)
   /// @version 2012-01-10/GGB - Function created.
 
@@ -1552,7 +1571,7 @@ namespace ACL
     EBlockType returnValue = BT_NONE;
 
     iter = std::find_if(HDB.begin(), HDB.end(),
-                        [&] (PHDB hdb) -> bool { return (hdb->HDBName() == hdbName); } );
+                        [&] (std::unique_ptr<CHDB> const &hdb) -> bool { return (hdb->HDBName() == hdbName); } );
 
     if (iter != HDB.end())
     {
@@ -1786,10 +1805,10 @@ namespace ACL
   }
 
   /// @brief Writes a keyword to the specified HDB.
-  /// @param[in] hdb - The HDB to address.
-  /// @param[in] keyword - The keyword name
-  /// @param[in] data - The keyword data
-  /// @param[in] comment - Comment for the keyword.
+  /// @param[in] hdb: The HDB to address.
+  /// @param[in] keyword: The keyword name
+  /// @param[in] data: The keyword data
+  /// @param[in] comment: Comment for the keyword.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2017-07-23/GGB - Function created.
 
@@ -1799,8 +1818,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
-    PFITSKeyword newKeyword(new CFITSKeywordDouble(keyword, value, comment));
-    keywordWrite(hdb, newKeyword);
+    keywordWrite(hdb, std::make_unique<CFITSKeywordDouble>(keyword, value, comment));
   }
 
   /// @brief Writes a keyword to the specified HDB.
@@ -1817,8 +1835,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
-    PFITSKeyword newKeyword(new CFITSKeywordInt16(keyword, value, comment));
-    keywordWrite(hdb, newKeyword);
+    keywordWrite(hdb, std::make_unique<CFITSKeywordInt16>(keyword, value, comment));
   }
 
   /// @brief Writes a keyword to the specified HDB.
@@ -1835,8 +1852,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
-    PFITSKeyword newKeyword(new CFITSKeywordInt32(keyword, value, comment));
-    keywordWrite(hdb, newKeyword);
+    keywordWrite(hdb, std::make_unique<CFITSKeywordInt32>(keyword, value, comment));
   }
 
   /// @brief Adds a keyword to the specified HDB.
@@ -1865,8 +1881,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
-    PFITSKeyword newKeyword(new CFITSKeywordString(keyword, value, comment));
-    keywordWrite(hdb, newKeyword);
+    keywordWrite(hdb, std::make_unique<CFITSKeywordString>(keyword, value, comment));
   }
 
   /// @brief Adds the data to the keyword in the relevant HDB.
@@ -1874,15 +1889,16 @@ namespace ACL
   /// @param[in] data - The keyword to write.
   /// @throws GCL::CRuntimeAssert
   /// @note If the keyword does not already exist, it will be created.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-08-09/GGB - Use runtime assert to check for valid HDB number.
   /// @version 2011-12-18/GGB - Convert to shared_ptr and smart HDB's
   /// @version 2011-07-18/GGB - Function created.
 
-  void CAstroFile::keywordWrite(DHDBStore::size_type hdb, PFITSKeyword &data)
+  void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::unique_ptr<CFITSKeyword> data)
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter HDB >= HDB.size()");
 
-    HDB[hdb]->keywordWrite(data);
+    HDB[hdb]->keywordWrite(std::move(data));
     isDirty(true);
     hasData(true);
   }
@@ -1942,6 +1958,7 @@ namespace ACL
   /// FITS file is closed by this routine.
   /// @param[in] file - The already open fitsfile to load from.
   /// @throws std::bad_alloc.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-06/GGB - (Bug 60) Updated to use cfitsio and not CCfits.
   /// @version 2013-03-13/GGB
   ///   @li Moved to class CAstroFile from CFITSAstroFile.
@@ -1951,9 +1968,7 @@ namespace ACL
 
   void CAstroFile::loadFromFITS(fitsfile *file)
   {
-    PHDB hdb;
     int iIndex;
-    int status = 0;
     int hduCount;
     int naxis;
 
@@ -1967,14 +1982,15 @@ namespace ACL
 
     if (naxis == 0)
     {
-      hdb.reset(new CHDBPrimary(this));
+      HDB.emplace_back(std::make_unique<CHDBPrimary>(this));
     }
     else
     {
-      hdb.reset(new CImageHDB(this, astroManager_HDB_PRIMARY));
+      HDB.emplace_back(std::make_unique<CImageHDB>(this, ASTROMANAGER_HDB_PRIMARY));
     };
-    hdb->readFromFITS(file);
-    HDB.push_back(hdb);
+
+    HDB.back()->readFromFITS(file);
+
 
       // Process all the extensions
 
@@ -1997,7 +2013,6 @@ namespace ACL
   void CAstroFile::loadFromMemory(CFITSMemoryFile &memoryFile)
   {
     fitsfile *file;
-    int status = 0;
 
     CFITSIO_TEST(fits_open_memfile, &file, "", READONLY, memoryFile.memoryPointer(), memoryFile.memorySize(), FITS_BLOCK, nullptr);
     loadFromFITS(file);
@@ -2014,15 +2029,17 @@ namespace ACL
 
   void CAstroFile::loadFromSBIG(boost::filesystem::path const &fileName)
   {
-    CSBIGImg *imageFile = new CSBIGImg();
-    CImageHDB_Ptr newHDB(new CImageHDB(this, astroManager_HDB_PRIMARY));
-    PFITSKeyword keyword;
+    std::unique_ptr<CSBIGImg> imageFile(new CSBIGImg());
     unsigned short xbin, ybin;
 
       // Check that the file is a SBIG file.
 
     if (imageFile->OpenImage(fileName.string().c_str()) == SBFE_NO_ERROR)
     {
+
+      HDB.emplace_back(std::make_unique<CImageHDB>(this, ASTROMANAGER_HDB_PRIMARY));
+      CImageHDB *newHDB = dynamic_cast<CImageHDB *>(HDB.back().get());
+
         // File was opened succesfully.
         // Read all the keywords and store in the data block
 
@@ -2034,33 +2051,26 @@ namespace ACL
 
         // Grab the exposure time from the image.
 
-      keyword.reset(new CFITSKeywordDouble(NOAO_EXPTIME, imageFile->GetExposureTime(), SBIG_COMMENT_EXPTIME));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(NOAO_EXPTIME, imageFile->GetExposureTime(), SBIG_COMMENT_EXPTIME));
 
         // Grab the pixel sizes from the image.
 
-      keyword.reset(new CFITSKeywordDouble(SBIG_PIXELSIZEX, imageFile->GetPixelWidth()/1000));
-      newHDB->keywordWrite(keyword);
-
-      keyword.reset(new CFITSKeywordDouble(SBIG_PIXELSIZEY, imageFile->GetPixelHeight()/1000));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_PIXELSIZEX, imageFile->GetPixelWidth()/1000));
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_PIXELSIZEY, imageFile->GetPixelHeight()/1000));
 
         // Grab the CCD temperature from the image.
 
-      keyword.reset(new CFITSKeywordDouble(SBIG_CCDTEMP, imageFile->GetCCDTemperature(), SBIG_COMMENT_CCDTEMP));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_CCDTEMP, imageFile->GetCCDTemperature(), SBIG_COMMENT_CCDTEMP));
 
         // Grab the camera model from the image.
 
-      keyword.reset(new CFITSKeywordString(FITS_INSTRUMENT, imageFile->GetCameraModel(), FITS_COMMENT_INSTRUMENT));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordString>(FITS_INSTRUMENT, imageFile->GetCameraModel(), FITS_COMMENT_INSTRUMENT));
 
         // Grab the filter from the image.
 
       if (imageFile->GetFilter() != "")
       {
-        keyword.reset(new CFITSKeywordString(HEASARC_FILTER, imageFile->GetFilter(), HEASARC_COMMENT_FILTER));
-        newHDB->keywordWrite(keyword);
+        newHDB->keywordWrite(std::make_unique<CFITSKeywordString>(HEASARC_FILTER, imageFile->GetFilter(), HEASARC_COMMENT_FILTER));
       };
 
         // Grab the binning information from the image.
@@ -2073,45 +2083,32 @@ namespace ACL
 
         // Grab the gain information
 
-      keyword.reset(new CFITSKeywordDouble(SBIG_EGAIN, imageFile->GetEGain(), SBIG_COMMENT_EGAIN));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_EGAIN, imageFile->GetEGain(), SBIG_COMMENT_EGAIN));
 
         // Grab the telescope information
 
       if (imageFile->GetFocalLength() >=  0)
       {
-        keyword.reset(new CFITSKeywordDouble(SBIG_FOCALLEN, imageFile->GetFocalLength() * PCL::IN_to_MM, SBIG_COMMENT_FOCALLEN));
-        newHDB->keywordWrite(keyword);
+        newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_FOCALLEN, imageFile->GetFocalLength() * PCL::IN_to_MM, SBIG_COMMENT_FOCALLEN));
       };
 
       if (imageFile->GetApertureDiameter() >= 0)
       {
-        keyword.reset(new CFITSKeywordDouble(SBIG_APTDIA, imageFile->GetApertureDiameter() * PCL::IN_to_MM, SBIG_COMMENT_APTDIA));
-        newHDB->keywordWrite(keyword);
+        newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_APTDIA, imageFile->GetApertureDiameter() * PCL::IN_to_MM, SBIG_COMMENT_APTDIA));
       };
 
       if (imageFile->GetApertureArea() >= 0)
       {
-        keyword.reset(new CFITSKeywordDouble(SBIG_APTAREA, imageFile->GetApertureArea() * MCL::pow2(PCL::IN_to_MM), SBIG_COMMENT_APTAREA));
-        newHDB->keywordWrite(keyword);
+        newHDB->keywordWrite(std::make_unique<CFITSKeywordDouble>(SBIG_APTAREA, imageFile->GetApertureArea() * MCL::pow2(PCL::IN_to_MM), SBIG_COMMENT_APTAREA));
       };
 
         // Grab the software information
 
-      keyword.reset(new CFITSKeywordString(HEASARC_CREATOR, imageFile->GetSoftware(), HEASARC_COMMENT_CREATOR));
-      newHDB->keywordWrite(keyword);
+      newHDB->keywordWrite(std::make_unique<CFITSKeywordString>(HEASARC_CREATOR, imageFile->GetSoftware(), HEASARC_COMMENT_CREATOR));
 
         // Create the astro image for the HDB
 
       //newHDB->imageSet(CAstroImage::CreateAstroImage(SHORT_IMG, newHDB->NAXIS(), newHDB->NAXISn(), imageFile->GetImagePointer()));
-
-      HDB.push_back(newHDB);
-
-      if (imageFile)
-      {
-        delete imageFile;
-        imageFile = nullptr;
-      };
 
       processSpecialKeywords();
 
@@ -2573,11 +2570,11 @@ namespace ACL
   }
 
   /// @brief Returns the photometryHDB pointer.
-  /// @returns Pointer to the photometry HDB
+  /// @returns Raw Pointer to the photometry HDB
   /// @throws None.
   /// @version 2012-11-11/GGB - Function created.
 
-  PHDBPhotometry CAstroFile::photometryHDB()
+  CHDBPhotometry *CAstroFile::photometryHDB()
   {
     return photometryHDB_;
   }
@@ -2882,6 +2879,7 @@ namespace ACL
 
   /// @brief Saves the contents of the memory structure as a FITS file.
   /// @note The fileName is not changed by this function.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-03/GGB - Use cfitsio instead of ccfits.
   /// @version 2013-08-10/GGB - Changed Astrometry table to binary table.
   /// @version 2013-07-18/GGB - Changed to take parameter "boost::filesystem::path const &) (Bug #1099804)
@@ -2890,7 +2888,7 @@ namespace ACL
 
   void CAstroFile::saveAsFITS(fitsfile *file)
   {
-    std::for_each(HDB.begin(), HDB.end(), [&] (PHDB p) {p->writeToFITS(file);});
+    std::for_each(HDB.begin(), HDB.end(), [&] (std::unique_ptr<CHDB> const &p) {p->writeToFITS(file);});
   }
 
   /// @brief Saves a file into memory.
@@ -3019,7 +3017,7 @@ namespace ACL
   /// @version 2015-08-09/GGB - Changed c-style casts to static_cast
   /// @version 2012-01-28/GGB - Function created.
 
-  bool CAstroFile::validateDarkDuration(PAstroFile &af)
+  bool CAstroFile::validateDarkDuration(CAstroFile *af)
   {
     FP_t darkExposure = 1, imageExposure = 1;
     bool bReturnValue = true;
@@ -3079,7 +3077,7 @@ namespace ACL
   /// @version 2015-08-09/GGB - Changed c-style casts to static_cast
   // 2012-01-28/GGB - Function created.
 
-  bool CAstroFile::validateDarkTemperature(PAstroFile &af)
+  bool CAstroFile::validateDarkTemperature(CAstroFile *af)
   {
     FP_t imageTemperature = 272, darkTemperature = 272;
     bool bReturnValue = true;
@@ -3127,7 +3125,7 @@ namespace ACL
   /// @throws None.
   /// @version 2012-01-28/GGB - Function created.
 
-  bool CAstroFile::validateImageDimensions(PAstroFile &af)
+  bool CAstroFile::validateImageDimensions(CAstroFile *af)
   {
     bool bReturnValue = true;
     NAXIS_t index;
@@ -3166,9 +3164,12 @@ namespace ACL
   }
 
   /// @brief Calls the code to load the appropriate type of extension data.
-  /// @param[in] file - The FITS file to load the extension from.
-  /// @param[in[ extension - The number of the extension to load.
+  /// @param[in] file: The FITS file to load the extension from.
+  /// @param[in[ extension: The number of the extension to load.
+  /// @throws {0x2018, "ASTROFILE: HDB Type not registered."},
+  /// @throws Lots.
   /// @note Checks for registered extension HDU's before testing the "traditional" HDU types.
+  /// @version 2018-09-22/GGB - Updated to use smart pointers.
   /// @version 2013-08-10/GGB - Changed Astrometry table to Binary table.
   /// @version 2013-05-09/GGB - Changed Photometry table to Binary table.
   /// @version 2012-01-21/GGB - Function created.
@@ -3179,103 +3180,85 @@ namespace ACL
 
     int status = 0;
     int hduType;
-    PHDB hdb;
+    CHDB *hdb = nullptr;
+    char szExtName[FLEN_CARD];
+    std::string extName;
+
+    if (fits_read_key(file, TSTRING, FITS_EXTNAME.c_str(), szExtName, nullptr, &status) == KEY_NO_EXIST)
+    {
+      // Extension name not found.
+
+      extName = "Extension " + std::to_string(extension);
+    }
+    else if (status == 0)
+    {
+      extName = std::string(szExtName);
+    }
+    else
+    {
+      throw CFITSException();       // Some other error. Needs to be thrown.
+    };
 
     CFITSIO_TEST(fits_movabs_hdu, file, extension, &hduType);
 
-      // Check the type of the "XTENSION" and load the data.
-
-    if (!HDBRegister.empty())
+    switch (hduType)
     {
-      DHDBRegisterIterator iterator = std::find_if(HDBRegister.begin(), HDBRegister.end(),
-                [&] (SHDBRegister r) {return r.testFunction(file);});
-
-      if (iterator != HDBRegister.end())
+      case IMAGE_HDU:
       {
-        hdb = (*iterator).createFunction(this, file);
-        HDB.push_back(hdb);
+        hdb = createImageHDB(extName);
         hdb->readFromFITS(file);
+        break;
       };
-    };
-
-    if (!hdb)
-    {
-      char szExtName[FLEN_CARD];
-      std::string extName;
-
-      if (fits_read_key(file, TSTRING, FITS_EXTNAME.c_str(), szExtName, nullptr, &status) == KEY_NO_EXIST)
+      case ASCII_TBL:
       {
-          // Extension name not found.
-
-        extName = "Extension " + std::to_string(extension);
-      }
-      else if (status == 0)
-      {
-        extName = std::string(szExtName);
-      }
-      else
-      {
-        throw CFITSException();       // Some other error. Needs to be thrown.
+        hdb = createATableHDB(extName);
+        hdb->readFromFITS(file);
+        break;
       };
-
-        // A custom type of HDB has not been found. Just create it as a stock standard type.
-
-      switch (hduType)
+      case BINARY_TBL:
       {
-        case IMAGE_HDU:
+        if (extName == ASTROMANAGER_HDB_ASTROMETRY)
         {
-          hdb = createImageHDB(extName);
-          hdb->readFromFITS(file);
-          break;
+          astrometryHDB_ = createAstrometryHDB();
+          astrometryHDB_->readFromFITS(file);
+        }
+        else if (extName == ASTROMANAGER_HDB_PHOTOMETRY)
+        {
+          photometryHDB_ = createPhotometryHDB();
+          photometryHDB_->readFromFITS(file);
+        }
+        else
+        {
+          createBTableHDB(extName);
         };
-        case ASCII_TBL:
+        break;
+      };
+      default:
+      {
+        // Check the type of the "XTENSION" and load the data if it is a custom HDB.
+        // This is done here as custom types are identified by
+
+        if (!HDBRegister.empty())
         {
-          hdb.reset(new CHDBAsciiTable(this, extName));
-          break;
-        };
-        case BINARY_TBL:
-        {
-          if (extName == astroManager_HDB_ASTROMETRY)
+          DHDBRegisterIterator iterator = std::find_if(HDBRegister.begin(), HDBRegister.end(),
+                                                       [&] (SHDBRegister r) {return r.testFunction(file);});
+
+          if (iterator != HDBRegister.end())
           {
-            astrometryHDB_.reset(new CHDBAstrometry(this));
-
-            if (astrometryHDB_)
-            {
-              HDB.push_back(astrometryHDB_);
-            }
-            else
-            {
-              ACL_CODE_ERROR;
-            };
-
-            astrometryHDB()->readFromFITS(file);
-          }
-          else if (extName == astroManager_HDB_PHOTOMETRY)
-          {
-            photometryHDB_.reset(new CHDBPhotometry(this));
-
-            if (photometryHDB_)
-            {
-              HDB.push_back(photometryHDB_);
-            }
-            else
-            {
-              ACL_CODE_ERROR;       /// Could not create the photomrtry HDB.
-            };
-
-            photometryHDB()->readFromFITS(file);
+            HDB.emplace_back((*iterator).createFunction(this, file));
+            HDB.back()->readFromFITS(file);
           }
           else
           {
-            hdb.reset(new CHDBBinTable(this, extName));
+            ACL_ERROR(0x2018);  // "ASTROFILE: HDB Type not registered."
           };
-          break;
-        };
-        default:
+        }
+        else
         {
-          ACL_ERROR(0x1000);  // Invalid xtension data
-          break;
-        };
+          ACL_ERROR(0x2018);  // "ASTROFILE: HDB Type not registered."
+        }
+        ACL_ERROR(0x1000);  // Invalid xtension data
+        break;
       };
     };
   }

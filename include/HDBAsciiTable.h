@@ -52,16 +52,16 @@
 #ifndef ACL_HDBASCIITABLE_H
 #define ACL_HDBASCIITABLE_H
 
-  // ACL header files.
-
-#include "HDB.h"
-#include "error.h"
-
-  // Standard C++ header files
+// Standard C++ library header files
 
 #include <cstddef>
 #include <memory>
 #include <vector>
+
+  // ACL library header files.
+
+#include "HDB.h"
+#include "error.h"
 
 namespace ACL
 {
@@ -82,14 +82,14 @@ namespace ACL
     CHDBAsciiTable(CAstroFile *, std::string const &);
     CHDBAsciiTable(CHDBAsciiTable const &);
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) {}
 
       // FITS functions
 
-    virtual void readFromFITS(fitsfile *);
-    virtual void writeToFITS(fitsfile *);
+    virtual void readFromFITS(fitsfile *) override;
+    virtual void writeToFITS(fitsfile *) override;
 
       // Information functions
 
@@ -102,8 +102,6 @@ namespace ACL
     virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
 
   };
-
-  typedef std::shared_ptr<CHDBAsciiTable> CATableHDB_Ptr;
 }
 
 #endif // ACL_HDBASCIITABLE_H

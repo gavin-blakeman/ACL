@@ -95,7 +95,7 @@ namespace ACL
       if (hduNumber == 1)
       {
         CFITSIO_TEST(fits_read_keyword, file, FITS_SIMPLE.c_str(), keywordValue, keywordComment);
-        newHDU->hduName = astroManager_HDB_PRIMARY;
+        newHDU->hduName = ASTROMANAGER_HDB_PRIMARY;
       }
       else
       {

@@ -116,6 +116,7 @@ namespace ACL
 
       // Position Calculation functions.
 
+    virtual CAstronomicalCoordinates positionCatalog() const = 0;
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const = 0;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) = 0;
 

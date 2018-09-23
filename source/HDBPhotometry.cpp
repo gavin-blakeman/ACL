@@ -48,14 +48,13 @@
 
 #include "../include/HDBPhotometry.h"
 
-  // ACL header files
+  // ACL library header files
 
 #include "../include/AstroFile.h"
 #include "../include/AstroImageFunctions.hpp"
 
-  // Boost library
+  // Miscellaneous library header files.
 
-#include "boost/assign.hpp"
 
 namespace ACL
 {
@@ -70,7 +69,7 @@ namespace ACL
   /// @throws None.
   /// @version 2013-06-08/GGB - Function created.
 
-  CHDBPhotometry::CHDBPhotometry(CAstroFile *np) : CHDBBinTable(np, astroManager_HDB_PHOTOMETRY), photometryObservations()
+  CHDBPhotometry::CHDBPhotometry(CAstroFile *np) : CHDBBinaryTable(np, ASTROMANAGER_HDB_PHOTOMETRY), photometryObservations()
   {
   }
 
@@ -78,7 +77,7 @@ namespace ACL
   /// @throws None.
   /// @brief 2013-06-08/GGB - Function created.
 
-  CHDBPhotometry::CHDBPhotometry(CHDBPhotometry const &toCopy) : CHDBBinTable(toCopy)
+  CHDBPhotometry::CHDBPhotometry(CHDBPhotometry const &toCopy) : CHDBBinaryTable(toCopy)
   {
     DPhotometryObservationStore::const_iterator iterator;
 
@@ -93,16 +92,16 @@ namespace ACL
   /// @brief Function to create a copy of *this.
   /// @returns A copy of this.
   /// @throws std::bad_alloc
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  PHDB CHDBPhotometry::createCopy() const
+  std::unique_ptr<CHDB> CHDBPhotometry::createCopy() const
   {
-    PHDB returnValue(new CHDBPhotometry(*this));
 
-    return returnValue;
+    return std::make_unique<CHDBPhotometry>(*this);
   }
 
-  /// Processes the flipping of the image. All the coordinates need to be flipped.
+  /// @brief Processes the flipping of the image. All the coordinates need to be flipped.
   //
   // 2013-05-13/GGB - Function created.
 
@@ -144,11 +143,13 @@ namespace ACL
     };
   }
 
-  /// Processes floating of the image.
-  //
-  // 2013-05-14/GGB - Function created.
+  /// @brief Processes floating of the image.
+  /// @param[in] oldDim: THe old dimensions of the image.
+  /// @param[in] newDim: The new dimensions of the image.
+  /// @throws None.
+  /// @version 2013-05-14/GGB - Function created.
 
-  void CHDBPhotometry::imageFloat(const boost::tuple<AXIS_t, AXIS_t> &oldDim, const boost::tuple<AXIS_t, AXIS_t> &newDim)
+  void CHDBPhotometry::imageFloat(const std::tuple<AXIS_t, AXIS_t> &oldDim, const std::tuple<AXIS_t, AXIS_t> &newDim)
   {
 
     DPhotometryObservationStore::iterator iter;
@@ -159,16 +160,22 @@ namespace ACL
     };
   }
 
-  /// Function called when the image is resampled.
-  //
-  // 2013-05-14/GGB - Function created.
+  /// @brief Function called when the image is resampled.
+  /// @param[in] rx: New image x-dimension
+  /// @param[in] ry: New image y-dimension
+  /// @throws None.
+  /// @version 2013-05-14/GGB - Function created.
 
-  void CHDBPhotometry::imageResample(long rx, long ry)
+  void CHDBPhotometry::imageResample(AXIS_t rx, AXIS_t ry)
   {
     DPhotometryObservationStore::iterator iterator;
 
     for (iterator = photometryObservations.begin(); iterator != photometryObservations.end(); iterator++)
-      (*iterator)->CCDCoordinates(ACL::imageResample((*iterator)->CCDCoordinates(), rx, ry));
+    {
+      (*iterator)->CCDCoordinates(ACL::imageResample((*iterator)->CCDCoordinates(),
+                                                     std::make_tuple(naxisn_[0], naxisn_[1]),
+                                                     std::make_tuple(rx, ry)));
+    };
   }
 
   /// @brief Processes the binning of pixels.
@@ -216,7 +223,7 @@ namespace ACL
 
     for (iter =  photometryObservations.begin(); iter != photometryObservations.end(); iter++)
     {
-      boost::optional<MCL::TPoint2D<FP_t> > temp = ACL::imageCrop( (*iter)->CCDCoordinates(), origin, dims);
+      std::optional<MCL::TPoint2D<FP_t> > temp = ACL::imageCrop( (*iter)->CCDCoordinates(), origin, dims);
       if (temp)
       {
         (*iter)->CCDCoordinates() = *temp;
@@ -468,7 +475,7 @@ namespace ACL
   }
 
   /// @brief Function to write data to the FITS file.
-  /// @param[in] file - Pointer to the fits file to be written to.
+  /// @param[in] file: Pointer to the fits file to be written to.
   /// @throws 0x190C - HDB: Cannot dynamic_cast to BinaryTable.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @details The data relevant to the photometry HDB must be written. The CHDB::writeToFITS
@@ -488,7 +495,6 @@ namespace ACL
     static char *tform[] = { "40A", "1D", "1D", "1D", "1D", "1D", "1D", "1D", "1D", "1D", "1D", "1D", "-1B"};
     static char *tunit[] = { "", "dd.dd", "dd.dd", "Pixels", "pixels", "MAG", "MAG", "ADU", "PIXELS", "ADU", "PIXELS", "PIXELS", ""};
     static int tfields = 13;
-
 
     RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr.");
 
@@ -550,7 +556,7 @@ namespace ACL
       //aperture.push_back(aps);        // Creates a copy of aps.
     };
 
-    fits_create_tbl(file, BINARY_TBL, NAXISn(2), tfields, ttype, tform, tunit, const_cast<char *>(astroManager_HDB_PHOTOMETRY.c_str()),
+    fits_create_tbl(file, BINARY_TBL, NAXISn(2), tfields, ttype, tform, tunit, const_cast<char *>(ASTROMANAGER_HDB_PHOTOMETRY.c_str()),
                     &status);
 
     CHDB::writeToFITS(file);

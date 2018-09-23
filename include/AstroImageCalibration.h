@@ -56,18 +56,18 @@
 #ifndef ACL_ASTROIMAGECALIBRATION_H
 #define ACL_ASTROIMAGECALIBRATION_H
 
-  // Include files for ACL library
+  // Standard C++ library header files
+
+#include <memory>
+#include <vector>
+
+  // ACL library header files
 
 #include "../include/AstroFile.h"
 #include "../include/FITSStrings.h"
 
-  // Standard library include files
+  // Miscellaneous library header files
 
-#include <vector>
-
-  // Bosot library include files
-
-#include "boost/shared_ptr.hpp"
 
 namespace ACL
 {
@@ -215,8 +215,6 @@ namespace ACL
 
     void calibrateFrames();
   };
-
-  typedef boost::shared_ptr<CCalibrateFrame> CCalibrateFrame_Ptr;
 
 }  // namespace
 

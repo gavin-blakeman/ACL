@@ -79,7 +79,7 @@
 #include "HDB.h"
 #include "HDBAstrometry.h"
 #include "HDBAsciiTable.h"
-#include "HDBBinTable.h"
+#include "HDBBinaryTable.h"
 #include "HDBImage.h"
 #include "HDBPhotometry.h"
 #include "FITSKeyword.h"
@@ -97,13 +97,11 @@
 namespace ACL
 {
   class CAstroFile;
-
-  typedef std::shared_ptr<CAstroFile> PAstroFile;         ///< Smart pointer to a CAstroFile object.
-  typedef std::vector<PHDB> DHDBStore;
+  typedef std::vector<std::unique_ptr<CHDB>> DHDBStore;
 
   typedef std::string(*FHDBType)();                       ///< Function template to return the class name of an HDB
   typedef bool(*FHDBTest)(fitsfile *);                    ///< Function template
-  typedef PHDB(*FHDBCreate)(CAstroFile *, fitsfile *);    ///< Function template to create a new HDB from the passed HDU.
+  typedef std::unique_ptr<CHDB>(*FHDBCreate)(CAstroFile *, fitsfile *);    ///< Function template to create a new HDB from the passed HDU.
 
   struct SHDBRegister
   {
@@ -139,8 +137,6 @@ namespace ACL
     bool saveOriginal;
   };
 
-  typedef boost::shared_ptr<SCalibrateImage> SCalibrateImage_Ptr;
-
   /// @brief The CAstroFile class corresponds to a FITS file.
   /// @details The class is used to encapsulate a FITS file. When an image is opened from any source, it is opened into the
   /// CAstroFile class. When the file is saved, it is automatically saved as a FITS file. The FITS file format has been chosen as
@@ -169,8 +165,8 @@ namespace ACL
   class CAstroFile
   {
   private:
-    PHDBAstrometry astrometryHDB_;                                      ///< The HDB storing astrometry specific information.
-    PHDBPhotometry photometryHDB_;                                      ///< The HDB that stores photometry information
+    CHDBAstrometry *astrometryHDB_;                     ///< The HDB storing astrometry specific information.
+    CHDBPhotometry *photometryHDB_;                     ///< The HDB that stores photometry information
 
   protected:
     std::string imageName_;                                                         ///< The image name to identify the file.
@@ -205,17 +201,13 @@ namespace ACL
     virtual void processObservationLocation();
     virtual void processWeather();
 
-    virtual CImageHDB_Ptr createImageHDB(std::string const &);
-    virtual CATableHDB_Ptr createATableHDB(std::string const &);
-    virtual CBTableHDB_Ptr createBTableHDB(std::string const &);
-
       // Calibration functions
 
-    virtual bool validateDarkDuration(PAstroFile &);
-    virtual bool validateDarkTemperature(PAstroFile &);
-    virtual bool validateImageDimensions(PAstroFile &);
-    virtual void calibrateFlat(PAstroFile, SCalibrateImage_Ptr);
-    virtual void calibrateDark(PAstroFile, PAstroFile, SCalibrateImage_Ptr);
+    virtual bool validateDarkDuration(CAstroFile *);
+    virtual bool validateDarkTemperature(CAstroFile *);
+    virtual bool validateImageDimensions(CAstroFile *);
+    virtual void calibrateFlat(CAstroFile *, SCalibrateImage *);
+    virtual void calibrateDark(CAstroFile *, CAstroFile *, SCalibrateImage *);
 
   public:
     explicit CAstroFile();
@@ -249,14 +241,21 @@ namespace ACL
 
     bool createPrimaryHDB();
     bool createPrimaryImageHDB();
+    virtual CImageHDB *createImageHDB(std::string const &);
+    virtual CHDBAsciiTable *createATableHDB(std::string const &);
+    virtual CHDBBinaryTable *createBTableHDB(std::string const &);
+    virtual CHDBAstrometry *createAstrometryHDB();
+    virtual CHDBPhotometry *createPhotometryHDB();
+
     static bool HDBRegisterClass(SHDBRegister &);
-    void HDBAdd(PHDB);
-    PHDB HDBCreateClass(fitsfile *);
+    void HDBAdd(std::unique_ptr<CHDB>);
+    std::unique_ptr<CHDB> HDBCreateClass(fitsfile *);
+
     inline size_t HDBCount() const { return HDB.size();}
     std::string HDBName(DHDBStore::size_type = 0) const;
     EBlockType HDBType(DHDBStore::size_type = 0) const;
     EBlockType HDBType(std::string const &) const;
-    PHDB &getHDB(DHDBStore::size_type = 0) const;
+    CHDB *getHDB(DHDBStore::size_type = 0) const;
 
       // Keyword information
 
@@ -266,7 +265,7 @@ namespace ACL
     DKeywordStore::size_type keywordCount(DHDBStore::size_type) const;
     KWType keywordType(DHDBStore::size_type, std::string const &) const;
     DKeywordStore &keywords(DHDBStore::size_type);
-    void keywordWrite(DHDBStore::size_type, PFITSKeyword &);
+    void keywordWrite(DHDBStore::size_type, std::unique_ptr<CFITSKeyword>);
     bool keywordDelete(DHDBStore::size_type, std::string const &);
 
     void keywordWrite(DHDBStore::size_type, std::string const &, std::int8_t const &, std::string const &);
@@ -355,8 +354,7 @@ namespace ACL
 
       // Astrometry functions
 
-    PHDBAstrometry createAstrometryHDB();
-    PHDBAstrometry astrometryHDB();
+    CHDBAstrometry *astrometryHDB();
     bool hasAstrometryHDB() const;
     bool astrometryObjectAdd(SPAstrometryObservation);
     bool astrometryObjectRemove(std::string const &);
@@ -370,8 +368,7 @@ namespace ACL
       // Photometry functions
 
     size_t photometryObjectCount() const;
-    PHDBPhotometry createPhotometryHDB();
-    PHDBPhotometry photometryHDB();
+    CHDBPhotometry *photometryHDB();
     bool hasPhotometryHDB() const;
     bool photometryObjectAdd(SPPhotometryObservation);
     bool photometryObjectRemove(std::string const &);
@@ -390,7 +387,7 @@ namespace ACL
 
       // Calibration functions
 
-    virtual void calibrateImage(SCalibrateImage_Ptr);
+    virtual void calibrateImage(SCalibrateImage *);
   };
 
 }     // namespace ACL

@@ -63,17 +63,20 @@
 #ifndef ACL_HDBASTROMETRY_H
 #define ACL_HDBASTROMETRY_H
 
-#include "HDBBinTable.h"
-#include "Observation.h"
-
-  // Standard library files
+  // Standard C++ library header files
 
 #include <cstddef>
 #include <list>
 #include <memory>
+#include <tuple>
 #include <vector>
 
-  // MCL library
+  // ACL library header files
+
+#include "HDBBinaryTable.h"
+#include "Observation.h"
+
+  // Miscellaneous library header files
 
 #include <MCL>
 
@@ -85,23 +88,23 @@ namespace ACL
 
     /// This class allows the astrometry related information to be stored in a HDB (HDU) for saving to an external disk file.
 
-  class CHDBAstrometry : public CHDBBinTable
+  class CHDBAstrometry : public CHDBBinaryTable
   {
   private:
     DAstrometryObservationStore astrometryObservations;
     DAstrometryObservationStore::iterator astrometryObservationsIterator;
 
-    virtual void loadKeywordPlateConstant(PFITSKeyword);
+    virtual void loadKeywordPlateConstant(std::unique_ptr<CFITSKeyword> &);
 
   protected:
-    virtual bool specialKeyword(PFITSKeyword);
+    virtual bool specialKeyword(std::unique_ptr<CFITSKeyword> &) override;
 
   public:
     CHDBAstrometry(CAstroFile *);
     explicit CHDBAstrometry(CHDBAstrometry const &);
     virtual ~CHDBAstrometry();
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
       // Information functions
 
@@ -109,15 +112,15 @@ namespace ACL
 
      // FITS file functions
 
-    virtual void readFromFITS(fitsfile *);
-    virtual void writeToFITS(fitsfile *);
+    virtual void readFromFITS(fitsfile *) override;
+    virtual void writeToFITS(fitsfile *) override;
 
       // Image manipulation functions
 
     virtual void imageFlip();
     virtual void imageFlop();
     virtual void imageRotate(FP_t);
-    virtual void imageFloat(boost::tuple<AXIS_t, AXIS_t> const &, boost::tuple<AXIS_t, AXIS_t> const &);
+    virtual void imageFloat(std::tuple<AXIS_t, AXIS_t> const &, std::tuple<AXIS_t, AXIS_t> const &);
     virtual void imageResample(AXIS_t, AXIS_t);
     virtual void binPixels(unsigned int);
     virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t, FP_t, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &);
@@ -138,8 +141,6 @@ namespace ACL
     virtual SPAstrometryObservation astrometryObjectFirst();
     virtual SPAstrometryObservation astrometryObjectNext();
   };
-
-  typedef std::shared_ptr<CHDBAstrometry> PHDBAstrometry;
 }
 
 #endif // ACL_HDBASTROMETRY_H

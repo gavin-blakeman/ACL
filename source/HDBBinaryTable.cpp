@@ -1,11 +1,11 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
-// FILE:								HDBBinTable
+// FILE:								HDBBinaryTable
 // SUBSYSTEM:						Header/Data Blocks (HDB)
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL,  CFitsIO, boost::filesystem, boost::UUID
+// LIBRARY DEPENDANCE:	SCL, CFitsIO, boost::filesystem
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
@@ -28,7 +28,7 @@
 //                      present a single interface to the other astro library classes while supporting several different file
 //                      types.
 //
-// CLASSES INCLUDED:		HDBBinTable - Binary table HDB.
+// CLASSES INCLUDED:		CHDBBinaryTable - Binary table HDB.
 //
 // CLASS HIERARCHY:     CHDB
 //                        - CHDBBinTable
@@ -43,7 +43,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDBBinTable.h"
+#include "../include/HDBBinaryTable.h"
 
 namespace ACL
 {
@@ -60,7 +60,7 @@ namespace ACL
   /// @details Initialise all variables to reasonable default values,
   /// @version 2011-11-25/GGB - Function created.
 
-  CHDBBinTable::CHDBBinTable(CAstroFile *np, std::string const &name) : CHDB(np, name), tfields_(0)
+  CHDBBinaryTable::CHDBBinaryTable(CAstroFile *np, std::string const &name) : CHDB(np, name), tfields_(0)
   {
     BITPIX(8);
     NAXIS(2);
@@ -74,20 +74,19 @@ namespace ACL
   /// @throws None.
   /// @version 2013-06-08/GGB - Function created.
 
-  CHDBBinTable::CHDBBinTable(CHDBBinTable const &toCopy) : CHDB(toCopy), tfields_(toCopy.tfields_), bitpix_(toCopy.bitpix_)
+  CHDBBinaryTable::CHDBBinaryTable(CHDBBinaryTable const &toCopy) : CHDB(toCopy), tfields_(toCopy.tfields_), bitpix_(toCopy.bitpix_)
   {
   }
 
   /// @brief Creates a copy of *this.
   /// @returns A copy of this.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Changed return value to std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  PHDB CHDBBinTable::createCopy() const
+  std::unique_ptr<CHDB> CHDBBinaryTable::createCopy() const
   {
-    PHDB returnValue( new CHDBBinTable(*this) );
-
-    return returnValue;
+    return std::make_unique<CHDBBinaryTable>(*this);
   }
 
   /// @brief Reads the column information from the FITS file.
@@ -95,7 +94,7 @@ namespace ACL
   /// @throws None.
   /// @version 2015-09-19/GGB - Function created.
 
-  void CHDBBinTable::readFromFITS(fitsfile *file)
+  void CHDBBinaryTable::readFromFITS(fitsfile *file)
   {
     CHDB::readFromFITS(file);
   }
@@ -105,7 +104,7 @@ namespace ACL
   /// @throws None.
   /// @version 2015-09-19/GGB - Function created.
 
-  void CHDBBinTable::writeToFITS(fitsfile *file)
+  void CHDBBinaryTable::writeToFITS(fitsfile *file)
   {
     CHDB::writeToFITS(file);
   }

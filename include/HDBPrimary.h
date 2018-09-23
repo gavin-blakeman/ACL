@@ -67,7 +67,7 @@ namespace ACL
     CHDBPrimary(CAstroFile *af) : CHDB(af, "PRIMARY") {}
     explicit CHDBPrimary(CHDBPrimary const &);
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) {}
 

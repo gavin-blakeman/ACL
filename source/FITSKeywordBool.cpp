@@ -69,11 +69,12 @@ namespace ACL
   /// @brief Creates a copy of this instance.
   /// @returns Pointer to a copy of this instance.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2016-04-11/GGB - Function created.
 
-  CFITSKeyword *CFITSKeywordBool::createCopy() const
+  std::unique_ptr<CFITSKeyword> CFITSKeywordBool::createCopy() const
   {
-    return (new CFITSKeywordBool(*this));
+    return std::make_unique<CFITSKeywordBool>(*this);
   }
 
   /// @brief Returns the type of the instance.

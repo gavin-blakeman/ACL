@@ -93,9 +93,15 @@ namespace ACL
     return std::string(dateTime);
   }
 
-  CFITSKeyword *CFITSKeywordDateTime::createCopy() const
+  /// @brief Creates a copy of this object.
+  /// @returns Pointer to the copy.
+  /// @throws std::bad_alloc
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
+  /// @version 2011-07-18/GGB - FUnction created.
+
+  std::unique_ptr<CFITSKeyword> CFITSKeywordDateTime::createCopy() const
   {
-    return (new CFITSKeywordDateTime(*this));
+    return std::make_unique<CFITSKeywordDateTime>(*this);
   }
 
   KWType CFITSKeywordDateTime::type() const

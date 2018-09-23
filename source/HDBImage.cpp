@@ -77,7 +77,7 @@
 
 namespace ACL
 {
-   struct SRawData8
+  struct SRawData8
   {
     std::uint16_t R;
     std::uint16_t G;
@@ -95,14 +95,15 @@ namespace ACL
   /// @param[in] parent - The astrofile instance that "owns" this instance.
   /// @returns A pointer to a new image HDB.
   /// @throws GCL::CRuntimeAssert
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-08-08/GGB - Changed assertion to runtime assertion.
   /// @version 2012-12-23/GGB - Function created.
 
-  PHDB CImageHDB::createHDB(CAstroFile *parent)
+  std::unique_ptr<CHDB> CImageHDB::createHDB(CAstroFile *parent)
   {
     RUNTIME_ASSERT(ACL, parent != nullptr, "Parameter parent cannot be nullptr.");
 
-    return PHDB(new CImageHDB(parent, ""));
+    return std::make_unique<CImageHDB>(parent, "");
   }
 
   /// @brief Constructor taking the name of the HDB to be created.
@@ -319,13 +320,12 @@ namespace ACL
   /// @brief Creates a copy of this HDB.
   /// @returns A smart pointer to a new HDB that is a copy of this.
   /// @throws std::bad_alloc
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-07/GGB - Function created.
 
-  PHDB CImageHDB::createCopy() const
+  std::unique_ptr<CHDB> CImageHDB::createCopy() const
   {
-    PHDB returnValue(new CImageHDB(*this));
-
-    return returnValue;
+    return std::make_unique<CImageHDB>(*this);
   }
 
   /// @brief Function to find the centroid.
@@ -669,7 +669,7 @@ namespace ACL
   /// @version 2016-04-16/GGB - Updated to static_cast<FP_t> from (float)
   /// @version 2011-08-31/GGB - Function created.
 
-  void CImageHDB::keywordPixelSize(PFITSKeyword keyword)
+  void CImageHDB::keywordPixelSize(std::unique_ptr<CFITSKeyword> &keyword)
   {
     if ((*keyword) == SBIG_PIXELSIZEX)
     {
@@ -693,15 +693,18 @@ namespace ACL
   NAXIS_t CImageHDB::NAXIS() const
   {
     if (data)
+    {
       return data->NAXIS();
+    }
     else
+    {
       ACL_ERROR(0x2007);    // Data pointer == nullptr
+    };
   }
 
   /// @brief Pass through function to get the size of axis naxisn in the image.
   /// @throws 0x2007 - Data pointer == NULL
-  //
-  // 2013-07-19/GGB - Function created.
+  /// @version 2013-07-19/GGB - Function created.
 
   AXIS_t CImageHDB::NAXISn(NAXIS_t naxisn) const
   {
@@ -782,6 +785,11 @@ namespace ACL
 
   /// @brief Transforms the image.
   /// @param[in] c0:
+  /// @param[in] ct:
+  /// @param[in] th:
+  /// @param[in] sc:
+  /// @param[in] pix: Pixel size
+  /// @param[in] maskPlane:
   /// @throws 0x2007 - Data pointer == NULL
   /// @throws CCodeError
   /// @version 2018-09-14/GGB - Changed data to unique_ptr and cleaned up logic.
@@ -1077,12 +1085,14 @@ namespace ACL
   //
   // 2011-09-28/GGB - Function created.
 
-  bool CImageHDB::specialKeyword(PFITSKeyword keyword)
+  bool CImageHDB::specialKeyword(std::unique_ptr<CFITSKeyword> &keyword)
   {
     bool returnValue = false;
 
     if (CHDB::specialKeyword(keyword))
+    {
       returnValue = true;
+    }
     else if ((*keyword) == SBIG_PIXELSIZEX)
     {
       keywordPixelSize(keyword);
@@ -1283,7 +1293,6 @@ namespace ACL
     RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
     RUNTIME_ASSERT(ACL, data != nullptr, "Data variable cannot be nullptr");
 
-    int status = 0;
     LONGLONG naxisn[3];
 
     naxisn[0] = static_cast<LONGLONG>(data->NAXISn(1));

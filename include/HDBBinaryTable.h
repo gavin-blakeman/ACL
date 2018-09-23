@@ -46,18 +46,18 @@
 #ifndef ACL_HDBBINTABLE_H
 #define ACL_HDBBINTABLE_H
 
-  // Standard C++ library
+  // Standard C++ library header files
 
 #include <memory>
 
-  // ACL Header files
+  // ACL library header files
 
 #include "HDB.h"
 #include "error.h"
 
 namespace ACL
 {
-  class CHDBBinTable : public CHDB
+  class CHDBBinaryTable : public CHDB
   {
   private:
     struct SColumnType
@@ -75,35 +75,31 @@ namespace ACL
     int tfields_;
     std::vector<SColumnType> columnData_;
 
-    virtual bool loadFromRAW(LibRaw *) { CODE_ERROR(ACL); }
+    virtual bool loadFromRAW(LibRaw *) { ACL_CODE_ERROR; }
 
   protected:
   public:
-    CHDBBinTable(CAstroFile *, std::string const &);
-    explicit CHDBBinTable(CHDBBinTable const &);
-    virtual ~CHDBBinTable() {}
+    CHDBBinaryTable(CAstroFile *, std::string const &);
+    explicit CHDBBinaryTable(CHDBBinaryTable const &);
+    virtual ~CHDBBinaryTable() {}
 
-    virtual PHDB createCopy() const;
+    virtual std::unique_ptr<CHDB> createCopy() const override;
 
       // FITS file functions.
 
-    virtual void readFromFITS(fitsfile *);
-    virtual void writeToFITS(fitsfile *);
+    virtual void readFromFITS(fitsfile *) override;
+    virtual void writeToFITS(fitsfile *) override;
 
     virtual EBlockType HDBType() const { return BT_BTABLE;}
 
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) {}
 
-    virtual int BITPIX() const { return bitpix_; }
-    virtual void BITPIX(int bp) { bitpix_ = bp;}
-    virtual std::string XTENSION() const {return FITS_XTENSION_TABLE;}
+    virtual int BITPIX() const override { return bitpix_; }
+    virtual void BITPIX(int bp) override { bitpix_ = bp;}
+    virtual std::string XTENSION() const override {return FITS_XTENSION_TABLE;}
 
-    virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
+    virtual FP_t imageExposure() const override { ACL_CODE_ERROR; }
   };
-
-  typedef std::shared_ptr<CHDBBinTable> CBTableHDB_Ptr;
-
-
 }  // namespace ACL
 
 #endif // ACL_HDBBINTABLE_H

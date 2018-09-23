@@ -356,9 +356,9 @@ namespace ACL
 
   // Defined strings
 
-  std::string const astroManager_HDB_PRIMARY            ("PRIMARY");
-  std::string const astroManager_HDB_ASTROMETRY         ("ASTROMETRY");
-  std::string const astroManager_HDB_PHOTOMETRY         ("PHOTOMETRY");
+  std::string const ASTROMANAGER_HDB_PRIMARY            ("PRIMARY");
+  std::string const ASTROMANAGER_HDB_ASTROMETRY         ("ASTROMETRY");
+  std::string const ASTROMANAGER_HDB_PHOTOMETRY         ("PHOTOMETRY");
 
   // Time strings
 

@@ -78,7 +78,6 @@ SOURCES += \
     source/HDBPrimary.cpp \
     source/HDBPhotometry.cpp \
     source/HDBImage.cpp \
-    source/HDBBinTable.cpp \
     source/HDBAstrometry.cpp \
     source/HDBAsciiTable.cpp \
     source/HDB.cpp \
@@ -139,7 +138,8 @@ SOURCES += \
     source/MPCORB.cpp \
     source/targetComet.cpp \
     source/CometEls.cpp \
-    source/IERS.cpp
+    source/IERS.cpp \
+    source/HDBBinaryTable.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -155,7 +155,6 @@ HEADERS += \
     include/HDBPrimary.h \
     include/HDBPhotometry.h \
     include/HDBImage.h \
-    include/HDBBinTable.h \
     include/HDBAstrometry.h \
     include/HDBAsciiTable.h \
     include/HDB.h \
@@ -220,7 +219,8 @@ HEADERS += \
     include/MPCORB.h \
     include/targetComet.h \
     include/CometEls.h \
-    include/IERS.h
+    include/IERS.h \
+    include/HDBBinaryTable.h
 
 OTHER_FILES += \
     ACL \

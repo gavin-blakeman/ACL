@@ -160,7 +160,7 @@ namespace ACL
   /// @version 2013-06-09/GGB - Changed astroFile to a smart pointer.
   /// @version 2011-08-27/GGB - Function created
 
-  void CRegisterImages::addImage(PAstroFile astroFile, std::vector<CHDB>::size_type hdb, MCL::TPoint2D<FP_t> const &alignPoint1,
+  void CRegisterImages::addImage(std::shared_ptr<CAstroFile> astroFile, std::vector<CHDB>::size_type hdb, MCL::TPoint2D<FP_t> const &alignPoint1,
     MCL::TPoint2D<FP_t> const &alignPoint2)
   {
     std::shared_ptr<CRegisterImageInformation> newInformation(new CRegisterImageInformation(astroFile, hdb, alignPoint1, alignPoint2) );

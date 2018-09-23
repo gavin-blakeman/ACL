@@ -84,15 +84,14 @@ namespace ACL
   }
 
   /// @brief Creates a copy of *this.
-  /// @returns A copt of this.
+  /// @returns A copy of this.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Changed return value to std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  PHDB CHDBAsciiTable::createCopy() const
+  std::unique_ptr<CHDB> CHDBAsciiTable::createCopy() const
   {
-    PHDB returnValue( new CHDBAsciiTable(*this) );
-
-    return returnValue;
+    return std::make_unique<CHDBAsciiTable>(*this);
   }
 
   /// @brief Write the ascii table information to FITS.

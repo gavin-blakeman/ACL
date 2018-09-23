@@ -115,7 +115,7 @@
 #include "include/AstrometryObservation.h"
 #include "include/AstronomicalCoordinates.h"
 #include "include/AstronomicalTime.h"
-#include "include/HDBBinTable.h"
+#include "include/HDBBinaryTable.h"
 #include "include/FITSKeyword.h"
 #include "include/FITSKeywordBool.h"
 #include "include/FITSKeywordComplex.h"

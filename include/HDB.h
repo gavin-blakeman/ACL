@@ -58,29 +58,28 @@
 #ifndef ACL_HDB_H
 #define ACL_HDB_H
 
-// Standard C++ libraries
+  // Standard C++ library header files
 
 #include <cstdint>
 #include <list>
 #include <memory>
 #include <optional>
 #include <string>
+#include <tuple>
 #include <vector>
 
-  // ACL Library
+  // ACL library header files
 
 #include "AstroCatalogue.h"
 #include "AstroImage.h"
 #include "Astrometry.h"
+#include "error.h"
 #include "FITSKeyword.h"
 #include "FITSStrings.h"
 
-  // cfitsio
-
-#include "fitsio.h"
-
   // MIscellaneous libraries
 
+#include "fitsio.h"
 #include <MCL>
 #include <SCL>
 
@@ -114,9 +113,8 @@ namespace ACL
 
   class CAstroFile;
 
-  typedef std::list<PFITSKeyword> DKeywordStore;
+  typedef std::list<std::unique_ptr<CFITSKeyword>> DKeywordStore;
   class CHDB;
-  typedef std::shared_ptr<CHDB> PHDB;
 
   /// @brief The CHDB class corresponds to an HDU in a  FITS file.
   /// @details As the class is used to store all the information that can be found in an HDU of a FITS file, there are a large
@@ -154,9 +152,10 @@ namespace ACL
 
       // Special keyword functions
 
-    virtual bool specialKeyword(PFITSKeyword);
+    virtual bool specialKeyword(std::unique_ptr<CFITSKeyword> &);
 
   public:
+    CHDB() = delete;
     CHDB(CAstroFile *, std::string const &);
     CHDB(CHDB const &);
 
@@ -164,7 +163,9 @@ namespace ACL
 
     virtual bool operator==(std::string const &) const;
 
-    virtual PHDB createCopy() const = 0;
+      // Factory functions
+
+    virtual std::unique_ptr<CHDB> createCopy() const = 0;
 
       // FITS file functions.
 
@@ -206,15 +207,15 @@ namespace ACL
     virtual int GCOUNT() const { return gcount_;}
     virtual void GCOUNT(int);
 
-    virtual FP_t BSCALE() const { CODE_ERROR(ACL); }
-    virtual void BSCALE(FP_t) { CODE_ERROR(ACL); }
+    virtual FP_t BSCALE() const { ACL_CODE_ERROR; }
+    virtual void BSCALE(FP_t) { ACL_CODE_ERROR; }
 
-    virtual FP_t BZERO() const { CODE_ERROR(ACL); }
-    virtual void BZERO(FP_t) { CODE_ERROR(ACL); }
+    virtual FP_t BZERO() const { ACL_CODE_ERROR; }
+    virtual void BZERO(FP_t) { ACL_CODE_ERROR; }
 
     virtual FP_t EXPOSURE();
 
-    virtual int PEDESTAL() const { CODE_ERROR(ACL); }
+    virtual int PEDESTAL() const { ACL_CODE_ERROR; }
 
     CAstroTime const &getObservationTime() const;
     CWeather *getObservationWeather() const;
@@ -227,7 +228,7 @@ namespace ACL
     virtual KWType keywordType(std::string const &) const;
     virtual DKeywordStore &keywordStore();
     virtual CFITSKeyword const &keywordData(std::string const &) const;
-    virtual void copyKeywords(PHDB const &);
+    virtual void copyKeywords(CHDB const *);
 
     void keywordWrite(std::string const &, std::int8_t const &, std::string const &);
     void keywordWrite(std::string const &, std::int16_t const &, std::string const &);
@@ -239,14 +240,14 @@ namespace ACL
     void keywordWrite(std::string const &, float const &, std::string const &);
     void keywordWrite(std::string const &, double const &, std::string const &);
     void keywordWrite(std::string const &, std::string const &, std::string const &);
-    virtual void keywordWrite(PFITSKeyword const &);
+    virtual void keywordWrite(std::unique_ptr<CFITSKeyword>);
 
       // Keyword iteration functions
 
-    virtual PFITSKeyword keywordIteratorFirst();
-    virtual PFITSKeyword keywordIteratorNext();
-    virtual PFITSKeyword keywordIteratorPrev();
-    virtual PFITSKeyword keywordIteratorLast();
+    //virtual CFITSKeyword *keywordIteratorFirst();
+    //virtual CFITSKeyword *keywordIteratorNext();
+    //virtual CFITSKeyword *keywordIteratorPrev();
+    //virtual CFITSKeyword *keywordIteratorLast();
 
       // Comment functions
 
@@ -260,63 +261,62 @@ namespace ACL
 
       // Image functions
 
-    virtual AXIS_t width() const { CODE_ERROR(ACL); }
-    virtual AXIS_t height() const { CODE_ERROR(ACL); }
-    virtual bool isMonoImage() const { CODE_ERROR(ACL); }
-    virtual bool isPolyImage() const { CODE_ERROR(ACL); }
-    virtual void imageSet(std::unique_ptr<CAstroImage> &) { CODE_ERROR(ACL); }
-    virtual CAstroImage *imageGet() { CODE_ERROR(ACL); }
-    virtual MCL::TPoint2D<FP_t> &getPixelSize() { CODE_ERROR(ACL); }
+    virtual AXIS_t width() const { ACL_CODE_ERROR; }
+    virtual AXIS_t height() const { ACL_CODE_ERROR; }
+    virtual bool isMonoImage() const { ACL_CODE_ERROR; }
+    virtual bool isPolyImage() const { ACL_CODE_ERROR; }
+    virtual void imageSet(std::unique_ptr<CAstroImage> &) { ACL_CODE_ERROR; }
+    virtual CAstroImage *imageGet() { ACL_CODE_ERROR; }
+    virtual MCL::TPoint2D<FP_t> &getPixelSize() { ACL_CODE_ERROR; }
     virtual FP_t imageExposure() const = 0;
 
       // Image rendering functions
 
-    virtual renderImage_t *getRenderedImage() const { CODE_ERROR(ACL); }
-    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { CODE_ERROR(ACL); }
-    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { CODE_ERROR(ACL); }
-    virtual void renderImage(ERenderMode) { CODE_ERROR(ACL); }
-    virtual FP_t blackPoint() { CODE_ERROR(ACL); }
-    virtual FP_t whitePoint() { CODE_ERROR(ACL); }
-    virtual FP_t getMaxValue() const { CODE_ERROR(ACL); }
-    virtual FP_t getMeanValue() const { CODE_ERROR(ACL); }
-    virtual FP_t getStDevValue() const { CODE_ERROR(ACL); }
-    virtual FP_t getMinValue() const { CODE_ERROR(ACL); }
-    virtual void objectProfile(MCL::TPoint2D<FP_t>, AXIS_t, std::vector<std::tuple<FP_t, FP_t> > &) const {CODE_ERROR(ACL); }
+    virtual renderImage_t *getRenderedImage() const { ACL_CODE_ERROR; }
+    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { ACL_CODE_ERROR; }
+    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { ACL_CODE_ERROR; }
+    virtual void renderImage(ERenderMode) { ACL_CODE_ERROR; }
+    virtual FP_t blackPoint() { ACL_CODE_ERROR; }
+    virtual FP_t whitePoint() { ACL_CODE_ERROR; }
+    virtual FP_t getMaxValue() const { ACL_CODE_ERROR; }
+    virtual FP_t getMeanValue() const { ACL_CODE_ERROR; }
+    virtual FP_t getStDevValue() const { ACL_CODE_ERROR; }
+    virtual FP_t getMinValue() const { ACL_CODE_ERROR; }
+    virtual void objectProfile(MCL::TPoint2D<FP_t>, AXIS_t, std::vector<std::tuple<FP_t, FP_t> > &) const { ACL_CODE_ERROR; }
 
       // Image manipulation functions
 
-    virtual void imageFlip() { CODE_ERROR(ACL); }
-    virtual void imageFlop() { CODE_ERROR(ACL); }
-    virtual void imageRotate(FP_t) { CODE_ERROR(ACL); }
-    virtual void imageFloat(AXIS_t, AXIS_t, long) { CODE_ERROR(ACL); }
-    virtual void imageResample(long, long) { CODE_ERROR(ACL); }
-    virtual void binPixels(unsigned int) { CODE_ERROR(ACL); }
-    virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t const &, FP_t const &, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &) { CODE_ERROR(ACL); }
-    virtual void imageCrop(MCL::TPoint2D<AXIS_t>, MCL::TPoint2D<AXIS_t> ) { CODE_ERROR(ACL); }
+    virtual void imageFlip() { ACL_CODE_ERROR; }
+    virtual void imageFlop() { ACL_CODE_ERROR; }
+    virtual void imageRotate(FP_t) { ACL_CODE_ERROR; }
+    virtual void imageFloat(AXIS_t, AXIS_t, long) { ACL_CODE_ERROR; }
+    virtual void imageResample(AXIS_t, AXIS_t) { ACL_CODE_ERROR; }
+    virtual void binPixels(unsigned int) { ACL_CODE_ERROR; }
+    virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t const &, FP_t const &, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &) { ACL_CODE_ERROR; }
+    virtual void imageCrop(MCL::TPoint2D<AXIS_t>, MCL::TPoint2D<AXIS_t> ) { ACL_CODE_ERROR; }
 
       // Calibration functions
 
-    virtual void calibrationApplyDark(CAstroImage const &) { CODE_ERROR(ACL); }
-    virtual void calibrationApplyFlat(CAstroImage const &) { CODE_ERROR(ACL); }
+    virtual void calibrationApplyDark(CAstroImage const &) { ACL_CODE_ERROR; }
+    virtual void calibrationApplyFlat(CAstroImage const &) { ACL_CODE_ERROR; }
 
       // Image Analysis functions
 
-    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR(ACL); }
-    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR(ACL); }
-    //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) {CODE_ERROR(ACL); };
-    virtual bool plateSolve(AXIS_t) { CODE_ERROR(ACL); }
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { ACL_CODE_ERROR; }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
+    //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) { ACL_CODE_ERROR; }
+    virtual bool plateSolve(AXIS_t) { ACL_CODE_ERROR; }
 
       // Photometry functions
 
-    virtual void pointPhotometry(SPPhotometryObservation) { CODE_ERROR(ACL); }
-    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
+    virtual void pointPhotometry(SPPhotometryObservation) { ACL_CODE_ERROR; }
+    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { ACL_CODE_ERROR; }
 
       // WCS functions
 
-    virtual bool hasWCSData() const { CODE_ERROR(ACL); }
-    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR(ACL); }
-    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { CODE_ERROR(ACL); }
-
+    virtual bool hasWCSData() const { ACL_CODE_ERROR; }
+    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { ACL_CODE_ERROR; }
+    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { ACL_CODE_ERROR; }
   };
 
 }  // namespace ACL

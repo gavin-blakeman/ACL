@@ -140,11 +140,12 @@ namespace ACL
   /// @brief Creates a copy of this object.
   /// @returns Pointer to the copy.
   /// @throws std::bad_alloc
-  /// @version 2011-07-18/GGB - FUnction created.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
+  /// @version 2011-07-18/GGB - Function created.
 
-  CFITSKeyword *CFITSKeywordString::createCopy() const
+  std::unique_ptr<CFITSKeyword> CFITSKeywordString::createCopy() const
   {
-    return (new CFITSKeywordString(*this));
+    return std::make_unique<CFITSKeywordString>(*this);
   }
 
   /// @brief Strips the single quote character from the front and back of the string if found.

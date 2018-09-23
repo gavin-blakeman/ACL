@@ -57,13 +57,12 @@ namespace ACL
   /// @brief Creates a copy of *this.
   /// @returns New instance as a copy of this.
   /// @throws None.
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2013-06-08/GGB - Function created.
 
-  PHDB CHDBPrimary::createCopy() const
+  std::unique_ptr<CHDB> CHDBPrimary::createCopy() const
   {
-    PHDB returnValue(new CHDBPrimary(*this) );
-
-    return returnValue;
+    return std::make_unique<CHDBPrimary>(*this);
   }
 
 }

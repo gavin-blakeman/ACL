@@ -36,11 +36,15 @@
 #ifndef ACL_ASTROIMAGEFUNCTIONS_HPP
 #define ACL_ASTROIMAGEFUNCTIONS_HPP
 
+  // Standard C++ library header files
+
+#include <cmath>
+#include <optional>
+#include <tuple>
+
+  // ACL library header files.
+
 #include "config.h"
-
-  // Boost Library
-
-#include "boost/optional.hpp"
 
   // Miscellaneous Libraries
 
@@ -55,8 +59,8 @@ namespace ACL
 {
 
   /// @brief Calculates the black point.
-  /// @param[in] mean - The image mean
-  /// @param[in] stdev = The image stdev.
+  /// @param[in] mean: The image mean
+  /// @param[in] stdev: The image stdev.
   /// @returns The black point.
   /// @throws None.
   /// @version 2017-08-28/GGB - Function created.
@@ -72,8 +76,8 @@ namespace ACL
   }
 
   /// @brief Calculates the white point.
-  /// @param[in] mean - The image mean
-  /// @param[in] stdev = The image stdev.
+  /// @param[in] mean: The image mean
+  /// @param[in] stdev: The image stdev.
   /// @returns The white point.
   /// @throws None.
   /// @version 2017-08-28/GGB - Function created.
@@ -95,8 +99,8 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Calculates the new coordinate value when binning pixels.
-  /// @param[in] pt - Point to calculate new coordinates for
-  /// @param[in] nsize - Binning factor.
+  /// @param[in] pt: Point to calculate new coordinates for
+  /// @param[in] nsize: Binning factor.
   /// @returns New coordinate value.
   /// @throws CRuntimeAssert
   /// @note Templated function.
@@ -118,18 +122,18 @@ namespace ACL
   }
 
   /// @brief Performs a crop on a pixel value.
-  /// @param[in,out] pt - The point to crop.
-  /// @param[in] o - The origen of the crop.
-  /// @param[in] d - The dimensions of the cropped image.
+  /// @param[in] pt: The point to crop.
+  /// @param[in] o: The origen of the crop.
+  /// @param[in] d: The dimensions of the cropped image.
   /// @returns true - The point falls within the new image.
   /// @returns false - The point does not fall within the new image.
   /// @throws None.
   /// @version 2015-09-20/GGB - Function created.
 
   template<typename T, typename U, typename V>
-  boost::optional<MCL::TPoint2D<T> > imageCrop(MCL::TPoint2D<T> &pt, MCL::TPoint2D<U> const &o, MCL::TPoint2D<V> const &d)
+  std::optional<MCL::TPoint2D<T> > imageCrop(MCL::TPoint2D<T> &pt, MCL::TPoint2D<U> const &o, MCL::TPoint2D<V> const &d)
   {
-    boost::optional<MCL::TPoint2D<T> > returnValue;
+    std::optional<MCL::TPoint2D<T> > returnValue;
 
     if ( (pt.x() >= o.x()) && (pt.y() >= o.y())  && (pt.x() <= (o.x() + d.x())) && (pt.y() <= (o.y() + d.y())))
     {
@@ -141,22 +145,22 @@ namespace ACL
   }
 
   /// @brief Calculates the new value for the coordinate if the image is floated.
-  /// @param[in] cp - Point to float.
-  /// @param[in] oldDim - the old dimensions of the image (w, h)
-  /// @param[in] newDim - The new dimensions of the image (w, h)
+  /// @param[in] cp: Point to float.
+  /// @param[in] oldDim: The old dimensions of the image (w, h)
+  /// @param[in] newDim: The new dimensions of the image (w, h)
   /// @returns New value of the coordinate.
   /// @throws None.
   /// @version 2013-03-17/GGB - Function created.
 
   template<typename T>
-  MCL::TPoint2D<T> imageFloat(MCL::TPoint2D<T> cp, boost::tuple<AXIS_t, AXIS_t> const &oldDim, boost::tuple<AXIS_t,
+  MCL::TPoint2D<T> imageFloat(MCL::TPoint2D<T> cp, std::tuple<AXIS_t, AXIS_t> const &oldDim, std::tuple<AXIS_t,
                               AXIS_t> const &newDim)
   {
     MCL::TPoint2D<T> returnValue;
-    AXIS_t oldWidth = oldDim.get<0>();
-    AXIS_t oldHeight = oldDim.get<1>();
-    AXIS_t newWidth = newDim.get<0>();
-    AXIS_t newHeight = newDim.get<1>();
+    AXIS_t oldWidth = std::get<0>(oldDim);
+    AXIS_t oldHeight = std::get<1>(oldDim);
+    AXIS_t newWidth = std::get<0>(newDim);
+    AXIS_t newHeight = std::get<1>(newDim);
     AXIS_t lox, hix, loy, hiy, xdiff, ydiff;
 
     xdiff = newWidth - oldWidth;
@@ -175,8 +179,8 @@ namespace ACL
   }
 
   /// @brief Flips the coordinate within the image.
-  /// @param[in] pt - Point to flip (Mirror around X axis).
-  /// @param[in] ymax - maximum Y coordinate.
+  /// @param[in] pt: Point to flip (Mirror around X axis).
+  /// @param[in] ymax: maximum Y coordinate.
   /// @returns New coordinates of pt.
   /// @throws None.
   /// @version 2012-01-21/GGB - Function created.
@@ -193,8 +197,8 @@ namespace ACL
   }
 
   /// @brief Flops the coordinate within the image. (Mirror around the y axis)
-  /// @param[in] pt - The point to flop.
-  /// @param[in] xmax - The maximum x coordinate.
+  /// @param[in] pt: The point to flop.
+  /// @param[in] xmax: The maximum x coordinate.
   /// @returns The new coordinates for pt.
   /// @throws None.
   /// @version 2012-01-21/GGB - Function created.
@@ -211,9 +215,9 @@ namespace ACL
   }
 
   /// @brief Calculates the new image coordinates when resampling.
-  /// @param[in] pt - The point to convert.
-  /// @param[in] oldDim - The old image dimensions. (>= 0)
-  /// @param[in] newDim - The new image dimensions.
+  /// @param[in] pt: The point to convert.
+  /// @param[in] oldDim: The old image dimensions. (>= 0)
+  /// @param[in] newDim: The new image dimensions.
   /// @returns The converted coordinates.
   /// @throws CRuntimeAssert.
   /// @version 2017-06-18/GGB - Added assertions to prevent divide-by-zero (Bug #22)
@@ -221,19 +225,19 @@ namespace ACL
   /// @version 2013-05-15/GGB - Function created.
 
   template<typename T>
-  MCL::TPoint2D<T> imageResample(MCL::TPoint2D<T> const &pt, boost::tuple<AXIS_t, AXIS_t> const &oldDim,
-                                 boost::tuple<AXIS_t, AXIS_t> const &newDim)
+  MCL::TPoint2D<T> imageResample(MCL::TPoint2D<T> const &pt, std::tuple<AXIS_t, AXIS_t> const &oldDim,
+                                 std::tuple<AXIS_t, AXIS_t> const &newDim)
   {
     FP_t xVal, yVal;
 
-    AXIS_t oldWidth = oldDim.get<0>();
-    AXIS_t oldHeight = oldDim.get<1>();
+    AXIS_t oldWidth = std::get<0>(oldDim);
+    AXIS_t oldHeight = std::get<1>(oldDim);
 
     RUNTIME_ASSERT(ACL, oldWidth >= 0, "Parameter oldDim<0> must be >= 0");
     RUNTIME_ASSERT(ACL, oldHeight >= 0, "Parameter oldDim<1> must be >= 0");
 
-    AXIS_t newWidth = newDim.get<0>();
-    AXIS_t newHeight = newDim.get<1>();
+    AXIS_t newWidth = std::get<0>(newDim);
+    AXIS_t newHeight = std::get<1>(newDim);
 
     FP_t xRatio = static_cast<FP_t>(newWidth) / static_cast<FP_t>(oldWidth);
     FP_t yRatio = static_cast<FP_t>(newHeight) / static_cast<FP_t>(oldHeight);
@@ -247,9 +251,9 @@ namespace ACL
   }
 
   /// @brief Rotates the coordinates around the origen by the angle theta.
-  /// @param[in] c0 - Origin
-  /// @param[in] cP - Coordinate to rotate.
-  /// @param[in] theta - Angle to rotate (radians)
+  /// @param[in] c0: Origin
+  /// @param[in] cP: Coordinate to rotate.
+  /// @param[in] theta: Angle to rotate (radians)
   /// @returns New Coordinates of cP.
   /// @todo Change order of c0 and cP in argument list.
   /// @version 2012-01-14/GGB - Function created.
@@ -266,12 +270,12 @@ namespace ACL
   }
 
   /// @brief Performs the forward transform of a point. (Original image coords -> transformed image coords)
-  /// @param[in] pt - point to be transformed. (coordinates)
-  /// @param[in] c0 - center of rotation
-  /// @param[in] ct - translation amount
-  /// @param[in] angle - angle of rotation (radians)
-  /// @param[in] scale - amount the image should be scaled. (scale >= 0)
-  /// @param[in] pixelSize - the size of the pixels. (pixelSize >= 0)
+  /// @param[in] pt: point to be transformed. (coordinates)
+  /// @param[in] c0: center of rotation
+  /// @param[in] ct: translation amount
+  /// @param[in] angle: angle of rotation (radians)
+  /// @param[in] scale: amount the image should be scaled. (scale >= 0)
+  /// @param[in] pixelSize: the size of the pixels. (pixelSize >= 0)
   /// @returns The forward transformed point coordinates.
   /// @throws CRuntimeAssert()
   /// @note 1. The translation value ct should be less than the size of the image. This cannnot however checked in the code and
@@ -288,8 +292,8 @@ namespace ACL
     RUNTIME_ASSERT(ACL, pixelSize.x() >= 0, "Parameter pixelSize.x must be >= 0");
     RUNTIME_ASSERT(ACL, pixelSize.y() >= 0, "Parameter pixelSize.y must be >= 0");
 
-    FP_t sina = sin(angle);
-    FP_t cosa = cos(angle);
+    FP_t sina = std::sin(angle);
+    FP_t cosa = std::cos(angle);
     FP_t x, y, xmm, ymm, xtemp, ytemp;
 
     xtemp = (pt.x() - c0.x()) * pixelSize.x();
@@ -308,12 +312,12 @@ namespace ACL
   }
 
   /// @brief Performs the reverse transform of a point. (Transformed image coords -> original image coords)
-  /// @param[in] pt - point to be transformed.
-  /// @param[in] c0 - center of rotation
-  /// @param[in] ct - translation amount
-  /// @param[in] angle - angle of rotation (radians)
-  /// @param[in] scale - amount the image should be scaled. (scale >= 0)
-  /// @param[in] pixelSize - the size of the pixels. (pixelSize >= 0)
+  /// @param[in] pt: point to be transformed.
+  /// @param[in] c0: center of rotation
+  /// @param[in] ct: translation amount
+  /// @param[in] angle: angle of rotation (radians)
+  /// @param[in] scale: amount the image should be scaled. (scale >= 0)
+  /// @param[in] pixelSize: the size of the pixels. (pixelSize >= 0)
   /// @returns The forward transformed point.
   /// @throws CRuntimeAssert()
   /// @note 1. The translation value ct should be less than the size of the image. This cannnot however checked in the code and

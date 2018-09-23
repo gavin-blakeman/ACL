@@ -86,6 +86,7 @@
 #include "TargetAstronomy.h"
 #include "AstronomicalTime.h"
 #include "config.h"
+#include "error.h"
 #include "Photometry.h"
 
   // Miscellaneous library header files.
@@ -320,7 +321,6 @@ namespace ACL
       // Catalog functions
 
     virtual TJD const &catalogEpoch() { return epoch_; }
-    virtual CAstronomicalCoordinates &catalogPlace() { return catalogCoordinates_; }
     virtual FP_t catalogPMRA() { return *pmRA_; }
     virtual FP_t catalogPMDEC() { return *pmDec_; }
     virtual FP_t catalogRadialVelocity() { return *radialVelocity_; }
@@ -328,6 +328,7 @@ namespace ACL
 
       // Posotion Functions
 
+    virtual CAstronomicalCoordinates positionCatalog() const { return catalogCoordinates_; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
   };

@@ -94,11 +94,12 @@ namespace ACL
   /// @brief Creates a copy of this object.
   /// @returns Pointer to the copy.
   /// @throws std::bad_alloc
+  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2011-07-18/GGB - FUnction created.
 
-  CFITSKeyword *CFITSKeywordInt64::createCopy() const
+  std::unique_ptr<CFITSKeyword> CFITSKeywordInt64::createCopy() const
   {
-    return (new CFITSKeywordInt64(*this));
+    return std::make_unique<CFITSKeywordInt64>(*this);
   }
 
   /// @brief Returns the type of the data stored in this instance.

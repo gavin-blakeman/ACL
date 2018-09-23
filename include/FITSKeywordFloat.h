@@ -80,7 +80,7 @@ namespace ACL
     virtual operator double() const;
     virtual operator float() const;
 
-    virtual CFITSKeyword *createCopy() const;
+    virtual std::unique_ptr<CFITSKeyword> createCopy() const override;
 
     virtual KWType type() const;
 
