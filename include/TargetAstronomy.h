@@ -58,7 +58,7 @@
 
 #include <list>
 #include <memory>
-#include <string>
+#include <vector>
 
   // ACL library header files
 
@@ -97,7 +97,7 @@ namespace ACL
 
   private:
   protected:
-    std::list<std::string> objectName_;             ///< List of object names. Object may have more than one name.
+    std::vector<std::string> objectName_;             ///< List of object names. Object may have more than one name.
     CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
 
   public:
@@ -121,8 +121,8 @@ namespace ACL
 
       // Data manipulation functions
 
-
     virtual void objectName(std::string const &);
+    virtual void objectName(std::vector<std::string> const &);
 
       // Position Calculation functions.
 

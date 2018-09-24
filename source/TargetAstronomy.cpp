@@ -68,12 +68,13 @@ namespace ACL
   /// @brief Default constructor for the class. Initialises the name field.
   /// @param[in] n - The object name (identifier)
   /// @throws None.
+  /// @version 2018-09-24/GGB - Updated to use vector of names
   /// @version 2016-05-07/GGB - Updated to use a list of object names.
   /// @version 2011-12-22/GGB - Function created.
 
   CTargetAstronomy::CTargetAstronomy(std::string const &n) : objectName_()
   {
-    objectName_.push_front(n);
+    objectName_.push_back(n);
   }
 
   /// @brief Copy constructor for the class.
@@ -119,11 +120,31 @@ namespace ACL
   /// @param[in] newName - The name to add.
   /// @throws None.
   /// @details The newName is added to the list of names.
+  /// @version 2018-09-24/GGB - Updated to use vector of names
   /// @version 2016-05-07/GGB - Function created.
 
   void CTargetAstronomy::objectName(std::string const &newName)
   {
-    objectName_.push_front(newName);
+    objectName_.push_back(newName);
+  }
+
+  /// @brief Adds the list of names to the name list.
+  /// @param[in] nameList: List of names to add.
+  /// @throws None.
+  /// @version 2018-09-24/GGB - Function created.
+
+  void CTargetAstronomy::objectName(std::vector<std::string> const &nameList)
+  {
+
+    std::copy_if(nameList.begin(), nameList.end(),
+                 std::back_inserter(objectName_),
+                  [this] (std::string const &name) -> bool
+                  {
+                    return (std::find(objectName_.begin(),
+                                      objectName_.end(),
+                                      name) == objectName_.end());
+                  }
+                );
   }
 
 }   // namespace ACL
