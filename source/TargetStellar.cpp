@@ -110,11 +110,12 @@ namespace ACL
 
   /// @brief Default contructor for class.
   /// @throws None.
+  /// @version 2018-09-29/GGB - Bug fix. Call default constructor for CTargetAstronomy.
   /// @version 2016-04-30/GGB - Updated pm, RV and PX to boost::optional<>
   /// @version 2012-01-12/GGB - Added support for location, weather and time of observations.
   /// @version 2009-12-16/GGB - Function created.
 
-  CTargetStellar::CTargetStellar() : CTargetAstronomy(""), catalogCoordinates_(), pmRA_(), pmDec_(),
+  CTargetStellar::CTargetStellar() : CTargetAstronomy(), catalogCoordinates_(), pmRA_(), pmDec_(),
     radialVelocity_(), parallax_(), epoch_(double(0))
   {
   }

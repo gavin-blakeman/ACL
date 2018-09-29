@@ -66,6 +66,14 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Default constructor for the class. Initialises the name field.
+  /// @throws None.
+  /// @version 2018-09-29/GGB - Function created.
+
+  CTargetAstronomy::CTargetAstronomy() : objectName_()
+  {
+  }
+
+  /// @brief std::string constructor for the class. Initialises the name field.
   /// @param[in] n - The object name (identifier)
   /// @throws None.
   /// @version 2018-09-24/GGB - Updated to use vector of names
