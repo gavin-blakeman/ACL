@@ -139,7 +139,8 @@ SOURCES += \
     source/targetComet.cpp \
     source/CometEls.cpp \
     source/IERS.cpp \
-    source/HDBBinaryTable.cpp
+    source/HDBBinaryTable.cpp \
+    source/photometryFunctions.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -220,7 +221,8 @@ HEADERS += \
     include/targetComet.h \
     include/CometEls.h \
     include/IERS.h \
-    include/HDBBinaryTable.h
+    include/HDBBinaryTable.h \
+    include/photometryFunctions.h
 
 OTHER_FILES += \
     ACL \

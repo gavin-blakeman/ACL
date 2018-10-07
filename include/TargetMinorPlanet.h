@@ -106,11 +106,15 @@ namespace ACL
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
 
-
       // Factory functions
 
     static std::unique_ptr<CTargetMinorPlanet> create(std::string const&);
     static std::unique_ptr<CTargetMinorPlanet> create(boost::filesystem::path const &, std::string const&);
+
+      // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
+    virtual magnitude_t magnitude() const {}
   };
 
 

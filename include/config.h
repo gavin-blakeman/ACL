@@ -119,6 +119,8 @@ namespace ACL
   typedef std::uint8_t renderImageGrey8_t;    ///< The type used for rendering Grey8 images.
   typedef std::uint8_t colourValue_t;         ///< The type used for a colour value in colour images.
 
+  typedef float magnitude_t;                  ///< Type used for storing/passing magnitudes.
+
 #ifndef ACL_NOMT
   extern size_t maxThreads;                   ///< The maximun number of threads to use in multi-threaded functions.
                                               ///< The library will choose a number of threads to utilise up to a maximum of this

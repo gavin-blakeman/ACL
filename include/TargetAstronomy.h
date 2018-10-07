@@ -88,11 +88,11 @@ namespace ACL
   public:
     enum ETargetType
     {
-      TT_NONE,
-      TT_STELLAR,
-      TT_MINORPLANET,
+      TT_NONE = 0,
       TT_MAJORPLANET,
-      TT_COMET
+      TT_MINORPLANET,
+      TT_COMET,
+      TT_STELLAR,
     };
 
   private:
@@ -130,7 +130,10 @@ namespace ACL
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const = 0;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) = 0;
 
-    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
+      // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) = 0;
+    virtual magnitude_t magnitude() const = 0;
   };
   typedef std::vector<std::shared_ptr<CTargetAstronomy>> DTargetAstronomy;
 

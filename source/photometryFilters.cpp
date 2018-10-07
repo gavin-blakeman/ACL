@@ -36,12 +36,12 @@
 
 #include "../include/photometryFilters.h"
 
-  // Standard libraries
+  // Standard C++ library header files.
 
 #include <algorithm>
 #include <limits>
 
-  // ACL Library
+  // ACL library header files.
 
 #include "../include/common.h"
 #include "../include/error.h"
@@ -87,7 +87,7 @@ namespace ACL
 
   /// @brief Comparison function for the filter name.
   /// @details Also searches the alternate filter name.
-  /// @param[in] filterName - The name of the filter to compare.
+  /// @param[in] filterName: The name of the filter to compare.
   /// @returns true - This is the correct filter.
   /// @returns false - This is not the correct filter.
   /// @throws None.
@@ -95,19 +95,23 @@ namespace ACL
 
   bool CPhotometryFilter::operator==(std::string const &filterName)
   {
+    bool returnValue = false;
+
     if (filterName_ == filterName)
     {
-      return true;
+      returnValue = true;
     }
     else
     {
-      return (std::find(alternateNames_.begin(), alternateNames_.end(), filterName) != alternateNames_.end());
-    }
+      returnValue = std::find(alternateNames_.begin(), alternateNames_.end(), filterName) != alternateNames_.end();
+    };
+
+    return returnValue;
   }
 
   /// @brief Returns the database ID of the selected string.
   /// @details The alternate names are also searched.
-  /// @param[in] filterName - The name of the filter to search for.
+  /// @param[in] filterName: The name of the filter to search for.
   /// @returns The value of the databaseID associated with the filter.
   /// @returns 0 - If the database ID has not been set.
   /// @throws GCL::search_error()
@@ -129,7 +133,7 @@ namespace ACL
 
   /// @brief Returns the filter ID of the selected string.
   /// @details The alternate names are also searched.
-  /// @param[in] filterName - The name of the filter to search for.
+  /// @param[in] filterName: The name of the filter to search for.
   /// @returns The value of the databaseID associated with the filter.
   /// @returns 0 - If the database ID has not been set.
   /// @throws GCL::search_error()
@@ -159,9 +163,9 @@ namespace ACL
   ///           2. Otherwise a search is done for the filter name.
   ///           3. If the filtername exists, the databaseID is assigned to the relevant entry.
   ///           4. Failing all this, a new entry is created using the next available filterID.
-  /// @param[in] filterDatabaseID - The databaseID of the filter.
-  /// @param[in] filterName - The name of the filter. (Generally 1-4 letters)
-  /// @param[in] filterDescription - A longer description of the filter.
+  /// @param[in] filterDatabaseID: The databaseID of the filter.
+  /// @param[in] filterName: The name of the filter. (Generally 1-4 letters)
+  /// @param[in] filterDescription: A longer description of the filter.
   /// @throws GCL::CError(ACL, 0x4000)
   /// @throws GCL::CError(ACL, 0x4001)
   /// @version 2017-07-23/GGB - Function created.
@@ -172,8 +176,8 @@ namespace ACL
       // Does the databaseID already exist in the list.
 
     if (std::find_if(photometryFilterStorage.begin(), photometryFilterStorage.end(),
-                     [filterDatabaseID](CPhotometryFilter &pf)->bool { return (pf.filterDatabaseID() == filterDatabaseID);} ) !=
-        photometryFilterStorage.end())
+                     [filterDatabaseID](CPhotometryFilter &pf)->bool
+                      { return (pf.filterDatabaseID() == filterDatabaseID);} ) != photometryFilterStorage.end())
     {
         // Database entry already exists.
 
@@ -217,6 +221,5 @@ namespace ACL
       };
     }
   }
-
 
 } // namespace ACL

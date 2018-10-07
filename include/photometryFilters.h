@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Photometry Filter class
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	MCL, boost.
+// LIBRARY DEPENDANCE:
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
@@ -37,7 +37,7 @@
 #ifndef ACL_PHOTOMETRYFILTERS_H
 #define ACL_PHOTOMETRYFILTERS_H
 
-  // Standard libraries
+  // Standard C++ library header files.
 
 #include <cstdint>
 #include <string>
@@ -48,7 +48,7 @@ namespace ACL
 
   /// @class CPhotometryFilter
   /// @remark The photometry filters are fairly standard. However, they need to be supported in the database as well as being
-  ///         supported by the ACL library. This is done by implmenting a class that support the database if supplied and if no
+  ///         supported by the ACL library. This is done by implmenting a class that supports the database if supplied and if no
   ///         database is available, the code will continue to work correctly.
 
   class CPhotometryFilter

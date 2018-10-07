@@ -6,7 +6,7 @@
 // LANGUAGE:						C++
 // TARGET OS:						None.
 // LIBRARY DEPENDANCE:	MCL, boost.
-// NAMESPACE:						libAstroClass
+// NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
@@ -45,72 +45,51 @@
 #ifndef ACL_PHOTOMETRY_H
 #define ACL_PHOTOMETRY_H
 
-  // ACL include files
+  // Standard C++ library header files
+
+#include <map>
+#include <optional>
+
+  // ACL library header files
 
 #include "AstronomicalTime.h"
 #include "config.h"
 #include "Observation.h"
 #include "PhotometryAperture.h"
+#include "photometryFilters.h"
 
-  // Boost libraries
-
-#include "boost/optional/optional.hpp"
-#include "boost/shared_ptr.hpp"
-
-  // Math class library
+  // Miscellaneous library header files
 
 #include <MCL>
-
-  // Storage class library
-
 #include <SCL>
-
-  // Standard libraries
-
-#include <valarray>
 
 namespace ACL
 {
-  class CPhotometryMeasurement
+  class CStellarMagnitude final
   {
   private:
-    //EPhotometryFilters filter_;
-    FP_t magniture_;
-    FP_t magnitudeError_;
+    class CMagnitude final
+    {
+    private:
+      std::optional<magnitude_t> magniture_;
+      std::optional<magnitude_t> magnitudeError_;
+    };
+
+    std::map<CPhotometryFilter, CMagnitude> magnitudeMap;
 
   protected:
   public:
+    CStellarMagnitude();
+
+      // Setter functions
+
+    void magnitude(CPhotometryFilter);
+
+      // Getter functions.
+
+    std::optional<magnitude_t> magnitude() const;
+    std::optional<magnitude_t> magnitudeError() const;
   };
-
-  FP_t RawInstrumentalMagnitude(FP_t);
-  FP_t RawInstrumentalMagnitude(FP_t, FP_t);
-  FP_t SNR(FP_t);
-
-  class CPhotometryData : public SCL::CPackage
-  {
-  private:
-    TJD JD;
-    //EPhotometryFilters Filter;
-    //CStellarObject Object;
-    double v;
-    double bv;
-    double ub;
-
-  protected:
-
-  public:
-    CPhotometryData(void);
-    //CPhotometryData(TJD &, EPhotometryFilters, CStellarObject &, double);
-  };
-
-  class CPhotometryReduce
-  {
-  private:
-
-  protected:
-  public:
-  };
-
 
 }	// namespace ACL
 

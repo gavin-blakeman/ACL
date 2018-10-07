@@ -111,6 +111,8 @@ namespace ACL
   /// Determination of the observed position of stellar objects is done by applying corrections for observation epoch, space
   /// motion, refraction etc. This is in contrast to solar objects where the position is determined by using an Ephemeris. The
   /// stellar object class includes the code necessary to reduce the catalog position to a observed position.
+  ///
+  /// @todo Add additional classes such as CStar, CGalaxy, CDoubleStar etc.
 
 
   ////*******************************************************************************************************************************
@@ -267,7 +269,7 @@ namespace ACL
     TJD epoch_;                                       ///< JD of epoch
     std::string spectralType_;                        ///< Spectral type of the object.
     std::vector<std::string> identifiers_;            ///< Alternate identifiers for the object.
-    std::vector<CPhotometryMeasurement> photometry_;  ///< Any photometry measurements associated with the object
+    CStellarMagnitude photometry_;                    ///< Any photometry measurements associated with the object
     std::uint64_t oid_;                               ///< SIMBAD OID
     std::string stellarType_;
 
@@ -294,7 +296,6 @@ namespace ACL
       // Setting functions
 
     virtual void stellarType(std::string const &st) { stellarType_ = st; }
-    virtual std::string stellarType() const;
     virtual void catalogueCoordinates(CAstronomicalCoordinates, EReferenceSystem = RS_ICRS);
     virtual void setEpoch(std::string const &);
     inline virtual void setEpoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch
@@ -307,6 +308,7 @@ namespace ACL
 
       // Getting functions
 
+    virtual std::string stellarType() const;
     virtual CAstronomicalCoordinates catalogueCoordinates() const { return catalogCoordinates_; }
     inline virtual FP_t pmRA() const { return *pmRA_; }
     inline virtual FP_t pmDec() const { return *pmDec_; }
@@ -332,6 +334,11 @@ namespace ACL
     virtual CAstronomicalCoordinates positionCatalog() const { return catalogCoordinates_; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
+
+    // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
+    virtual magnitude_t magnitude() const {}
   };
 
 }  // namespace ACL

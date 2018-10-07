@@ -74,8 +74,8 @@ namespace ACL
   }
 
   /// @brief Test if the passed coordinate lies within the annulus ring. (donut formed by r2_ and r3_)
-  /// @param[in] center - Center coordinate of the aperture
-  /// @param[in] coordinate - The coordinate to test.
+  /// @param[in] center:  Center coordinate of the aperture
+  /// @param[in] coordinate: The coordinate to test.
   /// @returns true - Coordinate is a sky coordinate
   /// @returns false - Coordinate is not a sky coordinate.
   /// @details The test is done by using the relationship R^2 = (x-xc)^2 + (y-yc)^2
@@ -105,9 +105,8 @@ namespace ACL
   }
 
   /// @brief Function to read the serialised data from a valarray.
-  /// EXCEPTIONS: 0x0501 - PHOTOMETRY: Unknown version number for circular aperture.
-  //
-  // 2013-05-09/GGB - Function created.
+  /// @throws 0x0501 - PHOTOMETRY: Unknown version number for circular aperture.
+  /// @version 2013-05-09/GGB - Function created.
 
   void CPhotometryApertureCircular::serialiseIn(std::valarray<boost::uint8_t> const &inputArray)
   {
@@ -157,10 +156,10 @@ namespace ACL
   }
 
   /// @brief Serialise the aperture data into a valarray.
-  /// @param[out] outputArray - The array to write the output data to.
+  /// @param[out] outputArray: The array to write the output data to.
   /// @throws None.
   /// @details For a circular aperture, we just need to store the descriptor and the three radii.
-  /// The longer types are stored LSB first.
+  ///          The long types are stored LSB first.
   /// @note The storage of the aperture is:
   /// @li ApertureType - std::uint8_t
   /// @li Version - std::uint8_t

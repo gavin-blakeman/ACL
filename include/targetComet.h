@@ -80,6 +80,11 @@ namespace ACL
     virtual CAstronomicalCoordinates positionCatalog() const { ACL_CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const { ACL_CODE_ERROR; }
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
+
+      // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
+    virtual magnitude_t magnitude() const {}
   };
 }
 

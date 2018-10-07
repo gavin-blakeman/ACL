@@ -98,6 +98,11 @@ namespace ACL
 
     static std::unique_ptr<CTargetMajorPlanet> create(EPlanets const &);
 
+      // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
+    virtual magnitude_t magnitude() const {}
+
   };
 }
 

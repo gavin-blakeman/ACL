@@ -42,68 +42,30 @@
 
 #include "../include/Photometry.h"
 
-  // libAstrometry header files.
+  // Standard C++ library header files.
+
+#include <cmath>
+
+  // ACL library header files
 
 #include "../include/constants.h"
 #include "../include/AstroFunctions.h"
 
-  // Standard libraries
-
-#include <cmath>
-
-  // Maths class library
+  // Miscellaneous library header files.
 
 #include <MCL>
 
 namespace ACL
 {
 
-  /// @brief Returns a Raw Instrumental Magnitude for the given intensity
-  /// @param[in] intensity - The intensity to convert.
-  /// @returns The intensity converted to a magnitude.
-  /// @throws CError(ACL, 0x2501) - Photometry: Cannot have intensity of zero.
-  /// @version 2015-10-14/GGB - Updated to throw on zero intensity.
-  /// @version 2010-07-23/GGB - Function created.
+  /// @brief Default constructor.
+  ///
+  /// @version 2018-10-05/GGB - Function created.
 
-  FP_t RawInstrumentalMagnitude(FP_t intensity)
+  CStellarMagnitude::CStellarMagnitude() : magnitudeMap()
   {
-    if (intensity >= 0)
-    {
-      return (-2.5 * std::log10(intensity));
-    }
-    else
-    {
-      ERROR(ACL, 0x2501);
-    };
+
   }
 
-  /// @brief Calculates the Raw Instrumental Magnitude given the ADU and adu conversion factor.
-  /// @param[in] ADU - The number of AD units
-  /// @param[in] aduConv - The ADU sensitivity e/ADU
-  /// @returns The raw instrumental magnitude
-  /// @throws None.
-  /// @version 2010-07-23/GGB - Function created.
-
-  FP_t RawInstrumentalMagnitude(FP_t ADU, FP_t aduConv)
-  {
-    if ( (aduConv <= 0) || (ADU <= 0) )
-    {
-      return 0;		// Error cannot take log of negative value.
-    }
-    else
-    {
-      return (-2.5 * log10(ADU * aduConv));
-    }
-  }
-
-  /// @brief Determines the SNR of a single observation
-  /// @param[in] o - intensity of the observation.
-  /// @returns The SNR of the observation
-  /// @version 2010-07-25/GGB - Function created.
-
-  FP_t SNR(FP_t o)
-  {
-    return std::sqrt(o);
-  }
 
 }	// namespace ACL
