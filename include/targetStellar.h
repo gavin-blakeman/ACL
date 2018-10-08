@@ -83,11 +83,11 @@
   // ACL Library header files.
 
 #include "AstronomicalCoordinates.h"
-#include "TargetAstronomy.h"
+#include "targetAstronomy.h"
 #include "AstronomicalTime.h"
 #include "config.h"
 #include "error.h"
-#include "Photometry.h"
+#include "photometry.h"
 
   // Miscellaneous library header files.
 
@@ -338,7 +338,7 @@ namespace ACL
     // Information functions
 
     virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
-    virtual magnitude_t magnitude() const {}
+    virtual CStellarMagnitude &magnitude() const {}
   };
 
 }  // namespace ACL

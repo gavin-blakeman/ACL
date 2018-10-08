@@ -80,7 +80,7 @@ namespace ACL
     CPhotometryObservation(std::shared_ptr<CTargetAstronomy>);
     virtual ~CPhotometryObservation() {}
 
-    virtual SPObservation createCopy() const;
+    virtual std::unique_ptr<CObservation> createCopy() const;
 
     virtual std::optional<FP_t> instrumentMagnitude();
     virtual FP_t magnitudeError() const;
@@ -110,7 +110,7 @@ namespace ACL
     FP_t getStarE() const;
     FP_t getSNR() const;
   };
-  typedef std::shared_ptr<CPhotometryObservation> SPPhotometryObservation;
+  //typedef std::shared_ptr<CPhotometryObservation> SPPhotometryObservation;
 }
 
 #endif // ACL_PHOTOMETRYOBSERVATION_H

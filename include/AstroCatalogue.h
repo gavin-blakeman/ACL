@@ -43,8 +43,8 @@
 
   // ACL include files
 
-#include "TargetAstronomy.h"
-#include "TargetStellar.h"
+#include "targetAstronomy.h"
+#include "targetStellar.h"
 
   // Std include files
 

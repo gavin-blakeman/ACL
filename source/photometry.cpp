@@ -40,7 +40,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/Photometry.h"
+#include "../include/photometry.h"
 
   // Standard C++ library header files.
 
@@ -63,6 +63,31 @@ namespace ACL
   /// @version 2018-10-05/GGB - Function created.
 
   CStellarMagnitude::CStellarMagnitude() : magnitudeMap()
+  {
+
+  }
+
+  /// @brief Returs the photometry magnitude for the specified filters (observation band)
+  /// @param[in] filterID - The filter to check magnitude for.
+  /// @returns An optional containing the value of the magnitudes, or invalid.
+  /// @throws None.
+  /// @version 2018-10-08/GGB - Function created.
+
+  std::optional<magnitude_t> CStellarMagnitude::magnitude(CPhotometryFilter::EFilters filterID) const
+  {
+    auto magnitudeValue = magnitudeMap.find(filterID);
+    if (magnitudeValue != magnitudeMap.end())
+    {
+      return { magnitudeValue->second.magnitude_};
+    }
+    else
+    {
+      return {};
+    }
+  }
+
+
+  std::optional<magnitude_t> CStellarMagnitude::magnitudeError(CPhotometryFilter::EFilters) const
   {
 
   }

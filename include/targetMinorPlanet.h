@@ -52,7 +52,7 @@
 #include "config.h"
 #include "error.h"
 #include "MPCORB.h"
-#include "TargetAstronomy.h"
+#include "targetAstronomy.h"
 
   // Miscellaneous library header files.
 
@@ -114,7 +114,7 @@ namespace ACL
       // Information functions
 
     virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) {}
-    virtual magnitude_t magnitude() const {}
+    virtual CStellarMagnitude &magnitude() const {}
   };
 
 

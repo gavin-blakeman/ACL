@@ -104,11 +104,7 @@ SOURCES += \
     source/FITSUtilities.cpp \
     source/FITS.cpp \
     source/FITSException.cpp \
-    source/Photometry.cpp \
     source/AstronomicalCoordinates.cpp \
-    source/TargetAstronomy.cpp \
-    source/TargetStellar.cpp \
-    source/TargetMinorPlanet.cpp \
     source/FITSKeyword.cpp \
     source/FITSKeywordString.cpp \
     source/FITSKeywordFloat.cpp \
@@ -134,13 +130,17 @@ SOURCES += \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
     source/error.cpp \
-    source/TargetMajorPlanet.cpp \
     source/MPCORB.cpp \
     source/targetComet.cpp \
     source/CometEls.cpp \
     source/IERS.cpp \
     source/HDBBinaryTable.cpp \
-    source/photometryFunctions.cpp
+    source/photometryFunctions.cpp \
+    source/photometry.cpp \
+    source/targetAstronomy.cpp \
+    source/targetMajorPlanet.cpp \
+    source/targetMinorPlanet.cpp \
+    source/targetStellar.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -184,12 +184,8 @@ HEADERS += \
     include/FITSUtilities.h \
     include/FITS.h \
     include/FITSException.h \
-    include/Photometry.h \
     include/AstronomicalCoordinates.h \
     include/AstronomicalObject.h \
-    include/TargetAstronomy.h \
-    include/TargetStellar.h \
-    include/TargetMinorPlanet.h \
     include/FITSKeyword.h \
     include/FITSKeywordString.h \
     include/FITSKeywordFloat.h \
@@ -216,13 +212,17 @@ HEADERS += \
     include/FITSMemoryFile.h \
     include/error.h \
     include/RST.h \
-    include/TargetMajorPlanet.h \
     include/MPCORB.h \
     include/targetComet.h \
     include/CometEls.h \
     include/IERS.h \
     include/HDBBinaryTable.h \
-    include/photometryFunctions.h
+    include/photometryFunctions.h \
+    include/photometry.h \
+    include/targetAstronomy.h \
+    include/targetMajorPlanet.h \
+    include/targetStellar.h \
+    include/targetMinorPlanet.h
 
 OTHER_FILES += \
     ACL \

@@ -52,6 +52,7 @@
 
 #include "../include/AstroFile.h"
 #include "../include/AstroImageFunctions.hpp"
+#include "../include/error.h"
 
   // Miscellaneous library header files.
 
@@ -83,9 +84,8 @@ namespace ACL
 
     for (iterator = toCopy.photometryObservations.begin(); iterator != toCopy.photometryObservations.end(); ++iterator)
     {
-      SPPhotometryObservation newObservation( std::dynamic_pointer_cast<CPhotometryObservation>((*iterator)->createCopy()) );
-
-      photometryObservations.push_back(newObservation);
+      photometryObservations.emplace_back(std::dynamic_pointer_cast<CPhotometryObservation>(
+                                            std::shared_ptr<CObservation>(std::move((*iterator)->createCopy()))));
     };
   }
 
@@ -97,13 +97,12 @@ namespace ACL
 
   std::unique_ptr<CHDB> CHDBPhotometry::createCopy() const
   {
-
     return std::make_unique<CHDBPhotometry>(*this);
   }
 
   /// @brief Processes the flipping of the image. All the coordinates need to be flipped.
-  //
-  // 2013-05-13/GGB - Function created.
+  /// @throws None.
+  /// @version 2013-05-13/GGB - Function created.
 
   void CHDBPhotometry::imageFlip()
   {
@@ -115,9 +114,9 @@ namespace ACL
     };
   }
 
-  /// Processes the flopping of the image. All the coordinates need to be flopped.
-  //
-  // 2013-05-13/GGB - Function created.
+  /// @brief Processes the flopping of the image. All the coordinates need to be flopped.
+  /// @throws None.
+  /// @version 2013-05-13/GGB - Function created.
 
   void CHDBPhotometry::imageFlop()
   {
@@ -187,7 +186,8 @@ namespace ACL
   void CHDBPhotometry::binPixels(unsigned int nsize)
   {
     std::for_each(photometryObservations.begin(), photometryObservations.end(),
-                  [&] (SPPhotometryObservation po) { po->CCDCoordinates() = ACL::imageBinPixels( po->CCDCoordinates(), nsize); });
+                  [&] (auto po)
+                  { po->CCDCoordinates() = ACL::imageBinPixels( po->CCDCoordinates(), nsize); });
   }
 
   /// @brief Performs the transform (TRS) on the point.
@@ -238,34 +238,39 @@ namespace ACL
   }
 
   /// @brief Adds a photometry object to the list of photometry objects.
-  //
-  // 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
-  // 2012-11-11/GGB - Function created.
+  /// @param[in] toAdd: The photometry observation to add.
+  /// @throws
+  /// @version 2018-10-07/GGB
+  ///           @li Removed return value.
+  ///           @li Changed paramter to s smart_ptr value.
+  /// @version 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
+  /// @version 2012-11-11/GGB - Function created.
 
-  bool CHDBPhotometry::photometryObjectAdd(SPPhotometryObservation toAdd)
+  void CHDBPhotometry::photometryObjectAdd(std::shared_ptr<CPhotometryObservation> toAdd)
   {
-    photometryObservations.push_back(toAdd);
+    photometryObservations.push_back(std::move(toAdd));
     NAXISn(2, photometryObservations.size() );
-    return true;
   }
 
-  /// Returns the count of objects in the photometry list.
-  //
-  // 2013-08-03/GGB - Function created.
+  /// @brief Returns the count of objects in the photometry list.
+  /// @returns The number of items in the photometry list.
+  /// @throws None.
+  /// @version 2013-08-03/GGB - Function created.
 
   size_t CHDBPhotometry::photometryObjectCount() const
   {
     return photometryObservations.size();
   }
 
-  /// Deletes the photometry observation with the name passed.
-  //
-  // 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
-  // 2013-08-11/GGB - Function created.
+  /// @brief Deletes the photometry observation with the name passed.
+  /// @param[in] toRemove: The observation to remove.
+  /// @throws
+  /// @version 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
+  /// @version 2013-08-11/GGB - Function created.
 
   bool CHDBPhotometry::photometryObjectRemove(std::string const &toRemove)
   {
-    assert(toRemove.size() != 0);
+    ACL_RUNTIME_ASSERT(toRemove.size() != 0, "Parameter cannot be empty string.");
 
     DPhotometryObservationStore::iterator iter = photometryObservations.begin();
 
@@ -282,30 +287,30 @@ namespace ACL
       return false;
   }
 
-  /// @brief Removes the specified photometry object from the list of photometry objects.
-  /// @param[in] toRemove - The photometry object to remove.
-  /// @returns true - object found and removed.
-  /// @returns false - object not found.
-  /// @throws None.
-  /// @version 2015-08-17/GGB - Updated to use C++11 functions.
-  /// @version 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
-  /// @version 2012-11-11/GGB - Function created
+//  /// @brief Removes the specified photometry object from the list of photometry objects.
+//  /// @param[in] toRemove: The photometry object to remove.
+//  /// @returns true - object found and removed.
+//  /// @returns false - object not found.
+//  /// @throws None.
+//  /// @version 2015-08-17/GGB - Updated to use C++11 functions.
+//  /// @version 2013-08-29/GGB - Added code to update value of NAXISn(2) (Bug #1213104)
+//  /// @version 2012-11-11/GGB - Function created
 
-  bool CHDBPhotometry::photometryObjectRemove(SPPhotometryObservation toRemove)
-  {
-    DPhotometryObservationStore::iterator iter = std::find(photometryObservations.begin(), photometryObservations.end(), toRemove);
+//  bool CHDBPhotometry::photometryObjectRemove(SPPhotometryObservation toRemove)
+//  {
+//    DPhotometryObservationStore::iterator iter = std::find(photometryObservations.begin(), photometryObservations.end(), toRemove);
 
-    if ( iter != photometryObservations.end())
-    {
-      photometryObservations.erase(iter);
-      NAXISn(2, photometryObservations.size() );
-      return true;
-    }
-    else
-    {
-      return false;
-    };
-  }
+//    if ( iter != photometryObservations.end())
+//    {
+//      photometryObservations.erase(iter);
+//      NAXISn(2, photometryObservations.size() );
+//      return true;
+//    }
+//    else
+//    {
+//      return false;
+//    };
+//  }
 
   /// @brief Removes all the elements from the list.
   /// @throws None.
@@ -321,42 +326,40 @@ namespace ACL
   /// @brief Returns the first item in the photometry object list.
   /// @returns The first item in the photometryObject list.
   /// @throws None.
+  /// @version 2018-10-08/GGB - Use a raw pointer return.
   /// @version 2012-11-11/GGB - Function created.
 
-  SPPhotometryObservation CHDBPhotometry::photometryObjectFirst()
+  CPhotometryObservation *CHDBPhotometry::photometryObjectFirst()
   {
     photometryObservationsIterator = photometryObservations.begin();
+    CPhotometryObservation *returnValue = nullptr;
 
-    if (photometryObservationsIterator == photometryObservations.end())
+    if (photometryObservationsIterator != photometryObservations.end())
     {
-      return SPPhotometryObservation();
-    }
-    else
-    {
-      return (*photometryObservationsIterator);
-    }
+      returnValue = photometryObservationsIterator->get();
+    };
+
+    return returnValue;
 
   }
 
   /// @brief Returns the next item in the photometry object list.
   /// @returns The next item in the photometry list.
   /// @throws None.
+  /// @version 2018-10-07/GGB - Changed return type to a raw pointer. Simplified program flow.
   /// @version 2012-11-11/GGB - Function created.
 
-  SPPhotometryObservation CHDBPhotometry::photometryObjectNext()
+  CPhotometryObservation *CHDBPhotometry::photometryObjectNext()
   {
-    if (photometryObservationsIterator == photometryObservations.end())
+    CPhotometryObservation *returnValue = nullptr;
+
+    if ( (photometryObservationsIterator != photometryObservations.end()) &&
+         (++photometryObservationsIterator != photometryObservations.end()) )
     {
-      return SPPhotometryObservation();
-    }
-    else if (++photometryObservationsIterator == photometryObservations.end())
-    {
-      return SPPhotometryObservation();
-    }
-    else
-    {
-      return (*photometryObservationsIterator);
+      returnValue = photometryObservationsIterator->get();
     };
+
+    return returnValue;
   }
 
   /// @brief Loads the HDB from the FITS HDB. All the keywords and data are loaded.
@@ -393,7 +396,6 @@ namespace ACL
 
     std::vector<std::string>::size_type columnIndex = 0;
     DPhotometryObservationStore::size_type index;
-    SPPhotometryObservation newRecord;
     FP_t exposure = 0;
     FP_t egain = 1;
 
@@ -448,27 +450,26 @@ namespace ACL
       {
         if (aperture[index].size() != 0)
         {
-          newRecord.reset(new CPhotometryObservation(objectNames[index]));
+          photometryObservations.emplace_back(std::make_unique<CPhotometryObservation>(objectNames[index]));
+
           if ( RA[index] != DOUBLENULLVALUE)
           {
-            newRecord->observedCoordinates(CAstronomicalCoordinates(MCL::angle_t(RA[index], MCL::AF_Dd), MCL::angle_t(DEC[index], MCL::AF_Dd)));
+            photometryObservations.back()->observedCoordinates(CAstronomicalCoordinates(MCL::angle_t(RA[index], MCL::AF_Dd), MCL::angle_t(DEC[index], MCL::AF_Dd)));
           };
-          newRecord->CCDCoordinates(MCL::TPoint2D<FP_t>(CCDX[index], CCDY[index]));
-          newRecord->sourceADU(sourceADU[index]);
-          newRecord->sourceArea(sourceArea[index]);
-          newRecord->skyADU(skyADU[index]);
-          newRecord->skyArea(skyArea[index]);
-          newRecord->exposure(exposure);
-          newRecord->gain(egain);
+          photometryObservations.back()->CCDCoordinates(MCL::TPoint2D<FP_t>(CCDX[index], CCDY[index]));
+          photometryObservations.back()->sourceADU(sourceADU[index]);
+          photometryObservations.back()->sourceArea(sourceArea[index]);
+          photometryObservations.back()->skyADU(skyADU[index]);
+          photometryObservations.back()->skyArea(skyArea[index]);
+          photometryObservations.back()->exposure(exposure);
+          photometryObservations.back()->gain(egain);
           if (FWHM[index] != DOUBLENULLVALUE)
           {
-            newRecord->FWHM(std::optional<FP_t>(FWHM[index]));
+            photometryObservations.back()->FWHM(std::optional<FP_t>(FWHM[index]));
           };
           PPhotometryAperture photometryAperture(CPhotometryAperture::createAperture(aperture[index]));
           photometryAperture->serialiseIn(aperture[index]);
-          newRecord->photometryAperture(photometryAperture);
-
-          photometryObservations.push_back(newRecord);
+          photometryObservations.back()->photometryAperture(photometryAperture);
         };
       };
     };

@@ -591,25 +591,26 @@ namespace ACL
   }
 
   /// @brief Performs photometry on the image plane
-  /// @param[in] po - THe photometry object.
+  /// @param[in] po: The photometry object.
   /// @throws 0x0003 - Overlaps edge
+  /// @version 2018-10-07/GGB - Changed parameter to a reference.
   /// @version 2013-05-08/GGB - Rewrite to use PPhotometryObservation as the parameter.
   /// @version 2012-11-10/GGB - Changed function arguments to align with changes to argument lists globally.
   /// @version 2010-11-07/GGB - Function created.
 
-  void CAstroImageMono::photometry(SPPhotometryObservation po) const
+  void CAstroImageMono::photometry(CPhotometryObservation &po) const
   {
     AXIS_t xIndex, yIndex;
-    AXIS_t xStart = static_cast<AXIS_t>(po->CCDCoordinates().x() - po->photometryAperture()->halfWidth() - 1);
-    AXIS_t xFinish = static_cast<AXIS_t>(po->CCDCoordinates().x() + po->photometryAperture()->halfWidth() + 1);
-    AXIS_t yStart = static_cast<AXIS_t>(po->CCDCoordinates().y() - po->photometryAperture()->halfHeight() - 1);
-    AXIS_t yFinish = (AXIS_t) (po->CCDCoordinates().y() + po->photometryAperture()->halfHeight() + 1);
-    MCL::TPoint2D<AXIS_t> center( (MCL::TPoint2D<AXIS_t>) po->CCDCoordinates() );
+    AXIS_t xStart = static_cast<AXIS_t>(po.CCDCoordinates().x() - po.photometryAperture()->halfWidth() - 1);
+    AXIS_t xFinish = static_cast<AXIS_t>(po.CCDCoordinates().x() + po.photometryAperture()->halfWidth() + 1);
+    AXIS_t yStart = static_cast<AXIS_t>(po.CCDCoordinates().y() - po.photometryAperture()->halfHeight() - 1);
+    AXIS_t yFinish = (AXIS_t) (po.CCDCoordinates().y() + po.photometryAperture()->halfHeight() + 1);
+    MCL::TPoint2D<AXIS_t> center( (MCL::TPoint2D<AXIS_t>) po.CCDCoordinates() );
 
-    po->sourceADU() = 0;
-    po->sourceArea() = 0;
-    po->skyADU() = 0;
-    po->skyArea() = 0;
+    po.sourceADU() = 0;
+    po.sourceArea() = 0;
+    po.skyADU() = 0;
+    po.skyArea() = 0;
 
     if ( (xStart < 0) || (yStart < 0) || (xFinish >= dimX) || (yFinish >= dimY) )
     {
@@ -621,15 +622,15 @@ namespace ACL
       {
         for (yIndex = yStart; yIndex <= yFinish; yIndex++)
         {
-          if ( po->photometryAperture()->isSource(center, MCL::TPoint2D<INDEX_t>(xIndex, yIndex)) ) // Is this part of the aperture?
+          if ( po.photometryAperture()->isSource(center, MCL::TPoint2D<INDEX_t>(xIndex, yIndex)) ) // Is this part of the aperture?
           {
-            po->sourceADU() += imagePlaneStorage[0]->getValue(xIndex, yIndex);
-            ++(po->sourceArea());
+            po.sourceADU() += imagePlaneStorage[0]->getValue(xIndex, yIndex);
+            ++(po.sourceArea());
           }
-          else if ( po->photometryAperture()->isSky(center, MCL::TPoint2D<INDEX_t>(xIndex, yIndex)) ) // Is this part of the annulus?
+          else if ( po.photometryAperture()->isSky(center, MCL::TPoint2D<INDEX_t>(xIndex, yIndex)) ) // Is this part of the annulus?
           {
-            po->skyADU() += imagePlaneStorage[0]->getValue(xIndex, yIndex);
-            ++(po->skyArea());
+            po.skyADU() += imagePlaneStorage[0]->getValue(xIndex, yIndex);
+            ++(po.skyArea());
           };
         };
       };

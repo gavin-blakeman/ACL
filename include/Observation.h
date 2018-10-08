@@ -51,15 +51,15 @@
   // Standard C++ library header files.
 
 #include <cstddef>
-#include <optional>
 #include <memory>
+#include <optional>
 
   // ACL header files
 
 #include "AstroClass.h"
 #include "AstronomicalTime.h"
 #include "config.h"
-#include "TargetAstronomy.h"
+#include "targetAstronomy.h"
 
   // Math Class Library
 
@@ -67,10 +67,6 @@
 
 namespace ACL
 {
-
-  class CObservation;                                       // Needed for the factory function.
-  typedef std::shared_ptr<CObservation> SPObservation;
-
   /// @class The CObservation class is used for storing observation data.
   /// An observation will typically include a target (object) and information about the place of observation.
   /// (Time, weather, geographic location).
@@ -96,7 +92,7 @@ namespace ACL
     bool operator==(std::string const &) const;
     bool operator!=(std::string const &) const;
 
-    virtual SPObservation createCopy() const;
+    virtual std::unique_ptr<CObservation> createCopy() const;
 
     void objectName(std::string const &);
     std::string objectName() const;

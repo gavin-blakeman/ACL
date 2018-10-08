@@ -51,23 +51,20 @@
 #ifndef ACL_ASTROMETRY_H
 #define ACL_ASTROMETRY_H
 
-  // ACL Include Files
+  // Standard C++ library header files.
+
+#include <memory>
+#include <vector>
+
+  // ACL library header files
 
 #include "AstroClass.h"
 #include "AstrometryObservation.h"
 #include "AstronomicalCoordinates.h"
 
-  // MCl Library
+  // Miscellaneous library header files.
 
 #include <MCL>
-
-  // Std C++ library
-
-#include <vector>
-
-  // Boost Library
-
-#include "boost/shared_ptr.hpp"
 
 namespace ACL
 {
@@ -77,15 +74,6 @@ namespace ACL
     double F;                   // Focal Length;
     double a, b, c, d, e, f;
   };
-
-  typedef boost::shared_ptr<SPlateData> SPlateData_Ptr;
-
-  /// DAstrometryStore typedef for the storage class for astrometry objects.
-
-  /// This typedef is set to a std::vector<>. The typedef is used as the storage class for the reference objects as well
-  /// as for the target objects. (If a list of target objects is desired/provided).
-
-  typedef std::vector<SPAstrometryObservation> DAstrometryStore;
 
   /// The CAstrometry class is used for performing astrometry on an image.
 
@@ -100,6 +88,8 @@ namespace ACL
   class CAstrometry
   {
   private:
+    typedef std::vector<std::shared_ptr<CAstrometryObservation>> DAstrometryStore;
+
     DAstrometryStore _references;
     DAstrometryStore _targets;
     PAstroTime observationTime;                            // Observation date/time (TT)
@@ -108,7 +98,7 @@ namespace ACL
     DAstrometryStore::iterator referenceIterator;
     DAstrometryStore::iterator targetIterator;
 
-    SPlateData_Ptr plateData;
+    std::unique_ptr<SPlateData> plateData;
     CAstronomicalCoordinates plateCenter;
 
     mutable bool bPDV;                                          // Plate data valid.
@@ -136,13 +126,13 @@ namespace ACL
 
       // Reference object functions
 
-    virtual bool referenceAdd(SPAstrometryObservation);
+    virtual bool referenceAdd(std::unique_ptr<CAstrometryObservation>);
     virtual bool referenceRemove(std::string const &);
     virtual DAstrometryStore::size_type referenCAstronomicalCoordinatesount() const;
 
       // Target object functions
 
-    virtual bool targetAdd(SPAstrometryObservation);
+    virtual bool targetAdd(std::unique_ptr<CAstrometryObservation>);
     virtual bool targetRemove(std::string const &);
     virtual DAstrometryStore::size_type targetCount() const;
 
@@ -163,8 +153,8 @@ namespace ACL
       // Calculation functions
 
     virtual void calculatePlateConstants();
-    virtual SPlateData_Ptr plateConstants() ;
-    virtual bool checkRequisites() const ;
+    virtual SPlateData *plateConstants() const;
+    virtual bool checkRequisites() const;
 
       // Image functions
 
@@ -174,10 +164,10 @@ namespace ACL
 
       // Iteration functions
 
-    virtual SPAstrometryObservation referenceFirst();
-    virtual SPAstrometryObservation referenceNext();
-    virtual SPAstrometryObservation targetFirst();
-    virtual SPAstrometryObservation targetNext();
+    virtual CAstrometryObservation &referenceFirst();
+    virtual CAstrometryObservation &referenceNext();
+    virtual CAstrometryObservation &targetFirst();
+    virtual CAstrometryObservation &targetNext();
   };
 
 }  // namespace ACL

@@ -56,7 +56,6 @@
 
 #include "Observation.h"
 
-
 namespace ACL
 {
   class CAstrometryObservation : public CObservation
@@ -82,10 +81,8 @@ namespace ACL
     CAstrometryObservation(std::shared_ptr<CTargetAstronomy>);
     virtual ~CAstrometryObservation();
 
-    virtual SPObservation createCopy() const;
-
+    virtual std::unique_ptr<CObservation> createCopy() const;
   };
-  typedef std::shared_ptr<CAstrometryObservation> SPAstrometryObservation;
 
 }
 

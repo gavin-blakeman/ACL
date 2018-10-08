@@ -1010,11 +1010,12 @@ namespace ACL
   }
 
   /// @brief Performs photometry on a single star or object.
-  /// @param[in] po - The photometry object.
+  /// @param[in] po: The photometry object.
   /// @throws 0x2007 - Data pointer == nullptr
+  /// @version 2018-10-07/GGB - Changed parameter to a reference.
   /// @version 2012-11-10/GGB - Function created.
 
-  void CImageHDB::pointPhotometry(SPPhotometryObservation po)
+  void CImageHDB::pointPhotometry(CPhotometryObservation &po)
   {
     if (!data)
     {

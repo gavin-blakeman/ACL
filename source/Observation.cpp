@@ -138,13 +138,12 @@ namespace ACL
   /// @brief Creates a copy of *this.
   /// @returns A shared_ptr with a copy of *this.
   /// @throws std::bad_alloc
+  /// @version 2018-10-08/GGB - Updated to have unique_ptr as return.
   /// @version 2013-06-08/GGB - Function created.
 
-  SPObservation CObservation::createCopy() const
+  std::unique_ptr<CObservation> CObservation::createCopy() const
   {
-    SPObservation returnValue(new CObservation(*this));
-
-    return returnValue;
+    return std::make_unique<CObservation>(*this);
   }
 
   /// Checks if a set of coordinates is close to the object.
@@ -156,9 +155,13 @@ namespace ACL
     double sr = sqrt( (float) MCL::pow2((center.x() - CCDCoordinates_.x())) + MCL::pow2((center.y() - CCDCoordinates_.y())) );
 
     if (sr < r)
+    {
       return true;
+    }
     else
+    {
       return false;
+    };
   }
 
   void CObservation::objectName(std::string const &on)

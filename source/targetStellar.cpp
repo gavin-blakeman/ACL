@@ -66,7 +66,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/TargetStellar.h"
+#include "../include/targetStellar.h"
 
   // Standard C++ library header files
 

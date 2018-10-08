@@ -53,7 +53,7 @@
 
 #include "AstronomicalCoordinates.h"
 #include "config.h"
-#include "TargetAstronomy.h"
+#include "targetAstronomy.h"
 
   // Miscellaneous library header files.
 

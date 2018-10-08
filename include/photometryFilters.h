@@ -53,6 +53,35 @@ namespace ACL
 
   class CPhotometryFilter
   {
+  public:
+    enum EFilters
+    {
+      FT_UNKNOWN = 0,
+      FT_UJ = 1,
+      FT_BJ,
+      FT_VJ,
+      FT_RC,
+      FT_IC,
+      FT_J,
+      FT_H,
+      FT_K,
+      FT_TG,
+      FT_Z,
+      FT_CV,
+      FT_CR,
+      FT_SZ,
+      FT_SU,
+      FT_SG,
+      FT_SR,
+      FT_SI,
+      FT_STU,
+      FT_RED,
+      FT_GREEN,
+      FT_BLUE,
+      FT_LUMINANACE,
+      FT_USER,
+    };
+
   private:
     std::uint16_t filterID_;
     std::uint16_t filterDatabaseID_ = 0;

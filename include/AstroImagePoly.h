@@ -71,8 +71,6 @@ namespace ACL
   class CAstroImagePoly : public CAstroImage
   {
   private:
-    DImagePlaneStorage imagePlanes;
-
     CAstroImagePoly() = delete;
     CAstroImagePoly(CAstroImagePoly const &) = delete;
     CAstroImagePoly &operator=(CAstroImagePoly const &) = delete;
@@ -142,7 +140,7 @@ namespace ACL
 
     virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
     virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {ACL_CODE_ERROR;}
-    virtual void photometry(SPPhotometryObservation /*photometryObservation*/) const {ACL_CODE_ERROR;}
+    virtual void photometry(CPhotometryObservation &) const {ACL_CODE_ERROR;}
     virtual std::optional<double> FWHM(MCL::TPoint2D<double> const &) const { ACL_CODE_ERROR; }
   };
 

@@ -47,7 +47,7 @@
 #include "AstroClass.h"
 #include "config.h"
 #include "AstronomicalTime.h"
-#include "TargetAstronomy.h"
+#include "targetAstronomy.h"
 
   // Boost library
 

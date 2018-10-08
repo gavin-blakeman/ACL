@@ -309,7 +309,7 @@ namespace ACL
 
       // Photometry functions
 
-    virtual void pointPhotometry(SPPhotometryObservation) { ACL_CODE_ERROR; }
+    virtual void pointPhotometry(CPhotometryObservation &) { ACL_CODE_ERROR; }
     virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { ACL_CODE_ERROR; }
 
       // WCS functions

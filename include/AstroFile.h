@@ -358,13 +358,13 @@ namespace ACL
 
     CHDBAstrometry *astrometryHDB();
     bool hasAstrometryHDB() const;
-    bool astrometryObjectAdd(SPAstrometryObservation);
+    bool astrometryObjectAdd(std::shared_ptr<CAstrometryObservation>);
     bool astrometryObjectRemove(std::string const &);
     void astrometryObjectRemoveAll();
     void astrometryCalculatePlateConstants();
     bool astrometryCheckRequisites() const;
-    SPAstrometryObservation astrometryObjectFirst();
-    SPAstrometryObservation astrometryObjectNext();
+    CAstrometryObservation *astrometryObjectFirst();
+    CAstrometryObservation *astrometryObjectNext();
     size_t astrometryObjectCount() const;
 
       // Photometry functions
@@ -372,14 +372,14 @@ namespace ACL
     size_t photometryObjectCount() const;
     CHDBPhotometry *photometryHDB();
     bool hasPhotometryHDB() const;
-    bool photometryObjectAdd(SPPhotometryObservation);
+    void photometryObjectAdd(std::shared_ptr<CPhotometryObservation>);
     bool photometryObjectRemove(std::string const &);
     void photometryObjectRemoveAll();
-    SPPhotometryObservation photometryObjectFirst();
-    SPPhotometryObservation photometryObjectNext();
+    CPhotometryObservation *photometryObjectFirst();
+    CPhotometryObservation *photometryObjectNext();
     std::optional<FP_t> FWHM();                                     // Determine the mean Full-Width-Half-Max for the image.
     std::optional<FP_t> FWHM(DHDBStore::size_type, MCL::TPoint2D<FP_t> const &) const;  // Determine the Full-Width-Half-Max for an image star.
-    virtual void pointPhotometry(DHDBStore::size_type, SPPhotometryObservation);
+    virtual void pointPhotometry(DHDBStore::size_type, CPhotometryObservation &);
 
       // WCS functions
 

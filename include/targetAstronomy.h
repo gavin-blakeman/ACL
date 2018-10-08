@@ -1,7 +1,7 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:			        Astronomy Class Library
-// FILE:				        AstronomicalObject
+// FILE:				        Astronomy Targets
 // SUBSYSTEM:		        Astronomical objects
 // TARGET OS:		        WINDOWS/UNIX/LINUX/MAC
 // LIBRARY DEPENDANCE:	GCL, MCL, PCL
@@ -51,108 +51,94 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/TargetAstronomy.h"
+#ifndef ACL_TARGETASTRONOMY_H
+#define ACL_TARGETASTRONOMY_H
 
-  // Standard C++ library headewrs
+  // Standard C++ library headers
 
-#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+  // ACL library header files
+
+#include "AstroClass.h"
+#include "common.h"
+#include "geographicLocation.h"
+#include "photometry.h"
+#include "RST.h"
+
+  // Miscellaneous library header files.
+
+#include <GCL>
 
 namespace ACL
 {
-  //*******************************************************************************************************************************
-  //
-  // CTargetAstronomy
-  //
-  //*******************************************************************************************************************************
+  /// The class is used for storing target (object) information and provides the methods to convert to apparent place.
+  /// The CTargetAstronomy is a pure virtual class that is used as a base class for the stellar objects and the solar system
+  /// objects.
+  /// The class is not a proxy for an observation, but only for a target (object). The apparent place can be requested from the
+  /// class, provided that a time, weather data and geographic location is provided.
+  ///
+  /// @note 1. It is important to reference the document sofa_ast_c.pdf in conjunction with this code. Particularly page 2,
+  ///          "The Chain of astrometric transformations". This is not detailed in this documentation, but can be found in the
+  ///          "TargetStellar.h" header file.
 
-  /// @brief Default constructor for the class. Initialises the name field.
-  /// @throws None.
-  /// @version 2018-09-29/GGB - Function created.
-
-  CTargetAstronomy::CTargetAstronomy() : objectName_()
+  class CTargetAstronomy
   {
-  }
-
-  /// @brief std::string constructor for the class. Initialises the name field.
-  /// @param[in] n - The object name (identifier)
-  /// @throws None.
-  /// @version 2018-09-24/GGB - Updated to use vector of names
-  /// @version 2016-05-07/GGB - Updated to use a list of object names.
-  /// @version 2011-12-22/GGB - Function created.
-
-  CTargetAstronomy::CTargetAstronomy(std::string const &n) : objectName_()
-  {
-    objectName_.push_back(n);
-  }
-
-  /// @brief Copy constructor for the class.
-  /// @param[in] toCopy: The instance to copy.
-  /// @throws std::bad_alloc
-  /// @version 2018-09-15/GGB - Function created.
-
-  CTargetAstronomy::CTargetAstronomy(CTargetAstronomy const &toCopy) : objectName_(toCopy.objectName_),
-    catalogCoordinates_(toCopy.catalogCoordinates_)
-  {
-  }
-
-  /// @brief Tests for equality between this objects name and the passed string.
-  /// @param[in] rhs - The object to test.
-  /// @returns true - The objects are the same
-  /// @returns false - The objects are not the same.
-  /// @throws None.
-  /// @version 2012-01-12/GGB - Function created.
-
-  bool CTargetAstronomy::operator==(std::string const &rhs) const
-  {
-    return (std::find(objectName_.begin(), objectName_.end(), rhs) != objectName_.end());
-  }
-
-  /// @brief Returns the first object name in the object names array.
-  /// @returns The first object name if an object name is assigned.
-  /// @throws None.
-  /// @version 2016-05-07/GGB - Function created.
-
-  std::string CTargetAstronomy::objectName() const
-  {
-    if (objectName_.empty())
+  public:
+    enum ETargetType
     {
-      return "";
-    }
-    else
-    {
-      return (objectName_.front());
+      TT_NONE = 0,
+      TT_MAJORPLANET,
+      TT_MINORPLANET,
+      TT_COMET,
+      TT_STELLAR,
     };
-  }
 
-  /// @brief Adds the object name to the name list.
-  /// @param[in] newName - The name to add.
-  /// @throws None.
-  /// @details The newName is added to the list of names.
-  /// @version 2018-09-24/GGB - Updated to use vector of names
-  /// @version 2016-05-07/GGB - Function created.
+  private:
+  protected:
+    std::vector<std::string> objectName_;             ///< List of object names. Object may have more than one name.
+    CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
 
-  void CTargetAstronomy::objectName(std::string const &newName)
-  {
-    objectName_.push_back(newName);
-  }
+  public:
+    CTargetAstronomy();
+    CTargetAstronomy(CTargetAstronomy const &);
+    CTargetAstronomy(std::string const &);
+    virtual ~CTargetAstronomy() {}
 
-  /// @brief Adds the list of names to the name list.
-  /// @param[in] nameList: List of names to add.
-  /// @throws None.
-  /// @version 2018-09-24/GGB - Function created.
+      // Factory functions
 
-  void CTargetAstronomy::objectName(std::vector<std::string> const &nameList)
-  {
+    virtual std::unique_ptr<CTargetAstronomy> createCopy() const = 0;
 
-    std::copy_if(nameList.begin(), nameList.end(),
-                 std::back_inserter(objectName_),
-                  [this] (std::string const &name) -> bool
-                  {
-                    return (std::find(objectName_.begin(),
-                                      objectName_.end(),
-                                      name) == objectName_.end());
-                  }
-                );
-  }
+      // Operators
 
-}   // namespace ACL
+    virtual bool operator==(std::string const &) const;
+
+      // Information functions
+
+    virtual std::string objectName() const;
+    virtual ETargetType targetType() const = 0;
+
+      // Data manipulation functions
+
+    virtual void objectName(std::string const &);
+    virtual void objectName(std::vector<std::string> const &);
+
+      // Position Calculation functions.
+
+    virtual CAstronomicalCoordinates positionCatalog() const = 0;
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const = 0;
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) = 0;
+
+      // Information functions
+
+    virtual void calculateRSTTime(CAstroTime const &, CGeographicLocation const &, CWeather const &, TJD &, TJD &, TJD *) = 0;
+    virtual CStellarMagnitude &magnitude() const = 0;
+  };
+
+  typedef std::vector<std::shared_ptr<CTargetAstronomy>> DTargetAstronomy;
+
+} // namespace ACL
+
+#endif // ACL_TARGETASTRONOMY_H

@@ -106,9 +106,8 @@ namespace ACL
 
     for (iterator = toCopy.astrometryObservations.begin(); iterator != toCopy.astrometryObservations.end(); ++iterator)
     {
-      SPAstrometryObservation newObservation(std::dynamic_pointer_cast<CAstrometryObservation>((*iterator)->createCopy()) );
-
-      astrometryObservations.push_back(newObservation);
+      astrometryObservations.emplace_back(std::dynamic_pointer_cast<CAstrometryObservation>(
+                                            std::shared_ptr<CObservation>(std::move((*iterator)->createCopy()))));
     };
   }
 
@@ -141,6 +140,7 @@ namespace ACL
   }
 
   /// @brief Adds a new reference to the list.
+  /// @param[in] toAdd: The new object to add to the list.
   /// @returns true - object added to the list.
   /// @returns false - object already exists and was not added.
   /// @throws None.
@@ -149,14 +149,14 @@ namespace ACL
   /// @version 2013-03-15/GGB - Updated function to use iterator and store information in this object.
   /// @version 2011-12-11/GGB - Function created.
 
-  bool CHDBAstrometry::astrometryObjectAdd(SPAstrometryObservation toAdd)
+  bool CHDBAstrometry::astrometryObjectAdd(std::shared_ptr<CAstrometryObservation> toAdd)
   {
       // Check for duplicates.
 
     if (!std::any_of(astrometryObservations.begin(), astrometryObservations.end(),
-                    [&] (SPAstrometryObservation ao) {return (ao->objectName() == toAdd->objectName());}))
+                    [&] (std::shared_ptr<CAstrometryObservation> ao) {return (ao->objectName() == toAdd->objectName());}))
     {
-      astrometryObservations.push_back(toAdd);
+      astrometryObservations.emplace_back(std::move(toAdd));
       NAXISn(2, astrometryObservations.size() );
       return true;
     }
@@ -177,36 +177,40 @@ namespace ACL
   }
 
   /// @brief Moves the iterator to the first item and returns the value.
-  //
-  // 2013-03-15/GGB - Updated function to use iterator and store information in this object.
-  // 2012-01-21/GGB - Function created.
+  /// @throws None.
+  /// @version 2018-10-08/GGB - Changed return value to raw pointer.
+  /// @version 2013-03-15/GGB - Updated function to use iterator and store information in this object.
+  /// @version 2012-01-21/GGB - Function created.
 
-  SPAstrometryObservation CHDBAstrometry::astrometryObjectFirst()
+  CAstrometryObservation *CHDBAstrometry::astrometryObjectFirst()
   {
+    CAstrometryObservation *returnValue = nullptr;
     astrometryObservationsIterator = astrometryObservations.begin();
     if (astrometryObservations.begin() != astrometryObservations.end())
-      return (*astrometryObservationsIterator);
-    else
-      return SPAstrometryObservation();
+    {
+      returnValue = astrometryObservationsIterator->get();
+    };
+
+    return returnValue;
   }
 
-  /// Moves the iterator to the next item and return.
-  //
-  // 2013-03-15/GGB - Updated function to use iterator and store information in this object.
-  // 2012-01-21/GGB - Function created.
+  /// @brief Moves the iterator to the next item and returns the next object.
+  /// @throws None.
+  /// @version 2018-10-08/GGB - Changed return value to raw pointer.
+  /// @version 2013-03-15/GGB - Updated function to use iterator and store information in this object.
+  /// @version 2012-01-21/GGB - Function created.
 
-  SPAstrometryObservation CHDBAstrometry::astrometryObjectNext()
+  CAstrometryObservation *CHDBAstrometry::astrometryObjectNext()
   {
-    if (astrometryObservationsIterator != astrometryObservations.end() )
+    CAstrometryObservation *returnValue = nullptr;
+
+    if ( (astrometryObservationsIterator != astrometryObservations.end()) &&
+         (++astrometryObservationsIterator != astrometryObservations.end()) )
     {
-      astrometryObservationsIterator++;
-     if (astrometryObservationsIterator != astrometryObservations.end() )
-       return *astrometryObservationsIterator;
-     else
-       return SPAstrometryObservation();
-    }
-    else
-      return SPAstrometryObservation();
+       returnValue = astrometryObservationsIterator->get();
+    };
+
+    return returnValue;
   }
 
   /// Removes a reference object from the list.
@@ -269,7 +273,10 @@ namespace ACL
   void CHDBAstrometry::imageFlip()
   {
     std::for_each(astrometryObservations.begin(), astrometryObservations.end(),
-                  [&] (SPAstrometryObservation ao) {ao->CCDCoordinates(ACL::imageFlip(ao->CCDCoordinates(), parent_->imageHeight(0)));});
+                  [&] (std::shared_ptr<CAstrometryObservation> ao)
+        {
+          ao->CCDCoordinates(ACL::imageFlip(ao->CCDCoordinates(), parent_->imageHeight(0)));
+        });
   }
 
   /// @brief Mirror image around x-axis, the list of targets and references must also be flopped.
@@ -281,7 +288,8 @@ namespace ACL
   void CHDBAstrometry::imageFlop()
   {
     std::for_each(astrometryObservations.begin(), astrometryObservations.end(),
-                  [&] (SPAstrometryObservation ao) {ao->CCDCoordinates(ACL::imageFlop(ao->CCDCoordinates(), parent_->imageHeight(0)));});
+                  [&] (std::shared_ptr<CAstrometryObservation> ao)
+                    { ao->CCDCoordinates(ACL::imageFlop(ao->CCDCoordinates(), parent_->imageHeight(0))); });
   }
 
   /// @brief Loads the HDB from the FITS HDB. All the keywords and data are loaded.
@@ -304,7 +312,6 @@ namespace ACL
     std::vector<FP_t> DEC;
     std::vector<std::string>::size_type columnIndex = 0;
     DAstrometryObservationStore::size_type index;
-    SPAstrometryObservation newRecord;
 
     CHDBBinaryTable::readFromFITS(file);   // Call the parent to load all the common stuff as well as the keywords.
 
@@ -445,7 +452,10 @@ namespace ACL
   void CHDBAstrometry::binPixels(unsigned int p)
   {
     std::for_each(astrometryObservations.begin(), astrometryObservations.end(),
-                  [&] (SPAstrometryObservation ao) { ao->CCDCoordinates(ACL::imageBinPixels(ao->CCDCoordinates(), p));});
+                  [&] ( std::shared_ptr<CAstrometryObservation> ao)
+                    {
+                      ao->CCDCoordinates(ACL::imageBinPixels(ao->CCDCoordinates(), p));
+                    });
   }
 
   /// @brief Updates all the coordinates when an image is transformed (TRS)
@@ -462,10 +472,10 @@ namespace ACL
                                       FP_t scale, MCL::TPoint2D<FP_t> const &pixelSize, std::unique_ptr<bool> &)
   {
     std::for_each(astrometryObservations.begin(), astrometryObservations.end(),
-                  [&] (SPAstrometryObservation ao)
-                    { ao->CCDCoordinates(ACL::imageTransformForward(ao->CCDCoordinates(),
-                                                                    center, ct, angle, scale,
-                                                                    pixelSize));});
+                  [&] (std::shared_ptr<CAstrometryObservation> ao)
+                    {
+                      ao->CCDCoordinates(ACL::imageTransformForward(ao->CCDCoordinates(), center, ct, angle, scale, pixelSize));
+                    });
   }
 
   /// @brief Performs a crop function on the astrometry data

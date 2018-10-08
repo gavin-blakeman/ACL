@@ -353,7 +353,7 @@ namespace ACL
   /// @version 2013-04-08/GGB - Added isDirty(true)
   /// @version 2011-12-11/GGB - Function created.
 
-  bool CAstroFile::astrometryObjectAdd(SPAstrometryObservation toAdd)
+  bool CAstroFile::astrometryObjectAdd(std::shared_ptr<CAstrometryObservation> toAdd)
   {
     if (!astrometryHDB_)
     {
@@ -362,7 +362,7 @@ namespace ACL
       hasData(true);
     };
 
-    bool returnValue = astrometryHDB_->astrometryObjectAdd(toAdd);
+    bool returnValue = astrometryHDB_->astrometryObjectAdd(std::move(toAdd));
 
     if (returnValue)
     {
@@ -379,11 +379,11 @@ namespace ACL
   /// @version 2013-08-27/GGB - Code changed for bug fix (Bug #1210902)
   /// @version 2012-01-21/GGB - Function created.
 
-  SPAstrometryObservation CAstroFile::astrometryObjectFirst()
+  CAstrometryObservation *CAstroFile::astrometryObjectFirst()
   {
     if (!astrometryHDB_)
     {
-      ERROR(ACL, 0x200C);
+      ACL_ERROR(0x200C);
     }
     else
     {
@@ -396,11 +396,11 @@ namespace ACL
   /// @throws 0x200C - ASTROFILE: Astrometry HDB does not exist.
   /// @version 2012-01-21/GGB - Function created.
 
-  SPAstrometryObservation CAstroFile::astrometryObjectNext()
+  CAstrometryObservation *CAstroFile::astrometryObjectNext()
   {
     if (!astrometryHDB_)
     {
-      ERROR(ACL, 0x200C);
+      ACL_ERROR(0x200C);
     }
     else
     {
@@ -2603,40 +2603,34 @@ namespace ACL
   }
 
   /// @brief Adds a new object into the photometry list.
-  /// @param[in] toAdd - The observation to add to the list.
-  /// @returns true - Function was sucessfull
-  /// @returns false - Function failed.
+  /// @param[in] toAdd: The observation to add to the list.
   /// @throws None.
+  /// @version 2018-10-07/GGB - Changed return value to void and parameter to shared_ptr.
   /// @version 2013-08-30/GGB - Changed logic to ensure that isDirty() and hasData() is updated.
   /// @version 2013-04-08/GGB - Added isDirty(true)
   /// @version 2012-11-11/GGB - Function created.
 
-  bool CAstroFile::photometryObjectAdd(SPPhotometryObservation toAdd)
+  void CAstroFile::photometryObjectAdd(std::shared_ptr<CPhotometryObservation> toAdd)
   {
     TRACEENTER;
 
     if (!photometryHDB_)
     {
       createPhotometryHDB();
-      isDirty(true);
-      hasData(true);
     };
 
-    bool returnValue = photometryHDB_->photometryObjectAdd(toAdd);
+    photometryHDB_->photometryObjectAdd(toAdd);
 
-    if (returnValue)
-    {
-      isDirty(true);
-      hasData(true);
-    };
+    isDirty(true);
+    hasData(true);
 
     TRACEEXIT;
-    return returnValue;
   }
 
-  /// Returns the number of photometry objects in the photometry list.
-  //
-  // 2013-08-03/GGB - Function created.
+  /// @brief Returns the number of photometry objects in the photometry list.
+  /// @returns The number of photometry objects in the list.
+  /// @throws None.
+  /// @version 2013-08-03/GGB - Function created.
 
   size_t CAstroFile::photometryObjectCount() const
   {
@@ -2656,7 +2650,7 @@ namespace ACL
   /// @version 2013-08-30/GGB - Changed to throw exception when no photometry HDB.
   /// @version 2012-11-11/GGB - Function created.
 
-  SPPhotometryObservation CAstroFile::photometryObjectFirst()
+  CPhotometryObservation *CAstroFile::photometryObjectFirst()
   {
     if (!photometryHDB_)
     {
@@ -2668,13 +2662,12 @@ namespace ACL
     }
   }
 
-  /// Returns the next photometry object.
-  /// throws: 0x2017 - ASTROFILE: Photometry HDB does not exist.
-  //
-  // 2013-08-30/GGB - Throw exception when there is no photometryHDB.
-  // 2012-11-11/GGB - Function created.
+  /// @brief Returns the next photometry object.
+  /// @throws 0x2017 - ASTROFILE: Photometry HDB does not exist.
+  /// @version 2013-08-30/GGB - Throw exception when there is no photometryHDB.
+  /// @version 2012-11-11/GGB - Function created.
 
-  SPPhotometryObservation CAstroFile::photometryObjectNext()
+  CPhotometryObservation *CAstroFile::photometryObjectNext()
   {
     if (!photometryHDB_)
     {
@@ -2736,19 +2729,20 @@ namespace ACL
   }
 
   /// @brief Performs photometry on a single point.
-  /// @param[in] hdb - The HDB number to perform the photometry on.
-  /// @param[in] po - The photometry object.
-  /// @throws 0x2001 - Invalid HDB number
   /// @details The CCD coordinates and annulus information are used to determine the centroidand the photometry parameters.
+  /// @param[in] hdb: The HDB number to perform the photometry on.
+  /// @param[in] po: The photometry object.
+  /// @throws 0x2001 - Invalid HDB number
+  /// @version 2018-10-07/GGB - Changed paramter to a reference.
   /// @version 2013-04-07/GGB - Changed type to PPhotometryObservation
   /// @version 2012-11-10/GGB - Function created.
 
-  void CAstroFile::pointPhotometry(DHDBStore::size_type hdb, SPPhotometryObservation po)
+  void CAstroFile::pointPhotometry(DHDBStore::size_type hdb, CPhotometryObservation &po)
   {
     RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
 
     isDirty(true);
-    return HDB[hdb]->pointPhotometry(po);
+    HDB[hdb]->pointPhotometry(po);
   }
 
   /// @brief Function to resample the image.

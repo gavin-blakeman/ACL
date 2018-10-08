@@ -92,9 +92,6 @@
 
 namespace ACL
 {
-
-typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
-
   class CAstroImageMono;
   class CAstroImagePoly;
 
@@ -115,6 +112,8 @@ typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
   class CAstroImage
   {
   private:
+    typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
+
     CAstroImage(CAstroImage const &) = delete;
     CAstroImage & operator=(CAstroImage const&) = delete;
 
@@ -264,7 +263,7 @@ typedef std::vector<std::unique_ptr<CImagePlane>> DImagePlaneStorage;
 
       // Photometry functions
 
-    virtual void photometry(SPPhotometryObservation) const = 0;
+    virtual void photometry(CPhotometryObservation &) const = 0;
     virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const = 0;
   };
 

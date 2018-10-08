@@ -87,15 +87,14 @@ namespace ACL
   {
   }
 
-  /// Creates a copy of *this
-  //
-  // 2013-06-08/GGB - Function created.
+  /// @brief Creates a copy of *this
+  /// @throws std::bad_alloc
+  /// @version 2018-10-08/GGB - Updated to std::unique_ptr return value.
+  /// @version 2013-06-08/GGB - Function created.
 
-  SPObservation CAstrometryObservation::createCopy() const
+  std::unique_ptr<CObservation> CAstrometryObservation::createCopy() const
   {
-    SPObservation returnValue(new CAstrometryObservation(*this));
-
-    return returnValue;
+    return std::make_unique<CAstrometryObservation>(*this);
   }
 
 }  // namespace ACL

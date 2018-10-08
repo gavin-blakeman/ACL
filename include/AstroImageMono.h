@@ -129,7 +129,7 @@ namespace ACL
 
       // Photometry functions
 
-    virtual void photometry(SPPhotometryObservation photometryObservation) const;
+    virtual void photometry(CPhotometryObservation &) const;
     virtual std::optional<FP_t> FWHM(const MCL::TPoint2D<FP_t> &) const;
 
       // Calibration functions

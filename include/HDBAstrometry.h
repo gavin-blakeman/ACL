@@ -82,15 +82,14 @@
 
 namespace ACL
 {
-  typedef std::list<SPAstrometryObservation> DAstrometryObservationStore;
-
-    /// Class to store the astrometry information in HDB.
-
+    /// @brief Class to store the astrometry information in HDB.
     /// This class allows the astrometry related information to be stored in a HDB (HDU) for saving to an external disk file.
 
   class CHDBAstrometry : public CHDBBinaryTable
   {
   private:
+    typedef std::list<std::shared_ptr<CAstrometryObservation>> DAstrometryObservationStore;
+
     DAstrometryObservationStore astrometryObservations;
     DAstrometryObservationStore::iterator astrometryObservationsIterator;
 
@@ -130,7 +129,7 @@ namespace ACL
       // Astrometry functions
 
     virtual size_t astrometryObjectCount() const;
-    virtual bool astrometryObjectAdd(SPAstrometryObservation);
+    virtual bool astrometryObjectAdd(std::shared_ptr<CAstrometryObservation>);
     virtual bool astrometryObjectRemove(std::string const &);
     virtual void astrometryObjectRemoveAll();
     virtual void astrometryCalculatePlateConstants();
@@ -138,8 +137,8 @@ namespace ACL
 
       // Iteration functions
 
-    virtual SPAstrometryObservation astrometryObjectFirst();
-    virtual SPAstrometryObservation astrometryObjectNext();
+    virtual CAstrometryObservation *astrometryObjectFirst();
+    virtual CAstrometryObservation *astrometryObjectNext();
   };
 }
 

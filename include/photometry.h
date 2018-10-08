@@ -54,8 +54,6 @@
 
 #include "AstronomicalTime.h"
 #include "config.h"
-#include "Observation.h"
-#include "PhotometryAperture.h"
 #include "photometryFilters.h"
 
   // Miscellaneous library header files
@@ -70,12 +68,12 @@ namespace ACL
   private:
     class CMagnitude final
     {
-    private:
-      std::optional<magnitude_t> magniture_;
+    public:
+      std::optional<magnitude_t> magnitude_;
       std::optional<magnitude_t> magnitudeError_;
     };
 
-    std::map<CPhotometryFilter, CMagnitude> magnitudeMap;
+    std::map<CPhotometryFilter::EFilters, CMagnitude> magnitudeMap;
 
   protected:
   public:
@@ -87,8 +85,8 @@ namespace ACL
 
       // Getter functions.
 
-    std::optional<magnitude_t> magnitude() const;
-    std::optional<magnitude_t> magnitudeError() const;
+    std::optional<magnitude_t> magnitude(CPhotometryFilter::EFilters = CPhotometryFilter::FT_VJ) const;
+    std::optional<magnitude_t> magnitudeError(CPhotometryFilter::EFilters = CPhotometryFilter::FT_VJ) const;
   };
 
 }	// namespace ACL

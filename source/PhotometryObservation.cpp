@@ -80,15 +80,14 @@ namespace ACL
 
   }
 
-  /// Creates a copy of *this
-  //
-  // 2013-06-08/GGB - Function created.
+  /// @brief Creates a copy of *this
+  /// @throws std::bad_alloc
+  /// @version 2018-10-08/GGB - Updated to std::unique_ptr return value.
+  /// @version 2013-06-08/GGB - Function created.
 
-  SPObservation CPhotometryObservation::createCopy() const
+  std::unique_ptr<CObservation> CPhotometryObservation::createCopy() const
   {
-    SPObservation returnValue(new CPhotometryObservation(*this));
-
-    return returnValue;
+    return std::make_unique<CPhotometryObservation>(*this);
   }
 
   /// @brief Calculates and returns the instrument magnitude

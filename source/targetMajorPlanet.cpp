@@ -37,7 +37,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/TargetMajorPlanet.h"
+#include "../include/targetMajorPlanet.h"
 
   // Standard C++ library header files.
 

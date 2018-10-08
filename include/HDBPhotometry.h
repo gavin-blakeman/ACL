@@ -63,17 +63,20 @@
 
 namespace ACL
 {
-  typedef std::vector<SPPhotometryObservation> DPhotometryObservationStore;
-
   /// @brief The CHDBPhotometry class is used to store photometry observation data within a FITS file structure.
   /// @details The photometry observation data related to the image is stored in a binary table. This class specialises the binary
   ///          table HDB to represent photometry observational data.<br>
-  /// When the FITS file is saved, the data is saved into a binary table. This allows the photometry data to be automatically
-  /// reloaded when the FITS file is opened from disk again.
+  ///          When the FITS file is saved, the data is saved into a binary table. This allows the photometry data to be
+  ///          automatically reloaded when the FITS file is opened from disk again.
 
   class CHDBPhotometry : public CHDBBinaryTable
   {
   private:
+
+    typedef std::vector<std::shared_ptr<CPhotometryObservation>> DPhotometryObservationStore;
+
+      // Use a shared_ptr specifically as the calling application may wish to share ownership.
+
     DPhotometryObservationStore photometryObservations;
     DPhotometryObservationStore::iterator photometryObservationsIterator;
 
@@ -106,15 +109,15 @@ namespace ACL
       // Photometry functions
 
     virtual size_t photometryObjectCount() const;
-    virtual bool photometryObjectAdd(SPPhotometryObservation);
-    virtual bool photometryObjectRemove(SPPhotometryObservation);
+    virtual void photometryObjectAdd(std::shared_ptr<CPhotometryObservation>);
+    //virtual bool photometryObjectRemove(CPhotometryObservation &);
     virtual bool photometryObjectRemove(std::string const &);
     void photometryObjectRemoveAll();
 
       // Iteration functions
 
-    virtual SPPhotometryObservation photometryObjectFirst();
-    virtual SPPhotometryObservation photometryObjectNext();
+    virtual CPhotometryObservation *photometryObjectFirst();
+    virtual CPhotometryObservation *photometryObjectNext();
   };
 }
 
