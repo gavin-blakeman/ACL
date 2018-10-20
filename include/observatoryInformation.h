@@ -1,4 +1,4 @@
-//*********************************************************************************************************************************
+﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
 // FILE:								observatoryInformation
@@ -62,7 +62,7 @@ namespace ACL
     CObservatory(CObservatory const &);
     virtual ~CObservatory() {}
 
-    virtual CObservatory *createCopy() const;
+    virtual std::unique_ptr<CGeographicLocation> createCopy() const override;
 
     void siteName(std::string const &siteName) { siteName_ = siteName; }
     void IAUCode(std::string const IAUCode) { IAUCode_ = IAUCode; }

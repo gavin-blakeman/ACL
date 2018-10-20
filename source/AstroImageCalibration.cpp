@@ -286,14 +286,12 @@ namespace ACL
 
     if (!masterFrame)
     {
-      masterFrame.reset(new CAstroFile(masterDarkImage.get()));
+      std::make_unique<CAstroFile>(std::move(masterDarkImage)).swap(masterFrame);
     }
     else
     {
       masterFrame->setAstroImage(0, masterDarkImage);
-    }
-
-    masterDarkImage = nullptr;
+    };
 
       // Add the filenames to the comments.
 
@@ -434,7 +432,9 @@ namespace ACL
     (*masterFlatImage) /= flatFrames.size();      // Calculate the average.
 
     if (masterFlatDarkFile)
+    {
       (*masterFlatImage ) -= (*masterFlatDarkFile->getAstroImage(0));
+    };
 
       // Now save the flat frame
 
@@ -444,7 +444,7 @@ namespace ACL
     }
     else
     {
-      masterFrame.reset(new CAstroFile(masterFlatImage.get()));
+      std::make_unique<CAstroFile>(std::move(masterFlatImage)).swap(masterFrame);
     };
 
     masterFlatImage = nullptr;
@@ -556,14 +556,12 @@ namespace ACL
 
     if (!masterFrame)
     {
-       masterFrame.reset(new CAstroFile(biasImage.get()));
+      std::make_unique<CAstroFile>(std::move(biasImage)).swap(masterFrame);
     }
     else
     {
       masterFrame->setAstroImage(0, biasImage);
     };
-
-    biasImage = nullptr;
 
       // Add the filenames to the comments.
 

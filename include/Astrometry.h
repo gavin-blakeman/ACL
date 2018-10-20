@@ -92,8 +92,8 @@ namespace ACL
 
     DAstrometryStore _references;
     DAstrometryStore _targets;
-    PAstroTime observationTime;                            // Observation date/time (TT)
-    PLocation observationLocation;
+    PAstroTime observationTime;                               // Observation date/time (TT)
+    std::unique_ptr<CGeographicLocation> observationLocation; ///< Geographic location of the observation
     PWeather observationWeather;
     DAstrometryStore::iterator referenceIterator;
     DAstrometryStore::iterator targetIterator;
@@ -139,7 +139,7 @@ namespace ACL
       // Observation functions
 
     virtual void setObservationLocation(double lat, double lon, double alt, double timeZone);
-    virtual void setObservationLocation(PLocation const location);
+    virtual void setObservationLocation(std::unique_ptr<CGeographicLocation>);
 
     virtual void setObservationParameters(PAstroTime JD, double temperature, double pressure);
     virtual void setObservationParameters(PAstroTime JD, PWeather weather);

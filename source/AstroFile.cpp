@@ -100,8 +100,7 @@ namespace ACL
   /// @version 2011-05-03/GGB - Function created.
 
   CAstroFile::CAstroFile() : imageName_(), HDB(), astrometryHDB_(), photometryHDB_(), observationLocation(new CObservatory()),
-    observationWeather(), observationTime(), observationTarget(),
-    observationTelescope(new CTelescope), bDirty(false), bHasData(false)
+    observationWeather(), observationTime(), observationTelescope(new CTelescope), bDirty(false), bHasData(false)
   {
   }
 
@@ -116,7 +115,7 @@ namespace ACL
 
   CAstroFile::CAstroFile(std::string const &imageName) : imageName_(imageName), HDB(), astrometryHDB_(), photometryHDB_(),
     observationLocation(new CObservatory()), observationWeather(), observationTime(),
-    observationTarget(), observationTelescope(new CTelescope), bDirty(false), bHasData(false)
+    observationTelescope(new CTelescope), bDirty(false), bHasData(false)
   {
   }
 
@@ -134,9 +133,11 @@ namespace ACL
   /// @version 2011-05-13/GGB - Function created.
 
   CAstroFile::CAstroFile(CAstroFile const &toCopy) : astrometryHDB_(), photometryHDB_(), imageName_(toCopy.imageName_),
-    observationLocation(toCopy.observationLocation->createCopy()), observationWeather(),
+    observationLocation(toCopy.observationLocation ?
+                          std::unique_ptr<CObservatory>(dynamic_cast<CObservatory *>(toCopy.observationLocation->createCopy().release()))
+                        : nullptr),
+    observationWeather(),
     observationTime(new CAstroTime(*toCopy.observationTime)),
-    observationTarget((toCopy.observationTarget) ? toCopy.observationTarget->createCopy() : nullptr),
     observationTelescope(toCopy.observationTelescope->createCopy()), HDB(), bDirty(false), bHasData(toCopy.bHasData)
   {
     DHDBStore::const_iterator hdbIterator;
@@ -163,44 +164,46 @@ namespace ACL
 
   /// @brief Constructor to create an instance from an astroImage.
   /// @param[in] ai: pointer to the astroimage to create the astrofile from.
-  /// @throws None.
-  /// @todo Implement this function.
+  /// @throws GCL::CCodeError(ACL)
   /// @version 2018-09-05/GGB - Changed targetCoordinates(CAstronomicalCoordinates) to observationTarget(CTargetAstronomy)
   /// @version 2017-08-10/GGB - Remove requirement for filename.
   /// @version 2016-04-02/GGB - Added keywordCount members.
   /// @version 2016-03-31/GGB - Added creation of the TLocation object to the constructor.
   /// @version 2011-05-13/GGB - Function created.
 
-  CAstroFile::CAstroFile(CAstroImage *ai): HDB(),
-    bHasData(true), bDirty(false), observationLocation(new CObservatory()), observationWeather(), observationTime()
+  CAstroFile::CAstroFile(std::unique_ptr<CAstroImage> ai): HDB(),
+    bHasData(true), bDirty(false), observationLocation(), observationWeather(), observationTime()
   {
-    /*CHDB *newHDB = new CHDB();
+    HDB.emplace_back(std::make_unique<CImageHDB>(this, ""));
 
 #if defined(FITSBASE_FLOAT)
-    newHDB->bitpix = BP_FLOAT;
+    HDB.back()->BITPIX(FLOAT_IMG);
 #else
-    newHDB->bitpix = BP_DOUBLE;
+    HDB.back()->BITPIX(DOUBLE_IMG);
 #endif
+
     if (ai->isMonoImage())
     {
-      newHDB->naxis = 2;
-      newHDB->naxisn.push_back(ai->getX());
-      newHDB->naxisn.push_back(ai->getY());
+      HDB.back()->NAXIS(2);
+      HDB.back()->NAXISn(0, ai->width());
+      HDB.back()->NAXISn(1, ai->height());
     }
     else if (ai->isPolyImage())
     {
-      newHDB->naxis = 3;
-      newHDB->naxisn.push_back(ai->getX());
-      newHDB->naxisn.push_back(ai->getY());
+      HDB.back()->NAXIS(3);
+      HDB.back()->NAXISn(0, ai->width());
+      HDB.back()->NAXISn(1, ai->height());
+      HDB.back()->NAXISn(3, ai->planes());
     }
     else
+    {
       ACL_CODE_ERROR;
+    };
 
-    newHDB->data = ai;
-    HDB.push_back(*newHDB);
+    HDB.back()->imageSet(ai);
 
     hasData(true);
-    isDirty(true);*/
+    isDirty(true);
   }
 
   /// @brief Class destructor. Ensure all dynamically allocated memory is destroyed correctly.
@@ -326,7 +329,8 @@ namespace ACL
   }
 
   /// @brief Passthrough to the astrometryHDB to check if the requisites are met.
-  /// @returns
+  /// @returns true if the requisites are met.
+  /// @returns false if the requisites are not met.
   /// @throws 0x200C - ASTROFILE: Astrometry HDB does not exist.
   /// @version 2012-01-13/GGB - Function created.
 
@@ -346,7 +350,7 @@ namespace ACL
   /// @param[in] toAdd: The astrometry reference to add.
   /// @returns true - Object added
   /// @returns false - Object not added
-  /// @throws None.
+  /// @throws std::bad_alloc.
   /// @post If return value == true, isDirty = true; hasData = true.
   /// @details A reference object is one that is used to determine the plate constants.
   /// @version 2013-08-30/GGB - Changed logic flow to only update isDirty() and hasData() when required.
@@ -449,10 +453,11 @@ namespace ACL
     return (static_cast<bool>(astrometryHDB_));
   }
 
-  /// @brief Removes a refernce from the astrometryHDB
+  /// @brief Removes a reference from the astrometryHDB
   /// @param[in] toRemove: The astrometry object to remove.
   /// @returns true - reference removed
   /// @returns false - reference not found
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws 0x200C - Astrometry HDB does not exist.
   /// @version 2013-04-08/GGB - Added isDirty(true)
   /// @version 2011-12-11/GGB - Function created.
@@ -475,7 +480,7 @@ namespace ACL
   /// @brief Bins the image.
   /// @param[in] hdb: The HDB to address.
   /// @param[in] nsize: The binning parameter.
-  /// @throws GCL::CRuntimeAssert
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws 0x2005 - Incorrect type of HDB.
   /// @details As the image size is changed when a bin-pixels is executed. All the HDB's need to be updated to reflect the
   ///          bin pixels.
@@ -696,6 +701,7 @@ namespace ACL
   /// @brief Creates an image HDB and adds it to the HDB list. Returns a shared pointer to the image HDB.
   /// @param[in] name: The name of the HDB to create.
   /// @returns Pointer to the created image.
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws std::bad_alloc
   /// @throws 0x200B - Cannot create HDB with duplicate name.
   /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
@@ -721,8 +727,9 @@ namespace ACL
   }
 
   /// @brief Creates an Ascii Table HDB and adds it to the HDB list.
-  /// @param[on] name - The name of the ASCII table.
+  /// @param[on] name: The name of the ASCII table.
   /// @returns A shared pointer to the image HDB.
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws std::bad_alloc
   /// @throws 0x200B - Cannot create HDB with duplicate name.
   /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
@@ -750,8 +757,9 @@ namespace ACL
   }
 
   /// @brief Creates an Binary Table HDB and adds it to the HDB list. Returns a shared pointer to the image HDB.
-  /// @param[in] name - Name of the HDB to create. Cannot be empty.
+  /// @param[in] name:  Name of the HDB to create. Cannot be empty.
   /// @returns Pointer to the newly created binary HDB.
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @throws std::bad_alloc
   /// @throws 0x200B - Cannot create HDB with duplicate name.
   /// @post isDirty = true
@@ -786,8 +794,8 @@ namespace ACL
   /// @note This function may be called from a multi-threaded function, and there may be more than one instance of this function
   /// running at any time.
   /// @details Specifically, all the HDB information needs to be picked up from oldAstroFile, the image information in the primary
-  /// HDU needs to be replaced with the colour information speficied in RGBArray and colour. The new AstroFile is returned in the
-  /// value newAstroFile.
+  ///          HDU needs to be replaced with the colour information speficied in RGBArray and colour. The new AstroFile is returned
+  ///          in the value newAstroFile.
   /// @throws 0x200D - ASTROFILE: Error accessing HDB[0], no HDB[0] existing.
   /// @version 2013-06-09/GGB - Use smart_pointers for astroFile.
   /// @version 2012-01-07/GGB - Function created.
@@ -896,13 +904,12 @@ namespace ACL
   }
 
   /// @brief Pass through function to find the centroid at the specified coordinates.
-  /// @param[in] hdb - The number of the HDB with the image.
-  /// @param[in] C0 - The center coordinates to search for a centroid.
-  /// @param[in] rmax - The maximum radius to search.
-  /// @param[in] sensitivity - The sensitivity of the search (sigma)
+  /// @param[in] hdb: The number of the HDB with the image.
+  /// @param[in] C0: The center coordinates to search for a centroid.
+  /// @param[in] rmax: The maximum radius to search.
+  /// @param[in] sensitivity: The sensitivity of the search (sigma)
   /// @returns The centroid if one has been found.
-  /// @throws 0x2001 - Invalid HDB number
-  /// @throws 0x2005 - Block Type should be BT_IMAGE
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-03-02/GGB - Changed TPoint to double from float.
   /// @version 2011-11-27/GGB - Convert to boost::shared_ptr, use smart HDB's (CHDB)
   /// @version 2011-06-12/GGB - Function created.
@@ -917,10 +924,9 @@ namespace ACL
   }
 
   /// @brief Flips the specified image if possible.
-  /// @param[in] hdb - Image to flip.
+  /// @param[in] hdb: Image to flip.
   /// @post isDirty == true
   /// @throws GCL::CRuntimeAssert
-  /// @throws 0x2005 -
   /// @todo hdb should not be required. An image flip should call all the HDB's to flip if required. (Bug 28)
   /// @version 2011-11-27/GGB - Change code to support astrometryHDB and photometryHDB.
   /// @version 2011-05-29/GGB - Function created.
@@ -952,9 +958,9 @@ namespace ACL
   }
 
   /// @brief Returns the renderedImage array
-  /// @param[in] hdb - The HDB number.
+  /// @param[in] hdb: The HDB number.
   /// @returns Pointer to the renderedImage.
-  /// @throws GCL::CRuntimeAssert
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-08-02/GGB - Function created.
 
   renderImage_t *CAstroFile::getRenderedImage(DHDBStore::size_type hdb) const
@@ -966,7 +972,7 @@ namespace ACL
   }
 
   /// @brief Determines if WCS data exists for the HDB.
-  /// @param[in] hdb - The HDB number.
+  /// @param[in] hdb: The HDB number.
   /// @returns true - If there is WCS data for the HDB.
   /// @returns false - If there is no WCS data for the HDB.
   /// @throws CRuntimeAssert(ACL)
@@ -980,8 +986,8 @@ namespace ACL
   }
 
   /// @brief Adds a history item to the specified HDB
-  /// @param[in] hdb - The number of the HDB to add the history to. (zero based)
-  /// @param[in] history - The history string to add.
+  /// @param[in] hdb: The number of the HDB to add the history to. (zero based)
+  /// @param[in] history: The history string to add.
   /// @throws CRuntimeAssert
   /// @post isDirty == true
   /// @post hasData == true
@@ -1001,9 +1007,9 @@ namespace ACL
   }
 
   /// @brief Returns the exposure time of the specified image.
-  /// @param[in] hdb - The number of the HDB to get the exposure of.
+  /// @param[in] hdb: The number of the HDB to get the exposure of.
   /// @returns The image duration (or zero for no duration)
-  /// @throws GCL::CRuntimeError()
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2017-08-30/GGB - Function created.
 
   FP_t CAstroFile::imageExposure(DHDBStore::size_type hdb) const
@@ -1038,10 +1044,10 @@ namespace ACL
   }
 
   /// @brief Floats the image onto a larger canvas.
-  /// @param[in] hdb - Image to float.
-  /// @param[in] newWidth - The new width
-  /// @param[in] newHeight - The new image height.
-  /// @param[in] newBkgnd - The new background to use.
+  /// @param[in] hdb: Image to float.
+  /// @param[in] newWidth: The new width
+  /// @param[in] newHeight: The new image height.
+  /// @param[in] newBkgnd: The new background to use.
   /// @throws 0x2001 -
   /// @throws 0x2005 -
   /// @version 2018-09-22/GGB - Updated to use std::tuple.
@@ -1090,12 +1096,10 @@ namespace ACL
   }
 
   /// @brief Flops the specified image if possible.
-  /// @param[in] hdb - The HDB to flip.
-  /// @throws 0x2001 - Invalid HDB
-  /// @throws 0x2005 - Incorrect block type
-  //
-  // 2011-11-27/GGB - Change code to support astrometryHDB and photometryHDB.
-  // 2011-05-29/GGB - Function created.
+  /// @param[in] hdb: The HDB to flip.
+  /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2011-11-27/GGB - Change code to support astrometryHDB and photometryHDB.
+  /// @version 2011-05-29/GGB - Function created.
 
   void CAstroFile::flopImage(DHDBStore::size_type hdb)
   {
@@ -1130,8 +1134,7 @@ namespace ACL
   }
 
   /// @brief Determines the FWHM for a star.
-  /// @throws 0x2001 - Invalid HDB
-  /// @throws 0x2005 - Invalid HDB type
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-04-14/GGB - Function created.
 
   std::optional<FP_t> CAstroFile::FWHM(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &star) const
@@ -1171,9 +1174,9 @@ namespace ACL
   }
 
   /// @brief Returns the comment string from the specified HDB
-  /// @param[in] hdb - HDB to query.
+  /// @param[in] hdb: HDB to query.
   /// @returns Function string for the HDB
-  /// @throws 0x2001 - Invalid HDB
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-06-29/GGB - Changed return value to a "std::string" from a "std::string const &"
   /// @version 2011-11-03/GGB	- Convert to smart pointers and smart HDB's.
   /// @version 2011-05-06/GGB - Function created.
@@ -1254,9 +1257,9 @@ namespace ACL
   }
 
   /// @brief Returns the history string for the specified HDB
-  /// @param[in] hdb - The HDB to address
+  /// @param[in] hdb: The HDB to address
   /// @returns The history string.
-  /// @throws 0x2001 - Invalid HDB
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-06-29/GGB - Changed return value to a "std::string", not a "std::string const &"
   /// @version 2011-11-03/GGB	- Convert to smart pointers and smart HDB's.
   /// @version 2011-05-06/GGB - Function created.
@@ -1269,7 +1272,7 @@ namespace ACL
   }
 
   /// @brief Returns a pointer to the HDB
-  /// @param[in] hdb - The HDB to get the pointer of
+  /// @param[in] hdb: The HDB to get the pointer of
   /// @returns Pointer to the requested HDB
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
@@ -1386,7 +1389,7 @@ namespace ACL
 
   CAstronomicalCoordinates const &CAstroFile::getTargetCoordinates() const
   {
-    return observationTarget->positionCatalog();
+    return imageCenter_;
   }
 
   /// @brief Retrieves the stdev image value from the specified HDB.
@@ -1407,8 +1410,7 @@ namespace ACL
   /// @brief Gets the y-dimension of the relevant HDB if it is an image.
   /// @param[in] hdb - The HDB to address.
   /// @returns The height of the image.
-  /// @throws 0x2001 -
-  /// @throws 0x2005 -
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-03-09/GGB - Rename to imageHeight.
   /// @version 2011-08-14/GGB - Function created.
 
@@ -1423,8 +1425,7 @@ namespace ACL
   /// @brief Gets the x-dimension of the relevant HDB if it is an image.
   /// @param[in] hdb - The HDB to address.
   /// @returns The width of the image.
-  /// @throws 0x2001 -
-  /// @throws 0x2005 -
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-06-30/GGB - Removed check of hdb < 0. (unsigned value cannot be < 0)
   /// @version 2013-03-09/GGB - Rename to imageWidth.
   /// @version 2011-11-29/GGB - Use function HDBType() and change return logic.
@@ -1480,8 +1481,7 @@ namespace ACL
   /// @param[in] hdb - The HDB to address.
   /// @param[in] imageSourceList - The container to place the found sources in.
   /// @param[in] paramters - The parameter list to use when searching.
-  /// @throws 0x2001 - Invalid HDB Number
-  /// @throws 0x2005 - HDB Type should be BT_IMAGE
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2014-02-09/GGB - Changed function header to allow parameters to be passed and sourceList to be returned.
   /// @version 2012-07-30/GGB - Function created.
 
@@ -1498,7 +1498,7 @@ namespace ACL
   /// @brief Returns the name of the HDB.
   /// @param[in] hdb - The HDB to address.
   /// @returns The name of the specified HDB
-  /// @throws GCL::CRuntimeAssert
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-08-08/GGB - Use runtime assert for paramter hdb.
   /// @version 2015-06-28/GGB - Remove the check for hdb < 0. size_t is an unsingned so this check is not necessary.
   /// @version 2011-11-13/GGB - Added exception functionallity if the parameter is out of range.
@@ -1543,8 +1543,9 @@ namespace ACL
     return returnValue;
   }
 
-  /// Returns the HDB type
-  /// @param[in] hdb - The HDB to address.
+  /// @brief Returns the HDB type
+  /// @param[in] hdb: The HDB to address.
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2015-08-08/GGB - Use runtime assert for paramter hdb.
   /// @version 2011-11-27/GGB - Changed to use smart pointers (boost::shared_ptr)
   /// @version 2011-11-13/GGB - Added exception functionallity if the parameter is out of range.
@@ -1558,7 +1559,7 @@ namespace ACL
   }
 
   /// @brief Returns the block type of the block with name hdbName.
-  /// @param[in] hdbName - The name of the HDB to return the block type of.
+  /// @param[in] hdbName: The name of the HDB to return the block type of.
   /// @returns The Block Type
   /// @throws None.
   /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
@@ -1582,7 +1583,7 @@ namespace ACL
   }
 
   /// @brief Returns the number of axes for the relevant HDB.
-  /// @param[in] hdb - The hdb number to get the NAXIS value from.
+  /// @param[in] hdb: The hdb number to get the NAXIS value from.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2011-11-27/GGB - Use smart pointers and smart HDB's.
   /// @version 2011-05-11/GGB - Function created.
@@ -1789,7 +1790,7 @@ namespace ACL
   }
 
   /// @brief Returns the type of the keyword.
-  /// @param[in] hdb - The HDB to address.
+  /// @param[in] hdb: The HDB to address.
   /// @throws GCL::CRuntimeAssert
   /// @version 2015-08-09/GGB - Use runtime assert for check for valid HDB number.
   /// @version 2011-12-04/GGB - Converted to smart pointers and smart HDB's.
@@ -1822,10 +1823,10 @@ namespace ACL
   }
 
   /// @brief Writes a keyword to the specified HDB.
-  /// @param[in] hdb - The HDB to address.
-  /// @param[in] keyword - The keyword name
-  /// @param[in] data - The keyword data
-  /// @param[in] comment - Comment for the keyword.
+  /// @param[in] hdb: The HDB to address.
+  /// @param[in] keyword: The keyword name
+  /// @param[in] data: The keyword data
+  /// @param[in] comment: Comment for the keyword.
   /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2017-08-04/GGB - Function created.
 
@@ -1904,7 +1905,9 @@ namespace ACL
   }
 
   /// @brief General load function. Uses the extension to determine the specific load function to call.
-  /// @throws GCL::CError(ACL, ...)
+  /// @throws ACL::CFITSException()
+  /// @throws GCL::CError(ACL, 0x000D)
+  /// @throws GCL::CCodeError(ACL)
   /// @version 2017-08-01/GGB - Added call to processTargetCoordinates().
   /// @version 2017-07-24/GGB - Function created.
 
@@ -1957,7 +1960,10 @@ namespace ACL
   /// @details The primary HDU is read first, followed by any extension HDU's. Once all the information has been read, the
   /// FITS file is closed by this routine.
   /// @param[in] file - The already open fitsfile to load from.
-  /// @throws std::bad_alloc.
+  /// @throws ACL::CFITSException()
+  /// @throws GCL::CError(ACL, 0x000D)
+  /// @throws GCL::CCodeError(ACL)
+  /// @throws std::bad_alloc
   /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
   /// @version 2015-09-06/GGB - (Bug 60) Updated to use cfitsio and not CCfits.
   /// @version 2013-03-13/GGB
@@ -1977,7 +1983,6 @@ namespace ACL
       // Process the Primary HDU
 
     CFITSIO_TEST(fits_movabs_hdu, file, 1, nullptr);
-
     CFITSIO_TEST(fits_get_img_dim, file, &naxis);
 
     if (naxis == 0)
@@ -1990,7 +1995,6 @@ namespace ACL
     };
 
     HDB.back()->readFromFITS(file);
-
 
       // Process all the extensions
 
@@ -2007,7 +2011,7 @@ namespace ACL
   /// @brief Loads a FITS file from a memory file.
   /// @param[in] memoryFile - The memory file containing the data.
   /// @returns None.
-  /// @throws ...
+  /// @throws ACL::CFITSException()
   /// @version 2017-08-12/GGB - Function created.
 
   void CAstroFile::loadFromMemory(CFITSMemoryFile &memoryFile)
@@ -2310,7 +2314,7 @@ namespace ACL
   }
 
   /// @brief Loads the observation time into the relevant memory structure.
-  /// @throws None.
+  /// @throws GCL::CError(ACL, 0x0200)
   /// @pre 1. The file must have been loaded before this is called.
   /// @version 2011-07-15/GGB - Function created.
 
@@ -2416,123 +2420,126 @@ namespace ACL
   {
     processObservationTelescope();
     processObservationTime();
-    processTargetCoordinates();
+    processObservationTargetData();
     processObservationLocation();
     processWeather();
   }
 
-  /// @brief Reads target coordinate values until a valid target coordinate value is obtained.
+  /// @brief Processes target data.
+  /// @details Reads target coordinate values until a valid target coordinate value is obtained.<br>
+  ///          The challenge is to "know" what type of target we are dealing with. This is why the data types are kept simple and
+  ///          the CTargetAstronomy classes are not used, neither is the CObservation classes.
   /// @throws None.
   /// @pre 1. The file must have been loaded before this is called.
   /// @version 2018-09-23/GGB - Added imageCenter member.
   /// @version 2017-08-01/GGB - Function created.
 
-  void CAstroFile::processTargetCoordinates()
+  void CAstroFile::processObservationTargetData()
   {
-    bool bRA = false, bDEC = false;
-    std::string system;
-    std::string epoch;
-    std::string equinox;
+//    bool bRA = false, bDEC = false;
+//    std::string system;
+//    std::string epoch;
+//    std::string equinox;
 
-    if (keywordExists(0, FITS_RADECSYS))
-    {
-      system = static_cast<std::string>(keywordData(0, FITS_RADECSYS));
+//    if (keywordExists(0, FITS_RADECSYS))
+//    {
+//      system = static_cast<std::string>(keywordData(0, FITS_RADECSYS));
 
-        // Remove quotation marks and spaces.
+//        // Remove quotation marks and spaces.
 
-      boost::erase_all(system, "'");
-      boost::trim(system);
+//      boost::erase_all(system, "'");
+//      boost::trim(system);
 
-      if (system == "FK5")
-      {
-        //targetCoordinates->setReferenceSystem(RS_FK5);
-      }
-      else if (system == "ICRS")
-      {
-        //targetCoordinates->setReferenceSystem(RS_ICRS);
-      }
-      else if (system == "FK4")
-      {
-        //targetCoordinates->setReferenceSystem(RS_FK4);
-      }
-      else
-      {
-        WARNINGMESSAGE("Unknown Coordinate System: " + system);
-      };
-    }
-    else
-    {
-      INFOMESSAGE("No Coordinate system specified, using FK5");
-    };
+//      if (system == "FK5")
+//      {
+//        //observationTarget->setReferenceSystem(RS_FK5);
+//      }
+//      else if (system == "ICRS")
+//      {
+//        //observationTarget->setReferenceSystem(RS_ICRS);
+//      }
+//      else if (system == "FK4")
+//      {
+//        //observationTarget->setReferenceSystem(RS_FK4);
+//      }
+//      else
+//      {
+//        WARNINGMESSAGE("Unknown Coordinate System: " + system);
+//      };
+//    }
+//    else
+//    {
+//      INFOMESSAGE("No Coordinate system specified, using FK5");
+//    };
 
-    if (keywordExists(0, FITS_EPOCH))
-    {
-      epoch = static_cast<std::string>(keywordData(0, FITS_EPOCH));
+//    if (keywordExists(0, FITS_EPOCH))
+//    {
+//      epoch = static_cast<std::string>(keywordData(0, FITS_EPOCH));
 
-      try
-      {
-        //targetCoordinates->setEpoch(convertEpoch(epoch));
-      }
-      catch(...)
-      {
-        WARNINGMESSAGE("Unknown Epoch: " + epoch);
-      };
-    }
-    else
-    {
-      INFOMESSAGE("No Epoch specified, using J2000");
-    }
+//      try
+//      {
+//        //targetCoordinates->setEpoch(convertEpoch(epoch));
+//      }
+//      catch(...)
+//      {
+//        WARNINGMESSAGE("Unknown Epoch: " + epoch);
+//      };
+//    }
+//    else
+//    {
+//      INFOMESSAGE("No Epoch specified, using J2000");
+//    }
 
 
-    if (keywordExists(0, FITS_EQUINOX))
-    {
-      equinox = static_cast<std::string>(keywordData(0, FITS_EQUINOX));
-      try
-      {
-        //targetCoordinates->setEquinox(convertEpoch(equinox));
-      }
-      catch(...)
-      {
-        WARNINGMESSAGE("Unknown Equinox:" + equinox);
-      };
-    }
-    else
-    {
-      INFOMESSAGE("No Equinox specified, using J2000");
-    };
+//    if (keywordExists(0, FITS_EQUINOX))
+//    {
+//      equinox = static_cast<std::string>(keywordData(0, FITS_EQUINOX));
+//      try
+//      {
+//        //targetCoordinates->setEquinox(convertEpoch(equinox));
+//      }
+//      catch(...)
+//      {
+//        WARNINGMESSAGE("Unknown Equinox:" + equinox);
+//      };
+//    }
+//    else
+//    {
+//      INFOMESSAGE("No Equinox specified, using J2000");
+//    };
 
-    try
-    {
-      if (keywordExists(0, MAXIM_RA))
-      {
-        imageCenter_.RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
-        observationTarget->positionCatalog().RA(imageCenter_.RA());
-        bRA = true;
-      }
-      else if (keywordExists(0, MAXIM_OBJECTRA))
-      {
-        imageCenter().RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
-        observationTarget->positionCatalog().RA(imageCenter_.RA());
-        bRA = true;
-      };
+//    try
+//    {
+//      if (keywordExists(0, MAXIM_RA))
+//      {
+//        imageCenter_.RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_RA))));
+//        observationTarget->positionCatalog().RA(imageCenter_.RA());
+//        bRA = true;
+//      }
+//      else if (keywordExists(0, MAXIM_OBJECTRA))
+//      {
+//        imageCenter().RA(parseRA(static_cast<std::string>(keywordData(0, MAXIM_OBJECTRA))));
+//        observationTarget->positionCatalog().RA(imageCenter_.RA());
+//        bRA = true;
+//      };
 
-      if (keywordExists(0, MAXIM_DEC))
-      {
-        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
-        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
-        bDEC = true;
-      }
-      else if (keywordExists(0, MAXIM_OBJECTDEC))
-      {
-        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
-        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
-        bDEC = true;
-      };
-    }
-    catch(...)
-    {
-        // Catch any errors generated by the parsing functions.
-    };
+//      if (keywordExists(0, MAXIM_DEC))
+//      {
+//        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_DEC))));
+//        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
+//        bDEC = true;
+//      }
+//      else if (keywordExists(0, MAXIM_OBJECTDEC))
+//      {
+//        imageCenter().DEC(parseDEC(static_cast<std::string>(keywordData(0, MAXIM_OBJECTDEC))));
+//        observationTarget->positionCatalog().DEC(imageCenter_.DEC());
+//        bDEC = true;
+//      };
+//    }
+//    catch(...)
+//    {
+//        // Catch any errors generated by the parsing functions.
+//    };
   }
 
   /// @brief Processes weather keywords.
@@ -2679,15 +2686,17 @@ namespace ACL
     }
   }
 
-  /// Removes the specified object from the photometry list.
-  //
-  // 2013-08-17/GGB - Changed parameter to std::string.
-  // 2013-04-08/GGB - Added isDirty(true)
-  // 2012-11-11/GGB - Function created.
+  /// @brief Removes the specified object from the photometry list.
+  /// @returns true if succesful
+  /// @returns false otherwise
+  /// @throws GCL::CRuntimeAssert(ACL)
+  /// @version 2013-08-17/GGB - Changed parameter to std::string.
+  /// @version 2013-04-08/GGB - Added isDirty(true)
+  /// @version 2012-11-11/GGB - Function created.
 
   bool CAstroFile::photometryObjectRemove(std::string const &toRemove)
   {
-    assert(!toRemove.empty());
+    ACL_RUNTIME_ASSERT(!toRemove.empty(), "parameter toRemove cannot be empty string.");
 
     if (!photometryHDB_)
     {
@@ -2700,9 +2709,9 @@ namespace ACL
     };
   }
 
-  /// Removes all the photometry objects from the list.
-  //
-  // 2013-05-10/GGB - Function created.
+  /// @brief Removes all the photometry objects from the list.
+  /// @throws None.
+  /// @version 2013-05-10/GGB - Function created.
 
   void CAstroFile::photometryObjectRemoveAll()
   {
@@ -2714,16 +2723,16 @@ namespace ACL
   }
 
   /// @brief Converts image coordinates to RA/Dec.
-  /// @param[in] hdb - The hdb number to address
-  /// @param[in] toConvert - The pixel address to convert.
+  /// @param[in] hdb: The hdb number to address
+  /// @param[in] toConvert: The pixel address to convert.
   /// @returns The coordinates converted to RA/Dec.
-  /// @throws GCL::CRuntimeAssert
+  /// @throws GCL::CRuntimeAssert(ACL)
   /// @version 2013-08-21/GGB - Function created.
 
   std::optional<CAstronomicalCoordinates> CAstroFile::pix2wcs(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &toConvert) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    ACL_RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    ACL_RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->pix2wcs(toConvert);
   }
@@ -2817,7 +2826,6 @@ namespace ACL
     boost::filesystem::path backupPath(fileName);
     boost::filesystem::path newPath(fileName);
     fitsfile *file;
-    int status = 0;
 
     try
     {
@@ -2925,21 +2933,6 @@ namespace ACL
 
     HDB[hdb]->imageSet(newImage);
   }
-
-  /// Sets the observation location.
-  /// @param[in] newLocation: The new location to set.
-  /// @throws CRuntimeAssert() Prevents reset to a NULL pointer.
-  /// @version 2011-12-17/GGB - Smart pointer implmentation
-  /// @version 2011-07-15/GGB - Function created.
-
-//  void CAstroFile::setObservationLocation(PLocation newLocation)
-//  {
-//    RUNTIME_ASSERT(ACL, !newLocation, "Parameter newLocation cannot have a nullptr.");
-
-//    observationLocation = newLocation;
-
-//    bHasData = bDirty = true;
-//  }
 
   /// @brief Sets the observation time.
   /// @param[in] newTime - The new time to set for the observation.

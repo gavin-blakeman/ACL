@@ -65,23 +65,29 @@ namespace ACL
   }
 
   /// @brief Copy constructor for the class.
-  /// @param[in] toCopy - The instance to create a copy of.
+  /// @param[in] toCopy: The instance to create a copy of.
   /// @throws None.
+  /// @version 2018-10-20/GGB - Updated to use std::shared_ptr.
   /// @version 2016-05-03/GGB - Added pointer to the CTargetAstronomy class to capture observed object information.
   /// @version 2013-06-08/GGB - Function created.
 
-  CObservation::CObservation(CObservation const &toCopy) : targetObject(toCopy.targetObject), time_(toCopy.time_),
-    location_(toCopy.location_), weather_(toCopy.weather_), CCDCoordinates_(toCopy.CCDCoordinates_),
+  CObservation::CObservation(CObservation const &toCopy) :
+    targetObject(toCopy.targetObject ? toCopy.targetObject->createCopy() : nullptr),
+    time_(toCopy.time_),
+    location_(toCopy.location_ ? toCopy.location_->createCopy() : nullptr),
+    weather_(toCopy.weather_), CCDCoordinates_(toCopy.CCDCoordinates_),
     observedCoordinates_(toCopy.observedCoordinates_)
   {
   }
 
   /// @brief Constructor taking a target object.
-  /// @param[in] target - The target object.
+  /// @param[in] target: The target object.
   /// @throws None.
   /// @version 2016-05-04/GGB - Function created.
 
-  CObservation::CObservation(std::shared_ptr<CTargetAstronomy> target) : targetObject(target), time_(), location_(), weather_()
+  CObservation::CObservation(std::shared_ptr<CTargetAstronomy> target) :
+    targetObject(target),
+    time_(), location_(), weather_()
   {
   }
 
@@ -94,7 +100,7 @@ namespace ACL
   }
 
   /// @brief Equality test against a std::string.
-  /// @param[in] rhs - The string to compare against.
+  /// @param[in] rhs: The string to compare against.
   /// @returns true - If the target object name is == to the string.
   /// @returns false - Otherwise.
   /// @throws None.

@@ -77,7 +77,7 @@ namespace ACL
   public:
     CPhotometryObservation(std::string const &);
     CPhotometryObservation(CPhotometryObservation const &);
-    CPhotometryObservation(std::shared_ptr<CTargetAstronomy>);
+    CPhotometryObservation(std::unique_ptr<CTargetAstronomy>);
     virtual ~CPhotometryObservation() {}
 
     virtual std::unique_ptr<CObservation> createCopy() const;

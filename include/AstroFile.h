@@ -174,7 +174,7 @@ namespace ACL
     std::unique_ptr<CObservatory> observationLocation;                              ///< The location of the observation location
     std::unique_ptr<CWeather> observationWeather;                                   ///< Weather at time of observation
     std::unique_ptr<CAstroTime> observationTime;                                    ///< Time of the observation
-    std::unique_ptr<CTargetAstronomy> observationTarget;                            ///< Coordinates of the observation.
+    //std::unique_ptr<CTargetAstronomy> observationTarget;                          ///< Coordinates of the observation.
     CAstronomicalCoordinates imageCenter_;                                          ///< Center of the image as retrieved from the FITS keywords.
     std::unique_ptr<CTelescope> observationTelescope;                               ///< Inforrmation about the telescope used.
     DHDBStore HDB;                                                                  ///< All the data blocks (HDU) in the file.
@@ -198,7 +198,7 @@ namespace ACL
     virtual void processSpecialKeywords();
     virtual void processObservationTelescope();
     virtual void processObservationTime();
-    virtual void processTargetCoordinates();
+    virtual void processObservationTargetData();
     virtual void processObservationLocation();
     virtual void processWeather();
 
@@ -214,7 +214,7 @@ namespace ACL
     explicit CAstroFile();
     CAstroFile(CAstroFile const &);
     CAstroFile(std::string const &);
-    CAstroFile(CAstroImage *);
+    CAstroFile(std::unique_ptr<CAstroImage>);
     virtual ~CAstroFile();		// Ensure that this is a virtual class.
 
       // Factory functions.
@@ -341,7 +341,6 @@ namespace ACL
     virtual CTelescope *getObservationTelescope() { return observationTelescope.get(); }
     virtual CAstroTime const &getObservationTime() const;
     virtual void setObservationWeather(std::unique_ptr<CWeather>);
-    //virtual void setObservationLocation(PLocation);
     virtual void setObservationTime(CAstroTime const &);
 
       // Target information

@@ -99,7 +99,7 @@ namespace ACL
   private:
   protected:
     std::vector<std::string> objectName_;             ///< List of object names. Object may have more than one name.
-    CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
+    //CAstronomicalCoordinates catalogCoordinates_;     ///< Catalog Coordinates of the object.
 
   public:
     CTargetAstronomy();

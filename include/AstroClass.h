@@ -183,7 +183,6 @@ namespace ACL
   };
 
 #if __cplusplus >= 201402L
-  typedef std::shared_ptr<CGeographicLocation> PLocation;
   typedef std::shared_ptr<CObservatory> PObservationSite;
   typedef std::shared_ptr<CWeather> PWeather;
 #else

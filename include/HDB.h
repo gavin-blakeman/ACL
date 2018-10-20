@@ -242,13 +242,6 @@ namespace ACL
     void keywordWrite(std::string const &, std::string const &, std::string const &);
     virtual void keywordWrite(std::unique_ptr<CFITSKeyword>);
 
-      // Keyword iteration functions
-
-    //virtual CFITSKeyword *keywordIteratorFirst();
-    //virtual CFITSKeyword *keywordIteratorNext();
-    //virtual CFITSKeyword *keywordIteratorPrev();
-    //virtual CFITSKeyword *keywordIteratorLast();
-
       // Comment functions
 
     virtual void commentWrite(std::string const &);

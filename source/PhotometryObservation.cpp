@@ -75,7 +75,12 @@ namespace ACL
   {
   }
 
-  CPhotometryObservation::CPhotometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(ta)
+  /// @brief Constructor taking a CTargetAstronomy instance.
+  /// @param[in] ta: The target to use
+  /// @throws None.
+  /// @version 2018-10-20/GGB - Function created.
+
+  CPhotometryObservation::CPhotometryObservation(std::unique_ptr<CTargetAstronomy> ta) : CObservation(std::move(ta))
   {
 
   }

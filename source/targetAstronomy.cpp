@@ -90,8 +90,7 @@ namespace ACL
   /// @throws std::bad_alloc
   /// @version 2018-09-15/GGB - Function created.
 
-  CTargetAstronomy::CTargetAstronomy(CTargetAstronomy const &toCopy) : objectName_(toCopy.objectName_),
-    catalogCoordinates_(toCopy.catalogCoordinates_)
+  CTargetAstronomy::CTargetAstronomy(CTargetAstronomy const &toCopy) : objectName_(toCopy.objectName_)
   {
   }
 

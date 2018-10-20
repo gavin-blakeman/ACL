@@ -41,7 +41,7 @@
 namespace ACL
 {
   /// @brief Copy constructor for the class.
-  /// @param[in] toCopy - The instance to copy.
+  /// @param[in] toCopy: The instance to copy.
   /// @throws std::bad_alloc
   /// @version 2017-08-26/GGB - Function created.
 
@@ -51,11 +51,11 @@ namespace ACL
   }
 
   /// @brief Constructor for the site.
-  /// @param[in] siteName - The name of the site.
-  /// @param[in] latitude - The latitude of the site.
-  /// @param[in] longitude - The longitude of the site.
-  /// @param[in] altitude - The altitude of the site.
-  /// @param[in] timeZone - The time zone of the site.
+  /// @param[in] siteName: The name of the site.
+  /// @param[in] latitude: The latitude of the site.
+  /// @param[in] longitude: The longitude of the site.
+  /// @param[in] altitude: The altitude of the site.
+  /// @param[in] timeZone: The time zone of the site.
   /// @throws None.
   /// @version 2012-01-02/GGB - Function created
 
@@ -65,12 +65,14 @@ namespace ACL
   }
 
   /// @brief Creates a copy of this instance.
+  /// @returns smart pointer to an instance equivilent to *this.
   /// @throws std::bad_alloc
+  /// @version 2018-10-20/GGB - Changed to std::unique_ptr.
   /// @version 2017-08-26/GGB - Function created.
 
-  CObservatory *CObservatory::createCopy() const
+  std::unique_ptr<CGeographicLocation> CObservatory::createCopy() const
   {
-    return new CObservatory(*this);
+    return std::make_unique<CObservatory>(*this);
   }
 
 } // namespace ALC

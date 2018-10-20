@@ -65,16 +65,22 @@ namespace ACL
   {
   }
 
-  /// Copy constructor.
-  //
-  // 2013-06-08/GGB - Function created.
+  /// @brief Copy constructor.
+  /// @param[in] toCopy: The instance to make a copy of.
+  /// @throws std::bad_alloc
+  /// @version 2013-06-08/GGB - Function created.
 
   CAstrometryObservation::CAstrometryObservation(CAstrometryObservation const &toCopy) : CObservation(toCopy),
     objectType_(toCopy.objectType_), coordinateSource_(toCopy.coordinateSource_)
   {
   }
 
-  CAstrometryObservation::CAstrometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(ta)
+  /// @brief Constructor taking an astronomy target.
+  /// @param[in] ta: The astronomy target object.
+  /// @throws None.
+  /// @version 2018-10-20/GGB - Function created.
+
+  CAstrometryObservation::CAstrometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(std::move(ta))
   {
 
   }

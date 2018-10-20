@@ -71,9 +71,14 @@ namespace ACL
     CGeographicLocation(CGeographicLocation const &);
     CGeographicLocation(FP_t, FP_t, int = 0);
 
+    virtual ~CGeographicLocation() {}
 
     virtual CGeographicLocation &operator =(CGeographicLocation const &);
     virtual bool operator ==(CGeographicLocation const &) const noexcept;
+
+      // Factory functions
+
+    virtual std::unique_ptr<CGeographicLocation> createCopy() const;
 
     void setLocation(FP_t, FP_t, int) ;
     void setLocation(FP_t, FP_t, int, FP_t);

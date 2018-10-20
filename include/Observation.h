@@ -59,6 +59,7 @@
 #include "AstroClass.h"
 #include "AstronomicalTime.h"
 #include "config.h"
+#include "geographicLocation.h"
 #include "targetAstronomy.h"
 
   // Math Class Library
@@ -77,9 +78,9 @@ namespace ACL
   private:
   protected:
     std::shared_ptr<CTargetAstronomy>  targetObject;                ///< The target object.
-    PAstroTime time_;                                               ///< The time of the observation.
-    PLocation location_;                                            ///< The location the observation was made from.
-    PWeather weather_;                                              ///< The weather at the time of the observation.
+    CAstroTime time_;                                               ///< The time of the observation.
+    std::unique_ptr<CGeographicLocation> location_;                 ///< The location the observation was made from.
+    CWeather weather_;                                              ///< The weather at the time of the observation.
     MCL::TPoint2D<FP_t> CCDCoordinates_;                            ///< The CCD coordinates of the observation.
     std::optional<CAstronomicalCoordinates> observedCoordinates_;   ///< The observed coordinates of the observation (if known)
 

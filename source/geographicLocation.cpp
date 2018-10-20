@@ -118,6 +118,16 @@ namespace ACL
     return altitude_;
   }
 
+  /// @brief Creates a copy of this.
+  /// @returns A copy of *this.
+  /// @throws std::bad_alloc
+  /// @version 2018-10-20/GGB - Function created.
+
+  std::unique_ptr<CGeographicLocation> CGeographicLocation::createCopy() const
+  {
+    return std::make_unique<CGeographicLocation>(*this);
+  }
+
   /// @brief Returns the latitude value - if it is valid.
   /// @returns The latitude (d + m/60 + s/3600)
   /// @throws None

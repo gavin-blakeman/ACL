@@ -187,6 +187,7 @@ namespace ACL
     inline virtual AXIS_t height() const { return dimY;}  /// @brief Returns the height (naxis2) of the image.
                                                           /// @returns The height of the image.
                                                           /// @throws Nothing.
+    inline virtual AXIS_t planes() const { return colourPlanes; }
 
     virtual bool isMonoImage() const {return false;}      ///< @brief Checks for a monochrome image.
                                                           ///< @details A monochrome image has only one colour plane.
