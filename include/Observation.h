@@ -77,7 +77,7 @@ namespace ACL
   {
   private:
   protected:
-    std::shared_ptr<CTargetAstronomy>  targetObject;                ///< The target object.
+    std::shared_ptr<CTargetAstronomy>  targetObject_;               ///< The target object.
     CAstroTime time_;                                               ///< The time of the observation.
     std::unique_ptr<CGeographicLocation> location_;                 ///< The location the observation was made from.
     CWeather weather_;                                              ///< The weather at the time of the observation.
@@ -102,11 +102,14 @@ namespace ACL
 
     void CCDCoordinates(MCL::TPoint2D<FP_t> const &newCoordinates);
     MCL::TPoint2D<FP_t> &CCDCoordinates();
-
     virtual bool isClose(MCL::TPoint2D<FP_t> const &center, int r) const;
 
     virtual void observedCoordinates(CAstronomicalCoordinates const &);
     virtual std::optional<CAstronomicalCoordinates> &observedCoordinates();
+
+      // Setter functions
+
+    virtual void targetObject(std::shared_ptr<CTargetAstronomy>);
   };
 
 }

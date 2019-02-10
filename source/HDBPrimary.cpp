@@ -46,7 +46,7 @@
 namespace ACL
 {
   /// @brief Copy constructor.
-  /// @param[in] toCopy - The primary HDB to create a copy of
+  /// @param[in] toCopy: The primary HDB to create a copy of
   /// @throws None.
   /// @version 2013-06-08/GGB - Function created.
 

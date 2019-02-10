@@ -187,11 +187,9 @@ namespace ACL
   typedef std::shared_ptr<CWeather> PWeather;
 #else
   #ifdef ACL_NOBOOST
-  typedef std::auto_ptr<CGeographicLocation> PLocation;
   typedef std::auto_ptr<CObservatory> PObservationSite;
   typedef std::auto_ptr<CWeather> PWeather;
   #else // ACL_NOBOOST
-    typedef boost::shared_ptr<CGeographicLocation> PLocation;
     typedef boost::shared_ptr<CObservatory> PObservationSite;
     typedef boost::shared_ptr<CWeather> PWeather;
   #endif  // ACL_NOBOOST

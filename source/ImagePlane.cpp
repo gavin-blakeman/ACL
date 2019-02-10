@@ -378,9 +378,9 @@ namespace ACL
   /// @throws std::bad_alloc
   /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
-  /// @li Use C-style arrays as storage type.
-  /// @li Use cfitsio rather than CCfits for accessing FITS files.
-  /// @li Add additional data types as supported by cfitsio V3.3
+  ///           @li Use C-style arrays as storage type.
+  ///           @li Use cfitsio rather than CCfits for accessing FITS files.
+  ///           @li Add additional data types as supported by cfitsio V3.3
   /// @version 2015-07-06/GGB - Added the additional fields for rendering.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2013-03-09/GGB - Converted to reflect native data types.
@@ -3990,14 +3990,20 @@ namespace ACL
   }
 
   /// @brief Function for rotating an image. Uses native FITS formats.
-  //
+  /// @param[in,out] imagePlane: THe image plane to rotate.
+  /// @param[in] l: Rotation parameters.
+  /// @param[in] xOrigin:
+  /// @param[in] yOrigin:
+  /// @param[in] cosa:
+  /// @param[in] sina:
+  /// @throws None.
   /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
   /// @version 2012-12-01/GGB - Function created.
 
   template<typename T>
   void CImagePlane::rotate(std::unique_ptr<T[]> &imagePlane,
-                           std::tuple<AXIS_t, AXIS_t, AXIS_t, AXIS_t> l, FP_t xOrigen, FP_t yOrigen, FP_t cosa, FP_t sina)
+                           std::tuple<AXIS_t, AXIS_t, AXIS_t, AXIS_t> l, FP_t xOrigin, FP_t yOrigin, FP_t cosa, FP_t sina)
   {
     size_t numberOfThreads;
     size_t threadNumber;
@@ -4039,7 +4045,7 @@ namespace ACL
       };
 
       thread = new boost::thread(&CImagePlane::rotateThread<T>, this, std::make_tuple(rowBegin, rowEnd),
-                                 imagePlane.get(), newImagePlane.get(), l, xOrigen, yOrigen, cosa, sina);
+                                 imagePlane.get(), newImagePlane.get(), l, xOrigin, yOrigin, cosa, sina);
       threadGroup.add_thread(thread);
       thread = nullptr;
     };
@@ -4131,8 +4137,9 @@ namespace ACL
   }
 
   /// @brief Function to write the image plane to a FITS HDU.
-  /// @param[in] hdu - The CCfits HDU to write to.
-  /// @throws CRuntimeAssert
+  /// @param[in] hdu: The CCfits HDU to write to.
+  /// @throws GCL::CRuntimeAssert(ACL)
+  /// @throws ACL::CFitsException()
   /// @version 2017-09-21/GGB - Added writing of BZERO and BSCALE (Bug #116)
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.

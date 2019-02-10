@@ -211,7 +211,7 @@ namespace ACL
   }
 
   /// @brief Set the temperature.
-  /// @param[in] nt - Temperature.
+  /// @param[in] nt: Temperature.
   /// @throws None.
   /// @version 2016-03-27/GGB - Function created.
 

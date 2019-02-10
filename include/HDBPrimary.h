@@ -79,8 +79,7 @@ namespace ACL
     virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
 
   };
-  typedef boost::shared_ptr<CHDBPrimary> PHDBPrimary;
 
-}
+} // namespace ACL
 
 #endif // ACL_HDBPRIMARY_H

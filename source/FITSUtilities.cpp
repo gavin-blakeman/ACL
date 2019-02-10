@@ -64,8 +64,8 @@ namespace ACL
 {
 
   /// @brief Parses a time give as per the FITS standard for DATE and DATE-OBS
-  /// @param[in] dateTime - The string containing the date time.
-  /// @param[out] time - The converted tome.
+  /// @param[in] dateTime: The string containing the date time.
+  /// @param[out] time: The converted tome.
   /// @details The following formats are specified in the FITS standard.
   ///           @li '14/10/96' - Original format, means 14 October 1996. (length = 8) (Only for century 1900)
   ///           @li '1996-10-14' (length = 10)

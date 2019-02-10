@@ -27,7 +27,6 @@
 // OVERVIEW:						Functions to calculate the FWHM of a point source. The method used is to fit a gaussian to the data.
 //                      A 2D gaussian non-linear least squares fit is perfomed.
 //
-//
 // CLASSES INCLUDED:		None.
 //
 // FUNCTIONS INCLUDED:  FWHM

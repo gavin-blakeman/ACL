@@ -57,9 +57,10 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// Constructor for class.
-  //
-  // 2013-04-01/GGB - Function created.
+  /// @brief Constructor for class.
+  /// @param[in] name: The name to assign to the object.
+  /// @throws None.
+  /// @version 2013-04-01/GGB - Function created.
 
   CPhotometryObservation::CPhotometryObservation(std::string const &name) : CObservation(name)
   {
@@ -80,7 +81,7 @@ namespace ACL
   /// @throws None.
   /// @version 2018-10-20/GGB - Function created.
 
-  CPhotometryObservation::CPhotometryObservation(std::unique_ptr<CTargetAstronomy> ta) : CObservation(std::move(ta))
+  CPhotometryObservation::CPhotometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(std::move(ta))
   {
 
   }

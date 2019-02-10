@@ -59,7 +59,7 @@ namespace ACL
   /// @version 2013-03-31/GGB - Function rewritten to use new intent of class.
   /// @version 2011-12-23/GGB - Function created.
 
-  CObservation::CObservation(std::string const &name) : targetObject(), time_(), location_(),
+  CObservation::CObservation(std::string const &name) : targetObject_(), time_(), location_(),
     weather_()
   {
   }
@@ -72,7 +72,7 @@ namespace ACL
   /// @version 2013-06-08/GGB - Function created.
 
   CObservation::CObservation(CObservation const &toCopy) :
-    targetObject(toCopy.targetObject ? toCopy.targetObject->createCopy() : nullptr),
+    targetObject_(toCopy.targetObject_ ? toCopy.targetObject_->createCopy() : nullptr),
     time_(toCopy.time_),
     location_(toCopy.location_ ? toCopy.location_->createCopy() : nullptr),
     weather_(toCopy.weather_), CCDCoordinates_(toCopy.CCDCoordinates_),
@@ -86,7 +86,7 @@ namespace ACL
   /// @version 2016-05-04/GGB - Function created.
 
   CObservation::CObservation(std::shared_ptr<CTargetAstronomy> target) :
-    targetObject(target),
+    targetObject_(target),
     time_(), location_(), weather_()
   {
   }
@@ -109,7 +109,7 @@ namespace ACL
 
   bool CObservation::operator==(std::string const &rhs) const
   {
-    return (*targetObject == rhs);
+    return (*targetObject_ == rhs);
   }
 
   /// Non-equality test.
@@ -119,7 +119,7 @@ namespace ACL
 
   bool CObservation::operator!=(std::string const &rhs) const
   {
-    return !(*targetObject == rhs);
+    return !(*targetObject_ == rhs);
   }
 
   // Returns a reference to the CCDCoordinates.
@@ -152,7 +152,7 @@ namespace ACL
     return std::make_unique<CObservation>(*this);
   }
 
-  /// Checks if a set of coordinates is close to the object.
+  /// @brief Checks if a set of coordinates is close to the object.
   //
   // 2013-04-07/GGB - Function created.
 
@@ -170,14 +170,24 @@ namespace ACL
     };
   }
 
+  /// @brief Function for setting the object name.
+  /// @param[in] on: The new object name.
+  /// @throws None.
+  /// @version 2018-10-21/GGB - Function created.
+
   void CObservation::objectName(std::string const &on)
   {
-    targetObject->objectName(on);
+    targetObject_->objectName(on);
   }
+
+  /// @brief Function for getting the object name.
+  /// @returns The first target name.
+  /// @throws None.
+  /// @version 2018-10-21/GGB - Function created.
 
   std::string CObservation::objectName() const
   {
-    return targetObject->objectName();
+    return targetObject_->objectName();
   }
 
   /// @brief Returns the observed place of the observation.
@@ -198,6 +208,18 @@ namespace ACL
   void CObservation::observedCoordinates(CAstronomicalCoordinates const &nc)
   {
     observedCoordinates_ = nc;
+  }
+
+  /// @brief Allows the target object to be changed.
+  /// @details Resets the current targetObject and then copies the new one.
+  /// @param[in] newTarget: The new target object.
+  /// @throws None.
+  /// @version 2018-10-21/GGB - Function created.
+
+  void CObservation::targetObject(std::shared_ptr<CTargetAstronomy> newTarget)
+  {
+    targetObject_.reset();
+    targetObject_ = newTarget;
   }
 
 }  // namespace

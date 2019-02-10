@@ -47,7 +47,7 @@
 
 #include "../include/HDB.h"
 
-  // C++ Libraries
+  // C++ standard library header files.
 
 #include <algorithm>
 #include <cstddef>
@@ -73,7 +73,7 @@
 
   // Miscellaneous library header files.
 
-#include <boost/algorithm/string.hpp>
+#include "boost/algorithm/string.hpp"
 #include "boost/lexical_cast.hpp"
 
 namespace ACL
@@ -327,7 +327,7 @@ namespace ACL
     RUNTIME_ASSERT(ACL, !kwd.empty(), "Parameter kwd is empty.");
 
     DKeywordStore::const_iterator iter;
-    CFITSKeyword *returnPointer;
+    CFITSKeyword *returnPointer = nullptr;
     bool bFound = false;
 
     for (iter = keywords_.begin(); (iter != keywords_.end()) && !bFound; ++iter)

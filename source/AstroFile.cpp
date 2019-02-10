@@ -2391,7 +2391,7 @@ namespace ACL
       observationTime.reset(new CAstroTime(static_cast<double>(keywordData(0, ASTROMANAGER_JD)), timeSystem));
     }
 
-    // DATE-OBS should be in the format "YYYY-MM-DDTHH:mm:ss"
+      // DATE-OBS should be in the format "YYYY-MM-DDTHH:mm:ss"
 
     else if ((keywordExists(0, FITS_DATEOBS)) && (parseDATE_OBS(static_cast<std::string>(keywordData(0, FITS_DATEOBS)), &time)))
     {
@@ -2548,37 +2548,42 @@ namespace ACL
 
   void CAstroFile::processWeather()
   {
-//    try
-//    {
-//      if ( (keyword == MAXIM_BOLTAMBT) ||
-//           (keyword == MAXIM_DAVAMBT) ||
-//           (keyword == astroManager_AMBTEM))
-//      {
-//        observationWeather->temperature(PCL::CTemperature(std::stod(keyword), PCL::TU_C));
-//        returnValue = true;
-//      }
-//      else if ( (keyword == MAXIM_DAVBAROM) ||
-//                (keyword == astroManager_AMBPRE))
-//      {
-//        observationWeather->pressure(PCL::CPressure(std::stod(keyword) * 100, PCL::PU::PA));
-//        returnValue = true;
-//      }
-//      else if ( (keyword == MAXIM_BOLTHUM) ||
-//                (keyword == MAXIM_DAVHUM) ||
-//                (keyword == astroManager_AMBHUM) )
-//      {
-//        observationWeather->RH(std::stod(keyword));
-//        returnValue = true;
-//      };
-//    }
-//    catch(std::invalid_argument &)
-//    {
-//      LOGMESSAGE(warning, "Unable to convert"  + keyword + " value (" + value + ") to valid value.");
-//    }
-//    catch(std::out_of_range &)
-//    {
-//      LOGMESSAGE(warning, "Unable to convert " + keyword + " value (" + value + ") to valid value.");
-//    }
+    if (keywordExists(0, MAXIM_BOLTAMBT))
+    {
+      observationWeather->temperature(PCL::CTemperature(static_cast<FP_t>(keywordData(0, MAXIM_BOLTAMBT)), PCL::TU_C));
+    };
+    if (keywordExists(0, MAXIM_DAVAMBT))
+    {
+
+      observationWeather->temperature(PCL::CTemperature(static_cast<FP_t>(keywordData(0, MAXIM_DAVAMBT)), PCL::TU_C));
+    };
+    if (keywordExists(0, ASTROMANAGER_AMBTEM))
+    {
+
+      observationWeather->temperature(PCL::CTemperature(static_cast<FP_t>(keywordData(0, ASTROMANAGER_AMBTEM)), PCL::TU_C));
+    };
+
+    if (keywordExists(0, MAXIM_DAVBAROM))
+    {
+      observationWeather->pressure(PCL::CPressure(static_cast<FP_t>(keywordData(0, MAXIM_DAVBAROM)) * 100, PCL::PU::PA));
+    };
+    if (keywordExists(0, ASTROMANAGER_AMBPRE))
+    {
+      observationWeather->pressure(PCL::CPressure(static_cast<FP_t>(keywordData(0, ASTROMANAGER_AMBPRE)) * 100, PCL::PU::PA));
+    };
+
+    if (keywordExists(0, MAXIM_BOLTHUM))
+    {
+      observationWeather->RH(static_cast<FP_t>(keywordData(0, MAXIM_BOLTHUM)));
+    };
+    if (keywordExists(0, MAXIM_DAVHUM))
+    {
+      observationWeather->RH(static_cast<FP_t>(keywordData(0, MAXIM_DAVHUM)));
+    };
+    if (keywordExists(0, ASTROMANAGER_AMBHUM))
+    {
+      observationWeather->RH(static_cast<FP_t>(keywordData(0, ASTROMANAGER_AMBHUM)));
+    };
   }
 
   /// @brief Returns the photometryHDB pointer.

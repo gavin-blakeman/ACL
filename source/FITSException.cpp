@@ -24,7 +24,6 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
-//
 // OVERVIEW:						Provides a lightweight wrapper to convert fits errors into exceptions.
 //
 // CLASSES INCLUDED:		CFITSException
