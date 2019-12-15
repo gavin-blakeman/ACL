@@ -30,14 +30,14 @@
 #
 #-----------------------------------------------------------------------------------------------------------------------------------
 
-TARGET = ACL
-TEMPLATE = lib
-CONFIG += staticlib
+TARGET    = ACL
+TEMPLATE  = lib
+CONFIG    += staticlib
 
-QT       -= core gui
+QT        -= core gui
 
 QMAKE_CXXFLAGS += -std=c++17
-DEFINES += BOOST_THREAD_USE_LIB
+DEFINES   += BOOST_THREAD_USE_LIB
 
 win32:CONFIG(release, debug|release) {
   DESTDIR = "../Library/win32/release"
@@ -57,7 +57,6 @@ else:unix:CONFIG(debug, debug|release) {
 }
 
 INCLUDEPATH += \
-  "../boost 1.62" \
   "../cfitsio" \
   "../dlib-19.4" \
   "../GCL" \
@@ -70,6 +69,7 @@ INCLUDEPATH += \
   "../SOFA/src" \
   "../" \
   "../GeographicLib/GeographicLib-1.48/include/GeographicLib"
+  "/home/gavin/Documents/Projects/software/Library/Boost/boost_1_71_0"
 
 SOURCES += \
     source/ImageStack.cpp \

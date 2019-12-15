@@ -5,12 +5,12 @@
 // SUBSYSTEM:						Time Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SOFA, Novas
+// LIBRARY DEPENDANCE:	SOFA
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2018 Gavin Blakeman.
+//                      Copyright 2005-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -39,7 +39,8 @@
 //                      2. Functions from other libraries, referenced by this library can be written in C.
 //                      3. New functions should be written to be multi-thread safe.
 //
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2019-12-14 GGB - Converted to use std::tm rather than struct tm.
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-29 GGB - Renamed to AstronomicalTime.h
 //                      2013-03-20 GGB - astroManager 2013.03 release.
 //                      2013-01-22 GGB - astroManager 000.00 release.
@@ -76,6 +77,7 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Default constructor for class. Defaults the value of the class to the local time when the class is created.
+  /// @version 2019-12-15/GGB - Updated to use std::tm.
   /// @version 2017-08-13/GGB - Logic flow corrected as always returning 0. (Bug #103)
   /// @version 2013-09-22/GGB - Removed call to tzset() before time()
   /// @version 2011-09-18/GGG - Changed function to use standard C, C++ routines to allow use with GCC compiler.
@@ -89,10 +91,10 @@ namespace ACL
 #ifdef _MSC_VER
     time_t tCurrent;
 #else
-    time_t tCurrent;
+    std::time_t tCurrent;
 #endif
 
-    struct tm *tmCurrent;
+    std::tm *tmCurrent;
 
     time(&tCurrent);
     if ((tmCurrent = localtime(&tCurrent)) == nullptr)
@@ -117,7 +119,7 @@ namespace ACL
   /// @version 2013-09-22/GGB - Removed call to tzset() before gmtime()
   /// @version 2011-12-25/GGB - Function created.
 
-  TJD::TJD(time_t const &time)
+  TJD::TJD(std::time_t const &time)
   {
     JD(time);
   }
@@ -165,6 +167,7 @@ namespace ACL
 
   /// @brief Constructor for a date and time.
   /// @throws std::bad_alloc
+  /// @version 2019-12-15/GGB - Updated to static_cast to replace c-style casting.
   /// @version 2011-07-16/GGB - Function created.
 
   TJD::TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds)
@@ -175,20 +178,54 @@ namespace ACL
     }
     else
     {
-      JD_[1] += (FP_t) hour / 24 + (FP_t) minute / 1440 + (FP_t) seconds / 86400;
+      JD_[1] += static_cast<FP_t>(hour) / 24 + static_cast<FP_t>(minute) / 1440 + static_cast<FP_t>(seconds) / 86400;
       normalise();
     };
   }
 
-  /// Constructor using a struct tm.
-  /// See time.h
-  //
-  // 2015-01-01/GGB - Changed C style casts to static_cast.
-  // 2011-07-05/GGB - Use two doubles to store the julian day to be in line with the SOFA libary.
-  // 2009-11-05/GGB - Use IAU SOFA library for the date conversion to JD. If an error is returned, a JD of 0 is returned.
-  // 2009-09-19/GGB - Function created.
+  /// @brief Constructor taking an array of 6 ints.
+  /// @param[in] value: The time value (stored as YYYY, MM, DD, HH, MM, SS)
+  /// @throws std::bad_alloc
+  /// @version 2019-12-15/GGB - Function created.
 
-  TJD::TJD(struct tm *tmDateTime)
+  TJD::TJD(std::array<int, 6> const &value)
+  {
+    if (iauCal2jd(value[0], value[1], value[2], &JD_[0], &JD_[1]) != 0)
+    {
+      JD_[0] = JD_[1] = 0;
+    }
+    else
+    {
+      JD_[1] += static_cast<FP_t>(value[3]) / 24 + static_cast<FP_t>(value[4]) / 1440 + static_cast<FP_t>(value[5]) / 86400;
+      normalise();
+    };
+  }
+
+  /// @brief Constructor taking an array of three ints.
+  /// @param[in] value: The time as a date only. (YYYY, MM, DD)
+  /// @throws std::bad_alloc
+  /// @version 2019-12-15/GGB - Function created.
+
+  TJD::TJD(std::array<int, 3> const &value)
+  {
+    if (iauCal2jd(value[0], value[1], value[2], &JD_[0], &JD_[1]) != 0)
+    {
+      JD_[0] = JD_[1] = 0;
+    };
+
+    normalise();
+  }
+
+  /// @brief Constructor using a std::tm.
+  /// @param[in] tmDateTime: The date/time data to use to initialise.
+  /// @throws
+  /// @version 2019-12-15/GGB - Updated to use std::tm.
+  /// @version 2015-01-01/GGB - Changed C style casts to static_cast.
+  /// @version 2011-07-05/GGB - Use two doubles to store the julian day to be in line with the SOFA libary.
+  /// @version 2009-11-05/GGB - Use IAU SOFA library for the date conversion to JD. If an error is returned, a JD of 0 is returned.
+  /// @version 2009-09-19/GGB - Function created.
+
+  TJD::TJD(std::tm *tmDateTime)
   {
     FP_t dH;
 
@@ -209,8 +246,8 @@ namespace ACL
   }
 
   /// @brief Constructor taking 2 doubles.
-  /// @param[d1] - First value
-  /// @param[d2] - Second value
+  /// @param[in] d1: First value
+  /// @param[in] d2: Second value
   /// @throws std::bad_alloc
   /// @version 2011-07-13/GGB - Function created.
 
@@ -221,11 +258,43 @@ namespace ACL
     normalise();
   }
 
-  // operator +=
-  //
-  // 2011-07-13/GGB - Function created.
+  /// @brief Subtraction operator for TJD class.
+  /// @param[in] rhs: Double value to delete.
+  /// @version 2019-12-15/GGB - Changed parameter to a const &.
+  /// @version 2011-07-05/GGB - Changed to use 2 doubles as per SOFA library.
+  /// @version 2010-06-08/GGB - Function created.
 
-  TJD &TJD::operator +=(FP_t val)
+  TJD TJD::operator-(FP_t const &rhs) const
+  {
+    TJD result;
+
+    result.JD_[0] = JD_[0] - rhs;
+    result.normalise();
+
+    return ( result );
+  }
+
+  /// @brief Subtraction operator taking a TJD instance as the RHS.
+  /// @param[in] rhs: The right hand value.
+  /// @returns The subtracted value.
+  /// @version 2019-12-15/GGB - Changed to use -= operator.
+  /// @version 2011-07-05/GGB - Uses two doubles as per SOFA library.
+  /// @version 2010-06-08/GGB - Function created.
+
+  TJD TJD::operator-(TJD const &rhs) const
+  {
+    TJD result = *this;
+    result -= rhs;
+
+    return result;
+  }
+
+  /// @brief operator +=
+  /// @param[in] val: The value to add.
+  /// @returns (*this)
+  /// @version 2011-07-13/GGB - Function created.
+
+  TJD &TJD::operator+=(FP_t val)
   {
     FP_t ip;
 
@@ -240,17 +309,32 @@ namespace ACL
   /// @param[in] val - The value to subtract.
   /// @returns (*this)
   /// @throws None
+  /// @version 2019-12-15/GGB - Changed parameter to a const &.
   /// @version  2011-07-09/GGB - Function created.
 
-  TJD &TJD::operator-=(FP_t val)
+  TJD &TJD::operator-=(FP_t const &rhs)
   {
     FP_t ip;
 
-    JD_[0] -= modf(val, &ip);
+    JD_[0] -= modf(rhs, &ip);
     JD_[1] -= ip;
     normalise();
 
     return *this;
+  }
+
+  /// @brief -= operator taking a TJD object as the RHS.
+  /// @param[in] rhs: The right hand operand.
+  /// @returns (*this)
+  /// @version 2019-12-15/GGB - Function created.
+
+  TJD &TJD::operator-=(TJD const & rhs)
+  {
+    JD_[0] -= rhs.JD_[0];
+    JD_[1] -= rhs.JD_[1];
+    normalise();
+
+    return (*this);
   }
 
   /// @brief Decomposes a JD.time value into a JD and a seconds of day value.
@@ -270,12 +354,13 @@ namespace ACL
 
   /// @brief Converts the JD into a gregorian date string.
   /// @throws 0x3204 - ASTROTIME: Error preparing gregorian date string.
+  /// @version 2019-12-15/GGB - Updated to use std::tm.
   /// @version 2011-12-31/GGB - Function created.
 
   std::string TJD::gregorianDate() const
   {
     char szDate[30];
-    struct tm date;
+    std::tm date;
     int year, month, day;
 
     gregorianDate(&date);
@@ -295,9 +380,9 @@ namespace ACL
   }
 
   /// @brief Calculates the Julian day from Y, M, D information. Replaces function TJD::SetJD(LPSYSTEMTIME)
-  /// @param[in] nY - The year
-  /// @param[in] nM - The month
-  /// @param[in] nd - The day of the month
+  /// @param[in] nY: The year
+  /// @param[in] nM: The month
+  /// @param[in] nd: The day of the month
   /// @version 2015-06-01/GGB - Changed name to JD(....)
   /// @version 2011-07-05/GGB - Use two doubles to store the julian day in line with the SOFA library.
   /// @version 2009-11-11/GGB - Function created.
@@ -340,19 +425,19 @@ namespace ACL
     };
   }
 
-  // Addition operator (TJD + double) for the TJD class.
-  //
-  // 2011-07-09/GGB - 1) Argument changed to double
-  //                  2) Changed to reflect two x double storage.
-  // 2010-06-08/GGB - Argument changed to const
-  // 2009-10-19/GGB - Function created.
+  /// @brief Addition operator (TJD + double) for the TJD class.
+  /// @param[in] rhs: The right hand value.
+  /// @version 2011-07-09/GGB - 1) Argument changed to double
+  ///                           2) Changed to reflect two x double storage.
+  /// @version 2010-06-08/GGB - Argument changed to const
+  /// @version 2009-10-19/GGB - Function created.
 
-  TJD TJD::operator+(FP_t dJD) const
+  TJD TJD::operator+(FP_t rhs) const
   {
     TJD result(*this);
     FP_t d1;
 
-    result.JD_[0] += modf(dJD, &d1);
+    result.JD_[0] += modf(rhs, &d1);
 
     result.JD_[1] += d1;
 
@@ -361,52 +446,22 @@ namespace ACL
     return (result);
   }
 
-  // Subtraction operator for TJD class.
-  //
-  // 2011-07-05/GGB - Changed to use 2 doubles as per SOFA library.
-  // 2010-06-08/GGB - Function created.
+  /// @brief Addition operator (TJD + TJD) for the TJD class.
+  /// @param[in] rhs: The right hand value.
+  /// @version 2011-07-05/GGB - Changed to use 2 doubles for storage as per SOFA library.
+  /// @version 2009-10-19/GGB - Function created.
 
-  TJD TJD::operator -(FP_t dJD) const
+  TJD TJD::operator +(const TJD &rhs) const
   {
     TJD result;
 
-    result.JD_[0] = JD_[0] - dJD;
+    result.JD_[0] = JD_[0] + rhs.JD_[0];
+    result.JD_[1] = JD_[1] + rhs.JD_[1];
     result.normalise();
 
     return ( result );
   }
 
-  // Addition operator (TJD + TJD) for the TJD class.
-  //
-  // 2011-07-05/GGB - Changed to use 2 doubles for storage as per SOFA library.
-  // 2009-10-19/GGB - Function created.
-
-  TJD TJD::operator +(const TJD &JD) const
-  {
-    TJD result;
-
-    result.JD_[0] = JD_[0] + JD.JD_[0];
-    result.JD_[1] = JD_[1] + JD.JD_[1];
-    result.normalise();
-
-    return ( result );
-  }
-
-  // Subtraction operator (TJD - TJD)
-  //
-  // 2011-07-05/GGB -Uses two doubles as per SOFA library.
-  // 2010-06-08/GGB - Function created.
-
-  TJD TJD::operator -(const TJD &JD) const
-  {
-    TJD result;
-
-    result.JD_[0] = JD_[0] - JD.JD_[0];
-    result.JD_[1] = JD_[1] - JD.JD_[1];
-    result.normalise();
-
-    return ( result );
-  }
 
   // Pre-increment operator for the class.
   //
@@ -533,7 +588,7 @@ namespace ACL
   }
 
   /// @brief Returns the Julian day value as a Heliocentric Julian Day.
-  /// @param[in] objectPosition - The position of the object to be corrected.
+  /// @param[in] objectPosition: The position of the object to be corrected.
   /// @returns Heliocentric Julian Day (double)
   /// @throws None.
   /// @version 2010-07-07/GGB Calls function ACL::HJD to perform the conversion.
@@ -554,19 +609,24 @@ namespace ACL
     return JD_[0] + JD_[1];
   }
 
-  // Converts the JDay value to a formatted string.
-  //
-  // 2009-09-19/GGB - Function created.
+  /// @brief Converts the JDay value to a formatted string.
+  /// @param[out] szBuffer: The buffer to contain the formatted string.
+  /// @param[in] nBuffer: The size of the buffer.
+  /// @param[in] nSig: the number of decimal places.
+  /// @returns The length of the resulting string.
+  /// @version 2009-09-19/GGB - Function created.
 
-  size_t TJD::JD(char *szBuffer, size_t nBuffer, int nSig)
+  std::size_t TJD::JD(char *szBuffer, size_t nBuffer, int nSig)
   {
     return ( sprintf(szBuffer, "%.*f", nSig, JD_[0] + JD_[1]) );
   }
 
   /// @brief Converts a JD to a Gregorian date in a structure tm.
+  /// @param[out] tmTimeDate: The time and date structure to contain the value.
   /// @returns true = succesfull
   /// @returns false = not succesfull, value in the struct tm is not valid.
   /// @throws None.
+  /// @version 2019-12-15/GGB - Updated to use std::tm.
   /// @version 2015-05-18/GGB
   ///   @li Changed return value to a bool.
   ///   @li Changed function name to gregorianDate(...)
@@ -574,7 +634,7 @@ namespace ACL
   /// @version 2009-11-05/GGB - Use the IAU SOFA routines to perform the calculation.
   /// @version 2009-10-21/GGB - Function created.
 
-  bool TJD::gregorianDate(struct tm *tmTimeDate) const
+  bool TJD::gregorianDate(std::tm *tmTimeDate) const
   {
     int iY, iM, iD;
     FP_t dD;
@@ -611,9 +671,9 @@ namespace ACL
   }
 
   /// @brief Initialiser function using a time_t value.
+  /// @param[in] time: The std::time_t value to initialise with.
   /// @throws GCL::CError(ACL::0x3203) - Error while constructing JD from time_t
-  //
-  // 2015-06-01/GGB - Function created.
+  /// @version 2015-06-01/GGB - Function created.
 
   void TJD::JD(std::time_t const &time)
   {
@@ -624,7 +684,8 @@ namespace ACL
     {
       if (iauCal2jd(UTCTime->tm_year + 1900, UTCTime->tm_mon + 1, UTCTime->tm_mday, &JD_[0], &JD_[1]) == 0)
       {
-        tod = (FP_t) UTCTime->tm_sec / 86400 + (FP_t) UTCTime->tm_min / 1440 + (FP_t) UTCTime->tm_hour / 24;
+        tod = static_cast<FP_t>(UTCTime->tm_sec) / 86400 + static_cast<FP_t>(UTCTime->tm_min) / 1440 +
+              static_cast<FP_t>(UTCTime->tm_hour) / 24;
 
         JD_[1] += tod;
 
@@ -641,7 +702,7 @@ namespace ACL
     }
   }
 
-  // Returns the modified Julian Day.
+  /// @brief Returns the modified Julian Day.
   //
   // 2015-01-01/GGB - Changed C style cast to static_cast.
   // 2011-07-09/GGB - Function created.
@@ -680,7 +741,9 @@ namespace ACL
   {
     normalise();
 
-    return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
+    // GGB - Not sure why, but if the following line is uncommented I receive a linker error that the function cannot be found.
+
+    //return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
   }
 
 } // namespace

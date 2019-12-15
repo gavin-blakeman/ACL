@@ -5,12 +5,14 @@
 // SUBSYSTEM:						Astronomical Image Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, cfitsio, boost.
+// LIBRARY DEPENDANCE:	SCL
+//                      cfitsio
+//                      boost.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -92,11 +94,11 @@ namespace ACL
   }
 
   /// @brief Returns the index of a point in the array.
-  /// @param[in] x - x-coordinate
-  /// @param[in] y - y-coordinate
-  /// @param[in] xm - minimum x value
-  /// @param[in] ym - minimum y value
-  /// @param[in] xd - dimension of x axis
+  /// @param[in] x: x-coordinate
+  /// @param[in] y: y-coordinate
+  /// @param[in] xm: minimum x value
+  /// @param[in] ym: minimum y value
+  /// @param[in] xd: dimension of x axis
   /// @returns The index in the array.
   /// @throws None.
   /// @version 2013-04-21/GGB - Moved out of class CImagePlane

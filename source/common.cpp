@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2013-2018 Gavin Blakeman.
+//                      Copyright 2013-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -23,7 +23,6 @@
 //
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
-//
 //
 // OVERVIEW:						Common definitions that can be used by multiple files
 //

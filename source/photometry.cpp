@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -67,8 +67,8 @@ namespace ACL
 
   }
 
-  /// @brief Returs the photometry magnitude for the specified filters (observation band)
-  /// @param[in] filterID - The filter to check magnitude for.
+  /// @brief Returns the photometry magnitude for the specified filters (observation band)
+  /// @param[in] filterID: The filter to check magnitude for.
   /// @returns An optional containing the value of the magnitudes, or invalid.
   /// @throws None.
   /// @version 2018-10-08/GGB - Function created.

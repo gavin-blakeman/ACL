@@ -63,8 +63,8 @@ namespace ACL
   }
 
   /// @brief Constructor for the class.
-  /// @param[in] mp - The new memory pointer.
-  /// @param[in] ms - The new memory size.
+  /// @param[in] mp: The new memory pointer.
+  /// @param[in] ms: The new memory size.
   /// @throws std::bad_alloc
   /// @version 2017-08-13/GGB - Function created.
 
@@ -83,7 +83,7 @@ namespace ACL
   }
 
   /// @brief Reads from a file into a newly sized memory buffer.
-  /// @param[in] filePath - path to the file
+  /// @param[in] filePath: path to the file
   /// @note Any data in the class is released and lost.
   /// @throws GCL::CError(ACL, 0x0800)
   /// @version 2017-08-06/GGB - Function created.
@@ -113,8 +113,8 @@ namespace ACL
   }
 
   /// @brief Reallocates a block of memory.
-  /// @param[in] pointer - ignored
-  /// @param[in] sizeOfFile - The new size to allocate.
+  /// @param[in] pointer: ignored
+  /// @param[in] sizeOfFile: The new size to allocate.
   /// @returns Pointer to the newly allocated buffer.
   /// @note Some special stuff is done here. As the vector maintains all the memory itself, the return values are just
   ///       based on the vectory being resized.
@@ -152,7 +152,7 @@ namespace ACL
   }
 
   /// @brief Writes the contents of the memory to the specified file.
-  /// @param[in] filePath - The filename and path to write to.
+  /// @param[in] filePath: The filename and path to write to.
   /// @note The vector size is not used. The size in memorySize_ is managed by cfitsio and is used to write the file.
   /// @throws GCL::CError(ACL, 0x0800)
   /// @version 2017-08-06/GGB - Function created.

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -36,7 +36,8 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2019-12-15 GGB - Removed some dead code.
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
 //                      2013-02-10 GGB - Moved class CHDBImage into seperate file.
 //                      2013-02-01 GGB - Moved class CAstrometryHDB into seperate file.
@@ -396,99 +397,6 @@ namespace ACL
     return bFound;
   }
 
-//  /// @brief Moves the iterator to the first position and returns a valid keyword pointer.
-//  /// @returns Smart pointer to the first keyword.
-//  /// @throws None.
-//  /// @version 2011-12-10/GGB - Function created.
-
-//  CFITSKeyword CHDB::keywordIteratorFirst()
-//  {
-//    static PFITSKeyword nullPtr;
-
-//    keywordIterator_ = keywords_.begin();
-//    if ( (*keywordIterator_) )
-//    {
-//      return *keywordIterator_;
-//    }
-//    else
-//    {
-//      return nullPtr;
-//    };
-//  }
-
-//  /// @brief Moves the iterator to the last position and returns a valid keyword pointer.
-//  /// @returns Smart pointer to last keyword.
-//  /// @throws None.
-//  /// @version 2011-12-10/GGB - Function created.
-
-//  PFITSKeyword CHDB::keywordIteratorLast()
-//  {
-//    static PFITSKeyword nullPtr;
-
-//    keywordIterator_ = keywords_.end();
-
-//    if ( keywordIterator_ != keywords_.begin())
-//    {
-//      keywordIterator_--;
-//    };
-
-//    if ( *keywordIterator_ )
-//    {
-//      return *keywordIterator_;
-//    }
-//    else
-//    {
-//      return nullPtr;
-//    };
-//  }
-
-//  /// @brief Returns the next keyword from the collection of keywords.
-//  /// @returns Smart pointer to the next keyword.
-//  /// @throws None.
-//  /// @version 2011-12-10/GGB - Function created.
-
-//  PFITSKeyword CHDB::keywordIteratorNext()
-//  {
-//    static PFITSKeyword nullPtr;
-
-//    if (keywordIterator_ != keywords_.end() )
-//    {
-//      keywordIterator_++;
-//      if ( keywordIterator_ != keywords_.end() )
-//      {
-//        return *keywordIterator_;
-//      }
-//      else
-//      {
-//        return nullPtr;
-//      };
-//    }
-//    else
-//    {
-//      return nullPtr;
-//    };
-//  }
-
-//  /// @brief Returns the previous keyword.
-//  /// @returns Smart pointer to previous keyword.
-//  /// @throws None.
-//  /// @version 2011-12-10/GGB - Function created.
-
-//  PFITSKeyword CHDB::keywordIteratorPrev()
-//  {
-//    static PFITSKeyword nullPtr;
-
-//    if (keywordIterator_ == keywords_.begin() )
-//    {
-//      return nullPtr;
-//    }
-//    else
-//    {
-//      keywordIterator_--;
-//      return *keywordIterator_;
-//    };
-//  }
-
   /// @brief Returns a reference to the vector that stores the keywords.
   /// @throws None.
   /// @todo Either deprecate or make protected.
@@ -625,51 +533,6 @@ namespace ACL
     parent_->hasData(true);
     parent_->isDirty(true);
   }
-
-//  /// @brief Loads the comments from the FITS file.
-//  /// @param[in] keyword: Keyword to check.
-//  /// @returns true - Keyword was a comment keyword and been processed.
-//  /// @returns false - Keyword is not a comment keyword.
-//  /// @throws None.
-//  /// @version 2015-08-10/GGB - Changed parameter to PKeyword. (cfitsio implementation)
-//  /// @version 2013-04-07/GGB - Changed return value to void
-//  /// @version 2013-03-13/GGB - Changed parameter to CCfits::HDU *
-//  /// @version 2011-12-13/GGB - Function created.
-
-//  bool CHDB::processComment(PFITSKeyword keyword)
-//  {
-//    bool returnValue = false;
-
-//    if (keyword->keyword() == FITS_COMMENT)
-//    {
-//      comments_.push_back(keyword->value());
-//    };
-
-//    return returnValue;
-//  }
-
-//  /// @brief Loads the history from the HDU
-//  /// @param[in] keyword - Keyword to check.
-//  /// @returns true - Keyword was a history keyword and been processed.
-//  /// @returns false - Keyword is not a history keyword.
-//  /// @throws None.
-//  /// @version 2015-08-10/GGB - Changed parameter to PKeyword. (cfitsio implementation)
-//  /// @version 2013-06-29/GGB - Changed history_ to a std::vector<>.
-//  /// @version 2013-04-07/GGB - Changed return type to void.
-//  /// @version 2013-03-13/GGB - Name changed to readHistory and parameter changed to pointer.
-//  /// @version 2011-12-13/GGB - Function created.
-
-//  bool CHDB::processHistory(PFITSKeyword keyword)
-//  {
-//    bool returnValue = false;
-
-//    if (keyword->keyword() == FITS_HISTORY)
-//    {
-//      //history_.push_back(keyword->value());
-//    };
-
-//    return returnValue;
-//  }
 
   /// @brief Loads all the common FITS HDU information.
   /// @param[in] file: The FITS file to open from.
@@ -882,7 +745,7 @@ namespace ACL
   }
 
   /// @brief Sets the new value of NAXIS. Error checking is performed.
-  /// @param[in] n - The new NAXIS value. (1-999)
+  /// @param[in] n: The new NAXIS value. (1-999)
   /// @throws 0x1902 - HDB: 0 <= NAXIS <= 999.
   /// @version 2011-12-18/GGB - Function created.
 
@@ -900,6 +763,7 @@ namespace ACL
   }
 
   /// @brief Returns the NAXISn value specified.
+  /// @param[in] n: The axis to return the NAXIS value.
   /// @returns The NAXISn number specified.
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
@@ -922,9 +786,12 @@ namespace ACL
   }
 
   /// @brief Sets the specified value of NAXISn
+  /// @param[in] nax: vector of NAXIS values.
+  /// @param[in] n: The axis to set the values for.
   /// @throws 0x2004  - NAXIS value not found or does not exist.
   /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
   /// @version 2011-12-18/GGB - Function created.
+  /// @todo Change the checks to runtime assertions.
 
   void CHDB::NAXISn(std::vector<AXIS_t>::size_type nax, AXIS_t n)
   {
@@ -943,8 +810,8 @@ namespace ACL
   }
 
   /// @brief Sets the PCOUNT value
-  //
-  // 2012-01-12/GGB - Function created.
+  /// @param[in] pcount: The new PCOUNT value.
+  /// @version 2012-01-12/GGB - Function created.
 
   void CHDB::PCOUNT(int pcount)
   {
@@ -955,8 +822,7 @@ namespace ACL
   /// @returns true - Simple HDB
   /// @returns false - Not a simple HDB
   /// @throws 0x190A - HDB: SIMPLE only allowed in PRIMARY header.
-  //
-  // 2012-01-11/GGB - Function created.
+  /// @version 2012-01-11/GGB - Function created.
 
   bool CHDB::SIMPLE() const
   {
@@ -999,17 +865,7 @@ namespace ACL
       bPrimary_ = false;
       keyword.reset();
       returnValue = true;
-    }
-//    else if (processHistory(keyword))
-//    {
-//      keyword.reset();
-//      returnValue = true;
-//    }
-//    else if (processComment(keyword))
-//    {
-//      keyword.reset();
-//      returnValue = true;
-//    }
+    };
 
     return returnValue;
   }

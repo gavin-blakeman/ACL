@@ -5,12 +5,12 @@
 // SUBSYSTEM:						Time Classes
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SOFA, Novas
+// LIBRARY DEPENDANCE:	SOFA
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2018 Gavin Blakeman.
+//                      Copyright 2005-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -26,10 +26,7 @@
 //
 // OVERVIEW:						This file provides a class for storing time and performing time conversions between different time scales.
 //
-//
 // CLASSES INCLUDED:		TJD           - Julian Date
-//                      CAstroTime    - Stores time (date/time) as a TT value. Can produce values converted to any of the other
-//                                      time scales on demand.
 //
 // CLASS HIERARCHY:     TJD
 //                      CAstroTime (TJD)
@@ -39,7 +36,8 @@
 //                      2. Functions from other libraries, referenced by this library can be written in C.
 //                      3. New functions should be written to be multi-thread safe.
 //
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2019-12-14 GGB - Converted to use std::tm rather than struct tm.
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2015-03-29 GGB - Renamed to AstronomicalTime.h
 //                      2013-03-20 GGB - astroManager 2013.03 release.
 //                      2013-01-22 GGB - astroManager 000.00 release.
@@ -52,6 +50,7 @@
 
   // Standard C++ library header files. (std)
 
+#include <array>
 #include <cstdint>
 #include <ctime>
 
@@ -83,17 +82,24 @@ namespace ACL
     TJD(FP_t, FP_t);                              // Constructor taking two doubles.
     TJD(int, int, int);														// yy mm dd constructor
     TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds);
+    TJD(std::array<int, 6> const &);
+    TJD(std::array<int, 3> const &);
     TJD(const TJD &);															// Copy Constructor
-    TJD(struct tm *);
-    TJD(time_t const &);
+    TJD(std::tm *);
+    TJD(std::time_t const &);
 
     TJD operator+(TJD const &) const;
-    TJD operator-(TJD const &) const;
     TJD operator+(FP_t) const;
-    TJD operator-(FP_t) const;
-    TJD &operator +=(FP_t);
-    TJD &operator-=(FP_t);
-    TJD operator++(void);
+
+    TJD operator-(TJD const &) const;
+    TJD operator-(FP_t const &) const;
+
+    TJD &operator+=(FP_t);
+
+    TJD &operator-=(FP_t const &);
+    TJD &operator-=(TJD const &);
+
+    TJD operator++();
     TJD operator++(int);
     TJD operator/(FP_t) const;
     TJD &operator=(FP_t);                   ///< Sets the JD to the double value passed.
@@ -113,7 +119,7 @@ namespace ACL
     FP_t HJD(CAstronomicalCoordinates const &);								// returns the heliocentric correction for the JD.
     char const *JDH(char *, int);
 
-    size_t JD(char *, size_t, int = 1);
+    std::size_t JD(char *, size_t, int = 1);
     bool gregorianDate(struct tm *) const;     // Converts the JD to a struct tm date.
     FP_t Epoch() const;
     std::pair<std::uint32_t, std::uint32_t> decompose();

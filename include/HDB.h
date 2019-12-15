@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2019 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -44,7 +44,8 @@
 //                          - CHDBPhotometry
 //                        - CHDBBinTable
 //
-// HISTORY:             2015-09-22 GGB - astroManager 2015.09 release
+// HISTORY:             2019-12-15 GGB - Removed dead code.
+//                      2015-09-22 GGB - astroManager 2015.09 release
 //                      2013-09-30 GGB - astroManager 2013.09 release.
 //                      2013-03-22 GGB - astroManager 2013.03 released.
 //                      2013-03-17 GGB - Moved class CHDBPhotometry into seperated file.
@@ -132,9 +133,6 @@ namespace ACL
     bool firstEdit_;          ///< true = HDB has not yet been edited. false = HDB has been edited.
 
     virtual void readKeywords(fitsfile *file);
-    //virtual bool processHistory(PFITSKeyword);
-    //virtual bool processComment(PFITSKeyword);
-
     virtual void writeKeywordsToFITS(fitsfile *) const;
     virtual void writeHistoryToFITS(fitsfile *) const;
     virtual void writeCommentsToFITS(fitsfile *) const;
