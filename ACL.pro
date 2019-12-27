@@ -68,8 +68,9 @@ INCLUDEPATH += \
   "../SCL" \
   "../SOFA/src" \
   "../" \
-  "../GeographicLib/GeographicLib-1.48/include/GeographicLib"
-  "/home/gavin/Documents/Projects/software/Library/Boost/boost_1_71_0"
+  "../GeographicLib/GeographicLib-1.48/include/GeographicLib" \
+  "/home/gavin/Documents/Projects/software/Library/Boost/boost_1_71_0" \
+  "../LibRaw"
 
 SOURCES += \
     source/ImageStack.cpp \

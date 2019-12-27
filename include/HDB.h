@@ -93,7 +93,7 @@
 
   // LibRaw
 
-#include "../../LibRaw/libraw/libraw.h"
+#include "libraw/libraw.h"
 
 namespace ACL
 {
@@ -119,8 +119,8 @@ namespace ACL
 
   /// @brief The CHDB class corresponds to an HDU in a  FITS file.
   /// @details As the class is used to store all the information that can be found in an HDU of a FITS file, there are a large
-  /// number of pass-through functions that are used to manipulate data. This is the facade pattern This encapsulation is preferred
-  /// to the idiom of requesting the contained objects and then operating on the contained objects.<br>
+  ///          number of pass-through functions that are used to manipulate data. This is the facade pattern. This encapsulation is
+  ///          preferred to the idiom of requesting the contained objects and then operating on the contained objects.
 
   class CHDB		// Structure to store a data block
   {
