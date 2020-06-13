@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -38,7 +38,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/ImageStack.h"
+#include "include/ImageStack.h"
 
   // Miscellaneous header files
 
@@ -289,7 +289,7 @@ namespace ACL
     long double ldAverage;			// Use long double (if supported) to maintain maximum precision.
     CAstroImage *tempImage;
 
-    LOGMESSAGE(info, "Starting MEAN combine...");
+    INFOMESSAGE("Starting MEAN combine...");
 
     inputImages.front()->createCopy().swap(resultImage);
     resultImage->BITPIX(DOUBLE_IMG);       // Change to double representation.
@@ -321,7 +321,7 @@ namespace ACL
       tempImage = nullptr;
     };
 
-    LOGMESSAGE(info, "Completed MEAN combine.");
+    INFOMESSAGE("Completed MEAN combine.");
    }
 
   /// @brief Performs a median combine. The gsl library is used to calculate the median.
@@ -337,7 +337,7 @@ namespace ACL
     std::valarray<FP_t> medianArray(countZ);
     DImageStore::iterator imageIterator;
 
-    LOGMESSAGE(info, "Starting MEDIAN combine...");
+    INFOMESSAGE("Starting MEDIAN combine...");
 
     resultImage = inputImages.front()->createCopy();
     resultImage->BITPIX(DOUBLE_IMG);       // Change to double representation.
@@ -363,7 +363,7 @@ namespace ACL
       };
     };
 
-    LOGMESSAGE(info, "Completed MEDIAN combine.");
+    INFOMESSAGE("Completed MEDIAN combine.");
   }
 
   /// @brief Adds keywords or new information.
@@ -488,8 +488,8 @@ namespace ACL
       refAngle += DPI;
     };
 
-    LOGMESSAGE(info, "Reference Image: " + (*fileIterator)->astroFile->getImageName() + ". Reference distance: " +
-               std::to_string(refDist) + " Reference angle: " + std::to_string(refAngle) + ".");
+    INFOMESSAGE("Reference Image: " + (*fileIterator)->astroFile->getImageName() + ". Reference distance: " +
+                std::to_string(refDist) + " Reference angle: " + std::to_string(refAngle) + ".");
 
       // Now have the reference origen, angle and distance.
       // For each of the images calculate the rotation angle.
@@ -512,7 +512,7 @@ namespace ACL
 
     for (; fileIterator != inputFiles.end(); fileIterator++)
     {
-      LOGMESSAGE(info, "Processing image " + std::to_string(imageCounter++) + " of " + std::to_string(inputFiles.size() - 1) + ".");
+      INFOMESSAGE("Processing image " + std::to_string(imageCounter++) + " of " + std::to_string(inputFiles.size() - 1) + ".");
       align1 = (*fileIterator)->align1;
       align2 = (*fileIterator)->align2;
 
@@ -548,10 +548,10 @@ namespace ACL
 
         // Write the parameters to GCL::logger
 
-      LOGMESSAGE(info, "Image: " + (*fileIterator)->astroFile->getImageName() + " Distance: " +
-                 std::to_string((*fileIterator)->dist) + " Angle: " + std::to_string((*fileIterator)->th) + " Translation: x:" +
-                 std::to_string((*fileIterator)->tr.x()) +  " y:" + std::to_string((*fileIterator)->tr.y()) + " Rotation angle: " +
-                 std::to_string((*fileIterator)->dth) + " Scale: " + std::to_string((*fileIterator)->sc));
+      INFOMESSAGE("Image: " + (*fileIterator)->astroFile->getImageName() + " Distance: " +
+                  std::to_string((*fileIterator)->dist) + " Angle: " + std::to_string((*fileIterator)->th) + " Translation: x:" +
+                  std::to_string((*fileIterator)->tr.x()) +  " y:" + std::to_string((*fileIterator)->tr.y()) + " Rotation angle: " +
+                  std::to_string((*fileIterator)->dth) + " Scale: " + std::to_string((*fileIterator)->sc));
 
         // Now do the TRS function on the image.
 
@@ -565,7 +565,7 @@ namespace ACL
 
       // Now mask the outputImage.
 
-    LOGMESSAGE(info, "Completed register images function.");
+    INFOMESSAGE("Completed register images function.");
   }
 
   /// @brief Function to stack the images. This function makes use of a number of helper functions.
@@ -593,7 +593,7 @@ namespace ACL
       ACL_ERROR(0x0400);    // IMAGESTACK: No Images, or Images zero size.
     };
 
-    LOGMESSAGE(info, "Starting function stackImages...");
+    INFOMESSAGE("Starting function stackImages...");
 
     consistencyCheckImages();
     calibrateImages();
@@ -609,7 +609,7 @@ namespace ACL
       resultFile->commentWrite(0, "IMAGE: " + file->astroFile->getImageName());
     }
 
-    LOGMESSAGE(info, "Completed function stackImages.");
+    INFOMESSAGE("Completed function stackImages.");
 
     return resultFile;    // Also allows ownership transfer
   }

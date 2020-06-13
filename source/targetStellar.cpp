@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2018 Gavin Blakeman.
+//                      Copyright 2005-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -66,7 +66,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/targetStellar.h"
+#include "include/targetStellar.h"
 
   // Standard C++ library header files
 
@@ -74,10 +74,10 @@
 
   // ACL library header files.
 
-#include "../include/AstroFunctions.h"
-#include "../include/constants.h"
-#include "../include/error.h"
-#include "../include/FITSStrings.h"
+#include "include/AstroFunctions.h"
+#include "include/constants.h"
+#include "include/error.h"
+#include "include/FITSStrings.h"
 
   // NOVAS library (optional depending on DEFINES)
 
@@ -102,6 +102,7 @@
 
 namespace ACL
 {
+
   //*******************************************************************************************************************************
   //
   // CTargetStellar
@@ -379,7 +380,7 @@ namespace ACL
       case RS_FK4:
       case RS_FK5:
       {
-        ERRORMESSAGE("Coordniate reference system FK4 and FK5 are not implemented.");
+        ERRORMESSAGE("Coordinate reference system FK4 and FK5 are not implemented.");
         ACL_CODE_ERROR;
         break;
       };

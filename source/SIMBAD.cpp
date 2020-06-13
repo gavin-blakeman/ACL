@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -38,7 +38,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/SIMBAD.h"
+#include "include/SIMBAD.h"
 
   // Standard C++ library header files.
 
@@ -46,13 +46,13 @@
 
   // ACL library header files
 
-#include "../include/AstroFunctions.h"
-#include "../include/common.h"
-#include "../include/error.h"
+#include "include/AstroFunctions.h"
+#include "include/common.h"
+#include "include/error.h"
 
   // Miscellaneous library header files.
 
-#include "boost/format.hpp"
+#include <boost/format.hpp>
 
 namespace ACL
 {

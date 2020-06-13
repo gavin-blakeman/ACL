@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2018 Gavin Blakeman.
+//                      Copyright 2005-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -47,7 +47,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstronomicalTime.h"
+#include "include/AstronomicalTime.h"
 
   // Standard C++ library header files. (std)
 
@@ -57,8 +57,8 @@
 
   // ACL Library
 
-#include "../include/AstroFunctions.h"
-#include "../include/AstroClass.h"
+#include "include/AstroFunctions.h"
+#include "include/AstroClass.h"
 
   // SOFA Library
 
@@ -74,6 +74,7 @@
 
 namespace ACL
 {
+
   FP_t const SECONDSDAY = 86400;
 
   //*****************************************************************************************************************************

@@ -11,7 +11,7 @@
 // LICENSE:             GPLv2
 //
 //                      Copyright 1996-2007 Smithsonian Astrophysical Observatory, Cambridge, MA, USA
-//                      Copyright 2014-2018 Gavin Blakeman.
+//                      Copyright 2014-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -69,7 +69,7 @@
                            Cambridge, MA 02138 USA
  */
 
-#include "../include/findstar.h"
+#include "include/findstar.h"
 
   // Standard C++ library header files
 
@@ -223,11 +223,11 @@ namespace ACL
     y1 = std::max(AXIS_t(0), (ny / 2) - rnoise);
     y2 = std::min((ny / 2) + rnoise, ny -1);
 
-    LOGMESSAGE(info, "Calculating image noise level... ");
+    INFOMESSAGE("Calculating image noise level... ");
 
     mean2D(MCL::TPoint2D<AXIS_t>(x1, y1), MCL::TPoint2D<AXIS_t>(x2, y2), noise, nsigma);
 
-    LOGMESSAGE(info, "Mean is " + boost::str(boost::format("%.2f") % noise) + ", sigma is " +
+    INFOMESSAGE("Mean is " + boost::str(boost::format("%.2f") % noise) + ", sigma is " +
                boost::str(boost::format("%.2f") % nsigma));
 
       /* Fill in borders of the image line buffer with noise */
@@ -238,9 +238,9 @@ namespace ACL
       svec[nx - index - 1] = noise;
     };
 
-    LOGMESSAGE(info, "x=[0, " + std::to_string(xborder1) + "] and [" + std::to_string(nx - xborder2 - 1) + ", " +
+    INFOMESSAGE("x=[0, " + std::to_string(xborder1) + "] and [" + std::to_string(nx - xborder2 - 1) + ", " +
                std::to_string(nx - 1) + "] set to noise...");
-    LOGMESSAGE(info, "y=[0, " + std::to_string(yborder1) + "] and [" + std::to_string(ny - yborder2 - 1) +
+    INFOMESSAGE("y=[0, " + std::to_string(yborder1) + "] and [" + std::to_string(ny - yborder2 - 1) +
                ", " + std::to_string(ny - 1) + "] set to noise...");
 
     if (bmin > 0)
@@ -258,7 +258,7 @@ namespace ACL
 
       /* Scan for stars based on surrounding local noise figure */
 
-    LOGMESSAGE(info, "Searching for objects in image...");
+    INFOMESSAGE("Searching for objects in image...");
 
     x1 = xborder1;
     y1 = yborder1;
@@ -381,7 +381,7 @@ namespace ACL
 
                         imageObjectList.push_back(imageStar);
 
-                        LOGMESSAGE(info, "Number: " + std::to_string(imageObjectList.size()) + " x: " + std::to_string(sx) + " y: " + std::to_string(sy) +
+                        INFOMESSAGE("Number: " + std::to_string(imageObjectList.size()) + " x: " + std::to_string(sx) + " y: " + std::to_string(sy) +
                                    " Peak: " + std::to_string(imageStar->peak) + " Radius: " +std::to_string(imageStar->radius) +
                                    " Flux: " + std::to_string(imageStar->flux));
                       };
@@ -407,7 +407,7 @@ namespace ACL
 //                          });
 //    LOGMESSAGE(info, "Sorting complete.");
 
-    LOGMESSAGE(info, "Computing magnitudes...");
+    INFOMESSAGE("Computing magnitudes...");
     for (iter = imageObjectList.begin(); iter != imageObjectList.end(); iter++)
     {
       if ( (*iter)->flux <= 0 )
@@ -419,9 +419,9 @@ namespace ACL
         (*iter)->flux = -2.5 * log10((*iter)->flux);
       };
     };
-    LOGMESSAGE(info, "Magnitudes complete.");
+    INFOMESSAGE("Magnitudes complete.");
 
-    LOGMESSAGE(info, "Total objects found: " + std::to_string(imageObjectList.size()));
+    INFOMESSAGE("Total objects found: " + std::to_string(imageObjectList.size()));
   }
 
 
