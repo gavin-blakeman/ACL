@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -63,22 +63,22 @@
 
   // ACL Library header files.
 
-#include "../include/AstroFunctions.h"
-#include "../include/FITSException.h"
-#include "../include/FITSKeyword.h"
-#include "../include/FITSKeywordDateTime.h"
-#include "../include/FITSKeywordDouble.h"
-#include "../include/FITSKeywordString.h"
-#include "../include/FITSKeywordInt16.h"
-#include "../include/FITSKeywordInt32.h"
-#include "../include/FITSUtilities.h"
-#include "../include/HDB.h"
-#include "../include/HDBPrimary.h"
+#include "include/AstroFunctions.h"
+#include "include/FITSException.h"
+#include "include/FITSKeyword.h"
+#include "include/FITSKeywordDateTime.h"
+#include "include/FITSKeywordDouble.h"
+#include "include/FITSKeywordString.h"
+#include "include/FITSKeywordInt16.h"
+#include "include/FITSKeywordInt32.h"
+#include "include/FITSUtilities.h"
+#include "include/HDB.h"
+#include "include/HDBPrimary.h"
 
   // Miscellaneous library header files.
 
 #include <boost/algorithm/string.hpp>
-#include "csbigimg.h"
+#include "../SBIG/csbigimg.h"
 #include <GCL>
 
 namespace ACL
