@@ -1,4 +1,11 @@
-﻿2019-12
+﻿2020-06
+------------------------------------------------------------------------------------------------------------------------------------
+CHANGE:     TJD::normalise - added noexcept specifier
+CHANGE:     TJD::TJD() - added noexcept specifier
+CHANGE:     TJD::TD(int, int, int) - added noexcept specifier.
+
+
+2019-12
 ------------------------------------------------------------------------------------------------------------------------------------
 REFACTOR:   TJD - Use std::tm rather than struct tm.
 ADD:        TJD - Constructor taking array parameter.

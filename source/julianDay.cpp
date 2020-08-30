@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2019 Gavin Blakeman.
+//                      Copyright 2005-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -48,7 +48,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/julianDay.h"
+#include "include/julianDay.h"
 
   // ACL library header files.
 
@@ -77,6 +77,7 @@ namespace ACL
   //*******************************************************************************************************************************
 
   /// @brief Default constructor for class. Defaults the value of the class to the local time when the class is created.
+  /// @version 2020-06-15/GGB - Added noexcept specifier.
   /// @version 2019-12-15/GGB - Updated to use std::tm.
   /// @version 2017-08-13/GGB - Logic flow corrected as always returning 0. (Bug #103)
   /// @version 2013-09-22/GGB - Removed call to tzset() before time()
@@ -86,7 +87,7 @@ namespace ACL
   ///                              the JD value 0 is returned.
   /// @version 2005-06-19/GGB - Function created.
 
-  TJD::TJD()
+  TJD::TJD() noexcept
   {
 #ifdef _MSC_VER
     time_t tCurrent;
@@ -160,17 +161,18 @@ namespace ACL
   ///                           value of 0 is returned.
   /// @version 2005-06-19/GGB 0 Function created.
 
-  TJD::TJD(int dY, int dM, int dD)
+  TJD::TJD(int dY, int dM, int dD) noexcept
   {
     JD(dY, dM, dD);
   }
 
   /// @brief Constructor for a date and time.
   /// @throws std::bad_alloc
+  /// @version 2020-06-15/GGB - Added noexcept specifier.
   /// @version 2019-12-15/GGB - Updated to static_cast to replace c-style casting.
   /// @version 2011-07-16/GGB - Function created.
 
-  TJD::TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds)
+  TJD::TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds) noexcept
   {
     if (iauCal2jd(year, month, day, &JD_[0], &JD_[1]) != 0)
     {
@@ -347,8 +349,6 @@ namespace ACL
   {
     normalise();      // JD_[0] = IP and JD[1] = FP
 
-    std::uint32_t testValue = static_cast<std::uint32_t>(JD_[1] * 60 * 60 * 24);
-
     return std::make_pair(static_cast<std::uint32_t>(JD_[0]), static_cast<std::uint32_t>(JD_[1] * 60 * 60 * 24));
   }
 
@@ -387,7 +387,7 @@ namespace ACL
   /// @version 2011-07-05/GGB - Use two doubles to store the julian day in line with the SOFA library.
   /// @version 2009-11-11/GGB - Function created.
 
-  void TJD::JD(unsigned int nY, unsigned int nM, unsigned int nD)
+  void TJD::JD(unsigned int nY, unsigned int nM, unsigned int nD) noexcept
   {
     if (iauCal2jd(nY, nM, nD, &JD_[0], &JD_[1]) != 0)
     {
@@ -602,6 +602,7 @@ namespace ACL
   /// @brief Returns a JD value.
   /// @returns The JD as a FP_t value.
   /// @throws None.
+  /// @version 2020-06-15/GGB - Added noexcept specifier.
   /// @version 2017-08-03/GGB - Function created.
 
   FP_t TJD::JD() const noexcept
@@ -623,8 +624,8 @@ namespace ACL
 
   /// @brief Converts a JD to a Gregorian date in a structure tm.
   /// @param[out] tmTimeDate: The time and date structure to contain the value.
-  /// @returns true = succesfull
-  /// @returns false = not succesfull, value in the struct tm is not valid.
+  /// @returns true - succesfull
+  /// @returns false - not succesfull, value in the struct tm is not valid.
   /// @throws None.
   /// @version 2019-12-15/GGB - Updated to use std::tm.
   /// @version 2015-05-18/GGB
@@ -703,9 +704,10 @@ namespace ACL
   }
 
   /// @brief Returns the modified Julian Day.
-  //
-  // 2015-01-01/GGB - Changed C style cast to static_cast.
-  // 2011-07-09/GGB - Function created.
+  /// @returns The modified Julian day.
+  /// @throws None.
+  /// @version 2015-01-01/GGB - Changed C style cast to static_cast.
+  /// @version 2011-07-09/GGB - Function created.
 
   unsigned long TJD::MJD() const
   {
@@ -725,10 +727,11 @@ namespace ACL
   /// @brief Normalises the JD. The normalised storage for the JD is the first element to have no fractional part and the second
   ///        element to have all the fractional part. This also ensures that there is no negative part.
   /// @throws None.
+  /// @version 2020-06-15/GGB - Added noexcept specifier.
   /// @version 2017-08-17/GGB - Simplified to support negative parts.
   /// @version 2011-07-05/GGB - Function created.
 
-  void TJD::normalise()
+  void TJD::normalise() noexcept
   {
     JD_[1] = std::modf(JD_[0] + JD_[1], &JD_[0]);
   }

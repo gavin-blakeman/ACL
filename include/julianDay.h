@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2019 Gavin Blakeman.
+//                      Copyright 2005-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -74,14 +74,14 @@ namespace ACL
     FP_t JD_[2];
 
   protected:
-    void normalise();
+    void normalise() noexcept;
 
   public:
-    TJD();																		    // Default constructor
+    TJD() noexcept;                               // Default constructor
     TJD(FP_t);                                    // Constructor taking a double.
     TJD(FP_t, FP_t);                              // Constructor taking two doubles.
-    TJD(int, int, int);														// yy mm dd constructor
-    TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds);
+    TJD(int, int, int) noexcept;                  // yy mm dd constructor
+    TJD(unsigned int year, unsigned int month, unsigned int day, unsigned int hour, unsigned int minute, FP_t seconds) noexcept;
     TJD(std::array<int, 6> const &);
     TJD(std::array<int, 3> const &);
     TJD(const TJD &);															// Copy Constructor
@@ -109,7 +109,7 @@ namespace ACL
     operator double() const;
     operator std::uint64_t() const;
 
-    void JD(unsigned int nY, unsigned int nM, unsigned int nD);
+    void JD(unsigned int nY, unsigned int nM, unsigned int nD) noexcept;
     void JD(std::time_t const &);
     FP_t JD() const noexcept;
 
