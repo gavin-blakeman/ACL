@@ -259,7 +259,7 @@ namespace ACL
 
   /// @brief Returns the reference system as a string value.
   /// @returns The catalog system as a string value.
-  /// @throws CODE_ERROR(ACL)
+  /// @throws CODE_ERROR
   /// @version 2012-01-22/GGB - Function created.
 
   std::string CTargetStellar::catalogSystemString()
@@ -290,7 +290,7 @@ namespace ACL
 //      };
 //      default:
 //      {
-//        CODE_ERROR(ACL);
+//        CODE_ERROR;
 //      };
 //    };
 

@@ -61,7 +61,7 @@ namespace ACL
 
   unsigned int const ACL_MAJORVERSION = 2018;           ///< The Major version number (yyyy)
   unsigned int const ACL_MINORVERSION = 9;              ///< The Minor version number (mm)
-  unsigned int const ACL_BUILDNUMBER  = 0x00C5;         ///< The build number - incremented on each build.
+  unsigned int const ACL_BUILDNUMBER  = 0x00CF;         ///< The build number - incremented on each build.
 
   /// @brief Returns the library version and build number.
   /// that was used for editing the library.
