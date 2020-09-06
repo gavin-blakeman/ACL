@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2017-2018 Gavin Blakeman.
+//                      Copyright 2017-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,7 +34,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/FITSMemoryFileArray.h"
+#include "include/FITSMemoryFileArray.h"
 
   // Standard C++ libraries.
 
@@ -44,8 +44,8 @@
 
   // ACL Library header files.
 
-#include "../include/common.h"
-#include "../include/error.h"
+#include "include/common.h"
+#include "include/error.h"
 
   // Miscellaneous libraries
 
@@ -142,7 +142,7 @@ namespace ACL
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
     }
   }
 
@@ -164,7 +164,7 @@ namespace ACL
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
     }
   }
 
@@ -213,7 +213,7 @@ namespace ACL
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
     }
   }
 

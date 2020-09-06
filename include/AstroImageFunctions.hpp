@@ -110,8 +110,8 @@ namespace ACL
   template<typename T>
   MCL::TPoint2D<T> imageBinPixels(MCL::TPoint2D<T> const &pt, int nsize)
   {
-    RUNTIME_ASSERT(ACL, nsize >= 1, "Parameter nsize must be >= 1");
-    RUNTIME_ASSERT(ACL, nsize <= 10, "Parameter nsize must be <= 10");
+    RUNTIME_ASSERT(nsize >= 1, "Parameter nsize must be >= 1");
+    RUNTIME_ASSERT(nsize <= 10, "Parameter nsize must be <= 10");
 
     MCL::TPoint2D<T> returnValue;
 
@@ -233,8 +233,8 @@ namespace ACL
     AXIS_t oldWidth = std::get<0>(oldDim);
     AXIS_t oldHeight = std::get<1>(oldDim);
 
-    RUNTIME_ASSERT(ACL, oldWidth >= 0, "Parameter oldDim<0> must be >= 0");
-    RUNTIME_ASSERT(ACL, oldHeight >= 0, "Parameter oldDim<1> must be >= 0");
+    RUNTIME_ASSERT(oldWidth >= 0, "Parameter oldDim<0> must be >= 0");
+    RUNTIME_ASSERT(oldHeight >= 0, "Parameter oldDim<1> must be >= 0");
 
     AXIS_t newWidth = std::get<0>(newDim);
     AXIS_t newHeight = std::get<1>(newDim);
@@ -288,9 +288,9 @@ namespace ACL
   MCL::TPoint2D<T> imageTransformForward(MCL::TPoint2D<T> const &pt, MCL::TPoint2D<U> const &c0, MCL::TPoint2D<U> const &ct,
                                          FP_t angle, FP_t scale, MCL::TPoint2D<V> const &pixelSize)
   {
-    RUNTIME_ASSERT(ACL, scale >= 0, "Parameter scale must be >= 0");
-    RUNTIME_ASSERT(ACL, pixelSize.x() >= 0, "Parameter pixelSize.x must be >= 0");
-    RUNTIME_ASSERT(ACL, pixelSize.y() >= 0, "Parameter pixelSize.y must be >= 0");
+    RUNTIME_ASSERT(scale >= 0, "Parameter scale must be >= 0");
+    RUNTIME_ASSERT(pixelSize.x() >= 0, "Parameter pixelSize.x must be >= 0");
+    RUNTIME_ASSERT(pixelSize.y() >= 0, "Parameter pixelSize.y must be >= 0");
 
     FP_t sina = std::sin(angle);
     FP_t cosa = std::cos(angle);
@@ -330,9 +330,9 @@ namespace ACL
   MCL::TPoint2D<T> imageTransformReverse(MCL::TPoint2D<T> const &pt, MCL::TPoint2D<U> const &c0, MCL::TPoint2D<U> const &ct,
                                          FP_t angle, FP_t scale, MCL::TPoint2D<V> const &pixelSize)
   {
-    RUNTIME_ASSERT(ACL, scale >= 0, "Parameter scale must be >= 0");
-    RUNTIME_ASSERT(ACL, pixelSize.x() >= 0, "Parameter pixelSize.x must be >= 0");
-    RUNTIME_ASSERT(ACL, pixelSize.y() >= 0, "Parameter pixelSize.y must be >= 0");
+    RUNTIME_ASSERT(scale >= 0, "Parameter scale must be >= 0");
+    RUNTIME_ASSERT(pixelSize.x() >= 0, "Parameter pixelSize.x must be >= 0");
+    RUNTIME_ASSERT(pixelSize.y() >= 0, "Parameter pixelSize.y must be >= 0");
 
     FP_t sina = std::sin(angle);
     FP_t cosa = std::cos(angle);

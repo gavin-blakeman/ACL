@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2019 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -173,7 +173,7 @@ namespace ACL
        // RAW functions
 
 #ifdef USE_LIBRAW
-    virtual bool loadFromRAW(LibRaw *) = 0; //{ ACL_CODE_ERROR; }
+    virtual bool loadFromRAW(LibRaw *) = 0; //{ CODE_ERROR; }
 #endif
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) = 0;
       // Information functions
@@ -205,15 +205,15 @@ namespace ACL
     virtual int GCOUNT() const { return gcount_;}
     virtual void GCOUNT(int);
 
-    virtual FP_t BSCALE() const { ACL_CODE_ERROR; }
-    virtual void BSCALE(FP_t) { ACL_CODE_ERROR; }
+    virtual FP_t BSCALE() const { CODE_ERROR; }
+    virtual void BSCALE(FP_t) { CODE_ERROR; }
 
-    virtual FP_t BZERO() const { ACL_CODE_ERROR; }
-    virtual void BZERO(FP_t) { ACL_CODE_ERROR; }
+    virtual FP_t BZERO() const { CODE_ERROR; }
+    virtual void BZERO(FP_t) { CODE_ERROR; }
 
     virtual FP_t EXPOSURE();
 
-    virtual int PEDESTAL() const { ACL_CODE_ERROR; }
+    virtual int PEDESTAL() const { CODE_ERROR; }
 
     CAstroTime const &getObservationTime() const;
     CWeather *getObservationWeather() const;
@@ -252,62 +252,62 @@ namespace ACL
 
       // Image functions
 
-    virtual AXIS_t width() const { ACL_CODE_ERROR; }
-    virtual AXIS_t height() const { ACL_CODE_ERROR; }
-    virtual bool isMonoImage() const { ACL_CODE_ERROR; }
-    virtual bool isPolyImage() const { ACL_CODE_ERROR; }
-    virtual void imageSet(std::unique_ptr<CAstroImage> &) { ACL_CODE_ERROR; }
-    virtual CAstroImage *imageGet() { ACL_CODE_ERROR; }
-    virtual MCL::TPoint2D<FP_t> &getPixelSize() { ACL_CODE_ERROR; }
+    virtual AXIS_t width() const { CODE_ERROR; }
+    virtual AXIS_t height() const { CODE_ERROR; }
+    virtual bool isMonoImage() const { CODE_ERROR; }
+    virtual bool isPolyImage() const { CODE_ERROR; }
+    virtual void imageSet(std::unique_ptr<CAstroImage> &) { CODE_ERROR; }
+    virtual CAstroImage *imageGet() { CODE_ERROR; }
+    virtual MCL::TPoint2D<FP_t> &getPixelSize() { CODE_ERROR; }
     virtual FP_t imageExposure() const = 0;
 
       // Image rendering functions
 
-    virtual renderImage_t *getRenderedImage() const { ACL_CODE_ERROR; }
-    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { ACL_CODE_ERROR; }
-    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { ACL_CODE_ERROR; }
-    virtual void renderImage(ERenderMode) { ACL_CODE_ERROR; }
-    virtual FP_t blackPoint() { ACL_CODE_ERROR; }
-    virtual FP_t whitePoint() { ACL_CODE_ERROR; }
-    virtual FP_t getMaxValue() const { ACL_CODE_ERROR; }
-    virtual FP_t getMeanValue() const { ACL_CODE_ERROR; }
-    virtual FP_t getStDevValue() const { ACL_CODE_ERROR; }
-    virtual FP_t getMinValue() const { ACL_CODE_ERROR; }
-    virtual void objectProfile(MCL::TPoint2D<FP_t>, AXIS_t, std::vector<std::tuple<FP_t, FP_t> > &) const { ACL_CODE_ERROR; }
+    virtual renderImage_t *getRenderedImage() const { CODE_ERROR; }
+    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { CODE_ERROR; }
+    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { CODE_ERROR; }
+    virtual void renderImage(ERenderMode) { CODE_ERROR; }
+    virtual FP_t blackPoint() { CODE_ERROR; }
+    virtual FP_t whitePoint() { CODE_ERROR; }
+    virtual FP_t getMaxValue() const { CODE_ERROR; }
+    virtual FP_t getMeanValue() const { CODE_ERROR; }
+    virtual FP_t getStDevValue() const { CODE_ERROR; }
+    virtual FP_t getMinValue() const { CODE_ERROR; }
+    virtual void objectProfile(MCL::TPoint2D<FP_t>, AXIS_t, std::vector<std::tuple<FP_t, FP_t> > &) const { CODE_ERROR; }
 
       // Image manipulation functions
 
-    virtual void imageFlip() { ACL_CODE_ERROR; }
-    virtual void imageFlop() { ACL_CODE_ERROR; }
-    virtual void imageRotate(FP_t) { ACL_CODE_ERROR; }
-    virtual void imageFloat(AXIS_t, AXIS_t, long) { ACL_CODE_ERROR; }
-    virtual void imageResample(AXIS_t, AXIS_t) { ACL_CODE_ERROR; }
-    virtual void binPixels(unsigned int) { ACL_CODE_ERROR; }
-    virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t const &, FP_t const &, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &) { ACL_CODE_ERROR; }
-    virtual void imageCrop(MCL::TPoint2D<AXIS_t>, MCL::TPoint2D<AXIS_t> ) { ACL_CODE_ERROR; }
+    virtual void imageFlip() { CODE_ERROR; }
+    virtual void imageFlop() { CODE_ERROR; }
+    virtual void imageRotate(FP_t) { CODE_ERROR; }
+    virtual void imageFloat(AXIS_t, AXIS_t, long) { CODE_ERROR; }
+    virtual void imageResample(AXIS_t, AXIS_t) { CODE_ERROR; }
+    virtual void binPixels(unsigned int) { CODE_ERROR; }
+    virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t const &, FP_t const &, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &) { CODE_ERROR; }
+    virtual void imageCrop(MCL::TPoint2D<AXIS_t>, MCL::TPoint2D<AXIS_t> ) { CODE_ERROR; }
 
       // Calibration functions
 
-    virtual void calibrationApplyDark(CAstroImage const &) { ACL_CODE_ERROR; }
-    virtual void calibrationApplyFlat(CAstroImage const &) { ACL_CODE_ERROR; }
+    virtual void calibrationApplyDark(CAstroImage const &) { CODE_ERROR; }
+    virtual void calibrationApplyFlat(CAstroImage const &) { CODE_ERROR; }
 
       // Image Analysis functions
 
-    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { ACL_CODE_ERROR; }
-    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
-    //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) { ACL_CODE_ERROR; }
-    virtual bool plateSolve(AXIS_t) { ACL_CODE_ERROR; }
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const { CODE_ERROR; }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR; }
+    //virtual bool starMatch(SAstroCatalogueContainer &referenceStars, double tol, WorldCoor &wcs) { CODE_ERROR; }
+    virtual bool plateSolve(AXIS_t) { CODE_ERROR; }
 
       // Photometry functions
 
-    virtual void pointPhotometry(CPhotometryObservation &) { ACL_CODE_ERROR; }
-    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { ACL_CODE_ERROR; }
+    virtual void pointPhotometry(CPhotometryObservation &) { CODE_ERROR; }
+    virtual std::optional<FP_t> FWHM(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR; }
 
       // WCS functions
 
-    virtual bool hasWCSData() const { ACL_CODE_ERROR; }
-    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { ACL_CODE_ERROR; }
-    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { ACL_CODE_ERROR; }
+    virtual bool hasWCSData() const { CODE_ERROR; }
+    virtual std::optional<CAstronomicalCoordinates> pix2wcs(MCL::TPoint2D<FP_t> const &) const { CODE_ERROR; }
+    virtual std::optional<MCL::TPoint2D<FP_t>> wcs2pix(CAstronomicalCoordinates const &) const { CODE_ERROR; }
   };
 
 }  // namespace ACL

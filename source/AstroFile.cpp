@@ -55,7 +55,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroFile.h"
+#include "include/AstroFile.h"
 
   // Standard C++ Library header files.
 
@@ -197,7 +197,7 @@ namespace ACL
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
     };
 
     HDB.back()->imageSet(ai);
@@ -260,8 +260,8 @@ namespace ACL
 
   void CAstroFile::commentWrite(size_t hdb, const std::string &comment)
   {
-    RUNTIME_ASSERT(ACL, !comment.empty(), "The comment parameter cannot be empty");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.")
+    RUNTIME_ASSERT(!comment.empty(), "The comment parameter cannot be empty");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.")
 
     HDB[hdb]->commentWrite(comment);
     isDirty(true);
@@ -321,7 +321,7 @@ namespace ACL
 
   void CAstroFile::HDBAdd(std::unique_ptr<CHDB> toAdd)
   {
-    RUNTIME_ASSERT(ACL, toAdd != nullptr, "HDB to add cannot be a nullptr.")
+    RUNTIME_ASSERT(toAdd != nullptr, "HDB to add cannot be a nullptr.")
 
     HDB.push_back(std::move(toAdd));
     isDirty(true);
@@ -464,7 +464,7 @@ namespace ACL
 
   bool CAstroFile::astrometryObjectRemove(std::string const &toRemove)
   {
-    RUNTIME_ASSERT(ACL, !toRemove.empty(), "Parameter toRemove cannot be empty");
+    RUNTIME_ASSERT(!toRemove.empty(), "Parameter toRemove cannot be empty");
 
     if (!astrometryHDB_)
     {
@@ -490,8 +490,8 @@ namespace ACL
 
   void CAstroFile::binPixels(DHDBStore::size_type hdb, unsigned int nsize)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
 
     HDB[hdb]->binPixels(nsize);
     isDirty(true);
@@ -516,8 +516,8 @@ namespace ACL
 
   FP_t CAstroFile::blackPoint(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
 
     return HDB[hdb]->blackPoint();
   }
@@ -710,7 +710,7 @@ namespace ACL
 
   CImageHDB *CAstroFile::createImageHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
 
     if (!std::any_of(HDB.begin(), HDB.end(),
                      [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
@@ -740,7 +740,7 @@ namespace ACL
 
   CHDBAsciiTable *CAstroFile::createATableHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
 
     if (std::any_of(HDB.begin(), HDB.end(),
                     [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
@@ -774,7 +774,7 @@ namespace ACL
 
   CHDBBinaryTable *CAstroFile::createBTableHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(ACL, !name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
 
     if (std::any_of(HDB.begin(), HDB.end(),
                     [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
@@ -826,7 +826,7 @@ namespace ACL
 //      colourString = std::string("Luminance");
 //      break;
 //    default:
-//      ACL_CODE_ERROR;
+//      CODE_ERROR;
 //      break;
 //    };
 
@@ -917,8 +917,8 @@ namespace ACL
   std::optional<MCL::TPoint2D<FP_t> > CAstroFile::centroid(DHDBStore::size_type hdb, MCL::TPoint2D<AXIS_t> const &c0,
                                                            AXIS_t rmax, int sensitivity) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->centroid(c0, rmax, sensitivity) );
   }
@@ -933,7 +933,7 @@ namespace ACL
 
   void CAstroFile::flipImage(size_t hdb)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     if ( HDB[hdb]->HDBType() != BT_IMAGE )
     {
@@ -965,8 +965,8 @@ namespace ACL
 
   renderImage_t *CAstroFile::getRenderedImage(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->getRenderedImage();
   }
@@ -980,7 +980,7 @@ namespace ACL
 
   bool CAstroFile::hasWCSData(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return (HDB[hdb]->hasWCSData());
   }
@@ -998,8 +998,8 @@ namespace ACL
 
   void CAstroFile::historyWrite(DHDBStore::size_type hdb, std::string const &history)
   {
-    RUNTIME_ASSERT(ACL, !history.empty(), "History value to be added cannot be empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(!history.empty(), "History value to be added cannot be empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     HDB[hdb]->historyWrite(history);
     isDirty(true);
@@ -1014,8 +1014,8 @@ namespace ACL
 
   FP_t CAstroFile::imageExposure(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageExposure();
   }
@@ -1059,8 +1059,8 @@ namespace ACL
 
   void CAstroFile::imageFloat(DHDBStore::size_type hdb, AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     std::tuple<AXIS_t, AXIS_t> oldDim(HDB[hdb]->width(), HDB[hdb]->height());
 
@@ -1089,8 +1089,8 @@ namespace ACL
 
   bool CAstroFile::keywordDelete(DHDBStore::size_type hdb, std::string const &kwd)
   {
-    RUNTIME_ASSERT(ACL, !kwd.empty(), "Parameter keyword empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(!kwd.empty(), "Parameter keyword empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->keywordDelete(kwd);
   }
@@ -1103,8 +1103,8 @@ namespace ACL
 
   void CAstroFile::flopImage(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageFlop();
     isDirty(true);
@@ -1139,8 +1139,8 @@ namespace ACL
 
   std::optional<FP_t> CAstroFile::FWHM(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &star) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->FWHM(star);
   }
@@ -1158,8 +1158,8 @@ namespace ACL
 
   CAstroImage *CAstroFile::getAstroImage(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     CAstroImage *retVal = nullptr;
 
@@ -1183,7 +1183,7 @@ namespace ACL
 
   std::string CAstroFile::commentGet(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb]->commentGet();
   }
@@ -1266,7 +1266,7 @@ namespace ACL
 
   std::string CAstroFile::historyGet(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb]->historyGet();
   }
@@ -1281,7 +1281,7 @@ namespace ACL
 
   CHDB *CAstroFile::getHDB(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb].get();
   }
@@ -1294,8 +1294,8 @@ namespace ACL
 
   FP_t CAstroFile::imageMax(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->getMaxValue() );
   }
@@ -1308,8 +1308,8 @@ namespace ACL
 
   FP_t CAstroFile::imageMean(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->getMeanValue() );
   }
@@ -1322,8 +1322,8 @@ namespace ACL
 
   FP_t CAstroFile::imageMin(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->getMinValue() );
   }
@@ -1401,8 +1401,8 @@ namespace ACL
 
   double CAstroFile::imageStdev(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->getStDevValue() );
   }
@@ -1416,8 +1416,8 @@ namespace ACL
 
   AXIS_t CAstroFile::imageHeight(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->height() );
   }
@@ -1433,8 +1433,8 @@ namespace ACL
 
   AXIS_t CAstroFile::imageWidth(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return ( HDB[hdb]->width() );
   }
@@ -1489,8 +1489,8 @@ namespace ACL
                              TImageSourceContainer &imageSourceList,
                              SFindSources const &parameters) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->findStars(imageSourceList, parameters);  // Call the HDB to identify all the objects.
   }
@@ -1506,7 +1506,7 @@ namespace ACL
 
   std::string CAstroFile::HDBName(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->HDBName();
   }
@@ -1553,7 +1553,7 @@ namespace ACL
 
   EBlockType CAstroFile::HDBType(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->HDBType();
   }
@@ -1590,7 +1590,7 @@ namespace ACL
 
   NAXIS_t CAstroFile::NAXIS(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb]->NAXIS();
   }
@@ -1605,7 +1605,7 @@ namespace ACL
 
   AXIS_t CAstroFile::NAXISn(DHDBStore::size_type hdb, size_t axis) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb]->NAXISn(axis);
   }
@@ -1624,8 +1624,8 @@ namespace ACL
 
   void CAstroFile::imageCrop(DHDBStore::size_type hdb, AXIS_t xo, AXIS_t yo, AXIS_t xd, AXIS_t yd)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     imageCrop(hdb, MCL::TPoint2D<AXIS_t>(xo, yo), MCL::TPoint2D<AXIS_t>(xd, yd));
   }
@@ -1644,8 +1644,8 @@ namespace ACL
 
   void CAstroFile::imageCrop(DHDBStore::size_type hdb, MCL::TPoint2D<AXIS_t> origen, MCL::TPoint2D<AXIS_t> dims)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageCrop(origen, dims);
     isDirty(true);
@@ -1670,8 +1670,8 @@ namespace ACL
 
   bool CAstroFile::isMonoImage(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->isMonoImage();
   }
@@ -1683,8 +1683,8 @@ namespace ACL
 
   bool CAstroFile::isPolyImage(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->isPolyImage();
   }
@@ -1697,7 +1697,7 @@ namespace ACL
 
   DHDBStore::size_type CAstroFile::keywordCount(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     return HDB[hdb]->keywordCount();
   }
@@ -1769,8 +1769,8 @@ namespace ACL
 
   bool CAstroFile::keywordExists(DHDBStore::size_type hdb, std::string const &kwd) const
   {
-    RUNTIME_ASSERT(ACL, !kwd.empty(), "Parameter keyword empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(!kwd.empty(), "Parameter keyword empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->keywordExists(kwd);
   }
@@ -1784,7 +1784,7 @@ namespace ACL
 
   DKeywordStore &CAstroFile::keywords(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->keywordStore();
   }
@@ -1799,8 +1799,8 @@ namespace ACL
 
   KWType CAstroFile::keywordType(DHDBStore::size_type hdb, std::string const &kwd) const
   {
-    RUNTIME_ASSERT(ACL, !kwd.empty(), "Paramter keyword empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(!kwd.empty(), "Paramter keyword empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
 
     return HDB[hdb]->keywordType(kwd);
   }
@@ -1816,8 +1816,8 @@ namespace ACL
   void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::string const &keyword, double const &value,
                                 std::string const &comment)
   {
-    RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(!keyword.empty(), "The keyword parameter cannot be empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     keywordWrite(hdb, std::make_unique<CFITSKeywordDouble>(keyword, value, comment));
   }
@@ -1833,8 +1833,8 @@ namespace ACL
   void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::string const &keyword, std::int16_t const &value,
                                 std::string const &comment)
   {
-    RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(!keyword.empty(), "The keyword parameter cannot be empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     keywordWrite(hdb, std::make_unique<CFITSKeywordInt16>(keyword, value, comment));
   }
@@ -1850,8 +1850,8 @@ namespace ACL
   void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::string const &keyword, std::int32_t const &value,
                                 std::string const &comment)
   {
-    RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(!keyword.empty(), "The keyword parameter cannot be empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     keywordWrite(hdb, std::make_unique<CFITSKeywordInt32>(keyword, value, comment));
   }
@@ -1879,8 +1879,8 @@ namespace ACL
   void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::string const &keyword, std::string const &value,
                                 std::string const &comment)
   {
-    RUNTIME_ASSERT(ACL, !keyword.empty(), "The keyword parameter cannot be empty.");
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(!keyword.empty(), "The keyword parameter cannot be empty.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     keywordWrite(hdb, std::make_unique<CFITSKeywordString>(keyword, value, comment));
   }
@@ -1897,7 +1897,7 @@ namespace ACL
 
   void CAstroFile::keywordWrite(DHDBStore::size_type hdb, std::unique_ptr<CFITSKeyword> data)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter HDB >= HDB.size()");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter HDB >= HDB.size()");
 
     HDB[hdb]->keywordWrite(std::move(data));
     isDirty(true);
@@ -1952,7 +1952,7 @@ namespace ACL
 #endif // USE_LIBRAW
     else
     {
-      CODE_ERROR(ACL);
+      CODE_ERROR;
     };
   }
 
@@ -2701,7 +2701,7 @@ namespace ACL
 
   bool CAstroFile::photometryObjectRemove(std::string const &toRemove)
   {
-    ACL_RUNTIME_ASSERT(!toRemove.empty(), "parameter toRemove cannot be empty string.");
+    RUNTIME_ASSERT(!toRemove.empty(), "parameter toRemove cannot be empty string.");
 
     if (!photometryHDB_)
     {
@@ -2736,8 +2736,8 @@ namespace ACL
 
   std::optional<CAstronomicalCoordinates> CAstroFile::pix2wcs(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &toConvert) const
   {
-    ACL_RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
-    ACL_RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->pix2wcs(toConvert);
   }
@@ -2753,7 +2753,7 @@ namespace ACL
 
   void CAstroFile::pointPhotometry(DHDBStore::size_type hdb, CPhotometryObservation &po)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
 
     isDirty(true);
     HDB[hdb]->pointPhotometry(po);
@@ -2767,8 +2767,8 @@ namespace ACL
 
   void CAstroFile::imageResample(DHDBStore::size_type hdb, AXIS_t width, AXIS_t height)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageResample(width, height);
     isDirty(true);
@@ -2795,8 +2795,8 @@ namespace ACL
 
   void CAstroFile::rotateImage(DHDBStore::size_type hdb, FP_t angle)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageRotate(angle);
     isDirty(true);
@@ -2826,7 +2826,7 @@ namespace ACL
 
   void CAstroFile::save(boost::filesystem::path const &fileName)
   {
-    RUNTIME_ASSERT(ACL, !fileName.empty(), "Parameter fileName is empty");
+    RUNTIME_ASSERT(!fileName.empty(), "Parameter fileName is empty");
 
     boost::filesystem::path backupPath(fileName);
     boost::filesystem::path newPath(fileName);
@@ -2933,8 +2933,8 @@ namespace ACL
 
   void CAstroFile::setAstroImage(DHDBStore::size_type hdb, std::unique_ptr<CAstroImage> &newImage)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageSet(newImage);
   }
@@ -2960,7 +2960,7 @@ namespace ACL
 
   void CAstroFile::setObservationWeather(std::unique_ptr<CWeather> newWeather)
   {
-    RUNTIME_ASSERT(ACL, !newWeather, "Parameter newWeather cannot have a nullptr.");
+    RUNTIME_ASSERT(!newWeather, "Parameter newWeather cannot have a nullptr.");
 
     observationWeather.swap(newWeather);
 
@@ -2974,8 +2974,8 @@ namespace ACL
 
   bool CAstroFile::plateSolve(DHDBStore::size_type hdb, AXIS_t plane)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->plateSolve(plane);
   }
@@ -2991,8 +2991,8 @@ namespace ACL
   void CAstroFile::TRS(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &c0, MCL::TPoint2D<FP_t> const &ct,
     FP_t th, FP_t sc, MCL::TPoint2D<FP_t> const &pix, std::unique_ptr<bool> &maskPlane)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageTransform(c0, ct, th, sc, pix, maskPlane);
     isDirty(true);
@@ -3154,8 +3154,8 @@ namespace ACL
 
   FP_t CAstroFile::whitePoint(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb(" + std::to_string(hdb) + ") out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb(" + std::to_string(hdb) + ") out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->whitePoint();
   }
@@ -3173,7 +3173,7 @@ namespace ACL
 
   void CAstroFile::loadExtension(fitsfile *file, int extension)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr.");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr.");
 
     int status = 0;
     int hduType;
@@ -3271,8 +3271,8 @@ namespace ACL
   void CAstroFile::objectProfile(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> centroid,
                                  AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
 
     HDB[hdb]->objectProfile(centroid, radius, data);
   }
@@ -3286,8 +3286,8 @@ namespace ACL
 
   void CAstroFile::renderImage(DHDBStore::size_type hdb, ERenderMode rm)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Invalid HDB Number");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Invalid HDB Number");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
 
     HDB[hdb]->renderImage(rm);
   }
@@ -3302,8 +3302,8 @@ namespace ACL
 
   void CAstroFile::setImagePlaneColourValues(DHDBStore::size_type hdb, size_t ip, SColourRGB colour, FP_t trans)
   {
-    RUNTIME_ASSERT(ACL, hdb >= HDB.size(), "Invalid HDB Number");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
+    RUNTIME_ASSERT(hdb >= HDB.size(), "Invalid HDB Number");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
 
     HDB[hdb]->setImagePlaneColourValues(ip, colour, trans);
   }
@@ -3322,8 +3322,8 @@ namespace ACL
   void CAstroFile::setImagePlaneRenderFunction(DHDBStore::size_type hdb, size_t ip, FP_t bp, FP_t wp, bool invert,
                                                ETransferFunction tf, FP_t tfp)
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Invalid HDB Number");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Invalid HDB Number");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
 
     HDB[hdb]->setImagePlaneRenderFunction(ip, bp, wp, invert, tf, tfp);
   }
@@ -3339,8 +3339,8 @@ namespace ACL
 
   std::optional<MCL::TPoint2D<FP_t> > CAstroFile::wcs2pix(DHDBStore::size_type hdb, CAstronomicalCoordinates const &toConvert) const
   {
-    RUNTIME_ASSERT(ACL, hdb < HDB.size(), "Invalid HDB Number");
-    RUNTIME_ASSERT(ACL, HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
+    RUNTIME_ASSERT(hdb < HDB.size(), "Invalid HDB Number");
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Invalid HDB Type");
 
     return HDB[hdb]->wcs2pix(toConvert);
   }

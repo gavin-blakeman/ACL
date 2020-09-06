@@ -104,7 +104,7 @@ namespace ACL
 
   void CAstroImagePoly::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "The parameter file cannot be a nullptr.");
+    RUNTIME_ASSERT(file != nullptr, "The parameter file cannot be a nullptr.");
 
 //    AXIS_t dimZ = hdu->axis(2);      // Must be positive
 //    AXIS_t axis;

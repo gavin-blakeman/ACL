@@ -64,9 +64,9 @@ namespace ACL
 
   class CAstronomicalCoordinates;
 
-  /// @brief The TJD class is used as a representation for a Julian Day.
-  /// @details The class allows storing and manipulating a Julian day value. The integer part of the JD is the Julian Days.
-  ///          The fractional part stores the time since the start of the previous Julian day.
+  /// @brief        The TJD class is used as a representation for a Julian Day.
+  /// @details      The class allows storing and manipulating a Julian day value. The integer part of the JD is the Julian Days.
+  ///               The fractional part stores the time since the start of the previous Julian day.
 
   class TJD		// Julian day/date class
   {
@@ -77,6 +77,9 @@ namespace ACL
     void normalise() noexcept;
 
   public:
+
+    // Constructors
+
     TJD() noexcept;                               // Default constructor
     TJD(FP_t);                                    // Constructor taking a double.
     TJD(FP_t, FP_t);                              // Constructor taking two doubles.
@@ -88,26 +91,49 @@ namespace ACL
     TJD(std::tm *);
     TJD(std::time_t const &);
 
+      // Arithmetic operators
+
     TJD operator+(TJD const &) const;
     TJD operator+(FP_t) const;
+    TJD &operator+=(FP_t);
 
     TJD operator-(TJD const &) const;
     TJD operator-(FP_t const &) const;
-
-    TJD &operator+=(FP_t);
-
     TJD &operator-=(FP_t const &);
     TJD &operator-=(TJD const &);
 
-    TJD operator++();
-    TJD operator++(int);
     TJD operator/(FP_t) const;
-    TJD &operator=(FP_t);                   ///< Sets the JD to the double value passed.
-    TJD &operator=(TJD const &);
-    FP_t &operator()(int) ;                 ///< param = {0, 1} Specifies which double to get.
-    FP_t const &operator()(int) const ;
+
+      // Increment/Decrement operators
+
+    TJD &operator++();
+    TJD operator++(int);
+
+      // Assignment operators
+
+    TJD &operator=(FP_t);
+    TJD &operator=(TJD const &) noexcept;
+
+      // Testing operators
+
+    bool operator==(TJD const &) const noexcept;
+    bool operator==(double) const noexcept;
+    bool operator<(TJD const &) const noexcept;
+    bool operator<(double) const noexcept;
+    bool operator<(std::uint64_t) const noexcept;
+    bool operator>(TJD const &) const noexcept;
+    bool operator>(double) const noexcept;
+    bool operator>(std::uint64_t) const noexcept;
+
+      // Casting operators
+
     operator double() const;
     operator std::uint64_t() const;
+
+      // Other Operators
+
+    FP_t &operator()(int) ;                 ///< param = {0, 1} Specifies which double to get.
+    FP_t const &operator()(int) const ;
 
     void JD(unsigned int nY, unsigned int nM, unsigned int nD) noexcept;
     void JD(std::time_t const &);

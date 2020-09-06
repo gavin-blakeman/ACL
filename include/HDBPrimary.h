@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -60,7 +60,7 @@ namespace ACL
   class CHDBPrimary : public CHDB
   {
   private:
-    virtual bool loadFromRAW(LibRaw *) { CODE_ERROR(ACL); }
+    virtual bool loadFromRAW(LibRaw *) { CODE_ERROR; }
 
   protected:
   public:
@@ -71,12 +71,12 @@ namespace ACL
 
     virtual void loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour) {}
 
-    virtual std::string XTENSION() const { CODE_ERROR(ACL); }
+    virtual std::string XTENSION() const { CODE_ERROR; }
 
     virtual int BITPIX() const { return BYTE_IMG; }
     virtual void BITPIX(int) {}
 
-    virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
+    virtual FP_t imageExposure() const { CODE_ERROR; }
 
   };
 

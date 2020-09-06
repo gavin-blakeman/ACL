@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -46,13 +46,13 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDBPhotometry.h"
+#include "include/HDBPhotometry.h"
 
   // ACL library header files
 
-#include "../include/AstroFile.h"
-#include "../include/AstroImageFunctions.hpp"
-#include "../include/error.h"
+#include "include/AstroFile.h"
+#include "include/AstroImageFunctions.hpp"
+#include "include/error.h"
 
   // Miscellaneous library header files.
 
@@ -270,7 +270,7 @@ namespace ACL
 
   bool CHDBPhotometry::photometryObjectRemove(std::string const &toRemove)
   {
-    ACL_RUNTIME_ASSERT(toRemove.size() != 0, "Parameter cannot be empty string.");
+    RUNTIME_ASSERT(toRemove.size() != 0, "Parameter cannot be empty string.");
 
     DPhotometryObservationStore::iterator iter = photometryObservations.begin();
 
@@ -378,7 +378,7 @@ namespace ACL
   {
     size_t const nameLength = 40;
 
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     CHDB::readFromFITS(file);   // Call the parent to load all the common stuff as well as the keywords.
 
@@ -497,7 +497,7 @@ namespace ACL
     static char *tunit[] = { "", "dd.dd", "dd.dd", "Pixels", "pixels", "MAG", "MAG", "ADU", "PIXELS", "ADU", "PIXELS", "PIXELS", ""};
     static int tfields = 13;
 
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr.");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr.");
 
     std::vector<char> objectNames;
     std::vector<FP_t> RA(NAXISn(2));

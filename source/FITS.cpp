@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2018 Gavin Blakeman.
+//                      Copyright 2015-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -36,7 +36,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/FITS.h"
+#include "include/FITS.h"
 
 #include <fstream>
 
@@ -105,7 +105,7 @@ namespace ACL
       };
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
     };

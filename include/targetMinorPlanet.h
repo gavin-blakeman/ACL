@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -102,7 +102,7 @@ namespace ACL
 
       // Position functions
 
-    virtual CAstronomicalCoordinates positionCatalog() const { ACL_CODE_ERROR; }
+    virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
 

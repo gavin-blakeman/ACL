@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -86,18 +86,18 @@ namespace ACL
 
     virtual PPhotometryAperture createCopy() const;
 
-    virtual void serialiseOut(std::valarray<std::uint8_t> &) const { CODE_ERROR(ACL); }
-    virtual void serialiseIn(std::valarray<std::uint8_t> const &) { CODE_ERROR(ACL); }
+    virtual void serialiseOut(std::valarray<std::uint8_t> &) const { CODE_ERROR; }
+    virtual void serialiseIn(std::valarray<std::uint8_t> const &) { CODE_ERROR; }
 
     virtual EPhotometryApertureType apertureType() { return PAT_NONE; }
 
-    virtual AXIS_t searchDiameter() const { CODE_ERROR(ACL); }
-    virtual AXIS_t height() const { CODE_ERROR(ACL); }
-    virtual AXIS_t width() const { CODE_ERROR(ACL); }
-    virtual AXIS_t halfHeight() const { CODE_ERROR(ACL); }
-    virtual AXIS_t halfWidth() const  { CODE_ERROR(ACL); }
-    virtual bool isSource(MCL::TPoint2D<INDEX_t> const &, MCL::TPoint2D<INDEX_t> const &) { CODE_ERROR(ACL); }
-    virtual bool isSky(MCL::TPoint2D<INDEX_t> const &, MCL::TPoint2D<INDEX_t> const &) { CODE_ERROR(ACL); }
+    virtual AXIS_t searchDiameter() const { CODE_ERROR; }
+    virtual AXIS_t height() const { CODE_ERROR; }
+    virtual AXIS_t width() const { CODE_ERROR; }
+    virtual AXIS_t halfHeight() const { CODE_ERROR; }
+    virtual AXIS_t halfWidth() const  { CODE_ERROR; }
+    virtual bool isSource(MCL::TPoint2D<INDEX_t> const &, MCL::TPoint2D<INDEX_t> const &) { CODE_ERROR; }
+    virtual bool isSky(MCL::TPoint2D<INDEX_t> const &, MCL::TPoint2D<INDEX_t> const &) { CODE_ERROR; }
   };
 
 }

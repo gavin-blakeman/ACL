@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -93,7 +93,7 @@ namespace ACL
 //        imagePlane->setImageData(data);
 //    };
 
-    virtual void loadFromRGBHP(SRGBHP_Ptr, EColour) { ACL_CODE_ERROR; }
+    virtual void loadFromRGBHP(SRGBHP_Ptr, EColour) { CODE_ERROR; }
 
       // File functions
 

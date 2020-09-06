@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -58,12 +58,12 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDBAstrometry.h"
+#include "include/HDBAstrometry.h"
 
   // ACL library header files.
 
-#include "../include/AstroFile.h"
-#include "../include/AstroImageFunctions.hpp"
+#include "include/AstroFile.h"
+#include "include/AstroImageFunctions.hpp"
 
   // Miscellaneous library header files
 
@@ -303,7 +303,7 @@ namespace ACL
 
   void CHDBAstrometry::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Paramter file cannnot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Paramter file cannnot be nullptr");
 
     std::vector<std::string> objectNames;
     std::vector<FP_t> CCDX;
@@ -392,7 +392,7 @@ namespace ACL
       pcFlag |= 0x40;
     }
     else
-      ACL_CODE_ERROR;*/
+      CODE_ERROR;*/
 
   }
 
@@ -540,7 +540,7 @@ namespace ACL
 
   void CHDBAstrometry::writeToFITS(fitsfile *file)
   {
-      RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+      RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     std::vector<std::string> objectNames;
     std::vector<FP_t> CCDX;

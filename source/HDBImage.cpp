@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -59,16 +59,16 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDBImage.h"
+#include "include/HDBImage.h"
 
   // ACL library header files.
 
-#include "../include/AstroImageFunctions.hpp"
-#include "../include/AstroImageMono.h"
-#include "../include/AstroImagePoly.h"
-#include "../include/constants.h"
-#include "../include/FITS.h"
-#include "../include/FITSException.h"
+#include "include/AstroImageFunctions.hpp"
+#include "include/AstroImageMono.h"
+#include "include/AstroImagePoly.h"
+#include "include/constants.h"
+#include "include/FITS.h"
+#include "include/FITSException.h"
 
   // Miscellaneous library header files
 
@@ -101,7 +101,7 @@ namespace ACL
 
   std::unique_ptr<CHDB> CImageHDB::createHDB(CAstroFile *parent)
   {
-    RUNTIME_ASSERT(ACL, parent != nullptr, "Parameter parent cannot be nullptr.");
+    RUNTIME_ASSERT(parent != nullptr, "Parameter parent cannot be nullptr.");
 
     return std::make_unique<CImageHDB>(parent, "");
   }
@@ -115,7 +115,7 @@ namespace ACL
 
   CImageHDB::CImageHDB(CAstroFile *np, std::string const &name) : CHDB(np, name), data(nullptr), WCSInformation(nullptr)
   {
-    RUNTIME_ASSERT(ACL, np != nullptr, "Parameter np == nullptr");
+    RUNTIME_ASSERT(np != nullptr, "Parameter np == nullptr");
 
     GCOUNT(1);
     PCOUNT(0);
@@ -647,7 +647,7 @@ namespace ACL
 
   bool CImageHDB::isMonoImage() const
   {
-    RUNTIME_ASSERT(ACL, data != nullptr, "Data pointer == nullptr");
+    RUNTIME_ASSERT(data != nullptr, "Data pointer == nullptr");
 
     return data->isMonoImage();
   }
@@ -659,7 +659,7 @@ namespace ACL
 
   bool CImageHDB::isPolyImage() const
   {
-    RUNTIME_ASSERT(ACL, data != nullptr, "Data pointer == nullptr");
+    RUNTIME_ASSERT(data != nullptr, "Data pointer == nullptr");
 
     return data->isPolyImage();
   }
@@ -681,14 +681,14 @@ namespace ACL
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
     };
   }
 
-  /// @brief Pass through function to get the number of axis in the image.
-  /// EXCEPTIONS:  0x2007 - Data pointer == NULL
+  /// @brief        Pass through function to get the number of axis in the image.
+  /// EXCEPTIONS:   0x2007 - Data pointer == NULL
   //
-  // 2013-07-19/GGB - Function created.
+  /// @version      2013-07-19/GGB - Function created.
 
   NAXIS_t CImageHDB::NAXIS() const
   {
@@ -729,7 +729,7 @@ namespace ACL
 
   void CImageHDB::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     CHDB::readFromFITS(file);          // Call the parent to load all the common stuff as well as the keywords.
 
@@ -772,13 +772,13 @@ namespace ACL
     };
   }
 
-  /// @brief Returns the rendered image.
-  /// @throws GCL::RuntimeAssert(ACL)
-  /// @version 2013-07=13/GGB - Function created.
+  /// @brief        Returns the rendered image.
+  /// @throws       GCL::RuntimeAssert
+  /// @version      2013-07=13/GGB - Function created.
 
   renderImage_t *CImageHDB::getRenderedImage() const
   {
-    RUNTIME_ASSERT(ACL, data, "data pointer == nullptr")
+    RUNTIME_ASSERT(data, "data pointer == nullptr");
 
     return data->getRenderedImage();
   }
@@ -832,7 +832,7 @@ namespace ACL
 
   void CImageHDB::imageSet(std::unique_ptr<CAstroImage> &newImage)
   {
-    RUNTIME_ASSERT(ACL, newImage != nullptr, "The new image cannot be a nullptr.");
+    RUNTIME_ASSERT(newImage != nullptr, "The new image cannot be a nullptr.");
 
     if (data)
     {
@@ -1055,7 +1055,7 @@ namespace ACL
 
   void CImageHDB::setImagePlaneRenderFunction(size_t ip, FP_t bp, FP_t wp, bool invert, ETransferFunction tf , FP_t tfp)
   {
-    RUNTIME_ASSERT(ACL, data != nullptr, "data cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, "data cannot be nullptr");
 
     data->setImagePlaneRenderFunction(ip, bp, wp, invert, tf, tfp);
   }
@@ -1069,7 +1069,7 @@ namespace ACL
 
   void CImageHDB::setImagePlaneColourValues(size_t ip, SColourRGB colour, FP_t trans)
   {
-    RUNTIME_ASSERT(ACL, data != nullptr, "data cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, "data cannot be nullptr");
 
     data->setImagePlaneColourValues(ip, colour, trans);
   }
@@ -1291,8 +1291,8 @@ namespace ACL
 
   void CImageHDB::writeToFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
-    RUNTIME_ASSERT(ACL, data != nullptr, "Data variable cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, "Data variable cannot be nullptr");
 
     LONGLONG naxisn[3];
 

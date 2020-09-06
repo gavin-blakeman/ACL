@@ -82,39 +82,39 @@ namespace ACL
     CAstroImagePoly(AXIS_t, AXIS_t, AXIS_t);
     CAstroImagePoly(CAstroImage const *);
 
-    virtual std::unique_ptr<CAstroImage> createCopy() const override { ACL_CODE_ERROR; }
+    virtual std::unique_ptr<CAstroImage> createCopy() const override { CODE_ERROR; }
 
       // Operators
 
-    virtual CAstroImage &operator+=(CAstroImage const &) {ACL_CODE_ERROR; }
-    virtual CAstroImage &operator-=(CAstroImage const &) {ACL_CODE_ERROR;}
-    virtual CAstroImage &operator*=(FP_t) {ACL_CODE_ERROR;}
-    virtual CAstroImage &operator/=(FP_t) {ACL_CODE_ERROR;}
+    virtual CAstroImage &operator+=(CAstroImage const &) {CODE_ERROR; }
+    virtual CAstroImage &operator-=(CAstroImage const &) {CODE_ERROR;}
+    virtual CAstroImage &operator*=(FP_t) {CODE_ERROR;}
+    virtual CAstroImage &operator/=(FP_t) {CODE_ERROR;}
 
     // Functions to load images.
 
     virtual void loadFromRGBHP(SRGBHP_Ptr, EColour) ;
 
-    virtual int BITPIX() const { ACL_CODE_ERROR; }
-    virtual void BITPIX(int) { ACL_CODE_ERROR; }
+    virtual int BITPIX() const { CODE_ERROR; }
+    virtual void BITPIX(int) { CODE_ERROR; }
 
-    virtual double BSCALE() const { ACL_CODE_ERROR; }
-    virtual void BSCALE(double) { ACL_CODE_ERROR; }
+    virtual double BSCALE() const { CODE_ERROR; }
+    virtual void BSCALE(double) { CODE_ERROR; }
 
-    virtual double BZERO() const { ACL_CODE_ERROR; }
-    virtual void BZERO(double) { ACL_CODE_ERROR; }
+    virtual double BZERO() const { CODE_ERROR; }
+    virtual void BZERO(double) { CODE_ERROR; }
 
-    virtual int PEDESTAL() const { ACL_CODE_ERROR; }
+    virtual int PEDESTAL() const { CODE_ERROR; }
 
     virtual NAXIS_t NAXIS() const { return 3;}
-    virtual AXIS_t NAXISn(NAXIS_t) const {ACL_CODE_ERROR;}
+    virtual AXIS_t NAXISn(NAXIS_t) const {CODE_ERROR;}
 
-    virtual std::valarray<double> *imageValarray() const {ACL_CODE_ERROR;}
+    virtual std::valarray<double> *imageValarray() const {CODE_ERROR;}
 
       // Image Plane functions
 
-    virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {ACL_CODE_ERROR;}
-    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const override { ACL_CODE_ERROR;}
+    virtual std::optional<MCL::TPoint2D<FP_t> > findCentroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t) const {CODE_ERROR;}
+    virtual void objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &data) const override { CODE_ERROR;}
 
     virtual bool isMonoImage() const {return false;}  ///< @brief Checks for a monochrome image.
                                                       ///< @details A monochrome image has only one colour plane.
@@ -131,17 +131,17 @@ namespace ACL
                                                       ///< @note !isPolyImage() is not equivalent to isMonoImage().
 
 
-    virtual void applyDark(CAstroImage const &) { ACL_CODE_ERROR; }
+    virtual void applyDark(CAstroImage const &) { CODE_ERROR; }
 
       // Information functions
 
-    virtual FP_t getValue(AXIS_t, AXIS_t, AXIS_t=0) const {ACL_CODE_ERROR;}
-    virtual void setValue(AXIS_t, AXIS_t, AXIS_t, FP_t) { ACL_CODE_ERROR; }
+    virtual FP_t getValue(AXIS_t, AXIS_t, AXIS_t=0) const {CODE_ERROR;}
+    virtual void setValue(AXIS_t, AXIS_t, AXIS_t, FP_t) { CODE_ERROR; }
 
-    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { ACL_CODE_ERROR; }
-    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {ACL_CODE_ERROR;}
-    virtual void photometry(CPhotometryObservation &) const {ACL_CODE_ERROR;}
-    virtual std::optional<double> FWHM(MCL::TPoint2D<double> const &) const { ACL_CODE_ERROR; }
+    virtual void findStars(TImageSourceContainer &, SFindSources const &) const { CODE_ERROR; }
+    virtual std::optional<MCL::TPoint2D<FP_t> > centroid(MCL::TPoint2D<AXIS_t> const &, AXIS_t, int) const {CODE_ERROR;}
+    virtual void photometry(CPhotometryObservation &) const {CODE_ERROR;}
+    virtual std::optional<double> FWHM(MCL::TPoint2D<double> const &) const { CODE_ERROR; }
   };
 
 } // namespace ACL

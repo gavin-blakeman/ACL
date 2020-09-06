@@ -52,8 +52,8 @@
 
   // ACL library header files.
 
-#include "../include/AstronomicalCoordinates.h"
-#include "../include/AstroFunctions.h"
+#include "include/AstronomicalCoordinates.h"
+#include "include/AstroFunctions.h"
 
   // Miscellaneous Library header files
 
@@ -325,10 +325,10 @@ namespace ACL
     return *this;
   }
 
-  /// @brief -= operator taking a TJD object as the RHS.
-  /// @param[in] rhs: The right hand operand.
-  /// @returns (*this)
-  /// @version 2019-12-15/GGB - Function created.
+  /// @brief        Subtraction assignment operator taking a TJD object as the RHS.
+  /// @param[in]    rhs: The right hand operand.
+  /// @returns      (*this)
+  /// @version      2019-12-15/GGB - Function created.
 
   TJD &TJD::operator-=(TJD const & rhs)
   {
@@ -339,11 +339,125 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Decomposes a JD.time value into a JD and a seconds of day value.
-  /// @returns first - The JD at midnight.
-  /// @returns second - Seconds since midnight.
-  /// @throws None.
-  /// @version 2017-08-01/GGB - Function created.
+  /// @brief        Equality operator (same class)
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if the two values are equal, false otherwise.
+  /// @throws       None.
+  /// @note         This test depends on both instances having been normalised.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator==(TJD const &rhs) const noexcept
+  {
+    return ( (JD_[0] == rhs.JD_[0]) &&
+             (JD_[1] == rhs.JD_[1]));
+  }
+
+  /// @brief        Equality operator (against double).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if the two values are equal, false otherwise.
+  /// @throws       None.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator==(double rhs) const noexcept
+  {
+    return ((JD_[0] + JD_[1]) == rhs);
+  }
+
+  /// @brief        Less than operator (class).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator<(TJD const &rhs) const noexcept
+  {
+    bool returnValue = false;
+
+    if (JD_[0] < rhs.JD_[0])
+    {
+      returnValue = true;
+    }
+    else if ( (JD_[0] == rhs.JD_[0]) && (JD_[1] < rhs.JD_[1]))
+    {
+      returnValue = true;
+    };
+
+    return returnValue;
+  }
+
+  /// @brief        Less than operator (double).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator<(double rhs) const noexcept
+  {
+    return ( (JD_[0] + JD_[1]) < rhs);
+  }
+
+  /// @brief        Less than operator (uint64_t).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @note         This operator only checks the days.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator<(std::uint64_t rhs) const noexcept
+  {
+    return (static_cast<std::uint64_t>(JD_[0] + JD_[1]) < rhs);
+  }
+
+  /// @brief        Greater than operator (class).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator>(TJD const &rhs) const noexcept
+  {
+    bool returnValue = false;
+
+    if (JD_[0] < rhs.JD_[0])
+    {
+      returnValue = true;
+    }
+    else if ( (JD_[0] == rhs.JD_[0]) && (JD_[1] < rhs.JD_[1]))
+    {
+      returnValue = true;
+    };
+
+    return returnValue;
+  }
+
+  /// @brief        Less than operator (double).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator>(double rhs) const noexcept
+  {
+    return ( (JD_[0] + JD_[1]) < rhs);
+  }
+
+  /// @brief        Less than operator (uint64_t).
+  /// @param[in]    rhs: The value to test against.
+  /// @returns      true if this is less than rhs, false otherwise.
+  /// @throws       None.
+  /// @note         This operator only checks the days.
+  /// @version      2020-09-06/GGB - Function created.
+
+  bool TJD::operator>(std::uint64_t rhs) const noexcept
+  {
+    return (static_cast<std::uint64_t>(JD_[0] + JD_[1]) > rhs);
+  }
+
+  /// @brief        Decomposes a JD.time value into a JD and a seconds of day value.
+  /// @returns      first: The JD at midnight.
+  /// @returns      second: Seconds since midnight.
+  /// @throws       None.
+  /// @version      2017-08-01/GGB - Function created.
 
   std::pair<std::uint32_t, std::uint32_t> TJD::decompose()
   {
@@ -399,10 +513,10 @@ namespace ACL
     }
   }
 
-  /// @brief Returns the JD referred to 0h UT. Must always be 0.5 ending on the JD.
-  /// @returns The JD referred to 0h UTC.
-  /// @version 2011-07-05/GGB - Use two doubles to store julian day. See SOFA library documentaiton for more details.
-  /// @version 2005-07-03/GGB - Function created.
+  /// @brief        Returns the JD referred to 0h UT. Must always be 0.5 ending on the JD.
+  /// @returns      The JD referred to 0h UTC.
+  /// @version      2011-07-05/GGB - Use two doubles to store julian day. See SOFA library documentaiton for more details.
+  /// @version      2005-07-03/GGB - Function created.
 
   FP_t TJD::JD0()
   {
@@ -425,12 +539,12 @@ namespace ACL
     };
   }
 
-  /// @brief Addition operator (TJD + double) for the TJD class.
-  /// @param[in] rhs: The right hand value.
-  /// @version 2011-07-09/GGB - 1) Argument changed to double
-  ///                           2) Changed to reflect two x double storage.
-  /// @version 2010-06-08/GGB - Argument changed to const
-  /// @version 2009-10-19/GGB - Function created.
+  /// @brief        Addition operator (TJD + double) for the TJD class.
+  /// @param[in]    rhs: The right hand value.
+  /// @version      2011-07-09/GGB -  1) Argument changed to double
+  ///                                 2) Changed to reflect two x double storage.
+  /// @version      2010-06-08/GGB - Argument changed to const
+  /// @version      2009-10-19/GGB - Function created.
 
   TJD TJD::operator+(FP_t rhs) const
   {
@@ -446,10 +560,10 @@ namespace ACL
     return (result);
   }
 
-  /// @brief Addition operator (TJD + TJD) for the TJD class.
-  /// @param[in] rhs: The right hand value.
-  /// @version 2011-07-05/GGB - Changed to use 2 doubles for storage as per SOFA library.
-  /// @version 2009-10-19/GGB - Function created.
+  /// @brief        Addition operator (TJD + TJD) for the TJD class.
+  /// @param[in]    rhs: The right hand value.
+  /// @version      2011-07-05/GGB - Changed to use 2 doubles for storage as per SOFA library.
+  /// @version      2009-10-19/GGB - Function created.
 
   TJD TJD::operator +(const TJD &rhs) const
   {
@@ -463,22 +577,23 @@ namespace ACL
   }
 
 
-  // Pre-increment operator for the class.
-  //
-  // 2011-07-05/GGB -Uses two doubles as per SOFA library.
-  // 2009-10-19/GGB - Function created.
+  /// @brief        Pre-increment operator for the class. (Increment the stored value by 1 day)
+  /// @returns      Reference to the incremented instance.
+  /// @version      2020-09-06/GGB - Change return value to reference.
+  /// @version      2011-07-05/GGB -Uses two doubles as per SOFA library.
+  /// @version      2009-10-19/GGB - Function created.
 
-  TJD TJD::operator++(void)
+  TJD &TJD::operator++(void)
   {
     JD_[0]++;
 
     return ( *this );
   }
 
-  // Post-increment operator for the class.
-  //
-  // 2011-07-05/GGB -Uses two doubles as per SOFA library.
-  // 2009-10-19/GGB - Function created.
+  /// @brief        Post-increment operator for the class. (Increment the stored value by 1 day).
+  /// @returns      Copy of this (post incremented)
+  /// @version      2011-07-05/GGB - Use two doubles as per SOFA library.
+  /// @version      2009-10-19/GGB - Function created.
 
   TJD TJD::operator++(int)
   {
@@ -487,24 +602,25 @@ namespace ACL
     return ( *this );
   }
 
-  // Equals operator for a double
-  //
-  // 2011-07-05/GGB -Uses two doubles as per SOFA library.
-  // 2009-10-11/GGB - Function created.
+  /// @brief        Assignment operator for a double.
+  /// @param[in]    jday: The value to assign.
+  /// @throws       None.
+  /// @version      2011-07-05/GGB - Use two doubles as per SOFA library.
+  /// @version      2009-10-11/GGB - Function created.
 
-  TJD &TJD::operator=(FP_t dJDay)
+  TJD &TJD::operator=(FP_t jday)
   {
-    JD_[0] = modf(dJDay, &JD_[1]);
+    JD_[0] = modf(jday, &JD_[1]);
 
     return (*this);
   }
 
-  // Equals operator for the class.
-  //
-  // 2011-07-05/GGB - Uses two doubles as per SOFA library.
-  // 2009-10-11/GGB - Function created.
+  /// @brief        Assignemnt operator for the class.
+  /// @param[in]    toCopy: The instance to copy.
+  /// @version      2011-07-05/GGB - Uses two doubles as per SOFA library.
+  /// @version      2009-10-11/GGB - Function created.
 
-  TJD &TJD::operator =(TJD const &toCopy)
+  TJD &TJD::operator=(TJD const &toCopy) noexcept
   {
     if (this == &toCopy)
     {
@@ -529,10 +645,10 @@ namespace ACL
     return (JD_[0] + JD_[1]);
   }
 
-  /// @brief Returns the julian day as an integer value.
-  /// @returns The JUlona Day as an integer value.
-  /// @throws None.
-  /// @version 2017-08-20/GGB - Function created.
+  /// @brief        Returns the julian day as an integer value.
+  /// @returns      The Julian Day as an integer value.
+  /// @throws       None.
+  /// @version      2017-08-20/GGB - Function created.
 
   TJD::operator std::uint64_t() const
   {
@@ -540,12 +656,16 @@ namespace ACL
                                                                       // If this code is still current then I would be suprised!
   }
 
-  // Returns the relevant double from the value.
-  //
-  // 2011-07-09/GGB - Function created.
+  /// @brief        Returns the relevant double from the value.
+  /// @param[in]    val: The position [] of the double to return.
+  /// @returns      The first or second stored value depending on the parameter.
+  /// @throws
+  /// @version      2011-07-09/GGB - Function created.
 
   double &TJD::operator ()(int val)
   {
+    RUNTIME_ASSERT(((val >= 0) && (val <= 1)), "TJD::operator(): Parameter must be [0, 1]");
+
     if (val < 0 || val > 1)
     {
       ERROR(ACL, 0x3202);      // Invalid parameter
@@ -724,12 +844,12 @@ namespace ACL
     return retVal;
   }
 
-  /// @brief Normalises the JD. The normalised storage for the JD is the first element to have no fractional part and the second
-  ///        element to have all the fractional part. This also ensures that there is no negative part.
-  /// @throws None.
-  /// @version 2020-06-15/GGB - Added noexcept specifier.
-  /// @version 2017-08-17/GGB - Simplified to support negative parts.
-  /// @version 2011-07-05/GGB - Function created.
+  /// @brief        Normalises the JD. The normalised storage for the JD is the first element to have no fractional part and the
+  ///               second element to have all the fractional part. This also ensures that there is no negative part.
+  /// @throws       None.
+  /// @version      2020-06-15/GGB - Added noexcept specifier.
+  /// @version      2017-08-17/GGB - Simplified to support negative parts.
+  /// @version      2011-07-05/GGB - Function created.
 
   void TJD::normalise() noexcept
   {

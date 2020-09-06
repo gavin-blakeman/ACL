@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -46,14 +46,14 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroImage.h"
+#include "include/AstroImage.h"
 
   // ACL include files.
 
-#include "../include/AstroImageMono.h"
-#include "../include/AstroImagePoly.h"
-#include "../include/config.h"
-#include "../include/AstroImageFunctions.hpp"
+#include "include/AstroImageMono.h"
+#include "include/AstroImagePoly.h"
+#include "include/config.h"
+#include "include/AstroImageFunctions.hpp"
 
   // Standard libraries
 
@@ -191,8 +191,8 @@ namespace ACL
 
   void CAstroImage::binPixels(unsigned int nsize)
   {
-    RUNTIME_ASSERT(ACL, nsize != 0, "Bin Pixels is only valid with a non-zero integer.");
-    RUNTIME_ASSERT(ACL, nsize <= 10, "Bin Pixels is only valid with a binning value of <= 10.");
+    RUNTIME_ASSERT(nsize != 0, "Bin Pixels is only valid with a non-zero integer.");
+    RUNTIME_ASSERT(nsize <= 10, "Bin Pixels is only valid with a binning value of <= 10.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [&] (std::unique_ptr<CImagePlane> const &p) { p->binPixels(nsize); p->getMeanValue(); p->getStDevValue(); } );
@@ -274,8 +274,8 @@ namespace ACL
 
   void CAstroImage::crop(const MCL::TPoint2D<AXIS_t> &o, const MCL::TPoint2D<AXIS_t> &d)
   {
-    RUNTIME_ASSERT(ACL, o.x() + d.x() <= dimX, "Cropped image extents will exceed current image extents.");
-    RUNTIME_ASSERT(ACL, o.y() + d.y() <= dimY, "Cropped image extents will exceed current image extents.");
+    RUNTIME_ASSERT(o.x() + d.x() <= dimX, "Cropped image extents will exceed current image extents.");
+    RUNTIME_ASSERT(o.y() + d.y() <= dimY, "Cropped image extents will exceed current image extents.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [&] (std::unique_ptr<CImagePlane> const &p) { p->crop(o, d); p->getMeanValue(); p->getStDevValue(); });
@@ -307,7 +307,7 @@ namespace ACL
 
   void CAstroImage::flip()
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [] (std::unique_ptr<CImagePlane> const &p) { p->mirrorAxisY(); } );
@@ -324,7 +324,7 @@ namespace ACL
 
   void CAstroImage::floatImage(AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [&] (std::unique_ptr<CImagePlane> const &p) { p->floatImage(newWidth, newHeight, newBkgnd); });
@@ -345,7 +345,7 @@ namespace ACL
 
   void CAstroImage::flop()
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [] (std::unique_ptr<CImagePlane> const &p) { p->mirrorAxisX(); } );
@@ -359,8 +359,8 @@ namespace ACL
 
   FP_t CAstroImage::getMax(size_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getMaxValue();
   }
@@ -371,8 +371,8 @@ namespace ACL
 
   FP_t CAstroImage::getMedian(size_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getMaxValue();
   }
@@ -384,8 +384,8 @@ namespace ACL
 
   FP_t CAstroImage::getMin(size_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getMinValue();
   }
@@ -397,8 +397,8 @@ namespace ACL
 
   FP_t CAstroImage::getMean(size_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip <= imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getMeanValue();
   }
@@ -420,8 +420,8 @@ namespace ACL
 
   FP_t CAstroImage::getStDev(size_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getStDevValue();
   }
@@ -435,8 +435,8 @@ namespace ACL
 
   FP_t CAstroImage::getValue(INDEX_t index, AXIS_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getValue(index);
   }
@@ -451,8 +451,8 @@ namespace ACL
 
   FP_t CAstroImage::getValue(AXIS_t lx, AXIS_t ly, AXIS_t ip) const
   {
-    RUNTIME_ASSERT(ACL, ip >= 0, "Parameter ip must be >= 0");
-    RUNTIME_ASSERT(ACL, ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
+    RUNTIME_ASSERT(ip >= 0, "Parameter ip must be >= 0");
+    RUNTIME_ASSERT(ip < imagePlaneStorage.size(), "Parameter ip must be < number of image planes.");
 
     return imagePlaneStorage[ip]->getValue(lx, ly);
   }
@@ -465,7 +465,7 @@ namespace ACL
 
   void CAstroImage::insertImagePlane(std::unique_ptr<CImagePlane> &newPlane)
   {
-    RUNTIME_ASSERT(ACL, newPlane != nullptr, "A valid image plane must be passed in newPlane.");
+    RUNTIME_ASSERT(newPlane != nullptr, "A valid image plane must be passed in newPlane.");
 
     imagePlaneStorage.push_back(std::move(newPlane));
   }
@@ -482,8 +482,8 @@ namespace ACL
 
   AXIS_t CAstroImage::NAXISn(NAXIS_t naxis) const
   {
-    RUNTIME_ASSERT(ACL, naxis >= 1, "Parameter naxis (1 <= naxis <= 999");
-    RUNTIME_ASSERT(ACL, naxis <= 999, "Parameter naxis (1 <= naxis <= 999");
+    RUNTIME_ASSERT(naxis >= 1, "Parameter naxis (1 <= naxis <= 999");
+    RUNTIME_ASSERT(naxis <= 999, "Parameter naxis (1 <= naxis <= 999");
 
     if (!imagePlaneStorage.empty())
     {
@@ -536,7 +536,7 @@ namespace ACL
       case RM_NONE:
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
       };
     };
   }
@@ -595,7 +595,7 @@ namespace ACL
 
   void CAstroImage::rotate(FP_t angle)
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [&] (std::unique_ptr<CImagePlane> const &p) { p->rotate(0, 0, angle); p->getMeanValue(); p->getStDevValue(); });
@@ -619,7 +619,7 @@ namespace ACL
 
   void CAstroImage::setImagePlaneColourValues(size_t ip, SColourRGB colour, FP_t transparency)
   {
-    RUNTIME_ASSERT(ACL, ip < imagePlaneStorage.size(), "Invalid Image Plane referenced");
+    RUNTIME_ASSERT(ip < imagePlaneStorage.size(), "Invalid Image Plane referenced");
 
     imagePlaneStorage[ip]->setImagePlaneColourValues(colour, transparency);
   }
@@ -632,8 +632,8 @@ namespace ACL
 
   void CAstroImage::resampleImage(FP_t percent)
   {
-    RUNTIME_ASSERT(ACL, percent = 0, "Parameter percent == 0");
-    RUNTIME_ASSERT(ACL, percent < 100, "Parameter percent > 100");
+    RUNTIME_ASSERT(percent = 0, "Parameter percent == 0");
+    RUNTIME_ASSERT(percent < 100, "Parameter percent > 100");
 
     FP_t newX, newY;
 
@@ -654,7 +654,7 @@ namespace ACL
 
   void CAstroImage::resampleImage(AXIS_t w, AXIS_t h)
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
                   [&] (std::unique_ptr<CImagePlane> const &p) { p->resample(w, h); p->getMeanValue(); p->getStDevValue(); });
@@ -679,7 +679,7 @@ namespace ACL
 
   void CAstroImage::setImagePlaneRenderFunction(size_t ip, FP_t bp, FP_t wp, bool invert, ETransferFunction tf, FP_t tfp)
   {
-    RUNTIME_ASSERT(ACL, ip < imagePlaneStorage.size(), "Invalid Image Plane referenced");
+    RUNTIME_ASSERT(ip < imagePlaneStorage.size(), "Invalid Image Plane referenced");
 
     imagePlaneStorage[ip]->setImagePlaneRenderFunction(bp, wp, invert, tf, tfp);
   }
@@ -692,7 +692,7 @@ namespace ACL
 
   void CAstroImage::setValue(AXIS_t lx, AXIS_t ly, AXIS_t lp, FP_t value)
   {
-    RUNTIME_ASSERT(ACL, lp >= 0, "Parameter lp should be >= 0");
+    RUNTIME_ASSERT(lp >= 0, "Parameter lp should be >= 0");
 
     if ( (lx < 0) || (ly < 0) || (lx >= dimX) || (ly >= dimY) )
     {
@@ -721,7 +721,7 @@ namespace ACL
   void CAstroImage::transform(MCL::TPoint2D<FP_t> const &c0, MCL::TPoint2D<FP_t> const  &ct, FP_t th, FP_t sc,
     MCL::TPoint2D<FP_t> const &pix, std::unique_ptr<bool[]> &maskPlane)
   {
-    RUNTIME_ASSERT(ACL, !imagePlaneStorage.empty(), "No Image planes available.");
+    RUNTIME_ASSERT(!imagePlaneStorage.empty(), "No Image planes available.");
 
     std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end
                   (), [&] (std::unique_ptr<CImagePlane> const &p)
@@ -740,7 +740,7 @@ namespace ACL
 
   void CAstroImage::writeToFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "parameter file cannot be equal to nullptr");
+    RUNTIME_ASSERT(file != nullptr, "parameter file cannot be equal to nullptr");
 
     AXIS_t imagePlane = 1;
 

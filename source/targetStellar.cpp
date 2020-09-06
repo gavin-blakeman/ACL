@@ -321,7 +321,7 @@ namespace ACL
 
   CAstronomicalCoordinates CTargetStellar::properMotion(TJD const &jd) const
   {
-    RUNTIME_ASSERT(ACL, static_cast<double>(jd) >= 0, "The julian day cannot be less than zero.");
+    RUNTIME_ASSERT(static_cast<double>(jd) >= 0, "The julian day cannot be less than zero.");
 
     CAstronomicalCoordinates retVal;
     FP_t ra, dec, pmRA, pmDec, parallax, radialVelocity;
@@ -335,7 +335,7 @@ namespace ACL
 
     if (nRetVal == -1)
     {
-      CODE_ERROR(ACL);
+      CODE_ERROR;
     }
     else if (nRetVal & 0x04)
     {
@@ -381,13 +381,13 @@ namespace ACL
       case RS_FK5:
       {
         ERRORMESSAGE("Coordinate reference system FK4 and FK5 are not implemented.");
-        ACL_CODE_ERROR;
+        CODE_ERROR;
         break;
       };
       case RS_NONE:
       default:
       {
-        ACL_CODE_ERROR;
+        CODE_ERROR;
       };
     };
   }

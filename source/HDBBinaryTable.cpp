@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -43,7 +43,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDBBinaryTable.h"
+#include "include/HDBBinaryTable.h"
 
 namespace ACL
 {

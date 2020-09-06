@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2017-2018 Gavin Blakeman.
+//                      Copyright 2017-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,7 +34,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/geographicLocation.h"
+#include "include/geographicLocation.h"
 
   // Miscellaneous library header files.
 
@@ -63,8 +63,8 @@ namespace ACL
 
   CGeographicLocation::CGeographicLocation(FP_t latitude, FP_t longitude, int altitude)
   {
-    RUNTIME_ASSERT(ACL, latitude >= -90 && latitude <= 90, "Parameter latitude not within reasonable bounds.");
-    RUNTIME_ASSERT(ACL, longitude >= -180 && longitude <= 180, "Parameter longitude not within reasonable bounds");
+    RUNTIME_ASSERT(latitude >= -90 && latitude <= 90, "Parameter latitude not within reasonable bounds.");
+    RUNTIME_ASSERT(longitude >= -180 && longitude <= 180, "Parameter longitude not within reasonable bounds");
 
     latitude_ = latitude;
     longitude_ = longitude;

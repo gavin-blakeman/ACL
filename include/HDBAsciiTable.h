@@ -73,9 +73,9 @@ namespace ACL
     std::vector<std::string> TFormn;    // The format of each column.
     int bitpix_;
 
-    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { CODE_ERROR(ACL); }
-    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { CODE_ERROR(ACL); }
-    virtual void renderImage(renderImage_t *, ERenderMode) { CODE_ERROR(ACL); }
+    virtual void setImagePlaneRenderFunction(size_t, FP_t, FP_t, bool, ETransferFunction, FP_t) { CODE_ERROR; }
+    virtual void setImagePlaneColourValues(size_t, SColourRGB, FP_t) { CODE_ERROR; }
+    virtual void renderImage(renderImage_t *, ERenderMode) { CODE_ERROR; }
 
   protected:
   public:
@@ -99,7 +99,7 @@ namespace ACL
     virtual int BITPIX() const { return bitpix_;}
     virtual void BITPIX(int bp) { bitpix_ = bp;}
 
-    virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
+    virtual FP_t imageExposure() const { CODE_ERROR; }
 
   };
 }

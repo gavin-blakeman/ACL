@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2009-2018 Gavin Blakeman.
+//                      Copyright 2009-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -1485,7 +1485,7 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
   {
     FP_t hh, mm, ss, inter;
 
-    RUNTIME_ASSERT(ACL, (hms > 0) && (hms < 235960), "hms value must fall in range (0, 235960");
+    RUNTIME_ASSERT((hms > 0) && (hms < 235960), "hms value must fall in range (0, 235960");
 
     inter = std::fabs(hms);
     hh = std::floor(inter / 10000);

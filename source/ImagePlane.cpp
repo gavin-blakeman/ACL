@@ -10,7 +10,7 @@
 // AUTHORS:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2018, 2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -115,19 +115,19 @@ namespace ACL
     };
   }
 
-  /// @brief Copies part of an image plane from src to dest.
-  /// @details This is a templated function that can copy any type of image plane. This function starts the thread functions that
-  /// perform the actual copy. The work is divided evenly over the threads.<br>
-  /// The types of the source and destination image planes must be the same.
-  /// @param[in] srcData<0> imagePlane
-  /// @param[in] srcData<1> startX
-  /// @param[in] srcData<2> startY
-  /// @param[in] srcData<3> dimX
-  /// @param[in,out] destData<0> imagePlane
-  /// @param[in] destData<1> dimX
-  /// @param[in] destData<2> dimY
-  /// @throws None.
-  /// @version 2013-04-21/GGB - Function created.
+  /// @brief        Copies part of an image plane from src to dest.
+  /// @details      This is a templated function that can copy any type of image plane. This function starts the thread functions
+  ///               that perform the actual copy. The work is divided evenly over the threads.
+  /// @param[in]    srcData<0>:  imagePlane
+  /// @param[in]    srcData<1>:  startX
+  /// @param[in]    srcData<2>:  startY
+  /// @param[in]    srcData<3>:  dimX
+  /// @param[in,out] destData<0>: imagePlane
+  /// @param[in]    destData<1>: dimX
+  /// @param[in]    destData<2>: dimY
+  /// @throws       None.
+  /// @note         The types of the source and destination image planes must be the same.
+  /// @version      2013-04-21/GGB - Function created.
 
   template<typename T>
   void copyImagePlane(std::tuple<T const *, AXIS_t, AXIS_t, AXIS_t> srcData, std::tuple<T *, AXIS_t, AXIS_t> destData)
@@ -179,21 +179,20 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// @brief Default constructor for the class.
-  /// @throws None.
-  /// @version 2015-09-02/GGB
-  /// @li Use C-style arrays as storage type.
-  /// @li Use cfitsio rather than CCfits for accessing FITS files.
-  /// @li Add additional data types as supported by cfitsio V3.3
-  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
-  /// @version 2012-11-27/GGB - Added support for native image planes and bitpix_
-  /// @version 2010-10-16/GGB - Function created.
+  /// @brief        Default constructor for the class.
+  /// @throws       None.
+  /// @version      2015-09-02/GGB
+  /// @li             Use C-style arrays as storage type.
+  /// @li             Use cfitsio rather than CCfits for accessing FITS files.
+  /// @li             Add additional data types as supported by cfitsio V3.3
+  /// @version      2013-03-11/GGB - Converted to use std::vector<> as storage type.
+  /// @version      2012-11-27/GGB - Added support for native image planes and bitpix_
+  /// @version      2010-10-16/GGB - Function created.
 
   CImagePlane::CImagePlane() : dimX(0), dimY(0), fMin(0), fMax(0), fMean(0), fStDev(0), bMinMax(false), bMean(false),
     bitpix_(0), bscale_(1), bzero_(0), pedestal_(0), imagePlane8(nullptr), imagePlaneS8(nullptr), imagePlaneU16(nullptr),
     imagePlane16(nullptr), imagePlaneU32(nullptr), imagePlane32(nullptr), imagePlane64(nullptr), imagePlaneF(nullptr),
     imagePlaneD(nullptr)
-
   {
   }
 
@@ -240,13 +239,13 @@ namespace ACL
   {
       // Check paramter values are valid
 
-    RUNTIME_ASSERT(ACL, oldPlane, "Parameter oldPlane == nullptr");
-    RUNTIME_ASSERT(ACL, xStart >= 0, "Parameter xStart < 0");
-    RUNTIME_ASSERT(ACL, xEnd >= 0, "Parameter xEnd < 0");
-    RUNTIME_ASSERT(ACL, xStart < xEnd, "Paramter xStart >= xEnd");
-    RUNTIME_ASSERT(ACL, yStart >= 0, "Parameter yStart < 0");
-    RUNTIME_ASSERT(ACL, yEnd >= 0, "Parameter yEnd < 0");
-    RUNTIME_ASSERT(ACL, yStart < yEnd, "Paramter yStart >= yEnd");
+    RUNTIME_ASSERT(oldPlane, "Parameter oldPlane == nullptr");
+    RUNTIME_ASSERT(xStart >= 0, "Parameter xStart < 0");
+    RUNTIME_ASSERT(xEnd >= 0, "Parameter xEnd < 0");
+    RUNTIME_ASSERT(xStart < xEnd, "Paramter xStart >= xEnd");
+    RUNTIME_ASSERT(yStart >= 0, "Parameter yStart < 0");
+    RUNTIME_ASSERT(yEnd >= 0, "Parameter yEnd < 0");
+    RUNTIME_ASSERT(yStart < yEnd, "Paramter yStart >= yEnd");
 
     bitpix_ = oldPlane->BITPIX();
     dimX = xEnd - xStart;
@@ -754,8 +753,8 @@ namespace ACL
 
   CImagePlane &CImagePlane::operator*=(CImagePlane const &rhs)
   {
-    RUNTIME_ASSERT(ACL, rhs.dimX != dimX, "this->dimX != rhs.dimX");
-    RUNTIME_ASSERT(ACL, rhs.dimY != dimY, "this->dimY != rhs.dimY");
+    RUNTIME_ASSERT(rhs.dimX != dimX, "this->dimX != rhs.dimX");
+    RUNTIME_ASSERT(rhs.dimY != dimY, "this->dimY != rhs.dimY");
 
     INDEX_t index;
     INDEX_t const count = dimX * dimY;
@@ -1023,8 +1022,8 @@ namespace ACL
 
   void CImagePlane::binPixels(unsigned int nSize)
   {
-    RUNTIME_ASSERT(ACL, nSize != 0, "Bin Pixels is only valid with a non-zero integer.");
-    RUNTIME_ASSERT(ACL, nSize <= 10, "Bin Pixels is only valid with a binning value of <= 10.");
+    RUNTIME_ASSERT(nSize != 0, "Bin Pixels is only valid with a non-zero integer.");
+    RUNTIME_ASSERT(nSize <= 10, "Bin Pixels is only valid with a binning value of <= 10.");
 
     AXIS_t yStep, yBegin, yEnd;
     size_t  numberOfThreads;
@@ -1630,10 +1629,10 @@ namespace ACL
 
   void CImagePlane::crop(MCL::TPoint2D<AXIS_t> const &o, MCL::TPoint2D<AXIS_t> const &d)
   {
-    RUNTIME_ASSERT(ACL, o.x() > 0, "Origin incorrect");
-    RUNTIME_ASSERT(ACL, o.y() > 0, "Origin incorrect");
-    RUNTIME_ASSERT(ACL, o.x() + d.x() < dimX, "Origin + dimension incorrect");
-    RUNTIME_ASSERT(ACL, o.y() + d.y() < dimY, "Origin + dimension incorrect");
+    RUNTIME_ASSERT(o.x() > 0, "Origin incorrect");
+    RUNTIME_ASSERT(o.y() > 0, "Origin incorrect");
+    RUNTIME_ASSERT(o.x() + d.x() < dimX, "Origin + dimension incorrect");
+    RUNTIME_ASSERT(o.y() + d.y() < dimY, "Origin + dimension incorrect");
 
     switch (bitpix_)
     {
@@ -1805,13 +1804,14 @@ namespace ACL
     sourceExtractor.findStars(sourceList);
   }
 
-  /// @brief Determines the FWHM of a star.
-  /// @details Searches within radius pixels of the center. Performs 2D curve fitting to function
-  /// @param[in] center - The center point to determine the FWHM from.
-  /// @param[radius] - The maximum radius
-  /// @returns The FWHM of the object.
-  /// @throws 0x1205 - IMAGEPLANE: FWHM Call Radius == 0.
-  /// @version 2018-05-12/GGB - Function created/
+  /// @brief        Determines the FWHM of a star.
+  /// @details      Searches within radius pixels of the center. Performs 2D curve fitting to function
+  /// @param[in]    center: The center point to determine the FWHM from.
+  /// @param[in]    radius: The maximum radius
+  /// @returns      The FWHM of the object.
+  /// @throws       0x1205 - IMAGEPLANE: FWHM Call Radius == 0.
+  /// @version      2020-09-21/GGB - Refactored to use vector_sorted.
+  /// @version      2018-05-12/GGB - Function created/
 
   std::optional<FP_t> CImagePlane::FWHM(MCL::TPoint2D<AXIS_t> const &center, AXIS_t radius) const
   {
@@ -1838,8 +1838,8 @@ namespace ACL
       }
     };
 
-    SCL::TVectorSorted<CDataPoint> dataPoints;
-    SCL::TVectorSorted<CDataPoint>::iterator dataPointsIterator;
+    SCL::vector_sorted<CDataPoint> dataPoints;
+    SCL::vector_sorted<CDataPoint>::iterator dataPointsIterator;
 
     if (radius <= 0)
     {
@@ -1875,7 +1875,7 @@ namespace ACL
             // Only store values that are positive. IE above the noise floor.
 
           CDataPoint dataPoint(MCL::TPoint2D<long>(indexX - centerX, indexY - centerY), dataValue);
-          dataPoints.insert(dataPoint);
+          dataPoints.push_back(dataPoint);
         };
       };
     };
@@ -1952,11 +1952,11 @@ namespace ACL
 
   FP_t CImagePlane::getValue(AXIS_t x, AXIS_t y) const
   {
-    RUNTIME_ASSERT(ACL, x >= 0, "Parameter x cannot be less than zero.");
-    RUNTIME_ASSERT(ACL, x < dimX, "Parameter x > dimX.");
+    RUNTIME_ASSERT(x >= 0, "Parameter x cannot be less than zero.");
+    RUNTIME_ASSERT(x < dimX, "Parameter x > dimX.");
 
-    RUNTIME_ASSERT(ACL, y >= 0, "Parameter y cannot be less than zero.");
-    RUNTIME_ASSERT(ACL, y < dimY, "Parameter y > dimY.");
+    RUNTIME_ASSERT(y >= 0, "Parameter y cannot be less than zero.");
+    RUNTIME_ASSERT(y < dimY, "Parameter y > dimY.");
 
     INDEX_t index = arrayIndex(x, y, dimX);
 
@@ -2122,7 +2122,7 @@ namespace ACL
   template<typename T>
   void CImagePlane::mirrorAxisX(std::unique_ptr<T[]> &imagePlane)
   {
-    RUNTIME_ASSERT(ACL, imagePlane, "Paramter imagePlane cannot be nullptr");
+    RUNTIME_ASSERT(imagePlane, "Paramter imagePlane cannot be nullptr");
 
     std::unique_ptr<T[]> newImagePlane(new T[dimX * dimY]);
     size_t numberOfThreads;
@@ -2207,8 +2207,8 @@ namespace ACL
 
   void CImagePlane::floatImage(AXIS_t newWidth, AXIS_t newHeight, long newBkgnd)
   {
-    RUNTIME_ASSERT(ACL, newWidth >= dimX, "Cannot have the x-dimension smaller when floating.");
-    RUNTIME_ASSERT(ACL, newHeight >= dimY, "Cannot have the y-dimension smaller when floating.");
+    RUNTIME_ASSERT(newWidth >= dimX, "Cannot have the x-dimension smaller when floating.");
+    RUNTIME_ASSERT(newHeight >= dimY, "Cannot have the y-dimension smaller when floating.");
 
     switch (bitpix_)
     {
@@ -2387,7 +2387,7 @@ namespace ACL
   template<typename T>
   void CImagePlane::mirrorAxisY(std::unique_ptr<T[]> &imagePlane)
   {
-    RUNTIME_ASSERT(ACL, imagePlane, "Parameter imagePlane cannot be nullptr.");
+    RUNTIME_ASSERT(imagePlane, "Parameter imagePlane cannot be nullptr.");
 
     std::unique_ptr<T[]> newImagePlane(new T[dimX * dimY]);
     size_t numberOfThreads;
@@ -3251,9 +3251,9 @@ namespace ACL
 
   void CImagePlane::readFromFITS(fitsfile *file, AXIS_t axis)
   {
-    RUNTIME_ASSERT(ACL, axis >= 1, "Parameter axis must be >= 1");
-    RUNTIME_ASSERT(ACL, axis <= 999, "Parameter axis must be <= 999");
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(axis >= 1, "Parameter axis must be >= 1");
+    RUNTIME_ASSERT(axis <= 999, "Parameter axis must be <= 999");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     CFITSIO_TEST(fits_get_img_equivtype, file, &bitpix_);
 
@@ -3405,7 +3405,7 @@ namespace ACL
       {
         case ETF_NONE:
         {
-          CODE_ERROR(ACL);
+          CODE_ERROR;
           break;
         };
         case ETF_LINEAR:
@@ -3441,7 +3441,7 @@ namespace ACL
         break;
       default:
         {
-          CODE_ERROR(ACL);
+          CODE_ERROR;
           break;
         }
       };
@@ -4149,9 +4149,9 @@ namespace ACL
 
   void CImagePlane::writeToFITS(fitsfile *file, AXIS_t axis)
   {
-    RUNTIME_ASSERT(ACL, axis >= 1, "Parameter axis must be >= 1. (" + std::to_string(axis) + ")");
-    RUNTIME_ASSERT(ACL, axis <= 999, "Parameter axis must be <= 999. (" + std::to_string(axis) + ")");
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(axis >= 1, "Parameter axis must be >= 1. (" + std::to_string(axis) + ")");
+    RUNTIME_ASSERT(axis <= 999, "Parameter axis must be <= 999. (" + std::to_string(axis) + ")");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     INDEX_t startPixel = (axis - 1) * dimX * dimY + 1;
     INDEX_t pixelCount = dimX * dimY;
@@ -4209,7 +4209,7 @@ namespace ACL
       };
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
     };

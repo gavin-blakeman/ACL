@@ -68,7 +68,7 @@ namespace ACL
 
   gregorianDate_t gregorianDate_t::EOMonth(std::int32_t months) const
   {
-    RUNTIME_ASSERT(std::abs(months) <= 393,204, "Parameter months cannot exceed 32767 years.");
+    RUNTIME_ASSERT(std::abs(months) <= 393204, "Parameter months cannot exceed 32767 years.");
 
     gregorianDate_t returnValue;
 
@@ -93,8 +93,7 @@ namespace ACL
       years--;
     };
 
-    RUNTIME_ASSERT("ACL",
-                   (year <= std::numeric_limits<year_t>::max()) &&
+    RUNTIME_ASSERT((year <= std::numeric_limits<year_t>::max()) &&
                    (year >= std::numeric_limits<year_t>::min()), "Year value will exceed limits of storage type");
 
     returnValue.year_ = static_cast<year_t>(year);

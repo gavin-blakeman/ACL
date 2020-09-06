@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -75,7 +75,7 @@ namespace ACL
     int tfields_;
     std::vector<SColumnType> columnData_;
 
-    virtual bool loadFromRAW(LibRaw *) { ACL_CODE_ERROR; }
+    virtual bool loadFromRAW(LibRaw *) { CODE_ERROR; }
 
   protected:
   public:
@@ -98,7 +98,7 @@ namespace ACL
     virtual void BITPIX(int bp) override { bitpix_ = bp;}
     virtual std::string XTENSION() const override {return FITS_XTENSION_TABLE;}
 
-    virtual FP_t imageExposure() const override { ACL_CODE_ERROR; }
+    virtual FP_t imageExposure() const override { CODE_ERROR; }
   };
 }  // namespace ACL
 

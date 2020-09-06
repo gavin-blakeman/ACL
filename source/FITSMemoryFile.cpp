@@ -140,13 +140,13 @@ namespace ACL
       }
       else
       {
-        ACL_CODE_ERROR;
+        CODE_ERROR;
         return nullptr;   // Not necessary, but prevents the compiler from squealing.
       }
     }
     else
     {
-      ACL_CODE_ERROR;
+      CODE_ERROR;
       return nullptr;   // Not necessary, but prevents the compiler from squealing.
     }
   }

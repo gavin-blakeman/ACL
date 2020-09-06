@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2019 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -148,7 +148,7 @@ namespace ACL
 
   void CHDB::commentWrite(std::string const &newComment)
   {
-    RUNTIME_ASSERT(ACL, !newComment.empty(), "Parameter newComment cannot be empty.");
+    RUNTIME_ASSERT(!newComment.empty(), "Parameter newComment cannot be empty.");
 
     comments_.emplace_back(newComment);
   }
@@ -325,7 +325,7 @@ namespace ACL
 
   CFITSKeyword const &CHDB::keywordData(std::string const &kwd) const
   {
-    RUNTIME_ASSERT(ACL, !kwd.empty(), "Parameter kwd is empty.");
+    RUNTIME_ASSERT(!kwd.empty(), "Parameter kwd is empty.");
 
     DKeywordStore::const_iterator iter;
     CFITSKeyword *returnPointer = nullptr;
@@ -354,7 +354,7 @@ namespace ACL
 
   bool CHDB::keywordDelete(std::string const &kwd)
   {
-    RUNTIME_ASSERT(ACL, kwd.size() != 0, "A keyword cannot have no characters");
+    RUNTIME_ASSERT(kwd.size() != 0, "A keyword cannot have no characters");
 
     bool returnValue = false;
 
@@ -381,7 +381,7 @@ namespace ACL
 
   bool CHDB::keywordExists(std::string const &kwd) const
   {
-    RUNTIME_ASSERT(ACL, kwd.size() != 0, "A keyword cannot have no characters");
+    RUNTIME_ASSERT(kwd.size() != 0, "A keyword cannot have no characters");
 
     DKeywordStore::const_iterator iter;
     bool bFound = false;
@@ -415,7 +415,7 @@ namespace ACL
 
   KWType CHDB::keywordType(std::string const &kwd) const
   {
-    RUNTIME_ASSERT(ACL, kwd.size() != 0, "A keyword cannot have no characters");
+    RUNTIME_ASSERT(kwd.size() != 0, "A keyword cannot have no characters");
 
     DKeywordStore::const_iterator iter;
     bool bFound = false;
@@ -687,7 +687,7 @@ namespace ACL
               };
               default:
               {
-                CODE_ERROR(ACL);
+                CODE_ERROR;
                 break;
               };
             };
@@ -706,12 +706,12 @@ namespace ACL
           };
           case 'X':
           {
-            RUNTIME_ASSERT(ACL, false, "Complex numbers not implemented.");
+            RUNTIME_ASSERT(false, "Complex numbers not implemented.");
             break;
           }
           default:
           {
-            CODE_ERROR(ACL);
+            CODE_ERROR;
             break;
           };
         }
@@ -736,7 +736,7 @@ namespace ACL
         }
         else
         {
-          CODE_ERROR(ACL);
+          CODE_ERROR;
         }
       }
     };
@@ -892,18 +892,18 @@ namespace ACL
                   [&] (std::string const &s) {CFITSIO_TEST(fits_write_history, file, s.c_str());});
   }
 
-  /// @brief Writes the keywords to the passed HDU.
-  /// @param[in] file: The FITS file to write to.
-  /// @throws GCL::CRuntimeAssert(ACL)
-  /// @details All the keywords are iterated, and the keywords already handled in the CCfits code are stripped out and not passed
-  ///          as keywords.
-  /// @version 2015-08-11/GGB - Converted to cfitsio.
-  /// @version 2013-03-14/GGB - Added function writeToFITS() to TKeyword class.
-  /// @version 2012-01-15/GGB - Function created.
+  /// @brief        Writes the keywords to the passed HDU.
+  /// @param[in]    file: The FITS file to write to.
+  /// @throws       GCL::CRuntimeAssert
+  /// @details      All the keywords are iterated, and the keywords already handled in the CCfits code are stripped out and not
+  ///               passed as keywords.
+  /// @version      2015-08-11/GGB - Converted to cfitsio.
+  /// @version      2013-03-14/GGB - Added function writeToFITS() to TKeyword class.
+  /// @version      2012-01-15/GGB - Function created.
 
   void CHDB::writeKeywordsToFITS(fitsfile *file) const
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     DKeywordStore::const_iterator iter;
 
@@ -936,7 +936,7 @@ namespace ACL
 
   void CHDB::writeToFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
 
     writeKeywordsToFITS(file);
     writeCommentsToFITS(file);

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -104,7 +104,7 @@ namespace ACL
     virtual void binPixels(unsigned int);
     virtual void imageTransform(MCL::TPoint2D<FP_t> const &, MCL::TPoint2D<FP_t> const &, FP_t, FP_t, MCL::TPoint2D<FP_t> const &, std::unique_ptr<bool> &);
     virtual void imageCrop(MCL::TPoint2D<AXIS_t> origen, MCL::TPoint2D<AXIS_t> dims);
-    virtual FP_t imageExposure() const { ACL_CODE_ERROR; }
+    virtual FP_t imageExposure() const { CODE_ERROR; }
 
       // Photometry functions
 

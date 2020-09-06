@@ -394,7 +394,7 @@ namespace ACL
       break;
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
     };
@@ -439,7 +439,7 @@ namespace ACL
       break;
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
 
@@ -468,7 +468,7 @@ namespace ACL
       break;
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
     };
@@ -626,7 +626,7 @@ namespace ACL
       break;
       default:
       {
-        CODE_ERROR(ACL);
+        CODE_ERROR;
         break;
       };
     };

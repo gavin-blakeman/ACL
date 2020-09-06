@@ -1,28 +1,30 @@
-﻿2020-06
-------------------------------------------------------------------------------------------------------------------------------------
+﻿2020-09
+-------
+CHANGE:     TJD pre-incement return value changed to refernce from copy.
+ADD:        TJD '==', '>', '<" operators.
+
+2020-06
+-------
 CHANGE:     TJD::normalise - added noexcept specifier
 CHANGE:     TJD::TJD() - added noexcept specifier
 CHANGE:     TJD::TD(int, int, int) - added noexcept specifier.
 
 
 2019-12
-------------------------------------------------------------------------------------------------------------------------------------
+-------
 REFACTOR:   TJD - Use std::tm rather than struct tm.
 ADD:        TJD - Constructor taking array parameter.
 
 2018-09
-------------------------------------------------------------------------------------------------------------------------------------
+-------
 CHANGE:     Use std::unique_ptr for CAstroImage factory function returns.
 CHANGE:     Use std::unique_ptr for factory function returns.
 
-2017-06 (2017-06-30)
-------------------------------------------------------------------------------------------------------------------------------------
+2017-06
+-------
 BUG:      	#22 - Parameter checking
 BUG:        #23 - Parameter checking
 BUG:        #24 - Parameter checking
-
-2016.04 (2016-04-30)
-------------------------------------------------------------------------------------------------------------------------------------
 BUG:        #1574420 - Not displaying RA/Dec correctly.
 BUG:        #1571169 - Not stripping off "'" character.
 BUG:        #1571151 - Date/Time Display incorrect

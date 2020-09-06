@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -289,20 +289,20 @@ namespace ACL
     };
   }
 
-  /// @brief Function to determine the centroid of an object closest to the centroid point passed as the parameter.
-  /// @param[in] c0 - Center point to search from.
-  /// @param[in] radius - The maximum search radius (radius >= 1)
-  /// @param[in] sensitivity - The search sensitivity
-  /// @returns Centroid if found.
-  /// @throws CError(ACL::0x2202) - Image plane not available
-  /// @throws CRuntimeAssert(ACL)
-  /// @version 2013-08-02/GGB - Changed return value to boost::optional<MCL::TPoint2D<FP_t>>
-  /// @version 2012-11-10/GGB - Function created.
+  /// @brief        Function to determine the centroid of an object closest to the centroid point passed as the parameter.
+  /// @param[in]    c0: Center point to search from.
+  /// @param[in]    radius: The maximum search radius (radius >= 1)
+  /// @param[in]    sensitivity: The search sensitivity
+  /// @returns      Centroid if found.
+  /// @throws       CError(ACL::0x2202) - Image plane not available
+  /// @throws       CRuntimeAssert
+  /// @version      2013-08-02/GGB - Changed return value to boost::optional<MCL::TPoint2D<FP_t>>
+  /// @version      2012-11-10/GGB - Function created.
 
   std::optional<MCL::TPoint2D<FP_t> > CAstroImageMono::centroid(MCL::TPoint2D<AXIS_t> const &guess,
                                                                   AXIS_t radius, int sensitivity) const
   {
-    RUNTIME_ASSERT(ACL, radius >= 1, "Parameter radius must be >= 1");
+    RUNTIME_ASSERT(radius >= 1, "Parameter radius must be >= 1");
 
     std::optional<MCL::TPoint2D<FP_t> > guess2;
 
@@ -645,7 +645,7 @@ namespace ACL
 
   void CAstroImageMono::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(ACL, file != nullptr, "parameter file cannot be equal to nullptr");
+    RUNTIME_ASSERT(file != nullptr, "parameter file cannot be equal to nullptr");
 
     imagePlaneStorage.emplace_back(new CImagePlane(file, 1));
   }
