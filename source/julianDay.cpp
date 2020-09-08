@@ -742,18 +742,19 @@ namespace ACL
     return ( sprintf(szBuffer, "%.*f", nSig, JD_[0] + JD_[1]) );
   }
 
-  /// @brief Converts a JD to a Gregorian date in a structure tm.
-  /// @param[out] tmTimeDate: The time and date structure to contain the value.
-  /// @returns true - succesfull
-  /// @returns false - not succesfull, value in the struct tm is not valid.
-  /// @throws None.
-  /// @version 2019-12-15/GGB - Updated to use std::tm.
-  /// @version 2015-05-18/GGB
-  ///   @li Changed return value to a bool.
-  ///   @li Changed function name to gregorianDate(...)
-  /// @version 2015-01-01/GGB - Changed C style casts to static_cast.
-  /// @version 2009-11-05/GGB - Use the IAU SOFA routines to perform the calculation.
-  /// @version 2009-10-21/GGB - Function created.
+  /// @brief        Converts a JD to a Gregorian date in a structure tm.
+  /// @param[out]   tmTimeDate: The time and date structure to contain the value.
+  /// @returns      true - succesful
+  /// @returns      false - not succesfull, value in the struct tm is not valid.
+  /// @throws       None.
+  /// @version      2019-12-15/GGB - Updated to use std::tm.
+  /// @version      2015-05-18/GGB
+  ///                 @li Changed return value to a bool.
+  ///                 @li Changed function name to gregorianDate(...)
+  /// @version      2015-01-01/GGB - Changed C style casts to static_cast.
+  /// @version      2009-11-05/GGB - Use the IAU SOFA routines to perform the calculation.
+  /// @version      2009-10-21/GGB - Function created.
+  /// @todo         1. Change return type to optional and return a std::tm structure.
 
   bool TJD::gregorianDate(std::tm *tmTimeDate) const
   {

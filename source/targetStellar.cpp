@@ -309,15 +309,16 @@ namespace ACL
     return (*parallax_ / 1000 * 3.26);  // Convert to arcseconds and then light years
   }
 
-  /// @brief Corrects the Catalogue coordinates for ProperMotion.
-  /// @param[in] jd: The julian day to correct to.
-  /// @returns The corrected coordinates for the stellar object.
-  /// @throws GCL::CCodeError
-  /// @throws GCL::CError(ACL, 0x2302) - StellarObjects: SOFA library error, iteration did not converge.
-  /// @throws GCL::CRuntimeAssert(ACL)
-  /// @details Use is made of the IAU SOFA routines.
-  /// @version 2017-09-23/GGB - Updated to use CAngle
-  /// @version 2011-07-09/GGB - Function created.
+  /// @brief        Corrects the Catalogue coordinates for ProperMotion.
+  /// @param[in]    jd: The julian day to correct to.
+  /// @returns      The corrected coordinates for the stellar object.
+  /// @throws       GCL::CCodeError
+  /// @throws       GCL::CRuntimeError("StellarObjects: SOFA library error, iteration did not converge.")
+  /// @throws       GCL::CRuntimeAssert(ACL)
+  /// @note         Use is made of the IAU SOFA routines.
+  /// @version      2020-09-08/GGB - Updated to use RUNTIME_ERROR.
+  /// @version      2017-09-23/GGB - Updated to use CAngle
+  /// @version      2011-07-09/GGB - Function created.
 
   CAstronomicalCoordinates CTargetStellar::properMotion(TJD const &jd) const
   {
@@ -339,7 +340,7 @@ namespace ACL
     }
     else if (nRetVal & 0x04)
     {
-      ERROR(ACL, 0x2302);
+      RUNTIME_ERROR("StellarObjects: SOFA library error, iteration did not converge.");
     };
 
     return CAstronomicalCoordinates(MCL::CAngle(ra), MCL::CAngle(dec));

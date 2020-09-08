@@ -39,6 +39,7 @@
   // Standard C++ library header files
 
 #include <algorithm>
+#include <stdexcept>
 
   // ACL Library headers
 
@@ -82,11 +83,12 @@ namespace ACL
     instanceLinks.remove_if([this](std::pair<void *, CFITSMemoryFile *> &elem) { return elem.second == this; });
   }
 
-  /// @brief Reads from a file into a newly sized memory buffer.
-  /// @param[in] filePath: path to the file
-  /// @note Any data in the class is released and lost.
-  /// @throws GCL::CError(ACL, 0x0800)
-  /// @version 2017-08-06/GGB - Function created.
+  /// @brief        Reads from a file into a newly sized memory buffer.
+  /// @param[in]    filePath: path to the file
+  /// @note         Any data in the class is released and lost.
+  /// @throws
+  /// @version      2020-09-08/GGB - Removed error message 0x0800.
+  /// @version      2017-08-06/GGB - Function created.
 
   void CFITSMemoryFile::readFromFile(boost::filesystem::path const &filePath)
   {
@@ -107,19 +109,18 @@ namespace ACL
     }
     else
     {
-      ERRORMESSAGE("Unable to open file: " + filePath.string());
-      ACL_ERROR(0x0800);
+      RUNTIME_ERROR("Unable to open FITS file.");
     };
   }
 
-  /// @brief Reallocates a block of memory.
-  /// @param[in] pointer: ignored
-  /// @param[in] sizeOfFile: The new size to allocate.
-  /// @returns Pointer to the newly allocated buffer.
-  /// @note Some special stuff is done here. As the vector maintains all the memory itself, the return values are just
-  ///       based on the vectory being resized.
-  /// @throws std::bad_alloc
-  /// @version 2017-08-13/GGB - Function created.
+  /// @brief        Reallocates a block of memory.
+  /// @param[in]    pointer: ignored
+  /// @param[in]    sizeOfFile: The new size to allocate.
+  /// @returns      Pointer to the newly allocated buffer.
+  /// @note         Some special stuff is done here. As the vector maintains all the memory itself, the return values are just
+  ///               based on the vectory being resized.
+  /// @throws       std::bad_alloc
+  /// @version      2017-08-13/GGB - Function created.
 
   void *CFITSMemoryFile::reallocate(void *ptr, std::size_t memorySize)
   {
@@ -151,11 +152,11 @@ namespace ACL
     }
   }
 
-  /// @brief Writes the contents of the memory to the specified file.
-  /// @param[in] filePath: The filename and path to write to.
-  /// @note The vector size is not used. The size in memorySize_ is managed by cfitsio and is used to write the file.
-  /// @throws GCL::CError(ACL, 0x0800)
-  /// @version 2017-08-06/GGB - Function created.
+  /// @brief        Writes the contents of the memory to the specified file.
+  /// @param[in]    filePath: The filename and path to write to.
+  /// @note         The vector size is not used. The size in memorySize_ is managed by cfitsio and is used to write the file.
+  /// @throws       GCL::CError(ACL, 0x0800)
+  /// @version      2017-08-06/GGB - Function created.
 
   void CFITSMemoryFile::writeToFile(boost::filesystem::path const &filePath)
   {
@@ -168,8 +169,7 @@ namespace ACL
     }
     else
     {
-      ERRORMESSAGE("Unable to open file: " + filePath.string());
-      ACL_ERROR(0x0800);
+      RUNTIME_ERROR("Unable to open FITS file.");
     };
   }
 

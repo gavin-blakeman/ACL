@@ -46,7 +46,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/HDB.h"
+#include "include/HDB.h"
 
   // C++ standard library header files.
 
@@ -56,21 +56,21 @@
 
   // ACL Header files.
 
-#include "../include/AstroFile.h"
-#include "../include/common.h"
-#include "../include/FITS.h"
-#include "../include/FITSException.h"
-#include "../include/FITSKeyword.h"
-#include "../include/FITSKeywordBool.h"
-#include "../include/FITSKeywordDouble.h"
-#include "../include/FITSKeywordInt08.h"
-#include "../include/FITSKeywordInt16.h"
-#include "../include/FITSKeywordInt32.h"
-#include "../include/FITSKeywordInt64.h"
-#include "../include/FITSKeywordString.h"
-#include "../include/FITSKeywordUInt08.h"
-#include "../include/FITSKeywordUInt16.h"
-#include "../include/FITSKeywordUInt32.h"
+#include "include/AstroFile.h"
+#include "include/common.h"
+#include "include/FITS.h"
+#include "include/FITSException.h"
+#include "include/FITSKeyword.h"
+#include "include/FITSKeywordBool.h"
+#include "include/FITSKeywordDouble.h"
+#include "include/FITSKeywordInt08.h"
+#include "include/FITSKeywordInt16.h"
+#include "include/FITSKeywordInt32.h"
+#include "include/FITSKeywordInt64.h"
+#include "include/FITSKeywordString.h"
+#include "include/FITSKeywordUInt08.h"
+#include "include/FITSKeywordUInt16.h"
+#include "include/FITSKeywordUInt32.h"
 
   // Miscellaneous library header files.
 
@@ -86,19 +86,18 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// @brief Constructor taking the name of the new HDB
-  /// @param[in] np:  Parent Object
-  /// @param[in] name:  name of the HDB (HDU)
-  /// @throws 0x1908 - HDB: parent cannot be == NULL.
+  /// @brief        Constructor taking the name of the new HDB
+  /// @param[in]    np:  Parent Object
+  /// @param[in]    name:  name of the HDB (HDU)
+  /// @throws       CRuntimeAssert.
+  /// @version      2020-09-08/GGB - Changed code checking that parent not a null pointer to a RUNTIME_ASSERT.
   /// @version 2011-11-27/GGB - Function created.
 
   CHDB::CHDB(CAstroFile *np, const std::string &name) : parent_(np), bPrimary_(false), bSimple(true), naxis_(0),
     firstEdit_(true), extname_(name)
   {
-    if (!parent_)
-    {
-      ACL_ERROR(0x1908);              // HDB: parent cannot be == NULL.
-    };
+    RUNTIME_ASSERT(parent_ != nullptr, "Parameter: parent_ cannot be a nullptr");
+
     boost::algorithm::to_upper(extname_);    // Convert to upper case.
     if (extname_ == "PRIMARY")
     {
@@ -186,13 +185,14 @@ namespace ACL
     };
   }
 
-  /// @brief Returns the exposure time from an image.
-  /// @returns The Exposure time associated with the HDB. (s)
-  /// @throws 0x190D - HDB: EXPOSURE or EXPTIME keyword not found.
-  /// @todo This function should only appear in the image HDB.
-  /// @version 2016-04-11/GGB - Updated to reflect use of FITSKeyword hierarchy
-  /// @version 2013-04-09/GGB - Moved from CImageHDB to CHDB.
-  /// @version 2012-01-31/GGB - Function created.
+  /// @brief        Returns the exposure time from an image.
+  /// @returns      The Exposure time associated with the HDB. (s)
+  /// @throws       CRuntimeError("HDB: EXPOSURE or EXPTIME keyword not found.")
+  /// @todo         This function should only appear in the image HDB.
+  /// @version      2020-09-08/GGB - Changed exception to RUNTIME_ERROR
+  /// @version      2016-04-11/GGB - Updated to reflect use of FITSKeyword hierarchy
+  /// @version      2013-04-09/GGB - Moved from CImageHDB to CHDB.
+  /// @version      2012-01-31/GGB - Function created.
 
   FP_t CHDB::EXPOSURE()
   {
@@ -208,7 +208,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x190D);      // HDB: EXPOSURE or EXPTIME keyword not found.
+      RUNTIME_ERROR("HDB: EXPOSURE or EXPTIME keyword not found.");
     };
 
     return exposureTime;

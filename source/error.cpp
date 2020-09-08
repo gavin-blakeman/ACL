@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2018 Gavin Blakeman.
+//                      Copyright 2018-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -37,7 +37,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/error.h"
+#include "include/error.h"
 
   // Standard C++ library headers
 
@@ -98,7 +98,6 @@ namespace ACL
       {0x0700, "SIMBAD: Invalid Region type."},
       {0x0701, "SIMBAD: Invalid field name."},
       {0x0702, "SIMBAD: Invalid region type."},
-      {0x0800, "FITSMemoryFile: Unable to open file."},
       {0x0900, ""},
       {0x1000, "FITS: Invalid XTENSION data"},
       {0x1001, ""},
@@ -169,7 +168,6 @@ namespace ACL
       {0x2300, "ASTROIMAGEMONO: Unable to cast instance to correct class."},
       {0x2300, "STELLAROBJECTS: Must have valid location for detemining observed position."},
       {0x2301, "STELLAROBJECTS: Must have valid time for determining observed position."},
-      {0x2302, "StellarObjects: SOFA library error, iteration did not converge."},
       {0x2400, "ASTROCATALOGUE: No items in list. Cannot return first item"},
       {0x2401, "ASTROCATALOGUE: Reached last item in list. Cannot return item."},
       {0x2402, "ASTROCATALOGUE: Reached first item in list. Cannot return item."},

@@ -132,6 +132,8 @@ namespace ACL
     int gcount_;
     bool firstEdit_;          ///< true = HDB has not yet been edited. false = HDB has been edited.
 
+    CHDB() = delete;
+
     virtual void readKeywords(fitsfile *file);
     virtual void writeKeywordsToFITS(fitsfile *) const;
     virtual void writeHistoryToFITS(fitsfile *) const;
@@ -153,7 +155,6 @@ namespace ACL
     virtual bool specialKeyword(std::unique_ptr<CFITSKeyword> &);
 
   public:
-    CHDB() = delete;
     CHDB(CAstroFile *, std::string const &);
     CHDB(CHDB const &);
 

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2014-2018 Gavin Blakeman.
+//                      Copyright 2014-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -36,7 +36,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/SourceExtraction.h"
+#include "include/SourceExtraction.h"
 
 #include <GCL>
 
@@ -48,15 +48,15 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  // Tests two objects for less than for sorting.
-  //
-  // 2012-07-30/GGB - Function created.
+  /// @brief        Operator less than
+  /// @param[in]    rhs: value to test against.
+  /// @version      2012-07-30/GGB - Function created.
 
-  bool SImageSource::operator<(SImageSource const &toTest) const
+  bool SImageSource::operator<(SImageSource const &rhs) const
   {
     TRACEMESSAGE("SImageSource::operator< this->flux=" + std::to_string(this->flux) + ". toTest->flux = " +
-                 std::to_string(toTest.flux));
+                 std::to_string(rhs.flux));
 
-    return (flux < toTest.flux);
+    return (flux < rhs.flux);
   }
 }

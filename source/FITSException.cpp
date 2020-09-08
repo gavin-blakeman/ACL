@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2015-2018 Gavin Blakeman.
+//                      Copyright 2015-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -36,7 +36,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/FITSException.h"
+#include "include/FITSException.h"
 
   // Standard C++ library header files
 
@@ -49,11 +49,11 @@
 
 namespace ACL
 {
-  /// @brief Class constructor
-  /// @details Obtains all the current error messages from the cfitsio library and stores them in the exception.
-  /// @throws None.
-  /// @version 2016-04-07/GGB - Removed intialisation value and updated storage to a pair.
-  /// @version 2015-09-05/GGB - Function created.
+  /// @brief        Class constructor
+  /// @details      Obtains all the current error messages from the cfitsio library and stores them in the exception.
+  /// @throws       None.
+  /// @version      2016-04-07/GGB - Removed intialisation value and updated storage to a pair.
+  /// @version      2015-09-05/GGB - Function created.
 
   CFITSException::CFITSException() : std::runtime_error("cfitsio Error")
   {
@@ -78,9 +78,9 @@ namespace ACL
     std::string returnValue;
 
     std::for_each(errorMessages.begin(), errorMessages.end(), [&] (TErrorMessage msg)
-        {
-          returnValue += "Library: cfitsio. Error Code: " + std::to_string(msg.first) + " - " + msg.second;
-        });
+    {
+      returnValue += "Library: cfitsio. Error Code: " + std::to_string(msg.first) + " - " + msg.second;
+    });
 
     return returnValue;
   }

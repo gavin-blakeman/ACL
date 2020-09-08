@@ -67,6 +67,7 @@ namespace ACL
   public:
     gregorianDate_t() noexcept;
     gregorianDate_t(std::tm &) noexcept;
+    gregorianDate_t(TJD const &) noexcept;
 
     gregorianDate_t EOMonth(std::int32_t) const;
     bool leapYear() const noexcept;

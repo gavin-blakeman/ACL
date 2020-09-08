@@ -61,6 +61,22 @@ namespace ACL
 
   }
 
+  gregorianDate_t::gregorianDate_t(TJD const &JD) noexcept
+  {
+    struct tm gd;
+
+    if (JD.gregorianDate(&gd))
+    {
+      RUNTIME_ERROR("Date passed to contructor is invalid.");
+    }
+    else
+    {
+      year_ = gd.tm_year + 1900;
+      month_ = gd.tm_mon + 1;
+      day_ = gd.tm_mday;
+    }
+  }
+
   /// @brief Returns a date for the end of the specified number of months in the past or future.
   /// @param[in] months: The number of months (future or past). 0 - gives end of current month.
   /// @throws None.

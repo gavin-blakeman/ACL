@@ -37,16 +37,16 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/targetMajorPlanet.h"
+#include "include/targetMajorPlanet.h"
 
   // Standard C++ library header files.
 
 
   // ACL header files.
 
-#include "../include/AstroFunctions.h"
-#include "../include/constants.h"
-#include "../include/error.h"
+#include "include/AstroFunctions.h"
+#include "include/constants.h"
+#include "include/error.h"
 
   // Miscellaneous library header files.
 
