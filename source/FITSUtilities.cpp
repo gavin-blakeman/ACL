@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -40,13 +40,9 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/FITSUtilities.h"
+#include "include/FITSUtilities.h"
 
-  // ACL Libraries
-
-#include "../include/constants.h"
-
-  // Standard library
+  // Standard C++ library header files
 
 #include <exception>
 #include <iostream>
@@ -54,11 +50,15 @@
 #include <list>
 #include <sstream>
 
-  // Boost library
+  // Miscellaneous library header files
 
 #include <boost/algorithm/string.hpp>
 #include "boost/format.hpp"
 #include "boost/tokenizer.hpp"
+
+  // ACL Library header files
+
+#include "include/constants.h"
 
 namespace ACL
 {

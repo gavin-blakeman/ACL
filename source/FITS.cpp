@@ -113,12 +113,12 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Determines if a file is a FITS file.
-  /// @param[in] p - The path to the file.
-  /// @returns true - The path points to a file that is likely a FITS file.
-  /// @returns false - The path is not a FITS file.
-  /// @throws None.
-  /// @version 2018-05-20/GGB - Function created.
+  /// @brief        Determines if a file is a FITS file.
+  /// @param[in]    p: The path to the file.
+  /// @returns      true - The path points to a file that is likely a FITS file.
+  /// @returns      false - The path is not a FITS file.
+  /// @throws       None.
+  /// @version      2018-05-20/GGB - Function created.
 
   bool isFitsFile(boost::filesystem::path const &p)
   {

@@ -61,13 +61,17 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroImageMono.h"
+#include "include/AstroImageMono.h"
 
   // Standard C++ library header files
 
 #include <cstdint>
 #include <limits>
 #include <valarray>
+
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
 
 namespace ACL
 {
@@ -111,13 +115,13 @@ namespace ACL
     imagePlaneStorage.emplace_back(std::make_unique<CImagePlane>(*(toCopy.imagePlaneStorage[0])));
   }
 
-  /// @brief Simply add the two image planes together.
-  /// @returns Reference to this.
-  /// @throws 0x0004 - Inconsistent image sizes
-  /// @throws 0x2300 - ASTROIMAGEMONO: Unable to cast instance to correct class.
-  //
-  // 2015-07-28/GGB - Updated to reflect new method of storing image planes.
-  // 2011-05-12/GGB - Function created.
+  /// @brief      Simply add the two image planes together.
+  /// @param[in]  rhs: The image plane to add to *this image plane.
+  /// @returns    *this
+  /// @throws     CRuntimeError
+  /// @version    2020-09-10/GGB - Update error handling to CRuntimeError.
+  /// @version    2015-07-28/GGB - Updated to reflect new method of storing image planes.
+  /// @version    2011-05-12/GGB - Function created.
 
   CAstroImage &CAstroImageMono::operator+=(CAstroImage const &rhs)
   {
@@ -134,18 +138,19 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x0004);    // Inconsistent image sizes.
-    }
+      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."));
+    };
 
     return (*this);
   }
 
-  /// @brief Simply subtract the two image planes together.
-  /// @returns Reference to this.
-  /// @throws 0x0004 - Inconsistent image sizes
-  //
-  // 2015-07-28/GGB - Updated to reflect new method of storing image planes.
-  // 2011-05-12/GGB - Function created.
+  /// @brief        Simply subtract the two image planes together.
+  /// @param[in]    rhs: The image plane to subtract.
+  /// @returns      *this
+  /// @throws       CRuntimeError
+  /// @version      2020-09-10/GGB - Updated to use CRuntimeError
+  /// @version      2015-07-28/GGB - Updated to reflect new method of storing image planes.
+  /// @version      2011-05-12/GGB - Function created.
 
   CAstroImage &CAstroImageMono::operator-=(CAstroImage const &rhs)
   {
@@ -162,7 +167,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x0004);    // Inconsistent image sizes.
+      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."));
     };
 
     return (*this);
@@ -590,13 +595,13 @@ namespace ACL
       //return imagePlaneStorage[0]->PEDESTAL();
   }
 
-  /// @brief Performs photometry on the image plane
-  /// @param[in] po: The photometry object.
-  /// @throws 0x0003 - Overlaps edge
-  /// @version 2018-10-07/GGB - Changed parameter to a reference.
-  /// @version 2013-05-08/GGB - Rewrite to use PPhotometryObservation as the parameter.
-  /// @version 2012-11-10/GGB - Changed function arguments to align with changes to argument lists globally.
-  /// @version 2010-11-07/GGB - Function created.
+  /// @brief      Performs photometry on the image plane
+  /// @param[in]  po: The photometry object.
+  /// @throws     CRuntimeError
+  /// @version    2018-10-07/GGB - Changed parameter to a reference.
+  /// @version    2013-05-08/GGB - Rewrite to use PPhotometryObservation as the parameter.
+  /// @version    2012-11-10/GGB - Changed function arguments to align with changes to argument lists globally.
+  /// @version    2010-11-07/GGB - Function created.
 
   void CAstroImageMono::photometry(CPhotometryObservation &po) const
   {
@@ -614,7 +619,7 @@ namespace ACL
 
     if ( (xStart < 0) || (yStart < 0) || (xFinish >= dimX) || (yFinish >= dimY) )
     {
-      ACL_ERROR(0x0003);    // Overlaps edge
+      RUNTIME_ERROR(boost::locale::translate("Photometry overlaps edge"));
     }
     else
     {

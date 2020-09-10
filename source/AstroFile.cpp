@@ -61,6 +61,13 @@
 
 #include <tuple>
 
+  // Miscellaneous library header files.
+
+#include <boost/algorithm/string.hpp>
+#include "boost/locale.hpp"
+#include "../SBIG/csbigimg.h"
+#include <GCL>
+
   // ACL Library header files.
 
 #include "include/AstroFunctions.h"
@@ -74,12 +81,6 @@
 #include "include/FITSUtilities.h"
 #include "include/HDB.h"
 #include "include/HDBPrimary.h"
-
-  // Miscellaneous library header files.
-
-#include <boost/algorithm/string.hpp>
-#include "../SBIG/csbigimg.h"
-#include <GCL>
 
 namespace ACL
 {
@@ -1328,13 +1329,13 @@ namespace ACL
     return ( HDB[hdb]->getMinValue() );
   }
 
-  /// @brief Returns the observation location.
-  /// @returns Pointer to the observation location.
-  /// @throws None.
-  /// @version 2018-08-25/GGB - Changed return type to raw pointer.
-  /// @version 2017-07-23/GGB - Change implementation to std::unique_ptr.
-  /// @version 2011-12-16/GGB - Use smart pointer implementation.
-  /// @version 2011-07-15/GGB - Function created.
+  /// @brief        Returns the observation location.
+  /// @returns      Pointer to the observation location.
+  /// @throws       None.
+  /// @version      2018-08-25/GGB - Changed return type to raw pointer.
+  /// @version      2017-07-23/GGB - Change implementation to std::unique_ptr.
+  /// @version      2011-12-16/GGB - Use smart pointer implementation.
+  /// @version      2011-07-15/GGB - Function created.
 
   CObservatory *CAstroFile::getObservationLocation()
   {
@@ -1933,15 +1934,15 @@ namespace ACL
     }
     else if (ext == ".SBIG")
     {
-      ACL_ERROR(0x000D);    // Unable to open file type of type selected.
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
     }
     else if (ext == ".JPG")
     {
-      ACL_ERROR(0x000D);    // Unable to open file type of type selected.
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
     }
     else if (ext == ".TIFF")
     {
-      ACL_ERROR(0x000D);    // Unable to open file type of type selected.
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
     }
 #ifdef USE_LIBRAW
     else if ( (ext == ".DNG") ||

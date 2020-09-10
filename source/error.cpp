@@ -69,17 +69,6 @@ namespace ACL
   {
     std::vector<std::pair<GCL::TErrorCode, std::string>> errors =
     {
-      {0x0001, "Invalid coordinates."},
-      {0x0002, "GENERAL: Unable to allocate memory"},
-      {0x0003, "Overlaps edge"},
-      {0x0004, "Inconsistent image sizes"},
-      {0x0005, "Invalid image plane"},
-      {0x0006, "Unable to open file, or file does not exist."},
-      {0x0007, "NAXIS > 3 not supported by ACL library."},
-      {0x0009, "Error while reading FITS file."},
-      {0x000A, "Variable not initialised correctly."},
-      {0x000B, "Array index out of array bounds."},
-      {0x000C, "FITS keyword type unknown."},
       {0x000D, "Unable to open file type selected."},
       {0x000E, "Error while opening file."},
       {0x000F, "cfitsio: cfitsioError"},

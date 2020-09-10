@@ -48,24 +48,24 @@
 
 #include "include/AstroImage.h"
 
-  // ACL include files.
-
-#include "include/AstroImageMono.h"
-#include "include/AstroImagePoly.h"
-#include "include/config.h"
-#include "include/AstroImageFunctions.hpp"
-
-  // Standard libraries
+  // Standard C++ library header files
 
 #include <cmath>
 #include <cstdio>
 
   // Miscellaneous Libraries
 
+#include "boost/locale.hpp"
 #include "boost/thread/thread.hpp"
-//#include "boost/scoped_array.hpp"
 #include <GCL>
 #include "sofam.h"
+
+  // ACL include files.
+
+#include "include/AstroImageMono.h"
+#include "include/AstroImagePoly.h"
+#include "include/config.h"
+#include "include/AstroImageFunctions.hpp"
 
 namespace ACL
 {
@@ -224,18 +224,17 @@ namespace ACL
     }
   }
 
-  /// @brief Factory function to create a CAstroImage object.
-  /// @param[in] naxisn: dimension of axis[n]
-  /// @returns Unique pointer to a new AstroImage of the relevant class.
-  /// @details Calls the relevant creation function for a poly image or a mono image. A number of axises greater that 3 is not
-  ///          supported. (Will throw an error)
-  /// @throws std::bad_alloc
-  /// @throws 0x0008 - Naxis == 1 not allowed.
-  /// @throws 0x0007 - Naxis > 3 not supported.
-  /// @version 2018-09-14/GGB - Changed return type to unique_ptr.
-  /// @version 2015-08-13/GGB - removed parameter for number of axes.
-  /// @version 2013-03-13/GGB - Changed parameters and simplified function to work with readFromFITS() functions better.
-  /// @version 2011-03-20/GGB - Function created.
+  /// @brief        Factory function to create a CAstroImage object.
+  /// @param[in]    naxisn: dimension of axis[n]
+  /// @returns      Unique pointer to a new AstroImage of the relevant class.
+  /// @details      Calls the relevant creation function for a poly image or a mono image. A number of axises greater that 3 is not
+  ///               supported. (Will throw an error)
+  /// @throws       std::bad_alloc
+  /// @throws       CRuntimeError
+  /// @version      2018-09-14/GGB - Changed return type to unique_ptr.
+  /// @version      2015-08-13/GGB - removed parameter for number of axes.
+  /// @version      2013-03-13/GGB - Changed parameters and simplified function to work with readFromFITS() functions better.
+  /// @version      2011-03-20/GGB - Function created.
 
   std::unique_ptr<CAstroImage> CAstroImage::CreateAstroImage(std::vector<AXIS_t> const &naxisn)
   {
@@ -255,7 +254,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x0007);
+      RUNTIME_ERROR(boost::locale::translate("NAXIS > 3 not suported."));
     };
 
     return returnValue;
@@ -684,19 +683,18 @@ namespace ACL
     imagePlaneStorage[ip]->setImagePlaneRenderFunction(bp, wp, invert, tf, tfp);
   }
 
-  /// @brief Sets the image value at the (lx, ly) coordinates.
-  /// @param[in] lp - Index of the image plane.
-  /// @throws CError(ACL::0x0001) - Invalid Coordinates
-  /// @throws CError(ACL::0x0005) - Invalid image Plane
-  /// @version 2013-03-07/GGB - Function Created
+  /// @brief      Sets the image value at the (lx, ly) coordinates.
+  /// @param[in]  lp: Index of the image plane.
+  /// @throws     CRuntimeError
+  /// @version    2013-03-07/GGB - Function Created
 
   void CAstroImage::setValue(AXIS_t lx, AXIS_t ly, AXIS_t lp, FP_t value)
   {
-    RUNTIME_ASSERT(lp >= 0, "Parameter lp should be >= 0");
+    RUNTIME_ASSERT(lp >= 0, boost::locale::translate("Parameter lp should be >= 0"));
 
     if ( (lx < 0) || (ly < 0) || (lx >= dimX) || (ly >= dimY) )
     {
-      ACL_ERROR(0x0001);      // invalid coordinates
+      RUNTIME_ERROR(boost::locale::translate("Invalid coordinates"));
     }
     else
     {

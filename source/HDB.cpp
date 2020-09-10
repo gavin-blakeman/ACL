@@ -569,7 +569,6 @@ namespace ACL
   /// @brief Loads the keywords into the HDB.
   /// @param[in] file: The FITS file to load from.
   /// @throws CODE_ERROR
-  /// @throws 0x000C
   /// @throws std::bad_alloc
   /// @throws boost::bad_lexical_cast
   /// @throws CFITSException

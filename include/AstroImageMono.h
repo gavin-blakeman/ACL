@@ -5,7 +5,7 @@
 // SUBSYSTEM:						Monochrome astronomical image class.
 // LANGUAGE:						C++
 // TARGET OS:						None.
-// LIBRARY DEPENDANCE:	SCL, cfitsio, gsl, boost.
+// LIBRARY DEPENDANCE:	SCL, cfitsio, boost.
 // NAMESPACE:						ACL
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2

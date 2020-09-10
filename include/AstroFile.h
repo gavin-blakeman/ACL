@@ -70,6 +70,13 @@
 #include <string>
 #include <vector>
 
+  // Miscellaneous libraries
+
+#include "boost/filesystem.hpp"
+#include "fitsio.h"
+#include <MCL>
+#include <SCL>
+
   // ACL library header files
 
 #include "AstroClass.h"
@@ -86,13 +93,6 @@
 #include "FITSMemoryFile.h"
 #include "SourceExtraction.h"
 #include "telescope.h"
-
-  // Miscellaneous libraries
-
-#include "boost/filesystem.hpp"
-#include "fitsio.h"
-#include <MCL>
-#include <SCL>
 
 namespace ACL
 {

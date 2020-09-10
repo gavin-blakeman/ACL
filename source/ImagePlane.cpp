@@ -10,7 +10,7 @@
 // AUTHORS:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018, 2020 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -63,18 +63,19 @@
 #include <iomanip>
 #include <iostream>
 
-  // ACL library header files
-
-#include "../include/constants.h"
-#include "../include/error.h"
-#include "../include/findstar.h"
-#include "../include/FITSException.h"
-#include "../include/FITSStrings.h"
-#include "../include/FWHM.h"
-
   // Miscellaneous header files
 
+#include "boost/locale.hpp"
 #include "boost/thread/thread.hpp"
+
+  // ACL library header files
+
+#include "include/constants.h"
+#include "include/error.h"
+#include "include/findstar.h"
+#include "include/FITSException.h"
+#include "include/FITSStrings.h"
+#include "include/FWHM.h"
 
 namespace ACL
 {
@@ -657,7 +658,9 @@ namespace ACL
       threadGroup.join_all();     // Wait for all the threads to finish.
     }
     else
-      ACL_ERROR(0x0004);    // Inconsistent image sizes.
+    {
+      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."));
+    };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
 
@@ -738,7 +741,9 @@ namespace ACL
       threadGroup.join_all();     // Wait for all the threads to finish.
     }
     else
-      ACL_ERROR(0x0004);    // Inconsistent image sizes.
+    {
+      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."));
+    };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
 
@@ -930,12 +935,12 @@ namespace ACL
     return CImagePlane(*this) %= rhs;
   }
 
-  /// @brief Array operator.
-  /// @param[in] index - The array index to return the value of.
-  /// @returns The value at the specified array index.
-  /// @throws CError(ACL::0x000B) - Array index out of array bounds.
-  /// @version 2013-01-26/GGB - Added support for native FITS formats.
-  /// @version 2011-05-01/GGB - Function created.
+  /// @brief      Array operator.
+  /// @param[in]  index: The array index to return the value of.
+  /// @returns    The value at the specified array index.
+  /// @throws     CRuntimeError
+  /// @version    2013-01-26/GGB - Added support for native FITS formats.
+  /// @version    2011-05-01/GGB - Function created.
 
   FP_t CImagePlane::operator [](INDEX_t index) const
   {
@@ -945,7 +950,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x000B);
+      RUNTIME_ERROR(boost::locale::translate("Array index out of bounds"));
     };
   }
 
@@ -975,13 +980,13 @@ namespace ACL
     return 0;
   }
 
-  /// @brief Interpolates the value of the image for position (x, y) Uses the bilinear interpolation function.
-  /// @param[in] x - position x
-  /// @param[in] y - Coordinate y
-  /// @returns The interpolated value.
-  /// @throws CError(ACL::0x0001) - Invalid coordinates.
-  /// @version 2013-03-11/GGB - Changed storage type of imagePlanes to std::vector<>
-  /// @version 2010-12-29/GGB - Function created.
+  /// @brief      Interpolates the value of the image for position (x, y) Uses the bilinear interpolation function.
+  /// @param[in]  x: position x
+  /// @param[in]  y: Coordinate y
+  /// @returns    The interpolated value.
+  /// @throws     CRuntimeError
+  /// @version    2013-03-11/GGB - Changed storage type of imagePlanes to std::vector<>
+  /// @version    2010-12-29/GGB - Function created.
 
   FP_t CImagePlane::bilinear(FP_t const &x, FP_t const &y) const
   {
@@ -994,7 +999,7 @@ namespace ACL
 
     if ( ( x < 0) || (y < 0) || (x >= dimX) || (y >= dimY) )
     {
-      ACL_ERROR(0x0001);    // Invalid coordinates.
+      RUNTIME_ERROR(boost::locale::translate("Invalid Coordinates"));
     };
 
     F00 = getValue(index);
