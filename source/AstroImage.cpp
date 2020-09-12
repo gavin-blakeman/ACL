@@ -125,25 +125,20 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Division by a fixed value.
-  /// @param[in] dbl: Factor to divide each point by.
-  /// @returns Reference to this.
-  /// @throws 0x2200 - Division by zero.
-  /// @version 2018-08-15/GGB - Refactor to use std::unique_ptr
-  /// @version 2015-07-28/GGB - Updated to reflect new method of storing image planes.
-  /// @version 2011-05-12/GGB - Function created.
+  /// @brief        Division by a fixed value.
+  /// @param[in]    dbl: Factor to divide each point by.
+  /// @returns      Reference to this.
+  /// @throws       GCL::CRuntimeAssert - Division by zero.
+  /// @version      2018-08-15/GGB - Refactor to use std::unique_ptr
+  /// @version      2015-07-28/GGB - Updated to reflect new method of storing image planes.
+  /// @version      2011-05-12/GGB - Function created.
 
   CAstroImage &CAstroImage::operator/=(FP_t dbl)
   {
-    if (dbl == 0)
-    {
-      ACL_ERROR(0x2200);
-    }
-    else
-    {
-      std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
-                    [&] (std::unique_ptr<CImagePlane> const &ip) { *ip /= dbl; });
-    };
+    RUNTIME_ASSERT(dbl != 0, boost::locale::translate("Parameter dbl may not be 0. (Divide by zero.)"));
+
+    std::for_each(imagePlaneStorage.begin(), imagePlaneStorage.end(),
+                  [&] (std::unique_ptr<CImagePlane> const &ip) { *ip /= dbl; });
     return (*this);
   }
 
@@ -159,7 +154,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x2201);      // ASTROIMAGE: Invalid image plane.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: Invalid image plane."), E_ASTROIMAGE_INVALIDIMAGEPLANE, LIBRARYNAME);
     };
   }
 
@@ -176,7 +171,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x2201);      // ASTROIMAGE: Invalid image plane.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: Invalid image plane."), E_ASTROIMAGE_INVALIDIMAGEPLANE, LIBRARYNAME);
     };
   }
 
@@ -216,7 +211,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202); //ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -242,7 +237,7 @@ namespace ACL
 
     if (naxisn.size() == 1)
     {
-      ACL_ERROR(0x0008);
+      RUNTIME_ERROR(boost::locale::translate("NAXIS == 1 not supported."), E_FITS_NAXIS1, LIBRARYNAME);
     }
     else if (naxisn.size() == 2)
     {
@@ -254,7 +249,7 @@ namespace ACL
     }
     else
     {
-      RUNTIME_ERROR(boost::locale::translate("NAXIS > 3 not suported."));
+      RUNTIME_ERROR(boost::locale::translate("NAXIS > 3 not suported."), E_FITS_NAXIS4, LIBRARYNAME);
     };
 
     return returnValue;
@@ -500,11 +495,13 @@ namespace ACL
       }
       else
       {
-        ACL_ERROR(0x2201);      // "ASTROIMAGE: Invalid image plane."
+        RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: Invalid image plane."), E_ASTROIMAGE_INVALIDIMAGEPLANE, LIBRARYNAME);
       }
     }
     else
-      ACL_ERROR(0x2202); //ASTROIMAGE: No Image Plane available.
+    {
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
+    };
   }
 
   /// @brief Renders an image in the specified format.

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -37,7 +37,9 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/config.h"
+#include "include/config.h"
+
+  // Standard C++ library header files.
 
 #include <thread>
 

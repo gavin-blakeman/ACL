@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2018 Gavin Blakeman.
+//                      Copyright 2018-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,21 +34,21 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/MPCORB.h"
+#include "include/MPCORB.h"
 
   // Standard C++ library header files.
 
 #include <vector>
-
-  // ACL library header files.
-
-#include "../include/error.h"
 
   // Miscellaneous library header files
 
 #include "boost/algorithm/string.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/lexical_cast.hpp"
+
+  // ACL library header files.
+
+#include "include/error.h"
 
 namespace ACL
 {
@@ -104,7 +104,7 @@ namespace ACL
 
       if (!ifs)
       {
-        ACL_ERROR(0x3300);
+        RUNTIME_ERROR("MPCORB: Unable to open MPCORB.DAT", E_UNABLETOOPEN_MPCORB, "ACL");
       }
       else
       {

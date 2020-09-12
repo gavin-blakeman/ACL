@@ -46,31 +46,32 @@
 #include <fstream>
 #include <vector>
 
-  // ACL library header files.
-
-#include "include/error.h"
-
   // Miscellaneous library header files.
 
 #include "boost/algorithm/string.hpp"
 #include "boost/filesystem/fstream.hpp"
+#include "boost/locale.hpp"
 #include <GCL>
+
+  // ACL library header files.
+
+#include "include/error.h"
 
 namespace ACL
 {
-  /// @brief Constructor constructs from an MPCORB 1 line record.
-  /// @param[in] mpcorbPath: The path and filename for the MPCORB.DAT file.
-  /// @param[in] targetName: The name of the target.
-  /// @throws CError(0x0600)
-  /// @version 2018-09-02/GGB - Added fileName parameter to constructor.
-  /// @version 2016-03-25/GGB - Function created.
+  /// @brief        Constructor constructs from an MPCORB 1 line record.
+  /// @param[in]    mpcorbPath: The path and filename for the MPCORB.DAT file.
+  /// @param[in]    targetName: The name of the target.
+  /// @throws       CError(0x0600)
+  /// @version      2018-09-02/GGB - Added fileName parameter to constructor.
+  /// @version      2016-03-25/GGB - Function created.
 
   CTargetMinorPlanet::CTargetMinorPlanet(boost::filesystem::path const &fileName, std::string const &targetName)
     : CTargetAstronomy(targetName), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
   {
     if (!MPCORB::loadMP(fileName, targetName, elements_))
     {
-      ACL_ERROR(0x2700);
+      RUNTIME_ERROR(boost::locale::translate("TargetMinorPlanet: Minor Planet specified not found."), E_TARGETMP_MPNOTFOUND, "ACL");
     };
   }
 

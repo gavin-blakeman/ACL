@@ -46,19 +46,19 @@
 
 namespace ACL
 {
-  /// @brief Creates and loads a comet target including elements.
-  /// @param[in] fileName: The path and filename for the CometEls.txt file.
-  /// @param[in] targetName: The designation of the comet.
-  /// @throws std::bad_alloc
-  /// @throws 0x2800 - TargetComet: Comet specified not found.
-  /// @version 2018-09-02/GGB - Function created.
+  /// @brief        Creates and loads a comet target including elements.
+  /// @param[in]    fileName: The path and filename for the CometEls.txt file.
+  /// @param[in]    targetName: The designation of the comet.
+  /// @throws       std::bad_alloc
+  /// @throws       CRuntimeError(0x2800 - TargetComet: Comet specified not found.)
+  /// @version      2018-09-02/GGB - Function created.
 
   CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &targetName)
     : CTargetAstronomy(targetName)
   {
     if (!COMETELS::loadComet(fileName, targetName, elements_))
     {
-      ACL_ERROR(0x2800);
+      RUNTIME_ERROR("TargetComet: Comet specified not found.", E_TARGETCOMET_NOTFOUND, "ACL");
     };
   }
 

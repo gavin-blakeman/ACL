@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2017-2018 Gavin Blakeman.
+//                      Copyright 2017-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,22 +34,23 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/photometryFilters.h"
+#include "include/photometryFilters.h"
 
   // Standard C++ library header files.
 
 #include <algorithm>
 #include <limits>
 
-  // ACL library header files.
-
-#include "../include/common.h"
-#include "../include/error.h"
-
-  // Miscellaneous libraries.
+  // Miscellaneous library header files.
 
 #include "boost/algorithm/string.hpp"
+#include "boost/locale.hpp"
 #include <GCL>
+
+  // ACL library header files.
+
+#include "include/common.h"
+#include "include/error.h"
 
 namespace ACL
 {
@@ -127,7 +128,7 @@ namespace ACL
     }
     else
     {
-      throw GCL::search_error("Unable to find filter corresponding to " + filterName + ".");
+      throw GCL::search_error(boost::locale::translate("Unable to find filter corresponding to ").str() + filterName + ".");
     };
   }
 
@@ -158,17 +159,17 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Processes filter data from a database entry.
-  /// @details  1. If the databaseID already exists, an error is thrown
-  ///           2. Otherwise a search is done for the filter name.
-  ///           3. If the filtername exists, the databaseID is assigned to the relevant entry.
-  ///           4. Failing all this, a new entry is created using the next available filterID.
-  /// @param[in] filterDatabaseID: The databaseID of the filter.
-  /// @param[in] filterName: The name of the filter. (Generally 1-4 letters)
-  /// @param[in] filterDescription: A longer description of the filter.
-  /// @throws GCL::CError(ACL, 0x4000)
-  /// @throws GCL::CError(ACL, 0x4001)
-  /// @version 2017-07-23/GGB - Function created.
+  /// @brief        Processes filter data from a database entry.
+  /// @details      1. If the databaseID already exists, an error is thrown
+  ///               2. Otherwise a search is done for the filter name.
+  ///               3. If the filtername exists, the databaseID is assigned to the relevant entry.
+  ///               4. Failing all this, a new entry is created using the next available filterID.
+  /// @param[in]    filterDatabaseID: The databaseID of the filter.
+  /// @param[in]    filterName: The name of the filter. (Generally 1-4 letters)
+  /// @param[in]    filterDescription: A longer description of the filter.
+  /// @throws       GCL::CRuntimeError(ACL, 0x4000)
+  /// @throws       GCL::CError(ACL, 0x4001)
+  /// @version      2017-07-23/GGB - Function created.
 
   void CPhotometryFilterCollection::processDatabaseEntry(std::uint16_t filterDatabaseID, std::string const &filterName,
                                                          std::string const & filterDescription)
@@ -181,7 +182,8 @@ namespace ACL
     {
         // Database entry already exists.
 
-      ACL_ERROR(0x4000);    // Repeated database ID's.
+      RUNTIME_ERROR(boost::locale::translate("PhotometryFilters: Repeated Database ID"), E_PHOTOMETRYFILTERS_REPEATEDID,
+                    LIBRARYNAME);
 
     };
 

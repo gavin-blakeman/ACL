@@ -42,6 +42,7 @@
 
   // Miscellaneous header files
 
+#include "boost/locale.hpp"
 #include <GCL>
 #include <MCL>
 #include "sofam.h"
@@ -274,7 +275,6 @@ namespace ACL
   /// @brief Performs a mean (average) combination of the image stack.
   /// @note This has been written differently to the approach used in the median combine to (hopefully) make this function quicker
   ///       than the median combine function.
-  /// @throws GCL::CCodeError(ACL, 0x0400) - IMAGESTACK: No Images, or Images zero size.
   /// @version 2018-09-14/GGB - Updated to reflect use of std::unique_ptr in function returns.
   /// @version 2017-08-26/GGB - Changed c-style casting to static_cast<>()
   /// @version 2014-12-26/GGB - Changed all std::clog logging to GCL::logger
@@ -289,7 +289,7 @@ namespace ACL
     long double ldAverage;			// Use long double (if supported) to maintain maximum precision.
     CAstroImage *tempImage;
 
-    INFOMESSAGE("Starting MEAN combine...");
+    INFOMESSAGE(boost::locale::translate("Starting MEAN combine..."));
 
     inputImages.front()->createCopy().swap(resultImage);
     resultImage->BITPIX(DOUBLE_IMG);       // Change to double representation.
@@ -321,7 +321,7 @@ namespace ACL
       tempImage = nullptr;
     };
 
-    INFOMESSAGE("Completed MEAN combine.");
+    INFOMESSAGE(boost::locale::translate("Completed MEAN combine."));
    }
 
   /// @brief Performs a median combine. The gsl library is used to calculate the median.
@@ -568,16 +568,16 @@ namespace ACL
     INFOMESSAGE("Completed register images function.");
   }
 
-  /// @brief Function to stack the images. This function makes use of a number of helper functions.
-  /// @param[in] stackMode - The stack mode to use.
-  /// @note All errors are returned as exceptions.
-  /// @details This is the only external interface to stacking the images. All the options and switches must be set before entry to
-  ///          this function.
-  /// @throws GCL::CCodeError(ACL, 0x0400) - IMAGESTACK: No Images, or Images zero size.
-  /// @throws GCL::CCodeError(ACL, 0x0401) - IMAGESTACK: Invalid stacking mode.
-  /// @version 2018-09-15/GGB - Updated to use unique_ptr/
-  /// @version 2014-12-26/GGB - Changed all uses of std::clog to GCL::logger classes and functions.
-  /// @version 2013-03-02/GGB - Function created
+  /// @brief        Function to stack the images. This function makes use of a number of helper functions.
+  /// @param[in]    stackMode: The stack mode to use.
+  /// @note         All errors are returned as exceptions.
+  /// @details      This is the only external interface to stacking the images. All the options and switches must be set before
+  ///               entry to this function.
+  /// @throws       GCL::CRuntimeAssert(0x0400)
+  /// @throws       GCL::CRuntimeAssert(0x0401)
+  /// @version      2018-09-15/GGB - Updated to use unique_ptr/
+  /// @version      2014-12-26/GGB - Changed all uses of std::clog to GCL::logger classes and functions.
+  /// @version      2013-03-02/GGB - Function created
 
   std::unique_ptr<CAstroFile> &CImageStack::stackImages(EStackMode stackMode)
   {
@@ -585,15 +585,15 @@ namespace ACL
 
     if (stackMode == SM_NONE)
     {
-      ACL_ERROR(0x0401);    // IMAGESTACK: Invalid stacking mode.
+      RUNTIME_ERROR(boost::locale::translate("IMAGESTACK: Invalid stacking mode."), E_IMAGESTACK_INVALIDMODE, LIBRARYNAME);
     };
 
     if (inputFiles.size() <= 1)
     {
-      ACL_ERROR(0x0400);    // IMAGESTACK: No Images, or Images zero size.
+      RUNTIME_ERROR(boost::locale::translate("IMAGESTACK: No Images, or Images zero size."), E_IMAGESTACK_NOIMAGE, LIBRARYNAME);
     };
 
-    INFOMESSAGE("Starting function stackImages...");
+    INFOMESSAGE(boost::locale::translate("Starting function stackImages..."));
 
     consistencyCheckImages();
     calibrateImages();
@@ -609,7 +609,7 @@ namespace ACL
       resultFile->commentWrite(0, "IMAGE: " + file->astroFile->getImageName());
     }
 
-    INFOMESSAGE("Completed function stackImages.");
+    INFOMESSAGE(boost::locale::translate("Completed function stackImages."));
 
     return resultFile;    // Also allows ownership transfer
   }

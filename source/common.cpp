@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2013-2019 Gavin Blakeman.
+//                      Copyright 2013-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -40,28 +40,25 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/common.h"
+#include "include/common.h"
 
-  // Standard libraries
+  // Standard C++ library header files
 
 #include <iomanip>
 #include <sstream>
 #include <string>
 
-  // GCL Library
-
-#include <GCL>
-
-  // Boost Library
+  // Miscellaneous Library header files
 
 #include <boost/algorithm/string.hpp>
+#include <GCL>
 
 namespace ACL
 {
 
   unsigned int const ACL_MAJORVERSION = 2018;           ///< The Major version number (yyyy)
   unsigned int const ACL_MINORVERSION = 9;              ///< The Minor version number (mm)
-  unsigned int const ACL_BUILDNUMBER  = 0x010F;         ///< The build number - incremented on each build.
+  unsigned int const ACL_BUILDNUMBER  = 0x0111;         ///< The build number - incremented on each build.
 
   /// @brief Returns the library version and build number.
   /// that was used for editing the library.

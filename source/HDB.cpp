@@ -54,6 +54,13 @@
 #include <cstddef>
 #include <typeinfo>
 
+  // Miscellaneous library header files.
+
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
+#include "boost/locale.hpp"
+#include <GCL>
+
   // ACL Header files.
 
 #include "include/AstroFile.h"
@@ -71,11 +78,6 @@
 #include "include/FITSKeywordUInt08.h"
 #include "include/FITSKeywordUInt16.h"
 #include "include/FITSKeywordUInt32.h"
-
-  // Miscellaneous library header files.
-
-#include "boost/algorithm/string.hpp"
-#include "boost/lexical_cast.hpp"
 
 namespace ACL
 {
@@ -147,7 +149,7 @@ namespace ACL
 
   void CHDB::commentWrite(std::string const &newComment)
   {
-    RUNTIME_ASSERT(!newComment.empty(), "Parameter newComment cannot be empty.");
+    RUNTIME_ASSERT(!newComment.empty(), boost::locale::translate("Parameter newComment cannot be empty."));
 
     comments_.emplace_back(newComment);
   }
@@ -224,7 +226,7 @@ namespace ACL
     {
       firstEdit_ = false;
 
-      std::string szText = "File modified by " + ACL_LIBNAME + " library. Build: " + getVersionString();
+      std::string szText = "File modified by " + LIBRARYNAME + " library. Build: " + getVersionString();
 
       historyWrite(szText);
     };
@@ -240,21 +242,16 @@ namespace ACL
     gcount_ = gcount;
   }
 
-  /// @brief Returns the observation time from the parent object.
-  /// @returns A smart pointer to the time of the observation.
-  /// @throws 0x1908 - HDB: parent cannot be == NULL.
-  /// @version 2011-12-23/GGB - Function created.
+  /// @brief        Returns the observation time from the parent object.
+  /// @returns      A smart pointer to the time of the observation.
+  /// @throws       CRuntimeAssert
+  /// @version      2011-12-23/GGB - Function created.
 
   CAstroTime const &CHDB::getObservationTime() const
   {
-    if (parent_ != nullptr)
-    {
-      return parent_->getObservationTime();
-    }
-    else
-    {
-      ACL_ERROR(0x1908);      // HDB: parent cannot be == NULL.
-    };
+    RUNTIME_ASSERT(parent_ != nullptr, boost::locale::translate("Parameter: parent_ cannot be a nullptr"));
+
+    return parent_->getObservationTime();
   }
 
   /// @brief Gets the observation weather from the parent.
@@ -265,14 +262,9 @@ namespace ACL
 
   CWeather *CHDB::getObservationWeather() const
   {
-    if (parent_ != nullptr)
-    {
-      return parent_->getObservationWeather();
-    }
-    else
-    {
-      ACL_ERROR(0x1908);        // HDB: parent cannot be == NULL.
-    };
+    RUNTIME_ASSERT(parent_ != nullptr, boost::locale::translate("Parameter: parent_ cannot be a nullptr"));
+
+    return parent_->getObservationWeather();
   }
 
   /// @brief Adds a new line to the history
@@ -325,7 +317,7 @@ namespace ACL
 
   CFITSKeyword const &CHDB::keywordData(std::string const &kwd) const
   {
-    RUNTIME_ASSERT(!kwd.empty(), "Parameter kwd is empty.");
+    RUNTIME_ASSERT(!kwd.empty(), boost::locale::translate("Parameter kwd is empty."));
 
     DKeywordStore::const_iterator iter;
     CFITSKeyword *returnPointer = nullptr;
@@ -354,7 +346,7 @@ namespace ACL
 
   bool CHDB::keywordDelete(std::string const &kwd)
   {
-    RUNTIME_ASSERT(kwd.size() != 0, "A keyword cannot have no characters");
+    RUNTIME_ASSERT(kwd.size() != 0, boost::locale::translate("A keyword cannot have no characters"));
 
     bool returnValue = false;
 
@@ -902,7 +894,7 @@ namespace ACL
 
   void CHDB::writeKeywordsToFITS(fitsfile *file) const
   {
-    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, boost::locale::translate("Parameter file cannot be nullptr"));
 
     DKeywordStore::const_iterator iter;
 
@@ -935,7 +927,7 @@ namespace ACL
 
   void CHDB::writeToFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, boost::locale::translate("Parameter 'file' cannot be nullptr"));
 
     writeKeywordsToFITS(file);
     writeCommentsToFITS(file);

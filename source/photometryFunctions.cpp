@@ -51,23 +51,19 @@
 namespace ACL
 {
 
-  /// @brief Returns a Raw Instrumental Magnitude for the given intensity
-  /// @param[in] intensity: The intensity to convert.
-  /// @returns The intensity converted to a magnitude.
-  /// @throws CError(ACL, 0x2501) - Photometry: Cannot have intensity of zero.
-  /// @version 2015-10-14/GGB - Updated to throw on zero intensity.
-  /// @version 2010-07-23/GGB - Function created.
+  /// @brief        Returns a Raw Instrumental Magnitude for the given intensity
+  /// @param[in]    intensity: The intensity to convert.
+  /// @returns      The intensity converted to a magnitude.
+  /// @throws       CRuntimeAssert
+  /// @version      2020-09-12/GGB - Use RUNTIME_ASSERT to check for valid intensity.
+  /// @version      2015-10-14/GGB - Updated to throw on zero intensity.
+  /// @version      2010-07-23/GGB - Function created.
 
   FP_t RawInstrumentalMagnitude(FP_t intensity)
   {
-    if (intensity >= 0)
-    {
-      return (-2.5 * std::log10(intensity));
-    }
-    else
-    {
-      ACL_ERROR(0x2501);
-    };
+    RUNTIME_ASSERT(intensity > 0, "Photometry: Cannot have intensity of zero.");
+
+    return (-2.5 * std::log10(intensity));
   }
 
   /// @brief Calculates the Raw Instrumental Magnitude given the ADU and adu conversion factor.

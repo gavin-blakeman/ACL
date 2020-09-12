@@ -118,6 +118,7 @@ namespace ACL
   /// @brief      Simply add the two image planes together.
   /// @param[in]  rhs: The image plane to add to *this image plane.
   /// @returns    *this
+  /// @throws     CCodeError
   /// @throws     CRuntimeError
   /// @version    2020-09-10/GGB - Update error handling to CRuntimeError.
   /// @version    2015-07-28/GGB - Updated to reflect new method of storing image planes.
@@ -133,7 +134,7 @@ namespace ACL
       }
       catch(std::bad_cast)
       {
-        ACL_ERROR(0x2300);
+        CODE_ERROR;
       }
     }
     else
@@ -162,7 +163,7 @@ namespace ACL
       }
       catch(std::bad_cast)
       {
-        ACL_ERROR(0x2300);
+        CODE_ERROR;
       }
     }
     else
@@ -173,13 +174,12 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Applies the passed dark frame to the image.
-  /// @param[in] df - The dark frame to apply.
-  /// @throws 0x2202 - ASTROIMAGE: No Image Plane available.
-  /// @throws 0x2207 - ASTROIMAGE: applyDark requires dark image to be of same type (mono or poly)
-  //
-  // 2015-07-28/GGB - Updated function to reflect new method of storing the image plane.
-  // 2012-01-28/GGB - Function created.
+  /// @brief        Applies the passed dark frame to the image.
+  /// @param[in]    df: The dark frame to apply.
+  /// @throws       0x2202 - ASTROIMAGE: No Image Plane available.
+  /// @throws       0x2207 - ASTROIMAGE: applyDark requires dark image to be of same type (mono or poly)
+  /// @version      2015-07-28/GGB - Updated function to reflect new method of storing the image plane.
+  /// @version      2012-01-28/GGB - Function created.
 
   void CAstroImageMono::applyDark(CAstroImage const &df)
   {
@@ -189,7 +189,7 @@ namespace ACL
 
       if ( (imagePlaneStorage.empty()) || (darkFrame.imagePlaneStorage.empty()) )
       {
-        ACL_ERROR(0x2202);    // ASTROIMAGE: No Image Plane available.
+        RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
       }
       else
       {
@@ -216,7 +216,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202); //ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -234,7 +234,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);  // ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -251,7 +251,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);  // ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -269,7 +269,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202); //ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -286,7 +286,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);  // ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -313,7 +313,7 @@ namespace ACL
 
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);  // Image plane not available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -358,7 +358,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -374,7 +374,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);    // ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -393,7 +393,7 @@ namespace ACL
   {
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     }
     else
     {
@@ -431,7 +431,7 @@ namespace ACL
 
     if (imagePlaneStorage.empty())
     {
-      ACL_ERROR(0x2202);      // ASTROIMAGE: No Image Plane available.
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAGE_NOIMAGEPLANE, LIBRARYNAME);
     };
 
       // Cannot look for centroids closer than rect/2 pixels from the edge of the image.
@@ -590,7 +590,7 @@ namespace ACL
   int CAstroImageMono::PEDESTAL() const
   {
 //    if (imagePlaneStorage.empty())
-//      ACL_ERROR(0x2202); //ASTROIMAGE: No Image Plane available.
+//      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: No Image Plane available."), E_ASTROIMAHE_NOIMAGEPLANE, LIBRARYNAME);
 //    else
       //return imagePlaneStorage[0]->PEDESTAL();
   }

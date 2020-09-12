@@ -550,7 +550,10 @@ namespace ACL
           case DOUBLE_IMG:
             break;
           default:
-            ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+          {
+            RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, "ACL");
+            break;
+          };
         };
         break;
       };
@@ -571,7 +574,10 @@ namespace ACL
       case DOUBLE_IMG:
         break;
       default:
-        ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+        {
+          RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
+          break;
+        };
       };
       break;
     case LONG_IMG:
@@ -589,7 +595,10 @@ namespace ACL
       case DOUBLE_IMG:
         break;
       default:
-        ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+        {
+          RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, "ACL");
+          break;
+        };
       };
       break;
     case LONGLONG_IMG:
@@ -605,15 +614,21 @@ namespace ACL
       case DOUBLE_IMG:
         break;
       default:
-        ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+        {
+          RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, "ACL");
+          break;
+        };
       };
       break;
     case FLOAT_IMG:
     case DOUBLE_IMG:
       BITPIX(DOUBLE_IMG);
       break;
-    default:
-      ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+      default:
+      {
+        RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, "ACL");
+        break;
+      };
     };
 
     if ( (dimX == rhs.dimX) && (dimY == rhs.dimY) )
@@ -659,7 +674,7 @@ namespace ACL
     }
     else
     {
-      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."));
+      RUNTIME_ERROR(boost::locale::translate("Inconsistent image sizes."), E_IMAGEPLANE_INCONSISTENTSIZE, "ACL");
     };
 
     bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
@@ -810,6 +825,7 @@ namespace ACL
   // /= operator
   //
   // 2010-12-11/GGB - Function created.
+  /// @todo         Multi-thread this function.
 
   CImagePlane &CImagePlane::operator/=(const CImagePlane &rhs)
   {
@@ -821,12 +837,16 @@ namespace ACL
         // Self assignment. Makes all values equal to 1.Use a fast approach.
 
       for (index = 0; index < count; index++)
+      {
         imagePlaneD[index] = 1;
+      };
     }
     else
     {
       for (index = 0; index < count; index++)
+      {
         imagePlaneD[index] /= rhs.imagePlaneD[index];
+      };
     };
 
     bMinMax = false;
@@ -835,23 +855,28 @@ namespace ACL
     return (*this);
   }
 
-  // Performs division by a fixed value.
-  //
-  // 2011-05-12/GGB - Function created.
+  /// @brief        Performs division by a fixed value.
+  /// @param[in]    rhs: The value to divide all the pixel values by.
+  /// @returns      *this
+  /// @throws       std::overflow_error("Division by zero")
+  /// @version      2011-05-12/GGB - Function created.
+  /// @todo         Multi-thread this function.
 
-  CImagePlane &CImagePlane::operator/=(double dbl)
+  CImagePlane &CImagePlane::operator/=(double rhs)
   {
     INDEX_t index;
     INDEX_t const count = dimX * dimY;
 
-    if (dbl == 0)
+    if (rhs == 0)
     {
-      ACL_ERROR(0x2200);  // Divide by zero
+      throw std::overflow_error("Division by zero");
     }
     else
     {
       for (index = 0; index < count; index++)
-        imagePlaneD[index] /= dbl;
+      {
+        imagePlaneD[index] /= rhs;
+      };
 
       bMinMax = false;
       bMean = false;
@@ -954,14 +979,13 @@ namespace ACL
     };
   }
 
-  /// (x, y) Array operator
-  /// EXCEPTIONS: 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-  ///             0x1203 - CIMAGEPLANE: Invalid BITPIX value.
-  ///             0x1204 - CIMAGEPLANE: Invalid coordinates.
-  //
-  // 2013-01-27/GGB - Simplified to use function getValue(long)
-  // 2012-11-29/GGB - Changed to handle native data types.
-  // 2011-05-01/GGB - Function created.
+  /// @brief        (x, y) Array operator
+  /// @param[in]    xIndex: The x-index to access
+  /// @param[in]    yIndex: The y-index to access.
+  /// @throws       CRUntimeError(E_IMAGEPLANE_INVALIDCOORDS)
+  /// @version      2013-01-27/GGB - Simplified to use function getValue(long)
+  /// @version      2012-11-29/GGB - Changed to handle native data types.
+  /// @version      2011-05-01/GGB - Function created.
 
   FP_t CImagePlane::operator()(AXIS_t xIndex, AXIS_t yIndex) const
   {
@@ -971,7 +995,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x1204);    // CIMAGEPLANE: Invalid coordinates.
+      RUNTIME_ERROR("IMAGEPLANE: Invalid coordinates.", E_IMAGEPLANE_INVALIDCOORDS, "ACL");
     };
   }
 
@@ -1133,13 +1157,13 @@ namespace ACL
     return bitpix_;
   }
 
-  /// @brief Sets the value of BITPIX.
-  /// @throws CError(ACL::0x1901) - HDB: Only supported BITPIX values are allowed
-  /// @throws std::bad_alloc
-  /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
-  /// @version 2013-03-11/GGB - Converted to use std::vector<> as storage type.
-  /// @version 2013-03-09/GGB - Added code to convert between image plane types. (See also TO DO at top of file.)
-  /// @version 2012-11-29/GGB - Function created.
+  /// @brief        Sets the value of BITPIX.
+  /// @throws       CRuntimeError(E_IMAGEPLANE_INVALIDBITPIX)
+  /// @throws       std::bad_alloc
+  /// @version      2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
+  /// @version      2013-03-11/GGB - Converted to use std::vector<> as storage type.
+  /// @version      2013-03-09/GGB - Added code to convert between image plane types. (See also TO DO at top of file.)
+  /// @version      2012-11-29/GGB - Function created.
 
   void CImagePlane::BITPIX(int bp)
   {
@@ -1346,7 +1370,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x1901);  // HDB: Only supported BITPIX values are allowed.
+      RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
     };
   }
 
@@ -1706,7 +1730,7 @@ namespace ACL
       };
       default:
       {
-        ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };
@@ -1822,6 +1846,8 @@ namespace ACL
   {
     AXIS_t indexX, indexY, sizeX, sizeY;
 
+    RUNTIME_ASSERT(radius > 0, boost::locale::translate("IMAGEPLANE: FWHM Call Radius == 0."));
+
     class CDataPoint
     {
     public:
@@ -1846,10 +1872,7 @@ namespace ACL
     SCL::vector_sorted<CDataPoint> dataPoints;
     SCL::vector_sorted<CDataPoint>::iterator dataPointsIterator;
 
-    if (radius <= 0)
-    {
-      ACL_ERROR(0x1205);    //IMAGEPLANE: FWHM Call Radius == 0.
-    };
+
 
       // Create the sub image plane.
 
@@ -1986,68 +2009,65 @@ namespace ACL
   {
     FP_t returnValue;
 
-    if (index > static_cast<INDEX_t>(dimX * dimY) )
-    {
-      ACL_ERROR(0x1202);    // CIMAGEPLANE: GetValue(index). index is beyond end of array.
-    }
-    else
-    {
-      switch (bitpix_)
-      {
-        case BYTE_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlane8[index]);
-          break;
-        };
-        case SBYTE_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlaneS8[index]);
-          break;
-        }
-        case USHORT_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlaneU16[index]);
-          break;
-        }
-        case SHORT_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlane16[index]);
-          break;
-        };
-        case ULONG_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlaneU32[index]);
-          break;
-        }
-        case LONG_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlane32[index]);
-          break;
-        };
-        case LONGLONG_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlane64[index]);
-          break;
-        };
-        case FLOAT_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlaneF[index]);
-          break;
-        };
-        case DOUBLE_IMG:
-        {
-          returnValue = static_cast<FP_t>(imagePlaneD[index]);
-          break;
-        };
-        default:
-        {
-          ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
-          break;
-        };
-      };
+    RUNTIME_ASSERT(index <= static_cast<INDEX_t>(dimX * dimY),
+                   boost::locale::translate("CIMAGEPLANE: GetValue(index). index is beyond end of array."));
 
-      return returnValue;
+    switch (bitpix_)
+    {
+      case BYTE_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlane8[index]);
+        break;
+      };
+      case SBYTE_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlaneS8[index]);
+        break;
+      }
+      case USHORT_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlaneU16[index]);
+        break;
+      }
+      case SHORT_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlane16[index]);
+        break;
+      };
+      case ULONG_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlaneU32[index]);
+        break;
+      }
+      case LONG_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlane32[index]);
+        break;
+      };
+      case LONGLONG_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlane64[index]);
+        break;
+      };
+      case FLOAT_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlaneF[index]);
+        break;
+      };
+      case DOUBLE_IMG:
+      {
+        returnValue = static_cast<FP_t>(imagePlaneD[index]);
+        break;
+      };
+      default:
+      {
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
+        break;
+      };
     };
+
+    return returnValue;
+
   }
 
   /// @brief Mirrors the image vertically (about the X axis)
@@ -2109,7 +2129,7 @@ namespace ACL
       };
       default:
       {
-        ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlant: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };
@@ -2373,7 +2393,7 @@ namespace ACL
       };
       default:
       {
-        ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };
@@ -3013,7 +3033,7 @@ namespace ACL
       };
         break;
       default:
-        ACL_ERROR(0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
 
@@ -3128,7 +3148,8 @@ namespace ACL
       else
       {
         bMean = false;
-        ACL_ERROR(0x1201);  // CIMAGEPLANE: Error when calculating image mean.
+        RUNTIME_ERROR(boost::locale::translate("CImagePlane: Error when calculating image mean."), E_IMAGEPLANE_MEANERROR,
+                      LIBRARYNAME);
       };
     };
   }
@@ -3196,7 +3217,7 @@ namespace ACL
       };
       default:
       {
-        ERROR(ACL, 0x1203);    // IMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };
@@ -3350,7 +3371,7 @@ namespace ACL
       }
       default:
       {
-        ACL_ERROR(0x1002);  // CCFITS: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };
@@ -3984,7 +4005,7 @@ namespace ACL
       };
       default:
       {
-        ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
+        RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
         break;
       };
     };

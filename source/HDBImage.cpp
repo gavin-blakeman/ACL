@@ -72,6 +72,7 @@
 
   // Miscellaneous library header files
 
+#include "boost/locale.hpp"
 #include <GCL>
 #include "wcs.h"      // libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment out K&R prototypes.)
 
@@ -161,52 +162,44 @@ namespace ACL
     };
   }
 
-  /// @brief Function to get the BITPIX value.
-  /// @returns The BITPIX value
-  /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
-  /// @version 2012-11-27/GGB - Function created.
+  /// @brief        Function to get the BITPIX value.
+  /// @returns      The BITPIX value
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2012-11-27/GGB - Function created.
 
   int CImageHDB::BITPIX() const
   {
-    if (data)
-    {
-      return data->BITPIX();
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    }
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->BITPIX();
   }
 
-  /// @brief Sets new values of BITPIX.
-  /// @param[in] bp - The new BITPIX value.
-  /// @details The value passed is checked to ensure that it is a valid value.
-  /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
-  //
-  // 2012-11-27/GGB - Changed to support BITPIX in CImagePlane.
-  // 2011-12-18/GGB - Function created.
+  /// @brief        Sets new values of BITPIX.
+  /// @param[in]    bp: The new BITPIX value.
+  /// @details      The value passed is checked to ensure that it is a valid value.
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2012-11-27/GGB - Changed to support BITPIX in CImagePlane.
+  /// @version      2011-12-18/GGB - Function created.
 
   void CImageHDB::BITPIX(int bp)
   {
-    if (!data)
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    }
-    else
-    {
-      data->BITPIX(bp);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->BITPIX(bp);
   }
 
-  /// @brief Determines the initial black point for displaying the image.
-  /// @returns The suggested black point for the image.
-  /// @throws 0x1907 - ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-  /// @version 2013-07-13/GGB - Added exception if data package == nullptr. Return mean - stdev if no CBLACK keyword.
-  /// @version 2012-12-01/GGB - Function created.
+  /// @brief        Determines the initial black point for displaying the image.
+  /// @returns      The suggested black point for the image.
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2020-09-12/GGB - Changed the data check to a runtime assert and simplified decision tree.
+  /// @version      2013-07-13/GGB - Added exception if data package == nullptr. Return mean - stdev if no CBLACK keyword.
+  /// @version      2012-12-01/GGB - Function created.
 
   FP_t CImageHDB::blackPoint()
   {
     FP_t bp;
+
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     if (keywordExists(SBIG_CBLACK))
     {
@@ -214,17 +207,13 @@ namespace ACL
 
       return bp;
     }
-    else if (data)
+    else
     {
       FP_t mean = data->getMean();
       FP_t stdev = data->getStDev();
 
       return ACL::blackPoint(mean, stdev);
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    }
+    };
   }
 
   /// @brief Function to get the BSCALE value.
@@ -234,14 +223,9 @@ namespace ACL
 
   FP_t CImageHDB::BSCALE() const
   {
-    if (data)
-    {
-      return data->BSCALE();
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->BSCALE();
   }
 
   /// @brief Sets the BSCALE value
@@ -253,14 +237,9 @@ namespace ACL
 
   void CImageHDB::BSCALE(FP_t bscale)
   {
-    if (!data)
-    {
-      ACL_ERROR(0x1907);
-    }
-    else
-    {
-      data->BSCALE(bscale);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->BSCALE(bscale);
   }
 
   /// @brief Function to get the BZERO value.
@@ -271,18 +250,13 @@ namespace ACL
 
   FP_t CImageHDB::BZERO() const
   {
-    if (data)
-    {
-      return data->BZERO();
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->BZERO();
   }
 
-  /// @brief Sets the value of bzero.
-  /// @param[in] bzero - The BZERO value to set.
+  /// @brief        Sets the value of bzero.
+  /// @param[in]    bzero: The BZERO value to set.
   /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
   //
   // 2012-11-30/GGB - Modified for the BSCALE value stored in the CImageplane class
@@ -290,14 +264,9 @@ namespace ACL
 
   void CImageHDB::BZERO(FP_t bzero)
   {
-    if (!data)
-    {
-      ACL_ERROR(0x1907);
-    }
-    else
-    {
-      data->BZERO(bzero);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->BZERO(bzero);
   }
 
   /// @brief Applies the dark frame to the image.
@@ -307,14 +276,9 @@ namespace ACL
 
   void CImageHDB::calibrationApplyDark(CAstroImage const &ai)
   {
-    if (data)
-    {
-      data->applyDark(ai);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->applyDark(ai);
   }
 
   /// @brief Creates a copy of this HDB.
@@ -339,30 +303,20 @@ namespace ACL
 
   std::optional<MCL::TPoint2D<FP_t> > CImageHDB::centroid(MCL::TPoint2D<AXIS_t> const &c0, AXIS_t rmax, int sensitivity) const
   {
-    if (data)
-    {
-      return data->centroid(c0, rmax, sensitivity);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->centroid(c0, rmax, sensitivity);
   }
 
   /// @brief Function to extract all the objects in the image.
-  /// @throws 0x1907 - HDB: Data package NULL. Should not be nullptr
+  /// @throws       GCL::CRuntimeAssert
   /// @version 2012-07-28/GGB - Function created.
 
   void CImageHDB::findStars(TImageSourceContainer &imageSourceList, const SFindSources &sourceDefaults) const
   {
-    if (!data)
-    {
-      ACL_ERROR(0x1907);  // Data pointer == nullptr
-    }
-    else
-    {
-      data->findStars(imageSourceList, sourceDefaults);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->findStars(imageSourceList, sourceDefaults);
   }
 
   /// @brief Determines the FWHM for a single star.
@@ -372,14 +326,9 @@ namespace ACL
 
   std::optional<FP_t> CImageHDB::FWHM(MCL::TPoint2D<FP_t> const &star) const
   {
-    if (!data)
-    {
-      ACL_ERROR(0x2007);
-    }
-    else
-    {
-      return data->FWHM(star);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->FWHM(star);
   }
 
   /// @brief Determines if there is WCS information for this image.
@@ -400,14 +349,9 @@ namespace ACL
 
   AXIS_t CImageHDB::height() const
   {
-    if (data)
-    {
-      return data->height();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->height();
   }
 
   /// @brief Returns the maximum value of the image.
@@ -416,14 +360,9 @@ namespace ACL
 
   FP_t CImageHDB::getMaxValue() const
   {
-    if (data)
-    {
-      return data->getMax();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->getMax();
   }
 
   /// @brief Returns the mean value of the image.
@@ -433,14 +372,9 @@ namespace ACL
 
   FP_t CImageHDB::getMeanValue() const
   {
-    if (data)
-    {
-      return data->getMean();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->getMean();
   }
 
   /// @brief Returns the stdev value of the image.
@@ -450,10 +384,9 @@ namespace ACL
 
   FP_t CImageHDB::getStDevValue() const
   {
-    if (data)
-      return data->getStDev();
-    else
-      ACL_ERROR(0x2007);    // Data pointer == NULL
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->getStDev();
   }
 
   /// @brief Returns the minimum value of the image.
@@ -463,14 +396,9 @@ namespace ACL
 
   FP_t CImageHDB::getMinValue() const
   {
-    if (data)
-    {
-      return data->getMin();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->getMin();
   }
 
   /// @brief Function to crop an image.
@@ -484,17 +412,11 @@ namespace ACL
   {
     std::string szHistory = "Image Cropped.";
 
-    if (data)
-    {
-      data->crop(origin, dims);
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    data->crop(origin, dims);
+    firstEdit();
+    historyWrite(szHistory);
   }
 
   /// @brief Returns the exposure time of the specified image.
@@ -527,37 +449,27 @@ namespace ACL
   {
     std::string szHistory = "Image mirrored vertically.";
 
-    if (data)
-    {
-      data->flip();
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);  // Data pointer == NULL
-    };
+    data->flip();
+    firstEdit();
+    historyWrite(szHistory);
   }
 
-  // Function to flop the image
-  //
-  // 2013-06-29/GGB - Added history functions.
-  // 2011-11-27/GGB - Function created.
+  /// @brief        Function to flop the image
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2013-06-29/GGB - Added history functions.
+  /// @version      2011-11-27/GGB - Function created.
 
   void CImageHDB::imageFlop()
   {
     std::string szHistory = "Image mirrored horizontally.";
 
-    if (data)
-    {
-      data->flop();
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-      ACL_ERROR(0x2007);  // Data pointer == NULL
+    data->flop();
+    firstEdit();
+    historyWrite(szHistory);
   }
 
   /// @brief Returns a pointer to image data.
@@ -568,14 +480,9 @@ namespace ACL
 
   CAstroImage *CImageHDB::imageGet()
   {
-    if (data)
-    {
-      return data.get();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);
-    }
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data.get();
   }
 
   // Function to float the image.
@@ -587,15 +494,11 @@ namespace ACL
   {
     std::string szHistory = "Image floated";
 
-    if (data)
-    {
-      data->floatImage(width, height, bkgnd);
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-      ACL_ERROR(0x2007);  // Data pointer == NULL
+    data->floatImage(width, height, bkgnd);
+    firstEdit();
+    historyWrite(szHistory);
   }
 
   // Resamples the image if there is a valid image.
@@ -608,15 +511,11 @@ namespace ACL
   {
     std::string szHistory("Image resampled");
 
-    if (data)
-    {
-      data->resampleImage(w, h);
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-      ACL_ERROR(0x2007);    // Data pointer == NULL
+    data->resampleImage(w, h);
+    firstEdit();
+    historyWrite(szHistory);
   }
 
   // Function to rotate the image.
@@ -629,15 +528,11 @@ namespace ACL
   {
     std::string szHistory("Image rotated");
 
-    if (data)
-    {
-      data->rotate(theta);
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-      firstEdit();
-      historyWrite(szHistory);
-    }
-    else
-      ACL_ERROR(0x2007);  // Data pointer == NULL
+    data->rotate(theta);
+    firstEdit();
+    historyWrite(szHistory);
   }
 
   /// @brief Tests if the image is a mono image.
@@ -647,7 +542,7 @@ namespace ACL
 
   bool CImageHDB::isMonoImage() const
   {
-    RUNTIME_ASSERT(data != nullptr, "Data pointer == nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     return data->isMonoImage();
   }
@@ -659,7 +554,7 @@ namespace ACL
 
   bool CImageHDB::isPolyImage() const
   {
-    RUNTIME_ASSERT(data != nullptr, "Data pointer == nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     return data->isPolyImage();
   }
@@ -692,14 +587,9 @@ namespace ACL
 
   NAXIS_t CImageHDB::NAXIS() const
   {
-    if (data)
-    {
-      return data->NAXIS();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == nullptr
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->NAXIS();
   }
 
   /// @brief Pass through function to get the size of axis naxisn in the image.
@@ -708,14 +598,9 @@ namespace ACL
 
   AXIS_t CImageHDB::NAXISn(NAXIS_t naxisn) const
   {
-    if (data)
-    {
-      return data->NAXISn(naxisn);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == nullptr
-    }
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->NAXISn(naxisn);
   }
 
   /// @brief Loads the data from the FITS file. This includes the image data as well as the keyword and other data.
@@ -729,7 +614,7 @@ namespace ACL
 
   void CImageHDB::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
+    RUNTIME_ASSERT(file != nullptr, boost::locale::translate("Parameter file cannot be nullptr"));
 
     CHDB::readFromFITS(file);          // Call the parent to load all the common stuff as well as the keywords.
 
@@ -750,25 +635,20 @@ namespace ACL
   void CImageHDB::binPixels(unsigned int p)
   {
     std::string szHistory("Image binned.");
-    if (data)
+
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->binPixels(p);
+    firstEdit();
+    historyWrite(szHistory);
+
+    if (data->isMonoImage())
     {
-      data->binPixels(p);
+      ACL::FP_t mean = data->getMean();
+      ACL::FP_t stdev = data->getStDev();
 
-      firstEdit();
-      historyWrite(szHistory);
-
-      if (data->isMonoImage())
-      {
-        ACL::FP_t mean = data->getMean();
-        ACL::FP_t stdev = data->getStDev();
-
-        keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
-        keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
-      };
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
+      keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
+      keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
     };
   }
 
@@ -778,7 +658,7 @@ namespace ACL
 
   renderImage_t *CImageHDB::getRenderedImage() const
   {
-    RUNTIME_ASSERT(data, "data pointer == nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     return data->getRenderedImage();
   }
@@ -802,24 +682,21 @@ namespace ACL
   {
     std::string szHistory("Image Transformed");
 
-    if (data)
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->transform(c0, ct, th, sc, pix, maskPlane);
+
+    firstEdit();
+    historyWrite(szHistory);
+
+    if (data->isMonoImage())
     {
-      data->transform(c0, ct, th, sc, pix, maskPlane);
+      ACL::FP_t mean = data->getMean();
+      ACL::FP_t stdev = data->getStDev();
 
-      firstEdit();
-      historyWrite(szHistory);
-
-      if (data->isMonoImage())
-      {
-        ACL::FP_t mean = data->getMean();
-        ACL::FP_t stdev = data->getStDev();
-
-        keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
-        keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
-      };
-    }
-    else
-      ACL_ERROR(0x2007);    // Data pointer == NULL
+      keywordWrite(SBIG_CBLACK, mean - stdev, SBIG_COMMENT_CBLACK);
+      keywordWrite(SBIG_CWHITE, mean + (3 * stdev), SBIG_COMMENT_CWHITE);
+    };
   }
 
   /// @brief Sets the new astro image.
@@ -832,17 +709,13 @@ namespace ACL
 
   void CImageHDB::imageSet(std::unique_ptr<CAstroImage> &newImage)
   {
-    RUNTIME_ASSERT(newImage != nullptr, "The new image cannot be a nullptr.");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
-    if (data)
+    if ( (newImage->width() != data->width() ) &&
+         (newImage->height() != data->height()) )
     {
-      if ( (newImage->width() != data->width() ) &&
-           (newImage->height() != data->height()) )
-      {
-        ACL_ERROR(0x2006);
-      };
+      ACL_ERROR(0x2006);
     };
-
     data.swap(newImage);
   }
 
@@ -912,10 +785,9 @@ namespace ACL
 
   void CImageHDB::loadFromRGBHP(SRGBHP_Ptr RGBData, EColour colour)
   {
-    if (data)
-      data->loadFromRGBHP(RGBData, colour);
-    else
-      ACL_ERROR(0x1907);    // HDB: Data package NULL. Should not be NULL
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->loadFromRGBHP(RGBData, colour);
   }
 
   /// @brief Function to get the profile data.
@@ -927,14 +799,9 @@ namespace ACL
 
   void CImageHDB::objectProfile(MCL::TPoint2D<FP_t> centroid, AXIS_t radius, std::vector<std::tuple<FP_t, FP_t> > &profileData) const
   {
-    if (data)
-    {
-      return data->objectProfile(centroid, radius, profileData);
-    }
-    else
-    {
-      ACL_ERROR(0x1907);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->objectProfile(centroid, radius, profileData);
   }
 
   /// @brief Function to get the PEDESTAL value.
@@ -944,14 +811,9 @@ namespace ACL
 
   int CImageHDB::PEDESTAL() const
   {
-    if (data)
-    {
-      return data->PEDESTAL();
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->PEDESTAL();
   }
 
   /// @brief Converts the pixel coordinates passed to WCS coordinates.
@@ -1017,14 +879,9 @@ namespace ACL
 
   void CImageHDB::pointPhotometry(CPhotometryObservation &po)
   {
-    if (!data)
-    {
-      ACL_ERROR(0x2007);    // Data pointer == nullptr
-    }
-    else
-    {
-      data->photometry(po);
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->photometry(po);
   }
 
   /// @brief Calls the image rendering function.
@@ -1033,29 +890,24 @@ namespace ACL
 
   void CImageHDB::renderImage(ERenderMode rm)
   {
-    if (data)
-    {
-      data->renderImage(rm);
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    }
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    data->renderImage(rm);
   }
 
-  /// @brief Set the rendering information for the colour plane.
-  /// @param[in] ip - The image plane number.
-  /// @param[in] bp - The blackpoint for rendering
-  /// @param[in] wp - The whitepoint for rendering
-  /// @param[in] invert - Invert the image?
-  /// @param[in] tf - The transfer function to use.
-  /// @param[in] tfp - Parameter for the transfer function.
-  /// @throws GCL::CRuntimeAssert
-  /// @version 2015-08-01/GGB - Function created.
+  /// @brief        Set the rendering information for the colour plane.
+  /// @param[in]    ip: The image plane number.
+  /// @param[in]    bp: The blackpoint for rendering
+  /// @param[in]    wp: The whitepoint for rendering
+  /// @param[in]    invert: Invert the image?
+  /// @param[in]    tf: The transfer function to use.
+  /// @param[in]    tfp: Parameter for the transfer function.
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2015-08-01/GGB - Function created.
 
   void CImageHDB::setImagePlaneRenderFunction(size_t ip, FP_t bp, FP_t wp, bool invert, ETransferFunction tf , FP_t tfp)
   {
-    RUNTIME_ASSERT(data != nullptr, "data cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     data->setImagePlaneRenderFunction(ip, bp, wp, invert, tf, tfp);
   }
@@ -1069,7 +921,7 @@ namespace ACL
 
   void CImageHDB::setImagePlaneColourValues(size_t ip, SColourRGB colour, FP_t trans)
   {
-    RUNTIME_ASSERT(data != nullptr, "data cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     data->setImagePlaneColourValues(ip, colour, trans);
   }
@@ -1245,23 +1097,21 @@ namespace ACL
   {
     FP_t wp;
 
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
     if (keywordExists(SBIG_CWHITE))
     {
       wp = static_cast<FP_t>(keywordData(SBIG_CWHITE) );
 
       return wp;
     }
-    else if (data)
+    else
     {
       FP_t mean = data->getMean();
       FP_t stdev = data->getStDev();
 
       return ACL::whitePoint(mean, stdev);
-    }
-    else
-    {
-      ACL_ERROR(0x1907);  // HDB: Data package NULL. Should not be nullptr
-    }
+    };
   }
 
   /// @brief Returns the width of the image.
@@ -1270,14 +1120,9 @@ namespace ACL
 
   AXIS_t CImageHDB::width() const
   {
-    if (data)
-    {
-      return data->width();
-    }
-    else
-    {
-      ACL_ERROR(0x2007);    // Data pointer == NULL
-    };
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
+
+    return data->width();
   }
 
   /// @brief Writes the image data to the FITS header that is passed.
@@ -1292,7 +1137,7 @@ namespace ACL
   void CImageHDB::writeToFITS(fitsfile *file)
   {
     RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr");
-    RUNTIME_ASSERT(data != nullptr, "Data variable cannot be nullptr");
+    RUNTIME_ASSERT(data != nullptr, boost::locale::translate("Data pointer == nullptr"));
 
     LONGLONG naxisn[3];
 

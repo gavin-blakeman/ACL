@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2018 Gavin Blakeman.
+//                      Copyright 2018-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,21 +34,21 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/IERS.h"
+#include "include/IERS.h"
 
   // Standard C++ library header files
-
-
-  // ACL library header files.
-
-#include "../include/error.h"
 
   // Miscellaneous library header files.
 
 #include "boost/algorithm/string.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/lexical_cast.hpp"
+#include "boost/locale.hpp"
 #include "boost/tokenizer.hpp"
+
+  // ACL library header files.
+
+#include "include/error.h"
 
 namespace ACL
 {
@@ -83,7 +83,7 @@ namespace ACL
 
       if (!ifs)
       {
-        ACL_ERROR(0x3320);
+        RUNTIME_ERROR(boost::locale::translate("IERS: Unable to open Bulletin A file specified."), E_UNABLETOOPEN_IERS, "ACL");
       }
       else
       {
@@ -99,7 +99,8 @@ namespace ACL
         if (ifs.eof())
         {
           ifs.close();
-          ACL_ERROR(0x3321);
+          RUNTIME_ERROR(boost::locale::translate("IERS: Unable to parse file. Is the file name and type correct."),
+                        E_UNABLETOPARSE_IERS, "ACL");
         }
         else
         {
@@ -115,7 +116,8 @@ namespace ACL
           if (ifs.eof())
           {
             ifs.close();
-            ACL_ERROR(0x3321);
+            RUNTIME_ERROR(boost::locale::translate("IERS: Unable to parse file. Is the file name and type correct."),
+                          E_UNABLETOPARSE_IERS, "ACL");
           }
           else
           {
@@ -149,7 +151,6 @@ namespace ACL
             }
             while ( (!ifs.eof()) && (szLine.find("These predictions are based on all announced leap seconds.") == std::string::npos));
           }
-
         }
 
         ifs.close();

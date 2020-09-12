@@ -47,18 +47,17 @@
 #include <memory>
 #include <string>
 
+  // Miscellaneous library header files.
+
+#include "boost/filesystem.hpp"
+#include <MCL>
+
   // ACL library header files.
 
 #include "config.h"
 #include "error.h"
 #include "MPCORB.h"
 #include "targetAstronomy.h"
-
-  // Miscellaneous library header files.
-
-#include "boost/filesystem.hpp"
-#include <MCL>
-
 
 namespace ACL
 {

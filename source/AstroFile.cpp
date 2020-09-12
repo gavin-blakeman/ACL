@@ -71,6 +71,7 @@
   // ACL Library header files.
 
 #include "include/AstroFunctions.h"
+#include "include/error.h"
 #include "include/FITSException.h"
 #include "include/FITSKeyword.h"
 #include "include/FITSKeywordDateTime.h"
@@ -1168,8 +1169,8 @@ namespace ACL
 
     if (!retVal)
     {
-      ACL_ERROR(0x2203); // Invalid Image Data
-    }
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: Invalid image plane."), E_ASTROIMAGE_INVALIDIMAGEPLANE, LIBRARYNAME);
+    };
 
     return retVal;
   }
@@ -1907,7 +1908,6 @@ namespace ACL
 
   /// @brief General load function. Uses the extension to determine the specific load function to call.
   /// @throws ACL::CFITSException()
-  /// @throws GCL::CError(ACL, 0x000D)
   /// @throws GCL::CCodeError(ACL)
   /// @version 2017-08-01/GGB - Added call to processTargetCoordinates().
   /// @version 2017-07-24/GGB - Function created.
@@ -1934,15 +1934,15 @@ namespace ACL
     }
     else if (ext == ".SBIG")
     {
-      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."),E_UNABLETOOPEN, "ACL");
     }
     else if (ext == ".JPG")
     {
-      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."), E_UNABLETOOPEN, "ACL");
     }
     else if (ext == ".TIFF")
     {
-      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."));
+      RUNTIME_ERROR(boost::locale::translate("Unable to open file type of type selected."), E_UNABLETOOPEN, "ACL");
     }
 #ifdef USE_LIBRAW
     else if ( (ext == ".DNG") ||
@@ -2702,7 +2702,7 @@ namespace ACL
 
   bool CAstroFile::photometryObjectRemove(std::string const &toRemove)
   {
-    RUNTIME_ASSERT(!toRemove.empty(), "parameter toRemove cannot be empty string.");
+    RUNTIME_ASSERT(!toRemove.empty(), boost::locale::translate("Parameter 'toRemove' cannot be empty string."));
 
     if (!photometryHDB_)
     {
@@ -2737,7 +2737,7 @@ namespace ACL
 
   std::optional<CAstronomicalCoordinates> CAstroFile::pix2wcs(DHDBStore::size_type hdb, MCL::TPoint2D<FP_t> const &toConvert) const
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter 'hdb' out of range."));
     RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     return HDB[hdb]->pix2wcs(toConvert);
@@ -2754,7 +2754,7 @@ namespace ACL
 
   void CAstroFile::pointPhotometry(DHDBStore::size_type hdb, CPhotometryObservation &po)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter 'hdb' out of range."));
 
     isDirty(true);
     HDB[hdb]->pointPhotometry(po);
@@ -2768,7 +2768,7 @@ namespace ACL
 
   void CAstroFile::imageResample(DHDBStore::size_type hdb, AXIS_t width, AXIS_t height)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter 'hdb' out of range."));
     RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageResample(width, height);
@@ -2796,7 +2796,7 @@ namespace ACL
 
   void CAstroFile::rotateImage(DHDBStore::size_type hdb, FP_t angle)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter 'hdb' out of range."));
     RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
 
     HDB[hdb]->imageRotate(angle);
@@ -2827,7 +2827,7 @@ namespace ACL
 
   void CAstroFile::save(boost::filesystem::path const &fileName)
   {
-    RUNTIME_ASSERT(!fileName.empty(), "Parameter fileName is empty");
+    RUNTIME_ASSERT(!fileName.empty(), boost::locale::translate("Parameter 'fileName' may not be empty"));
 
     boost::filesystem::path backupPath(fileName);
     boost::filesystem::path newPath(fileName);

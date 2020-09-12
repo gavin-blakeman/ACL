@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2018 Gavin Blakeman.
+//                      Copyright 2018-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -43,13 +43,13 @@
 #include <string>
 #include <vector>
 
-  // ACL library header files.
-
-#include "../include/julianDay.h"
-
   // Miscellaneous library header files.
 
 #include "boost/filesystem.hpp"
+
+  // ACL library header files.
+
+#include "include/julianDay.h"
 
 namespace ACL
 {

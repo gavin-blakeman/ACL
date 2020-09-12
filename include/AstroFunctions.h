@@ -46,16 +46,16 @@
 #include <cstdint>
 #include <string>
 
+  // Miscellaneous Library header files.
+
+#include <MCL>
+
   // ACL library header files
 
 #include "AstronomicalTime.h"
 #include "constants.h"
 #include "config.h"
 #include "julianDay.h"
-
-  // Miscellaneous Library header files.
-
-#include <MCL>
 
 namespace ACL
 {

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2018 Gavin Blakeman.
+//                      Copyright 2018-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -34,7 +34,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/CometEls.h"
+#include "include/CometEls.h"
 
   // Standard C++ library header files.
 
@@ -42,7 +42,7 @@
 
   // ACL library header files.
 
-#include "../include/error.h"
+#include "include/error.h"
 
   // Miscellaneous library header files
 
@@ -82,14 +82,14 @@ namespace ACL
                                                 { 160, 168},
                                               };
 
-    /// @brief Searches the ComEls.txt file to find the specified object.
-    /// @param[in] fileName: Path and file name for the MPCORB.DAT file.
-    /// @param[in] mpName: The name of the minor planet, can be designation, or name. or number.
+    /// @brief      Searches the ComEls.txt file to find the specified object.
+    /// @param[in]  fileName: Path and file name for the MPCORB.DAT file.
+    /// @param[in]  mpName: The name of the minor planet, can be designation, or name. or number.
     /// @param[out] elements: The elements of the minor planet.
-    /// @returns true - The MP was found.
-    /// @returns false - The MP was not found.
-    /// @throws 0x3310: Unable to open CometEls.txt
-    /// @version 2018-08-25/GGB - Function created.
+    /// @returns    true - The MP was found.
+    /// @returns    false - The MP was not found.
+    /// @throws     CRuntimeError - 0x3310: Unable to open CometEls.txt
+    /// @version    2018-08-25/GGB - Function created.
 
     bool loadComet(boost::filesystem::path const &fileName, std::string const &cometName, SCometElements &elements)
     {
@@ -99,7 +99,7 @@ namespace ACL
 
       if (!ifs)
       {
-        ACL_ERROR(0x3310);
+        RUNTIME_ERROR("CometElements: Unable to open ComEls.txt", E_COMETUNABLETOOPEN, "ACL");
       }
       else
       {

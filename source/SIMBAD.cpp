@@ -44,15 +44,16 @@
 
 #include <sstream>
 
+  // Miscellaneous library header files.
+
+#include <boost/format.hpp>
+#include "boost/locale.hpp"
+
   // ACL library header files
 
 #include "include/AstroFunctions.h"
 #include "include/common.h"
 #include "include/error.h"
-
-  // Miscellaneous library header files.
-
-#include <boost/format.hpp>
 
 namespace ACL
 {
@@ -79,13 +80,12 @@ namespace ACL
     {CSIMBADScript::POLYGON,    "polygon"}
   };
 
-  /// @brief Creates the script as a std::string to enable SIMBAD to be queried through the script query URL.
-  /// @param None.
-  /// @returns The script that has been built up.
-  /// @throws CError(ACL, 0x0700) - Invalid region type.
-  /// @throws CError(ACL, 0x0701) - Invalid field type.
-  /// @throws CError(ACL, 0x0702) - Invalid region type.
-  /// @version 2016-04-24/GGB - Function created.
+  /// @brief        Creates the script as a std::string to enable SIMBAD to be queried through the script query URL.
+  /// @param        None.
+  /// @returns      The script that has been built up.
+  /// @throws       CRumtimeError(0x0701)
+  /// @throws       CRuntimeError(0x0702)
+  /// @version      2016-04-24/GGB - Function created.
 
   CSIMBADScript::operator std::string() const
   {
@@ -107,7 +107,7 @@ namespace ACL
       }
       else
       {
-        ACL_ERROR(0x0701);
+        RUNTIME_ERROR(boost::locale::translate("SIMBAD: Invalid field name."), E_SIMBAD_INVALIDFIELD, LIBRARYNAME);
       }
     };
     outputStream << "\"" << std::endl;
@@ -123,7 +123,7 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x0702);
+      RUNTIME_ERROR(boost::locale::translate("SIMBAD: Invalid region type."), E_SIMBAD_INVALIDREGIONTYPE, LIBRARYNAME);
     };
     switch (regionType)
     {
@@ -146,7 +146,7 @@ namespace ACL
       case POLYGON:
       default:
       {
-        ACL_ERROR(0x0700);
+        RUNTIME_ERROR(boost::locale::translate("SIMBAD: Invalid region type."), E_SIMBAD_INVALIDREGIONTYPE, LIBRARYNAME);
         break;
       }
     }
@@ -205,7 +205,7 @@ namespace ACL
       }
       default:
       {
-        ACL_ERROR(0x0700);
+        RUNTIME_ERROR(boost::locale::translate("SIMBAD: Invalid region type."), E_SIMBAD_INVALIDREGIONTYPE, LIBRARYNAME);
         break;
       }
     }

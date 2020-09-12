@@ -47,15 +47,15 @@
 #include <memory>
 #include <string>
 
+  // Miscellaneous library header files
+
+#include "boost/filesystem.hpp"
+
   // ACL library header files
 
 #include "CometEls.h"
 #include "error.h"
 #include "targetAstronomy.h"
-
-  // Miscellaneous library header files
-
-#include "boost/filesystem.hpp"
 
 namespace ACL
 {

@@ -38,7 +38,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroFunctions.h"
+#include "include/AstroFunctions.h"
 
   // Standard C++ library header files.
 
@@ -49,18 +49,18 @@
 #include <iostream>
 #include <locale>
 
-  // ACL Library header files
-
-#include "../include/common.h"
-#include "../include/error.h"
-
   // Miscellaneous library header files.
 
-#include "boost/format.hpp"
 #include "boost/date_time/gregorian/gregorian.hpp"
+#include "boost/format.hpp"
+#include "boost/locale.hpp"
 #include <GCL>
 #include "sofa.h"
 
+  // ACL Library header files
+
+#include "include/common.h"
+#include "include/error.h"
 
 namespace ACL
 {
@@ -533,14 +533,14 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     };
   }
 
-  /// @brief Converts the passed string into a Julian day epoch
-  /// @param[in] newEpoch - The epoch to convert.
-  /// @returns Julian day value.
-  /// @throws std::out_of_range
-  /// @throws std::invalid_argument
-  /// @throws GCL::CError(ACL, 0x0301)
-  /// @version 2017-08-05/GGB - Updated to a C++ function. (Bug #56)
-  /// @version 2009-12-18/GGB - Function created.
+  /// @brief        Converts the passed string into a Julian day epoch
+  /// @param[in]    newEpoch: The epoch to convert.
+  /// @returns      Julian day value.
+  /// @throws       std::out_of_range
+  /// @throws       std::invalid_argument
+  /// @throws       GCL::CError(ACL, 0x0301)
+  /// @version      2017-08-05/GGB - Updated to a C++ function. (Bug #56)
+  /// @version      2009-12-18/GGB - Function created.
 
   TJD convertEpoch(std::string const &newEpoch)
   {
@@ -564,7 +564,8 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     }
     else
     {
-      ACL_ERROR(0x0301);
+      RUNTIME_ERROR(boost::locale::translate("ASTROFUNCTIONS: Incorrect format of Epoch."), E_ASTROFUNCTIONS_EPOCHERROR,
+                    LIBRARYNAME);
     };
 
     return returnValue;
@@ -631,12 +632,12 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     }
   }
 
-  /// @brief Solve Kepler's equation.
-  /// @param[in] meanAnomoly: The mean anomoly, M.
-  /// @param[in] eccentricity: The eccentric anomoly, e.
-  /// @returns The eccentricAnomoly, E.
-  /// @throws 0x0302: AstroFunctions: Keplers equation failed to converge.
-  /// @version 2018-08-25/GGB - Function created.
+  /// @brief        Solve Kepler's equation.
+  /// @param[in]    meanAnomoly: The mean anomoly, M.
+  /// @param[in]    eccentricity: The eccentric anomoly, e.
+  /// @returns      The eccentricAnomoly, E.
+  /// @throws       0x0302: AstroFunctions: Keplers equation failed to converge.
+  /// @version      2018-08-25/GGB - Function created.
 
   FP_t keplersEquation(FP_t M, FP_t e)
   {
@@ -660,7 +661,8 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
       loopCounter ++;
       if (loopCounter >= 255)       // Bailout if not converging.
       {
-        ACL_ERROR(0x0302);
+        RUNTIME_ERROR(boost::locale::translate("AstroFunctions: Keplers equation failed to converge."), E_ASTROFUNCTIONS_KEPLER,
+                      LIBRARYNAME);
       }
     }
     while (deltaE > tol);

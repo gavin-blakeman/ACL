@@ -69,6 +69,12 @@
 #include <tuple>
 #include <vector>
 
+  // Miscellaneous library header files
+
+#include "fitsio.h"
+#include <MCL>
+#include <SCL>
+
   // ACL library header files
 
 #include "AstroCatalogue.h"
@@ -77,12 +83,6 @@
 #include "error.h"
 #include "FITSKeyword.h"
 #include "FITSStrings.h"
-
-  // MIscellaneous libraries
-
-#include "fitsio.h"
-#include <MCL>
-#include <SCL>
 
   // The following are defined in cfitsio and need to be undefined to be able to include libraw (winnt.h).
   // As cfitsio is never accessed directly by the code in this library, this will not be a concern.
