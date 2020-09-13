@@ -54,7 +54,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/ImagePlane.h"
+#include "include/ImagePlane.h"
 
   // Standard C++ Library header files
 
@@ -65,13 +65,11 @@
 
   // Miscellaneous header files
 
-#include "boost/locale.hpp"
 #include "boost/thread/thread.hpp"
 
   // ACL library header files
 
 #include "include/constants.h"
-#include "include/error.h"
 #include "include/findstar.h"
 #include "include/FITSException.h"
 #include "include/FITSStrings.h"
@@ -1994,9 +1992,8 @@ namespace ACL
   /// @brief Returns the value for a given index.
   /// @details The return value is corrected as follows: returnValue = bzero + bscale * value;
   /// @returns The image value at the specified point.
-  /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-  /// @throws 0x1202 - CIMAGEPLANE: GetValue(index). index is beyond end of array.
-  /// @throws 0x1203 - CIMAGEPLANE: Invalid BITPIX value.
+  /// @throws       GCL::CRuntimeAssert(CIMAGEPLANE: GetValue(index). index is beyond end of array.)
+  /// @throws       0x1203 - CIMAGEPLANE: Invalid BITPIX value.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
   /// @li Use cfitsio rather than CCfits for accessing FITS files.
@@ -2067,7 +2064,6 @@ namespace ACL
     };
 
     return returnValue;
-
   }
 
   /// @brief Mirrors the image vertically (about the X axis)
@@ -3061,8 +3057,8 @@ namespace ACL
   }
 
   /// @brief Returns the mean of the values in the imagePlane.
-  /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-  /// @throws 0x1201 - CIMAGEPLANE: Error when calculating image mean.
+  /// @throws       GCL::CRuntimeError(0x1200)
+  /// @throws       0x1201 - CIMAGEPLANE: Error when calculating image mean.
   /// @version 2018-08-25/GGB - Changed storage type to std::unique_ptr<>.
   /// @version 2015-09-02/GGB
   /// @li Use C-style arrays as storage type.
@@ -3133,7 +3129,8 @@ namespace ACL
         };
         default:
         {
-          ERROR(ACL, 0x1200); // CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
+          RUNTIME_ERROR(boost::locale::translate("IMAGEPLANE: No image plane available BITPIX = BP_NONE."), E_IMAGEPLANE_NOIMAGE,
+                        LIBRARYNAME);
           break;
         };
       };

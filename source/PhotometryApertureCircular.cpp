@@ -41,9 +41,17 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/PhotometryApertureCircular.h"
+#include "include/PhotometryApertureCircular.h"
 
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
 #include <GCL>
+
+  // ACL library header files
+
+#include "include/common.h"
+#include "include/error.h"
 
 namespace ACL
 {
@@ -150,8 +158,11 @@ namespace ACL
       };
       r3_ = result;
       break;
-    default:
-      ERROR(ACL, 0x0501);    // PHOTOMETRY: Unknown version number for circular aperture.
+      default:
+      {
+        RUNTIME_ERROR(boost::locale::translate("PHOTOMETRY: Unknown version number for circular aperture."),
+                      E_PHOTOMETRY_UNKNOWNVERSION, LIBRARYNAME);
+      };
     };
   }
 

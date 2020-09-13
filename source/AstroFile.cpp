@@ -63,7 +63,7 @@
 
   // Miscellaneous library header files.
 
-#include <boost/algorithm/string.hpp>
+#include "boost/algorithm/string.hpp"
 #include "boost/locale.hpp"
 #include "../SBIG/csbigimg.h"
 #include <GCL>
@@ -71,6 +71,7 @@
   // ACL Library header files.
 
 #include "include/AstroFunctions.h"
+#include "include/common.h"
 #include "include/error.h"
 #include "include/FITSException.h"
 #include "include/FITSKeyword.h"
@@ -262,39 +263,34 @@ namespace ACL
 
   void CAstroFile::commentWrite(size_t hdb, const std::string &comment)
   {
-    RUNTIME_ASSERT(!comment.empty(), "The comment parameter cannot be empty");
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.")
+    RUNTIME_ASSERT(!comment.empty(), boost::locale::translate("The comment parameter cannot be empty"));
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("AstroFile: parameter 'hdb' out of range."));
 
     HDB[hdb]->commentWrite(comment);
     isDirty(true);
     hasData(true);
   }
 
-  /// @brief Copies the keywords from an HDB in an astroFile to an HDB in another astrofile.
-  /// @param[in] reference: The astrofile instance to copy the HDB from.
-  /// @param[in] hdb: The HDB number to copy. The same HDB is copied from and to.
-  /// @throws 0x2001 - Invalid HDB
-  /// @note If the HDB does not exist in @a this instance, then it will be created.
-  /// @todo It may be worth further generalising this function to allow keywords to be copied within the astrofile as well.
-  /// @version 2019-08-22/GGB - Updated to use std::unique_ptr idiom.
-  /// @version 2014-05-31/GGB - Function created
+  /// @brief        Copies the keywords from an HDB in an astroFile to an HDB in another astrofile.
+  /// @param[in]    reference: The astrofile instance to copy the HDB from.
+  /// @param[in]    hdb: The HDB number to copy. The same HDB is copied from and to.
+  /// @throws       0x2001 - Invalid HDB
+  /// @note         If the HDB does not exist in @a this instance, then it will be created.
+  /// @todo         It may be worth further generalising this function to allow keywords to be copied within the astrofile as well.
+  /// @version      2019-08-22/GGB - Updated to use std::unique_ptr idiom.
+  /// @version      2014-05-31/GGB - Function created
 
   void CAstroFile::copyKeywords(CAstroFile const &reference, DHDBStore::size_type hdb)
   {
-    if ( hdb >= reference.HDB.size() )
+    RUNTIME_ASSERT(hdb < reference.HDB.size(), boost::locale::translate("AstroFile: parameter 'hdb' out of range."));
+
+    if ( hdb >= HDB.size() )
     {
-      ERROR(ACL, 0x2001);    // Invalid HDB number
+      HDBAdd(reference.getHDB(hdb)->createCopy());
     }
     else
     {
-      if ( hdb >= HDB.size() )
-      {
-        HDBAdd(reference.getHDB(hdb)->createCopy());
-      }
-      else
-      {
-        HDB[hdb]->copyKeywords(reference.HDB[hdb].get());
-      };
+      HDB[hdb]->copyKeywords(reference.HDB[hdb].get());
     };
   }
 
@@ -323,7 +319,7 @@ namespace ACL
 
   void CAstroFile::HDBAdd(std::unique_ptr<CHDB> toAdd)
   {
-    RUNTIME_ASSERT(toAdd != nullptr, "HDB to add cannot be a nullptr.")
+    RUNTIME_ASSERT(toAdd != nullptr, boost::locale::translate("Astrofile: Parameter 'toadd' cannot be a nullptr."));
 
     HDB.push_back(std::move(toAdd));
     isDirty(true);
@@ -338,14 +334,9 @@ namespace ACL
 
   bool CAstroFile::astrometryCheckRequisites() const
   {
-    if (astrometryHDB_)
-    {
-      return astrometryHDB_->astrometryCheckRequisites();
-    }
-    else
-    {
-      ERROR(ACL, 0x200C);    // ASTROFILE: Astrometry HDB does not exist.
-    };
+    RUNTIME_ASSERT(astrometryHDB_, boost::locale::translate("Astrometry HDB does not exist."));
+
+    return astrometryHDB_->astrometryCheckRequisites();
   }
 
   /// @brief Adds a reference to the astrometry HDB.
@@ -379,39 +370,29 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Moves the reference iterator to the first object in the reference list.
-  /// @returns Pointer to the next astrometry object.
-  /// @throws 0x200C - ASTROFILE: Astrometry HDB does not exist.
-  /// @version 2013-08-27/GGB - Code changed for bug fix (Bug #1210902)
-  /// @version 2012-01-21/GGB - Function created.
+  /// @brief        Moves the reference iterator to the first object in the reference list.
+  /// @returns      Pointer to the next astrometry object.
+  /// @throws       0x200C - ASTROFILE: Astrometry HDB does not exist.
+  /// @version      2013-08-27/GGB - Code changed for bug fix (Bug #1210902)
+  /// @version      2012-01-21/GGB - Function created.
 
   CAstrometryObservation *CAstroFile::astrometryObjectFirst()
   {
-    if (!astrometryHDB_)
-    {
-      ACL_ERROR(0x200C);
-    }
-    else
-    {
-      return astrometryHDB_->astrometryObjectFirst();
-    }
+    RUNTIME_ASSERT(astrometryHDB_, boost::locale::translate("Astrometry HDB does not exist."));
+
+    return astrometryHDB_->astrometryObjectFirst();
   }
 
-  /// @brief Moves the reference iterator to the next object in the list.
-  /// @returns Pointer to the next astromery object.
-  /// @throws 0x200C - ASTROFILE: Astrometry HDB does not exist.
-  /// @version 2012-01-21/GGB - Function created.
+  /// @brief        Moves the reference iterator to the next object in the list.
+  /// @returns      Pointer to the next astromery object.
+  /// @throws       0x200C - ASTROFILE: Astrometry HDB does not exist.
+  /// @version      2012-01-21/GGB - Function created.
 
   CAstrometryObservation *CAstroFile::astrometryObjectNext()
   {
-    if (!astrometryHDB_)
-    {
-      ACL_ERROR(0x200C);
-    }
-    else
-    {
-      return astrometryHDB_->astrometryObjectNext();
-    }
+    RUNTIME_ASSERT(astrometryHDB_, boost::locale::translate("Astrometry HDB not created."));
+
+    return astrometryHDB_->astrometryObjectNext();
   }
 
   /// @brief Wrapper function to calculate the plate constants. Calls the relevant HDB if present.
@@ -422,16 +403,10 @@ namespace ACL
 
   void CAstroFile::astrometryCalculatePlateConstants()
   {
-    if (astrometryHDB_)
-    {
-      astrometryHDB_->astrometryCalculatePlateConstants();
+    RUNTIME_ASSERT(astrometryHDB_, boost::locale::translate("Astrometry HDB not created."));
 
-      isDirty(true);
-    }
-    else
-    {
-      ERROR(ACL, 0x200C);
-    };
+    astrometryHDB_->astrometryCalculatePlateConstants();
+    isDirty(true);
   }
 
   /// @brief Returns the astrometryHDB pointer.
@@ -466,17 +441,11 @@ namespace ACL
 
   bool CAstroFile::astrometryObjectRemove(std::string const &toRemove)
   {
-    RUNTIME_ASSERT(!toRemove.empty(), "Parameter toRemove cannot be empty");
+    RUNTIME_ASSERT(!toRemove.empty(), boost::locale::translate("Parameter toRemove cannot be empty"));
+    RUNTIME_ASSERT(astrometryHDB_, boost::locale::translate("Astrometry HDB does not exist."));
 
-    if (!astrometryHDB_)
-    {
-      ERROR(ACL, 0x200C);        // Astrometry HDB does not exist.
-    }
-    else
-    {
-      isDirty(true);
-      return astrometryHDB_->astrometryObjectRemove(toRemove);
-    };
+    isDirty(true);
+    return astrometryHDB_->astrometryObjectRemove(toRemove);
   }
 
   /// @brief Bins the image.
@@ -492,8 +461,8 @@ namespace ACL
 
   void CAstroFile::binPixels(DHDBStore::size_type hdb, unsigned int nsize)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
-    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("hdb parameter out of range."));
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, boost::locale::translate("Incorrect HDB type. (Must be an image.)"));
 
     HDB[hdb]->binPixels(nsize);
     isDirty(true);
@@ -518,8 +487,8 @@ namespace ACL
 
   FP_t CAstroFile::blackPoint(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.)");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter hdb out of range."));
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, boost::locale::translate("Incorrect HDB type. (Must be an image.)"));
 
     return HDB[hdb]->blackPoint();
   }
@@ -636,14 +605,16 @@ namespace ACL
     {
       if (!boost::filesystem::exists(calibrateData->biasFramePath))
       {
-        ACL_ERROR(0x2013);    // ASTROFILE: Bias calibration frame needs a valid file name.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Bias calibration frame needs a valid file name."),
+                      E_ASTROFILE_BIASFILENAME, LIBRARYNAME);
       };
 
       //biasFile = CreateFromFile(calibrateData->biasFramePath);
 
       if ( !validateImageDimensions(biasFile.get()))
       {
-        ACL_ERROR(0x2014);    //ASTROFILE: Bias calibration frame must be same dimenstions as image.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Bias calibration frame must be same dimensions as image."),
+                      E_ASTROFILE_BIASDIMENSIONS, LIBRARYNAME);
       };
     };
 
@@ -651,14 +622,16 @@ namespace ACL
     {
       if (boost::filesystem::exists(calibrateData->flatFramePath))
       {
-        ACL_ERROR(0x2015);    // ASTROFILE: Flat calibration frame needs a valid file name.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Flat calibration frame needs a valid file name."),
+                      E_ASTROFILE_FLATFILENAME, LIBRARYNAME);
       };
 
       //flatFile = CreateFromFile(calibrateData->flatFramePath);
 
       if ( !validateImageDimensions(flatFile.get()))
       {
-        ACL_ERROR(0x2016);    //ASTROFILE: Flat calibration frame must be same dimenstions as image.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Flat calibration frame must be same dimensions as image."),
+                      E_ASTROFILE_FLATDIMENSIONS, LIBRARYNAME);
       };
     };
 
@@ -700,19 +673,19 @@ namespace ACL
     return astrometryHDB_;
   }
 
-  /// @brief Creates an image HDB and adds it to the HDB list. Returns a shared pointer to the image HDB.
-  /// @param[in] name: The name of the HDB to create.
-  /// @returns Pointer to the created image.
-  /// @throws GCL::CRuntimeAssert(ACL)
-  /// @throws std::bad_alloc
-  /// @throws 0x200B - Cannot create HDB with duplicate name.
-  /// @version 2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
-  /// @version 2015-09-04/GGB - Updated search loop to use std::any_of.
-  /// @version 2011-12-10/GGB - Function created.
+  /// @brief        Creates an image HDB and adds it to the HDB list. Returns a shared pointer to the image HDB.
+  /// @param[in]    name: The name of the HDB to create.
+  /// @returns      Pointer to the created image.
+  /// @throws       GCL::CRuntimeAssert(ACL)
+  /// @throws       std::bad_alloc
+  /// @throws       0x200B - Cannot create HDB with duplicate name.
+  /// @version      2015-09-06/GGB - Removed check for non-null value after new function. This will throw a bad_alloc.
+  /// @version      2015-09-04/GGB - Updated search loop to use std::any_of.
+  /// @version      2011-12-10/GGB - Function created.
 
   CImageHDB *CAstroFile::createImageHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), boost::locale::translate("Parameter name cannot be empty."));
 
     if (!std::any_of(HDB.begin(), HDB.end(),
                      [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
@@ -724,7 +697,8 @@ namespace ACL
     }
     else
     {
-      ACL_ERROR(0x200B);    // Cannot create HDB with duplicate name.
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Cannot create HDB with duplicate name."), E_ASTROFILE_HDBDUPLICATE,
+                    LIBRARYNAME);
     };
   }
 
@@ -742,12 +716,13 @@ namespace ACL
 
   CHDBAsciiTable *CAstroFile::createATableHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), boost::locale::translate("Parameter name cannot be empty."));
 
     if (std::any_of(HDB.begin(), HDB.end(),
                     [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
     {
-      ACL_ERROR(0x200B);    // Cannot create HDB with duplicate name.
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Cannot create HDB with duplicate name."), E_ASTROFILE_HDBDUPLICATE,
+                    LIBRARYNAME);
     }
     else
     {
@@ -776,12 +751,13 @@ namespace ACL
 
   CHDBBinaryTable *CAstroFile::createBTableHDB(std::string const &name)
   {
-    RUNTIME_ASSERT(!name.empty(), "Parameter name cannot be empty.");
+    RUNTIME_ASSERT(!name.empty(), boost::locale::translate("Parameter name cannot be empty."));
 
     if (std::any_of(HDB.begin(), HDB.end(),
                     [&] (std::unique_ptr<CHDB> const &phdb) {return *phdb == name;}) )
     {
-      ACL_ERROR(0x200B);    // Cannot create HDB with duplicate name.
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Cannot create HDB with duplicate name."), E_ASTROFILE_HDBDUPLICATE,
+                    LIBRARYNAME);
     }
     else
     {
@@ -925,50 +901,43 @@ namespace ACL
     return ( HDB[hdb]->centroid(c0, rmax, sensitivity) );
   }
 
-  /// @brief Flips the specified image if possible.
-  /// @param[in] hdb: Image to flip.
-  /// @post isDirty == true
-  /// @throws GCL::CRuntimeAssert
-  /// @todo hdb should not be required. An image flip should call all the HDB's to flip if required. (Bug 28)
-  /// @version 2011-11-27/GGB - Change code to support astrometryHDB and photometryHDB.
-  /// @version 2011-05-29/GGB - Function created.
+  /// @brief        Flips the specified image if possible.
+  /// @param[in]    hdb: Image to flip.
+  /// @post         isDirty == true
+  /// @throws       GCL::CRuntimeAssert
+  /// @todo         hdb should not be required. An image flip should call all the HDB's to flip if required. (Bug 28)
+  /// @version      2011-11-27/GGB - Change code to support astrometryHDB and photometryHDB.
+  /// @version      2011-05-29/GGB - Function created.
 
   void CAstroFile::flipImage(size_t hdb)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter hdb out of range."));
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, boost::locale::translate("ASTROFILE: Block Type should be BT_IMAGE."));
 
-    if ( HDB[hdb]->HDBType() != BT_IMAGE )
+    HDB[hdb]->imageFlip();
+    isDirty(true);
+
+    if (astrometryHDB_)
     {
-      ACL_ERROR(0x2005);
-    }
-    else
+      astrometryHDB_->imageFlip();
+    };
+
+    if (photometryHDB_)
     {
-      HDB[hdb]->imageFlip();
-
-      isDirty(true);
-
-      if (astrometryHDB_)
-      {
-        astrometryHDB_->imageFlip();
-      };
-
-      if (photometryHDB_)
-      {
-        photometryHDB_->imageFlip();
-      };
+      photometryHDB_->imageFlip();
     };
   }
 
-  /// @brief Returns the renderedImage array
-  /// @param[in] hdb: The HDB number.
-  /// @returns Pointer to the renderedImage.
-  /// @throws GCL::CRuntimeAssert(ACL)
-  /// @version 2015-08-02/GGB - Function created.
+  /// @brief        Returns the renderedImage array
+  /// @param[in]    hdb: The HDB number.
+  /// @returns      Pointer to the renderedImage.
+  /// @throws       GCL::CRuntimeAssert(ACL)
+  /// @version      2015-08-02/GGB - Function created.
 
   renderImage_t *CAstroFile::getRenderedImage(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter hdb out of range."));
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, boost::locale::translate("Incorrect HDB type. (Must be an image."));
 
     return HDB[hdb]->getRenderedImage();
   }
@@ -982,7 +951,7 @@ namespace ACL
 
   bool CAstroFile::hasWCSData(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("hdb parameter out of range."));
 
     return (HDB[hdb]->hasWCSData());
   }
@@ -1000,8 +969,8 @@ namespace ACL
 
   void CAstroFile::historyWrite(DHDBStore::size_type hdb, std::string const &history)
   {
-    RUNTIME_ASSERT(!history.empty(), "History value to be added cannot be empty.");
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(!history.empty(), boost::locale::translate("History value to be added cannot be empty."));
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("hdb parameter out of range."));
 
     HDB[hdb]->historyWrite(history);
     isDirty(true);
@@ -1147,16 +1116,16 @@ namespace ACL
     return HDB[hdb]->FWHM(star);
   }
 
-  /// @brief Gets the image from the HDB numbered hdb.
-  /// @details Checks are done to ensure that the hdb value points to a valid position in the vector.
-  /// @returns nullptr if not an image
-  /// @returns Pointer to CAstroImage if an image
-  /// @throws	GCL::CError(0x2001) - Invalid HDB
-  /// @throws GCL::CError(0x2005) - Incorrect block type.
-  /// @throws GCL::CError(0x2203) - Invalid image data
-  /// @version 2017-08-29/GGB - Throw on nullptr. (Bug #49)
-  /// @version 2011-11-03/GGB	- Convert to smart pointers and smart HDB's.
-  /// @version 2011-03-22/GGB - Function created
+  /// @brief        Gets the image from the HDB numbered hdb.
+  /// @details      Checks are done to ensure that the hdb value points to a valid position in the vector.
+  /// @returns      nullptr if not an image
+  /// @returns      Pointer to CAstroImage if an image
+  /// @throws       GCL::CError(0x2001) - Invalid HDB
+  /// @throws       GCL::CError(0x2005) - Incorrect block type.
+  /// @throws       GCL::CError(0x2203) - Invalid image data
+  /// @version      2017-08-29/GGB - Throw on nullptr. (Bug #49)
+  /// @version      2011-11-03/GGB	- Convert to smart pointers and smart HDB's.
+  /// @version      2011-03-22/GGB - Function created
 
   CAstroImage *CAstroFile::getAstroImage(DHDBStore::size_type hdb) const
   {
@@ -1441,14 +1410,14 @@ namespace ACL
     return ( HDB[hdb]->width() );
   }
 
-  /// @brief Attempts to create an HDB from the registered classes.
-  /// @param[in] hdb - The HDB to address.
-  /// @returns Pointer to the newly created HDB.
-  /// @throws 0x2018 - HDB Type not registered.
-  /// @details If no class claims to be the HDB type, then a null pointer will be called.
-  /// @version 2018-09-22/GGB - Updated to use std::unique_ptr.
-  /// @version 2015-06-30/GGB - Function changed to throw if correct HDB type is not registered. (bug 32)
-  /// @version 2012-12-23/GGB - Function created
+  /// @brief        Attempts to create an HDB from the registered classes.
+  /// @param[in]    hdb: The HDB to address.
+  /// @returns      Pointer to the newly created HDB.
+  /// @throws       0x2018 - HDB Type not registered.
+  /// @details      If no class claims to be the HDB type, then a null pointer will be called.
+  /// @version      2018-09-22/GGB - Updated to use std::unique_ptr.
+  /// @version      2015-06-30/GGB - Function changed to throw if correct HDB type is not registered. (bug 32)
+  /// @version      2012-12-23/GGB - Function created
 
   std::unique_ptr<CHDB> CAstroFile::HDBCreateClass(fitsfile *file)
   {
@@ -1475,7 +1444,7 @@ namespace ACL
     }
       else
     {
-      ACL_ERROR(0x2018);
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: HDB Type not registered."), E_ASTROFILE_HDBNOTREGISTERED, LIBRARYNAME);
     };
   }
 
@@ -1491,8 +1460,8 @@ namespace ACL
                              TImageSourceContainer &imageSourceList,
                              SFindSources const &parameters) const
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "Parameter hdb out of range.");
-    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, "Incorrect HDB type. (Must be an image.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("Parameter hdb out of range."));
+    RUNTIME_ASSERT(HDB[hdb]->HDBType() == BT_IMAGE, boost::locale::translate("Incorrect HDB type. (Must be an image."));
 
     HDB[hdb]->findStars(imageSourceList, parameters);  // Call the HDB to identify all the objects.
   }
@@ -1508,7 +1477,7 @@ namespace ACL
 
   std::string CAstroFile::HDBName(DHDBStore::size_type hdb) const
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("hdb parameter out of range."));
 
     return HDB[hdb]->HDBName();
   }
@@ -1721,14 +1690,9 @@ namespace ACL
 
   CFITSKeyword const &CAstroFile::keywordData(DHDBStore::size_type hdb, std::string const &kwd) const
   {
-    if ( hdb > HDB.size() )
-    {
-      ACL_ERROR(0x2001);      // invalid HDB number
-    }
-    else
-    {
-      return HDB[hdb]->keywordData(kwd);
-    }
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("AstroFile: parameter 'hdb' out of range."));
+
+    return HDB[hdb]->keywordData(kwd);
   }
 
   /// @brief Gets the value and comment for the keyword passed from the HDB specified.
@@ -1772,7 +1736,7 @@ namespace ACL
   bool CAstroFile::keywordExists(DHDBStore::size_type hdb, std::string const &kwd) const
   {
     RUNTIME_ASSERT(!kwd.empty(), "Parameter keyword empty.");
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("AstroFile: parameter 'hdb' out of range."));
 
     return HDB[hdb]->keywordExists(kwd);
   }
@@ -1786,7 +1750,7 @@ namespace ACL
 
   DKeywordStore &CAstroFile::keywords(DHDBStore::size_type hdb)
   {
-    RUNTIME_ASSERT(hdb < HDB.size(), "hdb parameter out of range.");
+    RUNTIME_ASSERT(hdb < HDB.size(), boost::locale::translate("AstroFile: parameter 'hdb' out of range."));
 
     return HDB[hdb]->keywordStore();
   }
@@ -2123,7 +2087,7 @@ namespace ACL
     {
       // Error while opening file.
 
-      ACL_ERROR(0x000E);    // Error while opening file.
+      RUNTIME_ERROR(boost::locale::translate("Error while opening file."), E_FILEOPEN, LIBRARYNAME);
     };
   }
 
@@ -2381,7 +2345,8 @@ namespace ACL
       }
       else
       {
-        ACL_ERROR(0x0200);      // FITS: TIMESYS timescale unknown or undefined.
+        RUNTIME_ERROR(boost::locale::translate("FITS: TIMESYS - timescale unknown or undefined."), E_FITS_INVALIDTIMESYS,
+                      LIBRARYNAME);
       };
     };
 
@@ -2665,14 +2630,9 @@ namespace ACL
 
   CPhotometryObservation *CAstroFile::photometryObjectFirst()
   {
-    if (!photometryHDB_)
-    {
-      ACL_ERROR(0x2017);
-    }
-    else
-    {
-      return photometryHDB_->photometryObjectFirst();
-    }
+    RUNTIME_ASSERT(photometryHDB_, boost::locale::translate("AstroFile: PhotometryHDB does not exist."));
+
+    return photometryHDB_->photometryObjectFirst();
   }
 
   /// @brief Returns the next photometry object.
@@ -2682,14 +2642,9 @@ namespace ACL
 
   CPhotometryObservation *CAstroFile::photometryObjectNext()
   {
-    if (!photometryHDB_)
-    {
-      ACL_ERROR(0x2017);
-    }
-    else
-    {
-      return photometryHDB_->photometryObjectNext();
-    }
+    RUNTIME_ASSERT(photometryHDB_, boost::locale::translate("AstroFile: PhotometryHDB does not exist."));
+
+    return photometryHDB_->photometryObjectNext();
   }
 
   /// @brief Removes the specified object from the photometry list.
@@ -3174,7 +3129,7 @@ namespace ACL
 
   void CAstroFile::loadExtension(fitsfile *file, int extension)
   {
-    RUNTIME_ASSERT(file != nullptr, "Parameter file cannot be nullptr.");
+    RUNTIME_ASSERT(file != nullptr, boost::locale::translate("Parameter 'file' cannot be nullptr."));
 
     int status = 0;
     int hduType;
@@ -3248,14 +3203,16 @@ namespace ACL
           }
           else
           {
-            ACL_ERROR(0x2018);  // "ASTROFILE: HDB Type not registered."
+            RUNTIME_ERROR(boost::locale::translate("ASTROFILE: HDB Type not registered."), E_ASTROFILE_HDBNOTREGISTERED,
+                          LIBRARYNAME);
           };
         }
         else
         {
-          ACL_ERROR(0x2018);  // "ASTROFILE: HDB Type not registered."
-        }
-        ACL_ERROR(0x1000);  // Invalid xtension data
+          RUNTIME_ERROR(boost::locale::translate("ASTROFILE: HDB Type not registered."), E_ASTROFILE_HDBNOTREGISTERED, LIBRARYNAME);
+        };
+
+        RUNTIME_ERROR(boost::locale::translate("FITS: Invalid XTENSION data"), E_FIRS_INVALIDXTENSIONDATA, LIBRARYNAME);
         break;
       };
     };

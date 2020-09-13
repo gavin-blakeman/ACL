@@ -63,11 +63,8 @@
 
   // ACL library header files
 
-#include "../include/AstroFile.h"
-#include "../include/FITSStrings.h"
-
-  // Miscellaneous library header files
-
+#include "include/AstroFile.h"
+#include "include/FITSStrings.h"
 
 namespace ACL
 {

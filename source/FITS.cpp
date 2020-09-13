@@ -38,19 +38,23 @@
 
 #include "include/FITS.h"
 
+  // Standard C++ library header files
+
 #include <fstream>
+
+  // Miscellaneous library header files.
 
 #include "cfitsio/fitsio.h"
 #include <GCL>
 
 namespace ACL
 {
-  /// @brief Convert a BITPIX value to a string representation for HMI display.
-  /// @param[in] bp - The BITPIX value to convert.
-  /// @returns A string representation of the BITPIX value.
-  /// @throws GCL::CCodeError
-  /// @version 2015-09-06/GGB - Added unsigned short and unsigned long and signed byte cases.
-  /// @version 2015-08-16/GGB - Function created.
+  /// @brief        Convert a BITPIX value to a string representation for HMI display.
+  /// @param[in]    bp: The BITPIX value to convert.
+  /// @returns      A string representation of the BITPIX value.
+  /// @throws       GCL::CCodeError
+  /// @version      2015-09-06/GGB - Added unsigned short and unsigned long and signed byte cases.
+  /// @version      2015-08-16/GGB - Function created.
 
   std::string Bitpix2String(int bp)
   {

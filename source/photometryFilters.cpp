@@ -214,7 +214,8 @@ namespace ACL
 
       if (newID == std::numeric_limits<std::uint16_t>::max())
       {
-        ACL_ERROR(0x4001);    // All available ID's used.
+        RUNTIME_ERROR(boost::locale::translate("PhotometryFilters: All available filterID used."), E_PHOTOMERYFILTERS_ALLIDUSED,
+                      LIBRARYNAME);
       }
       else
       {

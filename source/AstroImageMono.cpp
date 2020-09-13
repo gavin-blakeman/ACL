@@ -198,7 +198,8 @@ namespace ACL
     }
     catch (std::bad_cast)
     {
-      ACL_ERROR(0x2207);    // ASTROIMAGE: applyDark requires dark image to be of same type (mono or poly)
+      RUNTIME_ERROR(boost::locale::translate("ASTROIMAGE: applyDark requires dark image to be of same type (mono or poly)"),
+                    E_ASTROIMAGE_WRONGIMAGETYPE, LIBRARYNAME);
     };
   }
 

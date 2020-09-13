@@ -64,45 +64,47 @@
 #include <optional>
 #include <tuple>
 
-  // ACL Library header file.
+// Miscellaneous Library header files.
 
-#include "common.h"
-#include "config.h"
-#include "findstar.h"
-#include "SourceExtraction.h"
-
-  // Miscellaneous Library header files.
-
+#include "boost/locale.hpp"
 #include "fitsio.h"
 #include <GCL>
 #include <MCL>
 #include <SCL>
 
+  // ACL Library header file.
+
+#include "common.h"
+#include "config.h"
+#include "error.h"
+#include "findstar.h"
+#include "SourceExtraction.h"
+
 namespace ACL
 {
-  /// @brief Function to calculate an array offset.
-  /// @param[in] x: x-coordinate
-  /// @param[in] y: y-coordinate
-  /// @param[in] xd: The x dimension
-  /// @returns The index in the array.
-  /// @throws None.
-  /// @version 2013-04-21/GGB - Moved out of class CImagePlane
+  /// @brief        Function to calculate an array offset.
+  /// @param[in]    x: x-coordinate
+  /// @param[in]    y: y-coordinate
+  /// @param[in]    xd: The x dimension
+  /// @returns      The index in the array.
+  /// @throws       None.
+  /// @version      2013-04-21/GGB - Moved out of class CImagePlane
 
   inline INDEX_t arrayIndex(AXIS_t x, AXIS_t y, AXIS_t xd)
   {
     return (x + y * xd);
   }
 
-  /// @brief Returns the index of a point in the array.
-  /// @param[in] x: x-coordinate
-  /// @param[in] y: y-coordinate
-  /// @param[in] xm: minimum x value
-  /// @param[in] ym: minimum y value
-  /// @param[in] xd: dimension of x axis
-  /// @returns The index in the array.
-  /// @throws None.
-  /// @version 2013-04-21/GGB - Moved out of class CImagePlane
-  /// @version 2011-05-31/GGB - Function created.
+  /// @brief        Returns the index of a point in the array.
+  /// @param[in]    x: x-coordinate
+  /// @param[in]    y: y-coordinate
+  /// @param[in]    xm: minimum x value
+  /// @param[in]    ym: minimum y value
+  /// @param[in]    xd: dimension of x axis
+  /// @returns      The index in the array.
+  /// @throws       None.
+  /// @version      2013-04-21/GGB - Moved out of class CImagePlane
+  /// @version      2011-05-31/GGB - Function created.
 
   inline INDEX_t arrayIndex(AXIS_t x, AXIS_t y, AXIS_t xm, AXIS_t ym, const AXIS_t xd)
   {
@@ -251,12 +253,11 @@ namespace ACL
     CImagePlane(AXIS_t, AXIS_t, AXIS_t, AXIS_t); // Constructor with an origen and size.
     CImagePlane(fitsfile *, AXIS_t);         // Constructor from a FITS HDU with slicing.
 
-    /// @brief Data constructor for class.
-    /// @param[in] bitpix: The value for BITPIX
-    /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-    /// @throws 0x1206 - CIMAGEPLANE: Invalid BITPIX value.
-    /// @version 2012-12-01/GGB - Added support for FITS native data types
-    /// @version 2011-05-04/GGB - Function created.
+    /// @brief      Data constructor for class.
+    /// @param[in]  bitpix: The value for BITPIX
+    /// @throws     0x1206 - CIMAGEPLANE: Invalid BITPIX value.
+    /// @version    2012-12-01/GGB - Added support for FITS native data types
+    /// @version    2011-05-04/GGB - Function created.
 
     template<typename T>
     CImagePlane(int bitpix, AXIS_t x, AXIS_t y, std::vector<T> const &data, FP_t bscale, FP_t bzero, int pedestal) :
@@ -284,27 +285,41 @@ namespace ACL
 
       switch (bitpix)
       {
-      case BYTE_IMG:
-        imagePlane8 = reinterpret_cast<std::uint8_t *>(newImagePlane);
-        break;
-      case SHORT_IMG:    // (16)
-        imagePlane16 = reinterpret_cast<std::int16_t *>(newImagePlane);
-        break;
-      case LONG_IMG:
-        imagePlane32 = reinterpret_cast<std::int32_t *>(newImagePlane);
-        break;
-      case LONGLONG_IMG:
-        imagePlane64 = reinterpret_cast<std::uint64_t *>(newImagePlane);
-        break;
-      case FLOAT_IMG:
-        imagePlaneF = reinterpret_cast<float *>(newImagePlane);
-        break;
-      case DOUBLE_IMG:
-        imagePlaneD = reinterpret_cast<double *>(newImagePlane);
-        break;
-      default:
-        ERROR(ACL, 0x1203); // CIMAGEPLANE: Invalid BITPIX value.
-        break;
+        case BYTE_IMG:
+        {
+          imagePlane8 = reinterpret_cast<std::uint8_t *>(newImagePlane);
+          break;
+        };
+        case SHORT_IMG:    // (16)
+        {
+          imagePlane16 = reinterpret_cast<std::int16_t *>(newImagePlane);
+          break;
+        };
+        case LONG_IMG:
+        {
+          imagePlane32 = reinterpret_cast<std::int32_t *>(newImagePlane);
+          break;
+        };
+        case LONGLONG_IMG:
+        {
+          imagePlane64 = reinterpret_cast<std::uint64_t *>(newImagePlane);
+          break;
+        };
+        case FLOAT_IMG:
+        {
+          imagePlaneF = reinterpret_cast<float *>(newImagePlane);
+          break;
+        };
+        case DOUBLE_IMG:
+        {
+          imagePlaneD = reinterpret_cast<double *>(newImagePlane);
+          break;
+        };
+        default:
+        {
+          RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
+          break;
+        };
       };
     }
 
@@ -356,98 +371,90 @@ namespace ACL
     double getValue(MCL::TPoint2D<AXIS_t> const &) const;
     void getRow(AXIS_t x1, AXIS_t x2, AXIS_t y, double *);
 
-    /// @brief Sets the value of a particular pixel.
-    /// @param[in] index: The index of the pixel.
-    /// @param[in] value: The value to set.
-    /// @throws 0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
-    /// @throws 0x1201 - CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
-    /// @version 2017-08-27/GGB - Ensure min/max are recalculated as required.
-    /// @version 2013-01-27/GGB - Function created.
+    /// @brief      Sets the value of a particular pixel.
+    /// @param[in]  index: The index of the pixel.
+    /// @param[in]  value: The value to set.
+    /// @throws     0x1200 - CIMAGEPLANE: No image plane available BITPIX = BP_NONE.
+    /// @version    2017-08-27/GGB - Ensure min/max are recalculated as required.
+    /// @version    2013-01-27/GGB - Function created.
 
     template<typename T>
     void setValue(INDEX_t index, T value)
     {
-      if ( (index >= (INDEX_t) (dimX * dimY)) )
+      RUNTIME_ASSERT(index < static_cast<INDEX_t>(dimX * dimY),
+                     boost::locale::translate("IMAGEPLANE: setValue(index), getValue(index). index is beyond end of array."));
+
+      switch (bitpix_)
       {
-        ERROR(ACL, 0x1202);    // CIMAGEPLANE: setValue(index), getValue(index). index is beyond end of array.
-      }
-      else
-      {
-        switch (bitpix_)
+        case BYTE_IMG:
         {
-          case BYTE_IMG:
-          {
-            imagePlane8[index] = static_cast<std::uint8_t>(value);
-            break;
-          };
-          case SBYTE_IMG:
-          {
-            imagePlaneS8[index] = static_cast<std::int8_t>(value);
-            break;
-          };
-          case USHORT_IMG:
-          {
-            imagePlaneU16[index] = static_cast<std::uint16_t>(value);
-            break;
-          };
-          case SHORT_IMG:
-          {
-            imagePlane16[index] = static_cast<std::int16_t>(value);
-            break;
-          };
-          case ULONG_IMG:
-          {
-            imagePlaneU32[index] = static_cast<std::uint32_t>(value);
-            break;
-          };
-          case LONG_IMG:
-          {
-            imagePlane32[index] = static_cast<std::uint32_t>(value);
-            break;
-          };
-          case LONGLONG_IMG:
-          {
-            imagePlane64[index] = static_cast<boost::uint64_t>(value);
-            break;
-          };
-          case FLOAT_IMG:
-          {
-            imagePlaneF[index] = static_cast<float>(value);
-            break;
-          };
-          case DOUBLE_IMG:
-          {
-            imagePlaneD[index] = static_cast<double>(value);
-            break;
-          };
-          default:
-          {
-            ERROR(ACL, 0x1203);  // CIMAGEPLANE: Invalid BITPIX value.
-            break;
-          };
+          imagePlane8[index] = static_cast<std::uint8_t>(value);
+          break;
+        };
+        case SBYTE_IMG:
+        {
+          imagePlaneS8[index] = static_cast<std::int8_t>(value);
+          break;
+        };
+        case USHORT_IMG:
+        {
+          imagePlaneU16[index] = static_cast<std::uint16_t>(value);
+          break;
+        };
+        case SHORT_IMG:
+        {
+          imagePlane16[index] = static_cast<std::int16_t>(value);
+          break;
+        };
+        case ULONG_IMG:
+        {
+          imagePlaneU32[index] = static_cast<std::uint32_t>(value);
+          break;
+        };
+        case LONG_IMG:
+        {
+          imagePlane32[index] = static_cast<std::uint32_t>(value);
+          break;
+        };
+        case LONGLONG_IMG:
+        {
+          imagePlane64[index] = static_cast<boost::uint64_t>(value);
+          break;
+        };
+        case FLOAT_IMG:
+        {
+          imagePlaneF[index] = static_cast<float>(value);
+          break;
+        };
+        case DOUBLE_IMG:
+        {
+          imagePlaneD[index] = static_cast<double>(value);
+          break;
+        };
+        default:
+        {
+          RUNTIME_ERROR(boost::locale::translate("ImagePlane: Invalid BITPIX value."), E_IMAGEPLANE_INVALIDBITPIX, LIBRARYNAME);
+          break;
         };
       };
+
       bMinMax = bMean = false;     // Min max and average have changed. Need to be recalculated.
     }
 
-    /// @brief Sets the value of the image at the relevant point to the passed value.
-    /// @param[in] x: The x coordinate
-    /// @param[in] y:  The y coordinate
-    /// @param[in] value: The value to set.
-    /// @throws GCL::CError(ACL, 0x1202)
-    /// @version 2010-10-16/GGB - Function created.
+    /// @brief      Sets the value of the image at the relevant point to the passed value.
+    /// @param[in]  x: The x coordinate
+    /// @param[in]  y:  The y coordinate
+    /// @param[in]  value: The value to set.
+    /// @throws     GCL::CRuntimeAssert
+    /// @version    2010-10-16/GGB - Function created.
 
     template<typename T>
     void setValue(AXIS_t x, AXIS_t y, T value)
     {
-      if ( (x >= 0) && (y >= 0) && (x < dimX) && (y < dimY))
-      {
-        setValue(arrayIndex(x,y, dimX), value);
-      }
-      else
-      {
-        ERROR(ACL, 0x1202);
-      };
+      RUNTIME_ASSERT( (x >= 0) && (x < dimX) && (y >= 0) && (y < dimY),
+                     boost::locale::translate("IMAGEPLANE: setValue(index), getValue(index). index is beyond end of array."));
+
+      setValue(arrayIndex(x,y, dimX), value);
     }
 
       // Basic image statistics

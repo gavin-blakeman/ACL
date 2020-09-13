@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -40,13 +40,13 @@
 #ifndef ACL_FITSKEYWORDSBYTE_H
 #define ACL_FITSKEYWORDSBYTE_H
 
-  // ACL library includes
-
-#include "FITSKeyword.h"
-
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <cstdint>
+
+// ACL library header files
+
+#include "FITSKeyword.h"
 
 namespace ACL
 {

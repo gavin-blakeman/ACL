@@ -50,16 +50,19 @@
 
 #include "include/julianDay.h"
 
-  // ACL library header files.
-
-#include "include/AstronomicalCoordinates.h"
-#include "include/AstroFunctions.h"
-
   // Miscellaneous Library header files
 
+#include "boost/locale.hpp"
 #include <GCL>
 #include "sofa.h"
 #include "sofam.h"
+
+// ACL library header files.
+
+#include "include/common.h"
+#include "include/error.h"
+#include "include/AstronomicalCoordinates.h"
+#include "include/AstroFunctions.h"
 
 namespace ACL
 {
@@ -115,7 +118,7 @@ namespace ACL
   }
 
   /// @brief Constructs JD from a time_t value. Calls the initialiser function JD(time_t)
-  /// @throws 0x3203 - ASTROTIME: Error while constructing JD from time_t.
+  /// @param[in]    time: The structure to use for creating the instance.
   /// @version 2015-06-01/GGB - Use initialiser function JD().
   /// @version 2013-09-22/GGB - Removed call to tzset() before gmtime()
   /// @version 2011-12-25/GGB - Function created.
@@ -664,32 +667,20 @@ namespace ACL
 
   double &TJD::operator ()(int val)
   {
-    RUNTIME_ASSERT(((val >= 0) && (val <= 1)), "TJD::operator(): Parameter must be [0, 1]");
+    RUNTIME_ASSERT(((val >= 0) && (val <= 1)), boost::locale::translate("TJD::operator(): Parameter must be [0, 1]"));
 
-    if (val < 0 || val > 1)
-    {
-      ERROR(ACL, 0x3202);      // Invalid parameter
-    }
-    else
-    {
-      return JD_[val];
-    };
+    return JD_[val];
   }
 
-  // Returns the relevant double from the value.
-  //
-  // 2011-07-09/GGB - Function created.
+  /// @brief        Returns the relevant double from the value.
+  /// @param[in]    val: The index to access.
+  /// @version      2011-07-09/GGB - Function created.
 
   FP_t const &TJD::operator ()(int val) const
   {
-    if (val < 0 || val > 1)
-    {
-      ERROR(ACL, 0x3202);      // Invalid parameter
-    }
-    else
-    {
-      return JD_[val];
-    };
+    RUNTIME_ASSERT(((val >= 0) && (val <= 1)), boost::locale::translate("TJD::operator(): Parameter must be [0, 1]"));
+
+    return JD_[val];
   }
 
   /// @brief Convert the julian day to an integral Julian Day.
@@ -792,10 +783,10 @@ namespace ACL
     return iauEpj(JD_[0], JD_[1]);
   }
 
-  /// @brief Initialiser function using a time_t value.
-  /// @param[in] time: The std::time_t value to initialise with.
-  /// @throws GCL::CError(ACL::0x3203) - Error while constructing JD from time_t
-  /// @version 2015-06-01/GGB - Function created.
+  /// @brief        Initialiser function using a time_t value.
+  /// @param[in]    time: The std::time_t value to initialise with.
+  /// @throws       GCL::CError(ACL::0x3203) - Error while constructing JD from time_t
+  /// @version      2015-06-01/GGB - Function created.
 
   void TJD::JD(std::time_t const &time)
   {
@@ -815,12 +806,14 @@ namespace ACL
       }
       else
       {
-        ERROR(ACL, 0x3203);          // ASTROTIME: Error while constructing JD from time_t.
+        RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Error while constructing JD from time_t."), E_ASTROTIME_CONSTRUCTTIMET,
+                      LIBRARYNAME);
       }
     }
     else
     {
-      ERROR(ACL, 0x3203);            //ASTROTIME: Error while constructing JD from time_t.
+      RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Error while constructing JD from time_t."), E_ASTROTIME_CONSTRUCTTIMET,
+                    LIBRARYNAME);
     }
   }
 

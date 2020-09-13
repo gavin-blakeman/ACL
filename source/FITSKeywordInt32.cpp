@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -40,13 +40,17 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeywordInt32.h"
+#include "include/FITSKeywordInt32.h"
 
-  // Standard libraries
+  // Standard C++ library header files
 
 #include <limits>
+#include <stdexcept>
 #include <string>
 
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
 
 namespace ACL
 {
@@ -74,7 +78,7 @@ namespace ACL
 
   /// @brief Type conversion operator.
   /// @returns The value as a std::int8_t if possible
-  /// @throws CError(ACL, 0x0101)
+  /// @throws       std::range_error
   /// @version 2016-04-013/GGB - Function created.
 
   CFITSKeywordInt32::operator std::int8_t() const
@@ -86,13 +90,13 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     };
   }
 
   /// @brief Type conversion operator.
   /// @returns The value as a std::int16_t if possible
-  /// @throws CError(ACL, 0x0101)
+  /// @throws       std::range_error
   /// @version 2016-04-013/GGB - Function created.
 
   CFITSKeywordInt32::operator std::int16_t() const
@@ -104,7 +108,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     };
   }
   /// @brief Type conversion operator.
@@ -131,7 +135,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     }
   }
 
@@ -144,7 +148,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     }
   }
 
@@ -157,7 +161,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     }
   }
 

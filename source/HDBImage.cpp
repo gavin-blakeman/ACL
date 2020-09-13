@@ -699,13 +699,13 @@ namespace ACL
     };
   }
 
-  /// @brief Sets the new astro image.
-  /// @note The sizes of the images must be the same, otherwise an exception will be thrown.
-  /// @param[in] newImage: The new image to set.
-  /// @throws CError ACL::0x2006 - Incorrect image size
-  /// @throws CRuntimeAssert
-  /// @version 2018-09-14/GGB - Changed parameter type to std::unique_ptr<>
-  /// @version 2011-11-27/GGB - Function created.
+  /// @brief        Sets the new astro image.
+  /// @note         The sizes of the images must be the same, otherwise an exception will be thrown.
+  /// @param[in]    newImage: The new image to set.
+  /// @throws       CRuntimeError(0x2006)
+  /// @throws       CRuntimeAssert
+  /// @version      2018-09-14/GGB - Changed parameter type to std::unique_ptr<>
+  /// @version      2011-11-27/GGB - Function created.
 
   void CImageHDB::imageSet(std::unique_ptr<CAstroImage> &newImage)
   {
@@ -714,7 +714,7 @@ namespace ACL
     if ( (newImage->width() != data->width() ) &&
          (newImage->height() != data->height()) )
     {
-      ACL_ERROR(0x2006);
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Incorrect image dimensions."), E_HDBIMAGE_INCORRECTIMAGEDIMS, LIBRARYNAME);
     };
     data.swap(newImage);
   }
@@ -1160,7 +1160,8 @@ namespace ACL
   {
     if (PRIMARY())
     {
-      ACL_ERROR(0x1909);    // HDB: XTENSION keyword not allowed for PRIMARY header.
+      RUNTIME_ERROR(boost::locale::translate("HDB: XTENSION keyword not allowed for PRIMARY header."), E_HDB_PRIMARYNOXTENSION,
+                    LIBRARYNAME);
     }
     else
     {

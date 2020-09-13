@@ -45,12 +45,17 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeywordUInt16.h"
+#include "include/FITSKeywordUInt16.h"
 
-  // Standard library
+  // Standard C++ library header files
 
 #include <limits>
+#include <stdexcept>
 #include <string>
+
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
 
 namespace ACL
 {
@@ -85,7 +90,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     };
   }
 

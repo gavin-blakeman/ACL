@@ -50,40 +50,73 @@
 
 namespace ACL
 {
-  std::uint64_t const E_UNABLETOOPEN                  = 0x000D;
+  using errorCode_t = GCL::TErrorCode;
 
-  std::uint64_t const E_FITS_NAXIS1                   = 0x0100;
-  std::uint64_t const E_FITS_NAXIS4                   = 0x0101;
+  errorCode_t const E_UNABLETOOPEN                  = 0x000D;
+  errorCode_t const E_FILEOPEN                      = 0x000E;
 
-  std::uint64_t const E_ASTROFUNCTIONS_EPOCHERROR     = 0x0301;
-  std::uint64_t const E_ASTROFUNCTIONS_KEPLER         = 0x0302;
+  errorCode_t const E_FITS_NAXIS1                   = 0x0100;
+  errorCode_t const E_FITS_NAXIS4                   = 0x0101;
 
-  std::uint64_t const E_IMAGESTACK_NOIMAGE            = 0x0400;
-  std::uint64_t const E_IMAGESTACK_INVALIDMODE        = 0x0401;
+  errorCode_t const E_FITS_INVALIDTIMESYS           = 0x0200;
 
-  std::uint64_t const E_SIMBAD_INVALIDFIELD           = 0x0701;
-  std::uint64_t const E_SIMBAD_INVALIDREGIONTYPE      = 0x0702;
+  errorCode_t const E_ASTROFUNCTIONS_LMSFORMAT      = 0x0300;
+  errorCode_t const E_ASTROFUNCTIONS_EPOCHERROR     = 0x0301;
+  errorCode_t const E_ASTROFUNCTIONS_KEPLER         = 0x0302;
 
-  std::uint64_t const E_IMAGEPLANE_INCONSISTENTSIZE   = 0x1001;
-  std::uint64_t const E_IMAGEPLANE_INVALIDBITPIX      = 0x1002;
+  errorCode_t const E_IMAGESTACK_NOIMAGE            = 0x0400;
+  errorCode_t const E_IMAGESTACK_INVALIDMODE        = 0x0401;
 
-  std::uint64_t const E_IMAGEPLANE_MEANERROR          = 0x1201;
-  std::uint64_t const E_IMAGEPLANE_INVALIDCOORDS      = 0x1204;
+  errorCode_t const E_PHOTOMETRY_UNKNOWNAPERTURE    = 0x0500;
+  errorCode_t const E_PHOTOMETRY_UNKNOWNVERSION     = 0x0501;
 
-  std::uint64_t const E_ASTROIMAGE_NOIMAGEPLANE       = 0x2202;
-  std::uint64_t const E_ASTROIMAGE_INVALIDIMAGEPLANE  = 0x2203;
+  errorCode_t const E_SIMBAD_INVALIDFIELD           = 0x0701;
+  errorCode_t const E_SIMBAD_INVALIDREGIONTYPE      = 0x0702;
 
-  std::uint64_t const E_TARGETMP_MPNOTFOUND           = 0x2700;
+  errorCode_t const E_FIRS_INVALIDXTENSIONDATA      = 0x1000;
+  errorCode_t const E_IMAGEPLANE_INCONSISTENTSIZE   = 0x1001;
+  errorCode_t const E_IMAGEPLANE_INVALIDBITPIX      = 0x1002;
+
+  errorCode_t const E_IMAGEPLANE_NOIMAGE            = 0x1200;
+  errorCode_t const E_IMAGEPLANE_MEANERROR          = 0x1201;
+  errorCode_t const E_IMAGEPLANE_INVALIDCOORDS      = 0x1204;
+
+  errorCode_t const E_HDB_PRIMARYNOXTENSION         = 0x1909;
+  errorCode_t const E_HDB_PRIMARYSIMPLE             = 0x190A;
+
+  errorCode_t const E_ASTROFILE_NAXISNOTFOUND       = 0x2004;
+  errorCode_t const E_ASTROFILE_HDBDUPLICATE        = 0x200B;
+  errorCode_t const E_ASTROFILE_BIASFILENAME        = 0x2013;
+  errorCode_t const E_ASTROFILE_BIASDIMENSIONS      = 0x2014;
+  errorCode_t const E_ASTROFILE_FLATFILENAME        = 0x2015;
+  errorCode_t const E_ASTROFILE_FLATDIMENSIONS      = 0x2016;
+  errorCode_t const E_ASTROFILE_HDBNOTREGISTERED    = 0x2018;
+
+  errorCode_t const E_IMAGECALIBRATION_ARRAYSIZE    = 0x2100;
+  errorCode_t const E_IMAGECALIBRATION_EXPOSURETIME = 0x2102;
+
+  errorCode_t const E_HDBIMAGE_INCORRECTIMAGEDIMS   = 0x2006;
+
+  errorCode_t const E_ASTROIMAGE_NOIMAGEPLANE       = 0x2202;
+  errorCode_t const E_ASTROIMAGE_INVALIDIMAGEPLANE  = 0x2203;
+  errorCode_t const E_ASTROIMAGE_WRONGIMAGETYPE     = 0x2207;
+
+  errorCode_t const E_TARGETMP_MPNOTFOUND           = 0x2700;
 
 
-  std::uint64_t const E_TARGETCOMET_NOTFOUND          = 0x2800;
+  errorCode_t const E_TARGETCOMET_NOTFOUND          = 0x2800;
 
-  std::uint64_t const E_UNABLETOOPEN_MPCORB           = 0x3300;
-  std::uint64_t const E_COMETUNABLETOOPEN             = 0x3310;
-  std::uint64_t const E_UNABLETOOPEN_IERS             = 0x3320;
-  std::uint64_t const E_UNABLETOPARSE_IERS            = 0x3321;
+  errorCode_t const E_ASTROTIME_NOSCALE             = 0x3200;
+  errorCode_t const E_ASTROTIME_CONSTRUCTTIMET      = 0x3203;
+  errorCode_t const E_ASTROTIME_TAIUTC1973          = 0x3207;
 
-  std::uint64_t const E_PHOTOMETRYFILTERS_REPEATEDID  = 0x4000;
+  errorCode_t const E_UNABLETOOPEN_MPCORB           = 0x3300;
+  errorCode_t const E_COMETUNABLETOOPEN             = 0x3310;
+  errorCode_t const E_UNABLETOOPEN_IERS             = 0x3320;
+  errorCode_t const E_UNABLETOPARSE_IERS            = 0x3321;
+
+  errorCode_t const E_PHOTOMETRYFILTERS_REPEATEDID  = 0x4000;
+  errorCode_t const E_PHOTOMERYFILTERS_ALLIDUSED    = 0x4001;
 }
 
 #endif // ACL_ERROR_H

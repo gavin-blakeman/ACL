@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -37,15 +37,17 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeywordInt08.h"
+#include "include/FITSKeywordInt08.h"
 
-  // Standard Libraries
+  // Standard C++ Library header files
 
 #include <limits>
+#include <stdexcept>
 #include <string>
 
   // Miscellaneous Libraries
 
+#include "boost/locale.hpp"
 #include <GCL>
 
 namespace ACL
@@ -92,10 +94,10 @@ namespace ACL
     return (static_cast<std::int64_t>(value_));
   }
 
-  /// @brief Return value as an unsigned 8 bit integer.
-  /// @returns The value as a uint8_t
-  /// @throws CError(ACL, 0x0101) - Unable to cast value ... out of range.
-  /// @version 2016-04-11/GGB - Function created.
+  /// @brief        Return value as an unsigned 8 bit integer.
+  /// @returns      The value as a uint8_t
+  /// @throws       std::range_error
+  /// @version      2016-04-11/GGB - Function created.
 
   CFITSKeywordInt08::operator std::uint8_t() const
   {
@@ -106,7 +108,7 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x0101);
+      throw std::range_error(boost::locale::translate("Unable to cast value ... out of range."));
     };
   }
 

@@ -55,22 +55,22 @@
 #include <fstream>
 #include <iostream>
 
+  // Miscellaneous Libraries
+
+#include "boost/algorithm/string.hpp"
+#include "boost/locale.hpp"
+#include "boost/filesystem/fstream.hpp"
+#include "boost/lexical_cast.hpp"
+#include <GCL>
+#include "sofa.h"
+#include "sofam.h"
+
   // ACL Library
 
 #include "include/AstroFunctions.h"
 #include "include/AstroClass.h"
-
-  // SOFA Library
-
-#include "sofa.h"
-#include "sofam.h"
-
-  // Miscellaneous Libraries
-
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/lexical_cast.hpp>
-#include <GCL>
+#include "include/error.h"
+#include "include/common.h"
 
 namespace ACL
 {
@@ -83,17 +83,17 @@ namespace ACL
   //
   //*****************************************************************************************************************************
 
-  /// @brief Loads the dAT information from a text file and stores it in the CAstroTime class.
-  /// @details The dAT value is required to convert TAI to UTC using the formuala dAT = TAI-UTC. All values are converted to
-  /// Modified Julian Days (MJD).
-  /// @param[in] ifn File Name of the text file that contains the dAT data values.
-  /// @throws ACL::CACLError(0x3205) - ASTROTIME: Error opening TAI-UTC file.
-  /// @post The dAT values are loaded and available to any instance of the CAstroTime class.
-  /// @version 2015-06-20/GGB - Moved function into CAstroTime class.
-  /// @version 2014-12-25/GGB - Removed std::clog error reporting. Exception should be sufficient.
-  /// @version 2013-09-16/GGB - Changed MJD to an unsigned long.
-  /// @version 2013-01-23/GGB - Changed to use data from a standalone file and not from a database and moved into AstroTime.
-  /// @version 2011-07-07/GGB - Function created.
+  /// @brief        Loads the dAT information from a text file and stores it in the CAstroTime class.
+  /// @details      The dAT value is required to convert TAI to UTC using the formuala dAT = TAI-UTC. All values are converted to
+  ///               Modified Julian Days (MJD).
+  /// @param[in]    ifn: File Name of the text file that contains the dAT data values.
+  /// @throws       ACL::CACLError(0x3205) - ASTROTIME: Error opening TAI-UTC file.
+  /// @post         The dAT values are loaded and available to any instance of the CAstroTime class.
+  /// @version      2015-06-20/GGB - Moved function into CAstroTime class.
+  /// @version      2014-12-25/GGB - Removed std::clog error reporting. Exception should be sufficient.
+  /// @version      2013-09-16/GGB - Changed MJD to an unsigned long.
+  /// @version      2013-01-23/GGB - Changed to use data from a standalone file and not from a database and moved into AstroTime.
+  /// @version      2011-07-07/GGB - Function created.
 
   void CAstroTime::load_dAT(boost::filesystem::path const &ifn)
   {
@@ -380,7 +380,8 @@ namespace ACL
     {
       case TS_NONE:
       {
-        ERROR(ACL, 0x3200);
+        RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Time scale NONE specified in conversion function."),
+                      E_ASTROTIME_NOSCALE, LIBRARYNAME);
         break;
       }
     case TS_UTC:
@@ -419,7 +420,8 @@ namespace ACL
     {
       case TS_NONE:
       {
-        ERROR(ACL, 0x3200);
+        RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Time scale NONE specified in conversion function."),
+                      E_ASTROTIME_NOSCALE, LIBRARYNAME);
         break;
       };
     case TS_UTC:
@@ -449,7 +451,8 @@ namespace ACL
     {
       case TS_NONE:
       {
-        ERROR(ACL, 0x3200);
+        RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Time scale NONE specified in conversion function."),
+                      E_ASTROTIME_NOSCALE, LIBRARYNAME);
       };
     case TS_UTC:
       retJD = TTtoUTC(interJD);
@@ -504,10 +507,12 @@ namespace ACL
 
     if (!found)
     {
-      ERROR(ACL, 0x3207);    // ASTROTIME: Cannot get TAI-UTC before 1973.
+      RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Cannot get TAI-UTC before 1973."), E_ASTROTIME_TAIUTC1973, LIBRARYNAME);
     }
     else
+    {
       return returnValue;
+    };
   }
 
   /// @brief Returns the dAT for this objects tt.
@@ -606,7 +611,8 @@ namespace ACL
     {
       case TS_NONE:
       {
-        ERROR(ACL, 0x3200);
+        RUNTIME_ERROR(boost::locale::translate("ASTROTIME: Time scale NONE specified in conversion function."),
+                      E_ASTROTIME_NOSCALE, LIBRARYNAME);
         break;
       };
     case TS_UTC:

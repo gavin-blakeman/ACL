@@ -731,14 +731,14 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     return ( sprintf(szBuffer, szFormat1, deg, min, sec) );
   }
 
-  /// @brief C++ version of the sprintfLMS function. Calls the C version for the actual formatting, but provides a better
-  ///        interface when using with C++ applications.
-  /// @param[in] latlon - The latitude or longitude to convert to a string.
-  /// @param[in] nDecimal - The number of decimal places.
-  /// @param[in] nLatLon -
-  /// @returns A string with the latitude/longiture
-  /// @throws
-  /// @version 2011-12-31/GGB - Function created
+  /// @brief        C++ version of the sprintfLMS function. Calls the C version for the actual formatting, but provides a better
+  ///               interface when using with C++ applications.
+  /// @param[in]    latlon: The latitude or longitude to convert to a string.
+  /// @param[in]    nDecimal: The number of decimal places.
+  /// @param[in]    nLatLon -
+  /// @returns      A string with the latitude/longiture
+  /// @throws       GCL::CRuntimeError()
+  /// @version      2011-12-31/GGB - Function created
 
   std::string sprintfLMS(FP_t latlon, int nDecimal, int nLatLon)
   {
@@ -750,7 +750,8 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     }
     else
     {
-      ERROR(ACL, 0x0300);      // ASTROFUNCTIONS: Error while formatting Latitude (sprintfLMS())
+      RUNTIME_ERROR(boost::locale::translate("ASTROFUNCTIONS: Error while formatting Latitude (sprintfLMS())"),
+                    E_ASTROFUNCTIONS_LMSFORMAT, LIBRARYNAME);
     };
   }
 

@@ -57,17 +57,17 @@
 #include <memory>
 #include <utility>
 
-  // ACL Libraries (ACL)
-
-#include "config.h"
-#include "julianDay.h"
-
 #ifndef ACL_NOBOOST
 // Boost Library
 
 #include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
 #endif // ACL_NOBOOST
+
+// ACL Libraries (ACL)
+
+#include "config.h"
+#include "julianDay.h"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4290 )  /* Disable the warning about C++ exception specifications. */

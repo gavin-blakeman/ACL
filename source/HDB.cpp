@@ -735,40 +735,34 @@ namespace ACL
     keyword.reset();
   }
 
-  /// @brief Sets the new value of NAXIS. Error checking is performed.
-  /// @param[in] n: The new NAXIS value. (1-999)
-  /// @throws 0x1902 - HDB: 0 <= NAXIS <= 999.
-  /// @version 2011-12-18/GGB - Function created.
+  /// @brief        Sets the new value of NAXIS. Error checking is performed.
+  /// @param[in]    n: The new NAXIS value. (1-999)
+  /// @throws       GCL::CRuntimeAssert
+  /// @version      2011-12-18/GGB - Function created.
 
   void CHDB::NAXIS(NAXIS_t n)
   {
-    if ( (n <= 0) || (n > 999) )
-    {
-      ACL_ERROR(0x1902);    // HDB: 0 <= NAXIS <= 999.
-    }
-    else
-    {
-      naxis_ = n;
-      naxisn_.resize(n);    // Resize the array to the correct number of axes.
-    };
+    RUNTIME_ASSERT((n <= 0) || (n > 999), boost::locale::translate("HDB: 0 <= NAXIS <= 999."));
+
+    naxis_ = n;
+    naxisn_.resize(n);    // Resize the array to the correct number of axes.
   }
 
-  /// @brief Returns the NAXISn value specified.
-  /// @param[in] n: The axis to return the NAXIS value.
-  /// @returns The NAXISn number specified.
-  /// @throws 0x2004  - NAXIS value not found or does not exist.
-  /// @throws 0x2008  - Invalid NAXISn. n < 1 || n > 999
-  /// @version 2011-11-27/GGB - Function created.
+  /// @brief        Returns the NAXISn value specified.
+  /// @param[in]    n: The axis to return the NAXIS value.
+  /// @returns      The NAXISn number specified.
+  /// @throws       0x2004  - NAXIS value not found or does not exist.
+  /// @throws       0x2008  - Invalid NAXISn. n < 1 || n > 999
+  /// @version      2011-11-27/GGB - Function created.
 
   AXIS_t CHDB::NAXISn(NAXIS_t n) const
   {
-    if ( (n < 1) || (n > 999) )
+    RUNTIME_ASSERT((n <= 0) || (n > 999), boost::locale::translate("HDB: 0 <= NAXIS <= 999."));
+
+    if (n > naxisn_.size())
     {
-      ACL_ERROR(0x2008);    // Invalid NAXISn. n < 1 || n > 999
-    }
-    else if (n > naxisn_.size())
-    {
-      ACL_ERROR(0x2004);    // NAXIS value not found or does not exist.
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: NAXIS value not found or does not exist."), E_ASTROFILE_NAXISNOTFOUND,
+                    LIBRARYNAME);
     }
     else
     {
@@ -786,13 +780,12 @@ namespace ACL
 
   void CHDB::NAXISn(std::vector<AXIS_t>::size_type nax, AXIS_t n)
   {
-    if ( (nax < 1) || (nax > 999) )
+    RUNTIME_ASSERT((n <= 0) || (n > 999), boost::locale::translate("HDB: 0 <= NAXIS <= 999."));
+
+    if  ((nax > naxisn_.size()) )
     {
-      ACL_ERROR(0x2008);  // HDB: Cannot set value of NAXISn, NAXIS not correctly defined.
-    }
-    else if  ((nax > naxisn_.size()) )
-    {
-      ACL_ERROR(0x2004);    // NAXIS value not found or does not exist.
+      RUNTIME_ERROR(boost::locale::translate("ASTROFILE: NAXIS value not found or does not exist."), E_ASTROFILE_NAXISNOTFOUND,
+                    LIBRARYNAME);
     }
     else
     {
@@ -809,17 +802,17 @@ namespace ACL
     pcount_ = pcount;
   }
 
-  /// @brief Returns the value of the SIMPLE keyword.
-  /// @returns true - Simple HDB
-  /// @returns false - Not a simple HDB
-  /// @throws 0x190A - HDB: SIMPLE only allowed in PRIMARY header.
-  /// @version 2012-01-11/GGB - Function created.
+  /// @brief        Returns the value of the SIMPLE keyword.
+  /// @returns      true - Simple HDB
+  /// @returns      false - Not a simple HDB
+  /// @throws       0x190A - HDB: SIMPLE only allowed in PRIMARY header.
+  /// @version      2012-01-11/GGB - Function created.
 
   bool CHDB::SIMPLE() const
   {
     if (!PRIMARY())
     {
-      ACL_ERROR(0x190A);    // HDB: SIMPLE only allowed in PRIMARY header.
+      RUNTIME_ERROR(boost::locale::translate("HDB: SIMPLE only allowed in PRIMARY header."), E_HDB_PRIMARYSIMPLE, LIBRARYNAME);
     }
     else
     {

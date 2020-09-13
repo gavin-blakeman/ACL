@@ -53,6 +53,10 @@
 
 #include "include/AstroImageCalibration.h"
 
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
+
 namespace ACL
 {
   //*******************************************************************************************************************************
@@ -88,27 +92,29 @@ namespace ACL
   {
     switch (mode)
     {
-    case EIC_MEAN:
-      meanCombine();
-      break;
-    case EIC_MEDIAN:
-      medianCombine();
-      break;
-    default:
-      CODE_ERROR;
+      case EIC_MEAN:
+        meanCombine();
+        break;
+      case EIC_MEDIAN:
+        medianCombine();
+        break;
+      default:
+      {
+        CODE_ERROR;
+      };
     };
   }
 
-  /// @brief Common procedure to test that a sequence of frames have the same characteristics.
-  /// @param[in] frames - The list of frames to verify.
-  /// @param[in] iter - The iterator for the frames.
-  /// @details Checks that the following details are the same
-  ///           1. naxis
-  ///           2. naxisn
-  ///           3. exposure.
-  ///           4. ... may be extended to other parameters such as temperature etc.
-  /// @version 2017-08-10/GGB - Remove iterator parameter.
-  /// @version 2011-05-17/GGB - Function created.
+  /// @brief        Common procedure to test that a sequence of frames have the same characteristics.
+  /// @param[in]    frames: The list of frames to verify.
+  /// @param[in]    iter: The iterator for the frames.
+  /// @details      Checks that the following details are the same
+  ///                 1. naxis
+  ///                 2. naxisn
+  ///                 3. exposure.
+  ///                 4. ... may be extended to other parameters such as temperature etc.
+  /// @version      2017-08-10/GGB - Remove iterator parameter.
+  /// @version      2011-05-17/GGB - Function created.
 
   bool CMasterFrame::verifyFrames(std::vector<std::string> const &frames) const
   {
@@ -153,15 +159,18 @@ namespace ACL
 
       if (naxis != astroFrame->NAXIS(0))
       {
-        ACL_ERROR(0x2100);
+        RUNTIME_ERROR(boost::locale::translate("CALIBRATION: Inconsistent image array sizes."), E_IMAGECALIBRATION_ARRAYSIZE,
+                      LIBRARYNAME);
       }
       else if (naxis1 != astroFrame->NAXISn(0, 1))
       {
-        ACL_ERROR(0x2101);
+        RUNTIME_ERROR(boost::locale::translate("CALIBRATION: Inconsistent image array sizes."), E_IMAGECALIBRATION_ARRAYSIZE,
+                      LIBRARYNAME);
       }
       else if (naxis2 != astroFrame->NAXISn(0, 2))
       {
-        ACL_ERROR(0x2101);
+        RUNTIME_ERROR(boost::locale::translate("CALIBRATION: Inconsistent image array sizes."), E_IMAGECALIBRATION_ARRAYSIZE,
+                      LIBRARYNAME);
       }
       else if (bExptimeValid)
       {
@@ -176,7 +185,8 @@ namespace ACL
 
         if (dExptime != exptime)
         {
-          ACL_ERROR(0x2102);
+          RUNTIME_ERROR(boost::locale::translate("CALIBRATION: Inconsistent exposure times."), E_IMAGECALIBRATION_EXPOSURETIME,
+                        LIBRARYNAME);
         }
       };
 
@@ -215,7 +225,7 @@ namespace ACL
   //
   // 2011-05-08/GGB - Function created.
 
-  CMasterDarkFrame::CMasterDarkFrame(std::string const &opf) : CMasterFrame(opf), masterBiasFile(NULL)
+  CMasterDarkFrame::CMasterDarkFrame(std::string const &opf) : CMasterFrame(opf), masterBiasFile(nullptr)
   {
   }
 

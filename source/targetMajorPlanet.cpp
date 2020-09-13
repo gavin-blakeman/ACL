@@ -154,13 +154,12 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Returns the coordinates of the object at the date/time specified.
-  /// @param[in] Teph: The date/time to return the catalogueCoordinates.
+  /// @brief        Returns the coordinates of the object at the date/time specified.
+  /// @param[in]    Teph: The date/time to return the catalogueCoordinates.
   /// @returns
-  /// @details Use the method given in aprx_pos_planets.pdf (See documentation) published on the JPL website. (E M Standish)
-  ///          The values for the period 1800AD - 2050AD are used. Referenced to the mead ecliptic and equinox of J2000.0
-  /// @throws ACL, 0x2600 - Keplers equation fails to converge.
-  /// @version 2018-08-22/GGB - Function created.
+  /// @details      Use the method given in aprx_pos_planets.pdf (See documentation) published on the JPL website. (E M Standish)
+  ///               The values for the period 1800AD - 2050AD are used. Referenced to the mead ecliptic and equinox of J2000.0
+  /// @version      2018-08-22/GGB - Function created.
 
   CAstronomicalCoordinates CTargetMajorPlanet::positionICRS(CAstroTime const &Teph) const
   {

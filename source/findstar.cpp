@@ -84,6 +84,7 @@
   // Miscellaneous library header files.
 
 #include "boost/format.hpp"
+#include "boost/locale.hpp"
 #include <GCL>
 
 namespace ACL
@@ -223,7 +224,7 @@ namespace ACL
     y1 = std::max(AXIS_t(0), (ny / 2) - rnoise);
     y2 = std::min((ny / 2) + rnoise, ny -1);
 
-    INFOMESSAGE("Calculating image noise level... ");
+    INFOMESSAGE(boost::locale::translate("Calculating image noise level... "));
 
     mean2D(MCL::TPoint2D<AXIS_t>(x1, y1), MCL::TPoint2D<AXIS_t>(x2, y2), noise, nsigma);
 
@@ -258,7 +259,7 @@ namespace ACL
 
       /* Scan for stars based on surrounding local noise figure */
 
-    INFOMESSAGE("Searching for objects in image...");
+    INFOMESSAGE(boost::locale::translate("Searching for objects in image..."));
 
     x1 = xborder1;
     y1 = yborder1;
@@ -407,7 +408,7 @@ namespace ACL
 //                          });
 //    LOGMESSAGE(info, "Sorting complete.");
 
-    INFOMESSAGE("Computing magnitudes...");
+    INFOMESSAGE(boost::locale::translate("Computing magnitudes..."));
     for (iter = imageObjectList.begin(); iter != imageObjectList.end(); iter++)
     {
       if ( (*iter)->flux <= 0 )
@@ -419,9 +420,9 @@ namespace ACL
         (*iter)->flux = -2.5 * log10((*iter)->flux);
       };
     };
-    INFOMESSAGE("Magnitudes complete.");
+    INFOMESSAGE(boost::locale::translate("Magnitudes complete."));
 
-    INFOMESSAGE("Total objects found: " + std::to_string(imageObjectList.size()));
+    INFOMESSAGE(boost::locale::translate("Total objects found: ").str() + std::to_string(imageObjectList.size()));
   }
 
 

@@ -44,11 +44,17 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/PhotometryAperture.h"
+#include "include/PhotometryAperture.h"
+
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
 
   // ACL header files
 
-#include "../include/PhotometryApertureCircular.h"
+#include "include/common.h"
+#include "include/error.h"
+#include "include/PhotometryApertureCircular.h"
 
 namespace ACL
 {
@@ -58,11 +64,11 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// @brief Factory function for creating apertures.
-  /// @param[in] inputArray - Array of bytes describing the aperture.
-  /// @returns A newly created photometry aperture.
-  /// @throws 0x0500 - PHOTOMETRY: Unknown aperture, cannot read from array.
-  /// @version 2013-05-09/GGB - Function created.
+  /// @brief        Factory function for creating apertures.
+  /// @param[in]    inputArray: Array of bytes describing the aperture.
+  /// @returns      A newly created photometry aperture.
+  /// @throws       0x0500 - PHOTOMETRY: Unknown aperture, cannot read from array.
+  /// @version      2013-05-09/GGB - Function created.
 
   CPhotometryAperture *CPhotometryAperture::createAperture(std::valarray<boost::uint8_t> const &inputArray)
   {
@@ -77,7 +83,8 @@ namespace ACL
       }
       default:
       {
-        ERROR(ACL, 0x0500);    // PHOTOMETRY: Unknown aperture, cannot read from array.
+        RUNTIME_ERROR(boost::locale::translate("PHOTOMETRY: Unknown aperture, cannot read from array."),
+                      E_PHOTOMETRY_UNKNOWNAPERTURE, LIBRARYNAME);
         break;
       }
     };

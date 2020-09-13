@@ -60,12 +60,16 @@
 
 #include "include/HDBAstrometry.h"
 
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
+
   // ACL library header files.
 
 #include "include/AstroFile.h"
 #include "include/AstroImageFunctions.hpp"
-
-  // Miscellaneous library header files
+#include "include/error.h"
+#include "include/common.h"
 
 namespace ACL
 {
