@@ -40,6 +40,11 @@
 
 #include "include/targetComet.h"
 
+  // Miscellaneous library header files
+
+#include "boost/locale.hpp"
+#include <GCL>
+
   // ACL library header files
 
 #include "include/error.h"
@@ -50,7 +55,7 @@ namespace ACL
   /// @param[in]    fileName: The path and filename for the CometEls.txt file.
   /// @param[in]    targetName: The designation of the comet.
   /// @throws       std::bad_alloc
-  /// @throws       CRuntimeError(0x2800 - TargetComet: Comet specified not found.)
+  /// @throws       CRuntimeError(TargetComet: Comet specified not found.): E_TARGETCOMET_NOTFOUND
   /// @version      2018-09-02/GGB - Function created.
 
   CTargetComet::CTargetComet(boost::filesystem::path const &fileName, std::string const &targetName)
@@ -58,7 +63,7 @@ namespace ACL
   {
     if (!COMETELS::loadComet(fileName, targetName, elements_))
     {
-      RUNTIME_ERROR("TargetComet: Comet specified not found.", E_TARGETCOMET_NOTFOUND, "ACL");
+      RUNTIME_ERROR(boost::locale::translate("TargetComet: Comet specified not found."), E_TARGETCOMET_NOTFOUND, "ACL");
     };
   }
 

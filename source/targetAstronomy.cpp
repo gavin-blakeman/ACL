@@ -73,12 +73,12 @@ namespace ACL
   {
   }
 
-  /// @brief std::string constructor for the class. Initialises the name field.
-  /// @param[in] n - The object name (identifier)
-  /// @throws None.
-  /// @version 2018-09-24/GGB - Updated to use vector of names
-  /// @version 2016-05-07/GGB - Updated to use a list of object names.
-  /// @version 2011-12-22/GGB - Function created.
+  /// @brief        std::string constructor for the class. Initialises the name field.
+  /// @param[in]    n: The object name (identifier)
+  /// @throws       None.
+  /// @version      2018-09-24/GGB - Updated to use vector of names
+  /// @version      2016-05-07/GGB - Updated to use a list of object names.
+  /// @version      2011-12-22/GGB - Function created.
 
   CTargetAstronomy::CTargetAstronomy(std::string const &n) : objectName_()
   {
@@ -95,7 +95,7 @@ namespace ACL
   }
 
   /// @brief Tests for equality between this objects name and the passed string.
-  /// @param[in] rhs - The object to test.
+  /// @param[in]    rhs: The object to test.
   /// @returns true - The objects are the same
   /// @returns false - The objects are not the same.
   /// @throws None.
@@ -124,7 +124,7 @@ namespace ACL
   }
 
   /// @brief Adds the object name to the name list.
-  /// @param[in] newName - The name to add.
+  /// @param[in]    newName: The name to add.
   /// @throws None.
   /// @details The newName is added to the list of names.
   /// @version 2018-09-24/GGB - Updated to use vector of names
@@ -136,7 +136,7 @@ namespace ACL
   }
 
   /// @brief Adds the list of names to the name list.
-  /// @param[in] nameList: List of names to add.
+  /// @param[in]    nameList: List of names to add.
   /// @throws None.
   /// @version 2018-09-24/GGB - Function created.
 

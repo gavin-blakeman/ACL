@@ -62,7 +62,7 @@ namespace ACL
   /// @brief        Constructor constructs from an MPCORB 1 line record.
   /// @param[in]    mpcorbPath: The path and filename for the MPCORB.DAT file.
   /// @param[in]    targetName: The name of the target.
-  /// @throws       CError(0x0600)
+  /// @throws       CRuntimeError(E_TARGETMP_MPNOTFOUND)
   /// @version      2018-09-02/GGB - Added fileName parameter to constructor.
   /// @version      2016-03-25/GGB - Function created.
 
