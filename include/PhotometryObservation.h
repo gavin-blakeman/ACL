@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -48,7 +48,7 @@
 #ifndef ACL_PHOTOMETRYOBSERVATION_H
 #define ACL_PHOTOMETRYOBSERVATION_H
 
-  // Standard C++ libraries
+  // Standard C++ library header files
 
 #include <memory>
 #include <string>
@@ -110,7 +110,7 @@ namespace ACL
     FP_t getStarE() const;
     FP_t getSNR() const;
   };
-  //typedef std::shared_ptr<CPhotometryObservation> SPPhotometryObservation;
+
 }
 
 #endif // ACL_PHOTOMETRYOBSERVATION_H

@@ -574,21 +574,24 @@ namespace ACL
     {
       if (!boost::filesystem::exists(calibrateData->darkFramePath))
       {
-        ERROR(ACL, 0x200F);    // ASTROFILE: Calibration needs a valid dark frame name.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Calibration needs a valid dark frame name."), E_ASTROFILE_DARKFILENAME,
+                      LIBRARYNAME);
       };
 
       //darkFile = CreateFromFile(calibrateData->darkFramePath);    // Will throw on failure.
 
       if ( !validateImageDimensions(darkFile.get()) )
       {
-        ERROR(ACL, 0x2010);    // ASTROFILE: Dark Calibration Frame must be same dimensions as image.
+        RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Dark Calibration Frame must be same dimensions as image."),
+                      E_ASTROFILE_DARKDIMENSIONS, LIBRARYNAME);
       };
 
       if (!calibrateData->overrideDarkExposure || !calibrateData->useBiasFrame)
       {
         if (!validateDarkDuration(darkFile.get()) )
         {
-          ERROR(ACL, 0x2011);    // ASTROFILE: Dark calibration frame must be same duration as image.
+          RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Dark calibration frame must be same duration as image."),
+                        E_ASTROFILE_DARKDURATION, LIBRARYNAME);
         };
       };
 
@@ -596,7 +599,8 @@ namespace ACL
       {
         if (!validateDarkTemperature(darkFile.get()) )
         {
-          ERROR(ACL, 0x2012);    // ASTROFILE: Dark calibration frame should be same temperature as image.
+          RUNTIME_ERROR(boost::locale::translate("ASTROFILE: Dark calibration frame should be same temperature as image."),
+                        E_ASTROFILE_DARKTEMPERATURE, LIBRARYNAME);
         };
       };
     };

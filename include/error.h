@@ -90,6 +90,10 @@ namespace ACL
   errorCode_t const E_ASTROFILE_BIASDIMENSIONS      = 0x2014;
   errorCode_t const E_ASTROFILE_FLATFILENAME        = 0x2015;
   errorCode_t const E_ASTROFILE_FLATDIMENSIONS      = 0x2016;
+  errorCode_t const E_ASTROFILE_DARKFILENAME        = 0x200F;
+  errorCode_t const E_ASTROFILE_DARKDIMENSIONS      = 0x2010;
+  errorCode_t const E_ASTROFILE_DARKDURATION        = 0x2011;
+  errorCode_t const E_ASTROFILE_DARKTEMPERATURE     = 0x2012;
   errorCode_t const E_ASTROFILE_HDBNOTREGISTERED    = 0x2018;
 
   errorCode_t const E_IMAGECALIBRATION_ARRAYSIZE    = 0x2100;
@@ -103,11 +107,14 @@ namespace ACL
 
   errorCode_t const E_TARGETMP_MPNOTFOUND           = 0x2700;
 
-
   errorCode_t const E_TARGETCOMET_NOTFOUND          = 0x2800;
 
   errorCode_t const E_ASTROTIME_NOSCALE             = 0x3200;
+  errorCode_t const E_ASTROTIME_DUT11973            = 0x3201;
   errorCode_t const E_ASTROTIME_CONSTRUCTTIMET      = 0x3203;
+  errorCode_t const E_ASTROTIME_GREGORAINERROR      = 0x3204;
+  errorCode_t const E_ASTROTIME_TAIUTCFILE          = 0x3205;
+  errorCode_t const E_ASTROTIME_UTCUTIFILE          = 0x3206;
   errorCode_t const E_ASTROTIME_TAIUTC1973          = 0x3207;
 
   errorCode_t const E_UNABLETOOPEN_MPCORB           = 0x3300;

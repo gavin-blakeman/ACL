@@ -128,7 +128,7 @@ namespace ACL
       // Casting operators
 
     operator double() const;
-    operator std::uint64_t() const;
+    explicit operator std::uint64_t() const;
 
       // Other Operators
 

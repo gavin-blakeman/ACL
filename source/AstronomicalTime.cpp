@@ -108,8 +108,8 @@ namespace ACL
 
     if (!ifs)
     {
-      ERRORMESSAGE("Unable to open dAT data file. '" + ifn.string() + "'");
-      ERROR(ACL, 0x3205);    // ASTROTIME: Error opening TAI-UTC file.
+      RUNTIME_ERROR(boost::locale::translate("Unable to open dAT data file. '").str() + ifn.string() + "'",
+                    E_ASTROTIME_TAIUTCFILE, LIBRARYNAME);
     }
     else
     {
@@ -134,17 +134,17 @@ namespace ACL
     };
   }
 
-  /// @brief Loads the dUT1 information from the file and stores it in the CAstroTime class.
-  /// @details The dUT1 value is required to convert UT1 to UTC using the formuala dUT1 = UTC - UT1. All values are converted to
-  ///          Modified Julian Days (MJD).
-  /// @param[in] ifn: Path and file Name of the text file that contains the dUT1 data values.
-  /// @throws ACL::CACLError(0x3206) - ASTROTIME: Error opening UTC-UT1 file.
-  /// @post The dUT1 values are loaded and available to any instance of the CAstroTime class.
-  /// @version 2015-06-20/GGB - Moved function into CAstroTime class.
-  /// @version 2014-12-25/GGB - Removed std::clog error reporting and rely on exception.
-  /// @version 2013-09-16/GGB - Changed MJD to an unsigned long.
-  /// @version 2013/01-26/GGB - Moved into AstroTime file.
-  /// @version 2011-07-07/GGB - Function created.
+  /// @brief        Loads the dUT1 information from the file and stores it in the CAstroTime class.
+  /// @details      The dUT1 value is required to convert UT1 to UTC using the formuala dUT1 = UTC - UT1. All values are converted
+  ///               to Modified Julian Days (MJD).
+  /// @param[in]    ifn: Path and file Name of the text file that contains the dUT1 data values.
+  /// @throws       ACL::CACLError(0x3206) - ASTROTIME: Error opening UTC-UT1 file.
+  /// @post         The dUT1 values are loaded and available to any instance of the CAstroTime class.
+  /// @version      2015-06-20/GGB - Moved function into CAstroTime class.
+  /// @version      2014-12-25/GGB - Removed std::clog error reporting and rely on exception.
+  /// @version      2013-09-16/GGB - Changed MJD to an unsigned long.
+  /// @version      2013/01-26/GGB - Moved into AstroTime file.
+  /// @version      2011-07-07/GGB - Function created.
 
   void CAstroTime::load_dUT1(boost::filesystem::path const &ifn)
   {
@@ -159,8 +159,8 @@ namespace ACL
 
     if (!ifs)
     {
-      ERRORMESSAGE("Unable to open dUT1 data file. '" + ifn.string() + "'");
-      ERROR(ACL, 0x3206);  // ASTROTIME: Error opening UTC-UT1 file.
+      RUNTIME_ERROR(boost::locale::translate("Unable to open dUT1 data file. '").str() + ifn.string() + "'",
+                    E_ASTROTIME_UTCUTIFILE, LIBRARYNAME);
     }
     else
     {
@@ -209,28 +209,28 @@ namespace ACL
 
   FP_t const dTAI = 32.184;   // Delta TAI.
 
-  /// @brief Default constructor for the class.
-  /// @throws None
-  /// @version 2011-07-13/GGB - Function created.
+  /// @brief        Default constructor for the class.
+  /// @throws       None
+  /// @version      2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime() : TT_()
   {
   }
 
-  /// @brief Copy constructor.
-  /// @param[in] toCopy - The instance to copy from.
-  /// @throws std::bad_alloc
-  /// @version 2017-07-31/GGB - Function created.
+  /// @brief        Copy constructor.
+  /// @param[in]    toCopy: The instance to copy from.
+  /// @throws       std::bad_alloc
+  /// @version      2017-07-31/GGB - Function created.
 
   CAstroTime::CAstroTime(CAstroTime const &toCopy) : TT_(toCopy.TT_)
   {
   }
 
-  /// @brief Constructor using a @a std::time_t value.
-  /// @details The @a std::time_t value is considered to be a UTC value.
-  /// @param[in] time The @a std::time_t value returned by a @a std::time(...) function call.
-  /// @throws None.
-  /// @version 2011-12-25/GGB - Function created.
+  /// @brief        Constructor using a @a std::time_t value.
+  /// @details      The @a std::time_t value is considered to be a UTC value.
+  /// @param[in]    time: The @a std::time_t value returned by a @a std::time(...) function call.
+  /// @throws       None.
+  /// @version      2011-12-25/GGB - Function created.
 
   CAstroTime::CAstroTime(time_t const &time) : TT_()
   {
@@ -239,22 +239,22 @@ namespace ACL
     constructClass(jd, ACL::TS_UTC);
   }
 
-  /// @brief Constructor taking a julian day and time scale.
-  /// @param[in] jd: The JD to construct the instance with.
-  /// @param[in] timeScale: The time scale to construct the class with.
-  /// @throws std::bad_alloc
-  /// @version 2011-07-13/GGB - Function created.
+  /// @brief        Constructor taking a julian day and time scale.
+  /// @param[in]    jd: The JD to construct the instance with.
+  /// @param[in]    timeScale: The time scale to construct the class with.
+  /// @throws       std::bad_alloc
+  /// @version      2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime(TJD const &jd, ETimeScale timeScale) : TT_()
   {
     constructClass(jd, timeScale);
   }
 
-  /// @brief Constructor taking one doubles.
-  /// @param[in] jd: The JD to construct the instance with.
-  /// @param[in] timeScale: The time scale to construct the class with.
-  /// @throws std::bad_alloc
-  /// @version 2011-07-13/GGB - Function created.
+  /// @brief        Constructor taking one double.
+  /// @param[in]    jd: The JD to construct the instance with.
+  /// @param[in]    timeScale: The time scale to construct the class with.
+  /// @throws       std::bad_alloc
+  /// @version      2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime(FP_t jd, ETimeScale timeScale) : TT_()
   {
@@ -263,9 +263,9 @@ namespace ACL
     constructClass(JD, timeScale);
   }
 
-  // Constructor taking two doubles.
+  /// @brief        Constructor taking two doubles.
   //
-  // 2011-07-13/GGB - Function created.
+  /// @version      2011-07-13/GGB - Function created.
 
   CAstroTime::CAstroTime(FP_t jd0, FP_t jd1, ETimeScale timeScale) : TT_()
   {
@@ -299,35 +299,37 @@ namespace ACL
     constructClass(jd, timeScale);
   }
 
-  /// @brief Addition operator for class.
-  /// @throws None.
-  /// @version 2016-03-25/GGB - Function created.
+  /// @brief      Addition operator for class.
+  /// @throws     None.
+  /// @version    2016-03-25/GGB - Function created.
 
-  const CAstroTime CAstroTime::operator+(CAstroTime const &rhs) const
+  CAstroTime CAstroTime::operator+(CAstroTime const &rhs) const
   {
     CAstroTime returnValue(*this);
 
     returnValue += rhs;
 
-    return returnValue;
+    return std::move(returnValue);
   }
 
-  /// @brief Subtraction operator for class.
-  /// @throws None.
-  /// @version 2016-03-25/GGB - Function created.
+  /// @brief      Addition to a double.
+  /// @param[in]  rhs: The value to add.
+  /// @throws
+  /// @version    2020-09-16/GGB - Function created.
 
-  const CAstroTime CAstroTime::operator-(const CAstroTime &rhs) const
+  CAstroTime CAstroTime::operator+(FP_t rhs) const
   {
     CAstroTime returnValue(*this);
 
-    returnValue -= rhs;
+    returnValue += rhs;
 
-    return returnValue;
+    return std::move(returnValue);
   }
 
-  /// @brief Addition operator for class.
-  /// @throws None.
-  /// @version 2016-03-25/GGB - Function created.
+  /// @brief      Addition operator for class.
+  /// @param[in]  rhs: The time to add.
+  /// @throws     None.
+  /// @version    2016-03-25/GGB - Function created.
 
   CAstroTime &CAstroTime::operator +=(CAstroTime const &rhs)
   {
@@ -336,9 +338,49 @@ namespace ACL
     return *this;
   }
 
-  /// @brief Subtraction operator for class.
-  /// @throws None.
-  /// @version 2016-03-25/GGB - Function created.
+  /// @brief      Addition operator for class.
+  /// @param[in]  rhs: The time to add.
+  /// @throws     None.
+  /// @version    2020-09-16/GGB - Function created.
+
+  CAstroTime &CAstroTime::operator +=(FP_t rhs)
+  {
+    TT_ += rhs;
+
+    return *this;
+  }
+
+  /// @brief      Subtraction operator for class.
+  /// @throws     None.
+  /// @version    2016-03-25/GGB - Function created.
+
+  CAstroTime CAstroTime::operator-(CAstroTime const &rhs) const
+  {
+    CAstroTime returnValue(*this);
+
+    returnValue -= rhs;
+
+    return returnValue;
+  }
+
+  /// @brief      Subtraction of an FP_t value.
+  /// @param[in]  rhs: The value to subtract.
+  /// @throws
+  /// @version    2020-09-16/GGB - Function created.
+
+  CAstroTime CAstroTime::operator -(FP_t rhs) const
+  {
+    CAstroTime returnValue(*this);
+
+    returnValue -= rhs;
+
+    return returnValue;
+  }
+
+  /// @brief      Subtraction operator for class.
+  /// @param[in]  rhs: The value to subtract.
+  /// @throws     None.
+  /// @version    2016-03-25/GGB - Function created.
 
   CAstroTime &CAstroTime::operator-=(CAstroTime const &rhs)
   {
@@ -347,10 +389,78 @@ namespace ACL
     return *this;
   }
 
-  // Adds the value into the array.
-  //
-  // 2013-01-23/GGB - Changed first parameter to long.
-  // 2011-07-09/GGB - Function created.
+  /// @brief      Subtraction operator for class.
+  /// @param[in]  rhs: The value to subtract.
+  /// @throws     None.
+  /// @version    2020-09-16/GGB - Function created.
+
+  CAstroTime &CAstroTime::operator-=(FP_t rhs)
+  {
+    TT_ -= rhs;
+
+    return *this;
+  }
+
+  /// @brief      Greater than operator.
+  /// @param[in]  rhs: The value to test against.
+  /// @returns    (*this) > rhs
+  /// @throws     None
+  /// @version    2020-09-16/GGB - Function created.
+
+  bool CAstroTime::operator>(CAstroTime const &rhs) const noexcept
+  {
+    return TT_ < rhs.TT_;
+  }
+
+  /// @brief      Less than operator.
+  /// @param[in]  rhs: The value to test against.
+  /// @returns    (*this) < rhs
+  /// @throws     None
+  /// @version    2020-09-16/GGB - Function created.
+
+  bool CAstroTime::operator<(CAstroTime const &rhs) const noexcept
+  {
+    return TT_ < rhs.TT_;
+  }
+
+  /// @brief      Equality than operator.
+  /// @param[in]  rhs: The value to test against.
+  /// @returns    (*this) == rhs
+  /// @throws     None
+  /// @version    2020-09-17/GGB - Function created.
+
+  bool CAstroTime::operator==(CAstroTime const &rhs) const noexcept
+  {
+    return TT_ == rhs.TT_;
+  }
+
+  /// @brief      Greater than equals operator.
+  /// @param[in]  rhs: The value to test against.
+  /// @returns    (*this) >= rhs
+  /// @throws     None
+  /// @version    2020-09-17/GGB - Function created.
+
+  bool CAstroTime::operator >=(CAstroTime const &rhs) const noexcept
+  {
+    return TJD(TT_) >= TJD(rhs.TT_);
+  }
+
+  /// @brief      Less than equals operator.
+  /// @param[in]  rhs: The value to test against.
+  /// @returns    (*this) <= rhs
+  /// @throws     None
+  /// @version    2020-09-17/GGB - Function created.
+
+  bool CAstroTime::operator <=(CAstroTime const &rhs) const noexcept
+  {
+    return TT_ <= rhs.TT_;
+  }
+
+  /// @brief      Adds the value into the array.
+  /// @param[in]  mjd:
+  /// @param[in]  val:
+  /// @version    2013-01-23/GGB - Changed first parameter to long.
+  /// @version    2011-07-09/GGB - Function created.
 
   void CAstroTime::add_dAT(unsigned long mjd, int val)
   {
@@ -367,12 +477,12 @@ namespace ACL
     dUT1Array[mjd] = val;
   }
 
-  /// @brief Constructs the class using a JD and time scale.
-  /// @param[in] jd: The Julian day to construct with.
-  /// @param[in] timeScale: The time scale to use.
-  /// @throws ACL::CACLError(0x3200)
-  /// @throws ACL::CACLCodeError()
-  /// @version 2011-07-13/GGB - Function created.
+  /// @brief      Constructs the class using a JD and time scale.
+  /// @param[in]  jd: The Julian day to construct with.
+  /// @param[in]  timeScale: The time scale to use.
+  /// @throws     ACL::CACLError(0x3200)
+  /// @throws     ACL::CACLCodeError()
+  /// @version    2011-07-13/GGB - Function created.
 
   void CAstroTime::constructClass(const TJD &jd, ETimeScale timeScale)
   {
@@ -401,15 +511,15 @@ namespace ACL
     };
   }
 
-  /// @brief Converts time from one time scale to another.
-  /// @details Use is made of other funcitons and the conversion is done in a two step process.
-  ///           Step 1.  Convert to TT
-  ///           Step 2.  Convert from TT to the required time scale.
-  /// @param[in] jd:
-  /// @param[in] ts1:
-  /// @param[in] ts2:
+  /// @brief      Converts time from one time scale to another.
+  /// @details    Use is made of other funcitons and the conversion is done in a two step process.
+  ///               Step 1.  Convert to TT
+  ///               Step 2.  Convert from TT to the required time scale.
+  /// @param[in]  jd :
+  /// @param[in]  ts1:
+  /// @param[in]  ts2:
   /// @throws
-  /// @version 2011-07-13/GGB - Function created.
+  /// @version    2011-07-13/GGB - Function created.
 
   TJD CAstroTime::convertTime(TJD const &jd, ETimeScale ts1, ETimeScale ts2)
   {
@@ -573,7 +683,7 @@ namespace ACL
 
     if (dUT1Array.count(JD) < 1)
     {
-      ERROR(ACL, 0x3201);    // No dUT for dates less than 1973.
+      RUNTIME_ERROR(boost::locale::translate("No dUT for dates less than 1973."), E_ASTROTIME_DUT11973, LIBRARYNAME);
     }
     else
       returnVal = dUT1Array.find(JD)->second;

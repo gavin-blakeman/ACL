@@ -469,10 +469,10 @@ namespace ACL
     return std::make_pair(static_cast<std::uint32_t>(JD_[0]), static_cast<std::uint32_t>(JD_[1] * 60 * 60 * 24));
   }
 
-  /// @brief Converts the JD into a gregorian date string.
-  /// @throws 0x3204 - ASTROTIME: Error preparing gregorian date string.
-  /// @version 2019-12-15/GGB - Updated to use std::tm.
-  /// @version 2011-12-31/GGB - Function created.
+  /// @brief    Converts the JD into a gregorian date string.
+  /// @throws   0x3204 - ASTROTIME: Error preparing gregorian date string.
+  /// @version  2019-12-15/GGB - Updated to use std::tm.
+  /// @version  2011-12-31/GGB - Function created.
 
   std::string TJD::gregorianDate() const
   {
@@ -492,17 +492,18 @@ namespace ACL
     }
     else
     {
-      ERROR(ACL, 0x3204);    // ASTROTIME: Error preparing gregorian date string.
+      RUNTIME_ERROR(boost::locale::translate("JULIANDAY: Error preparing gregorian date string."), E_ASTROTIME_GREGORAINERROR,
+                    LIBRARYNAME);
     };
   }
 
-  /// @brief Calculates the Julian day from Y, M, D information. Replaces function TJD::SetJD(LPSYSTEMTIME)
-  /// @param[in] nY: The year
-  /// @param[in] nM: The month
-  /// @param[in] nd: The day of the month
-  /// @version 2015-06-01/GGB - Changed name to JD(....)
-  /// @version 2011-07-05/GGB - Use two doubles to store the julian day in line with the SOFA library.
-  /// @version 2009-11-11/GGB - Function created.
+  /// @brief      Calculates the Julian day from Y, M, D information. Replaces function TJD::SetJD(LPSYSTEMTIME)
+  /// @param[in]  nY: The year
+  /// @param[in]  nM: The month
+  /// @param[in]  nd: The day of the month
+  /// @version    2015-06-01/GGB - Changed name to JD(....)
+  /// @version    2011-07-05/GGB - Use two doubles to store the julian day in line with the SOFA library.
+  /// @version    2009-11-11/GGB - Function created.
 
   void TJD::JD(unsigned int nY, unsigned int nM, unsigned int nD) noexcept
   {
@@ -513,7 +514,7 @@ namespace ACL
     else
     {
       normalise();
-    }
+    };
   }
 
   /// @brief        Returns the JD referred to 0h UT. Must always be 0.5 ending on the JD.

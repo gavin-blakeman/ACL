@@ -60,7 +60,6 @@
 #ifndef ACL_NOBOOST
 // Boost Library
 
-#include <boost/shared_array.hpp>
 #include <boost/filesystem.hpp>
 #endif // ACL_NOBOOST
 
@@ -92,13 +91,13 @@ namespace ACL
     TS_TCB
   };
 
-  /// @brief The CAstroTime class stores a time value in a standard format.
-  /// @details The class allows storing time in a standard format and converting to different time scales on the fly.
-  /// This is valuable as the class just needs to be constructed with the correct time value and time scale @c ETimeScale and then
-  /// different time scales can be retrieved by using the relevant functions.<br>
-  /// The values of dUT1 and dAT need to be loaded into the class at runtime.
-  /// All time values are stored in the member TT_ as a terrestrial time (TT) value.
-  /// @pre Ensure the dUT1 and dAT values are loaded.
+  /// @brief    The CAstroTime class stores a time value in a standard format.
+  /// @details  The class allows storing time in a standard format and converting to different time scales on the fly.
+  ///           This is valuable as the class just needs to be constructed with the correct time value and time scale @c ETimeScale
+  ///           and then different time scales can be retrieved by using the relevant functions.<br>
+  ///           The values of dUT1 and dAT need to be loaded into the class at runtime. All time values are stored in the member
+  ///           TT_ as a terrestrial time (TT) value.
+  /// @pre      Ensure the dUT1 and dAT values are loaded.
 
   class CAstroTime
   {
@@ -134,10 +133,21 @@ namespace ACL
 
       // Operators
 
-    const CAstroTime operator+(CAstroTime const &) const;
-    const CAstroTime operator-(CAstroTime const &) const;
+    CAstroTime operator+(CAstroTime const &) const;
+    CAstroTime operator+(FP_t) const;
     CAstroTime &operator +=(CAstroTime const &);
+    CAstroTime &operator+=(FP_t);
+
+    CAstroTime operator-(CAstroTime const &) const;
+    CAstroTime operator-(FP_t) const;
     CAstroTime &operator-=(CAstroTime const &);
+    CAstroTime &operator-=(FP_t);
+
+    bool operator>(CAstroTime const &) const noexcept;
+    bool operator<(CAstroTime const &) const noexcept;
+    bool operator==(CAstroTime const &) const noexcept;
+    bool operator >=(CAstroTime const &) const noexcept;
+    bool operator <=(CAstroTime const &) const noexcept;
 
 #ifndef ACL_NOBOOST
     static void load_dAT(boost::filesystem::path const &);

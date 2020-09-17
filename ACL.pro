@@ -130,7 +130,6 @@ SOURCES += \
     source/telescope.cpp \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
-    source/error.cpp \
     source/MPCORB.cpp \
     source/targetComet.cpp \
     source/CometEls.cpp \

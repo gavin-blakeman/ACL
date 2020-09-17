@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -45,8 +45,11 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/PhotometryObservation.h"
+#include "include/PhotometryObservation.h"
 
+  // Miscellaneous library header files.
+
+#include "boost/locale.hpp"
 #include <GCL>
 
 namespace ACL
@@ -57,18 +60,18 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// @brief Constructor for class.
-  /// @param[in] name: The name to assign to the object.
-  /// @throws None.
-  /// @version 2013-04-01/GGB - Function created.
+  /// @brief      Constructor for class.
+  /// @param[in]  name: The name to assign to the object.
+  /// @throws     None.
+  /// @version    2013-04-01/GGB - Function created.
 
   CPhotometryObservation::CPhotometryObservation(std::string const &name) : CObservation(name)
   {
   }
 
-  /// Copy constructor for class.
+  /// @brief      Copy constructor for class.
   //
-  // 2013-06-08/GGB - Function created.
+  /// @version    2013-06-08/GGB - Function created.
 
   CPhotometryObservation::CPhotometryObservation(CPhotometryObservation const &toCopy) : CObservation(toCopy),
     sourceADU_(toCopy.sourceADU_), sourceArea_(toCopy.sourceArea_), skyADU_(toCopy.skyADU_), skyArea_(toCopy.skyArea_),
@@ -76,10 +79,10 @@ namespace ACL
   {
   }
 
-  /// @brief Constructor taking a CTargetAstronomy instance.
-  /// @param[in] ta: The target to use
-  /// @throws None.
-  /// @version 2018-10-20/GGB - Function created.
+  /// @brief      Constructor taking a CTargetAstronomy instance.
+  /// @param[in]  ta: The target to use
+  /// @throws     None.
+  /// @version    2018-10-20/GGB - Function created.
 
   CPhotometryObservation::CPhotometryObservation(std::shared_ptr<CTargetAstronomy> ta) : CObservation(std::move(ta))
   {
@@ -96,38 +99,33 @@ namespace ACL
     return std::make_unique<CPhotometryObservation>(*this);
   }
 
-  /// @brief Calculates and returns the instrument magnitude
+  /// @brief    Calculates and returns the instrument magnitude
   /// @throws EXCEPTIONS: 0x2500 - PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude.
-  /// @returns The instrument magniture
-  /// @version 2013-04-01/GGB - Function created.
+  /// @returns  The instrument magniture
+  /// @version  2013-04-01/GGB - Function created.
 
   std::optional<FP_t> CPhotometryObservation::instrumentMagnitude()
   {
-    if (exposure_ == 0)
-    {
-      ERROR(ACL, 0x2500); // PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude.
-    }
-    else
-    {
-      FP_t value = sourceADU_ - (sourceArea_ * getSkyADU());
-      value = -2.5 * std::log(value / exposure_);
-      std::optional<FP_t> returnValue(value);
-      return returnValue;
-    };
+    RUNTIME_ASSERT(exposure_ != 0, boost::locale::translate("PHOTOMETRY: Cannot have exposure == 0 when calculating magnitude."));
+
+    FP_t value = sourceADU_ - (sourceArea_ * getSkyADU());
+    value = -2.5 * std::log(value / exposure_);
+    std::optional<FP_t> returnValue(value);
+    return returnValue;
   }
 
-  /// Calculates the Magnitude error
+  /// @brief      Calculates the Magnitude error
   //
-  // 2012-11-16/GGB - Function created.
+  /// @version    2012-11-16/GGB - Function created.
 
   FP_t CPhotometryObservation::magnitudeError() const
   {
     return (1.0857 / getSNR());
   }
 
-  // Calculates and returns the Sky ADU count from the raw data.
+  /// @brief      Calculates and returns the Sky ADU count from the raw data.
   //
-  // 2013-04-07/GGB - Function created.
+  /// @version    2013-04-07/GGB - Function created.
 
   FP_t CPhotometryObservation::getSkyADU() const
   {
