@@ -128,41 +128,6 @@ namespace ACL
     SSO_PLUTO
   };
 
-  /*!
-   * @brief The CWeatherClass is used to store weather information.
-   * @todo Use boost::optional for the data member (Bug 11)
-   */
-
-  class CWeather
-  {
-  private:
-    std::optional<PCL::CTemperature> temperature_;     ///< The atmospheric temperature. (C)
-    std::optional<PCL::CPressure> pressure_;           ///< The atmospheric pressure. (Pa)
-    std::optional<float> RH_;                          ///< The relative humidity. (%) (This never needs to be a double.
-
-  protected:
-  public:
-    CWeather();
-    CWeather(CWeather const &);
-    CWeather(PCL::CTemperature const &);
-    CWeather(PCL::CTemperature const &, PCL::CPressure const &);
-    CWeather(PCL::CTemperature const &, PCL::CPressure const &, float const &);
-
-    bool operator ==(CWeather const &) const;
-
-      // Value setter functions
-
-    void temperature(PCL::CTemperature const &);
-    void pressure(PCL::CPressure const &);
-    void RH(float const &);
-
-      // Value retrieval functions
-
-    std::optional<PCL::CTemperature> const &temperature() const;
-    std::optional<PCL::CPressure> const &pressure() const;
-    std::optional<float> const &RH() const;
-  };
-
   class CEarthOrientationData
   {
     struct SPole
@@ -181,19 +146,6 @@ namespace ACL
     static bool getData(CAstroTime const &, FP_t &, FP_t &);
 
   };
-
-#if __cplusplus >= 201402L
-  typedef std::shared_ptr<CObservatory> PObservationSite;
-  typedef std::shared_ptr<CWeather> PWeather;
-#else
-  #ifdef ACL_NOBOOST
-  typedef std::auto_ptr<CObservatory> PObservationSite;
-  typedef std::auto_ptr<CWeather> PWeather;
-  #else // ACL_NOBOOST
-    typedef boost::shared_ptr<CObservatory> PObservationSite;
-    typedef boost::shared_ptr<CWeather> PWeather;
-  #endif  // ACL_NOBOOST
-#endif // _cplusplus
 
 } // namespace ACL
 

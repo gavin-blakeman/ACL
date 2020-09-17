@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -56,15 +56,16 @@
 #include <memory>
 #include <vector>
 
+  // Miscellaneous library header files.
+
+#include <MCL>
+
   // ACL library header files
 
 #include "AstroClass.h"
 #include "AstrometryObservation.h"
 #include "AstronomicalCoordinates.h"
-
-  // Miscellaneous library header files.
-
-#include <MCL>
+#include "weather.h"
 
 namespace ACL
 {
@@ -94,7 +95,7 @@ namespace ACL
     DAstrometryStore _targets;
     PAstroTime observationTime;                               // Observation date/time (TT)
     std::unique_ptr<CGeographicLocation> observationLocation; ///< Geographic location of the observation
-    PWeather observationWeather;
+    std::unique_ptr<CWeather> observationWeather;
     DAstrometryStore::iterator referenceIterator;
     DAstrometryStore::iterator targetIterator;
 
@@ -142,11 +143,11 @@ namespace ACL
     virtual void setObservationLocation(std::unique_ptr<CGeographicLocation>);
 
     virtual void setObservationParameters(PAstroTime JD, double temperature, double pressure);
-    virtual void setObservationParameters(PAstroTime JD, PWeather weather);
+    virtual void setObservationParameters(PAstroTime JD, std::unique_ptr<CWeather> weather);
 
     virtual void setObservationDate(PAstroTime const JD) {observationTime = JD;}
 
-    virtual void setWeather(PWeather const weather);
+    virtual void setWeather(std::unique_ptr<CWeather>  weather);
 
     virtual void setPlateCenter(CAstronomicalCoordinates const &pltCenter);
 

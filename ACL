@@ -10,7 +10,7 @@
 // AUTHOR:              Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2019 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -24,7 +24,8 @@
 //                      You should have received a copy of the GNU General Public License along with ACL.  If not,
 //                      see <http://www.gnu.org/licenses/>.
 //
-// HISTORY:             2018-09-13 GGB - Updated library links.
+// HISTORY:             2020-09-17 GGB - Moved CWeather into the 'weather' files.
+//                      2018-09-13 GGB - Updated library links.
 //                      2018-08-21 GGB - Added RST support
 //                      2016-04-11 GGB - Added FITSKeyword hierarchy
 //                      2015-09-22 GGB - astroManager 2015.09 release
@@ -159,4 +160,5 @@
 #include "include/targetMinorPlanet.h"
 #include "include/targetStellar.h"
 #include "include/telescope.h"
+#include "include/weather.h"
 #endif

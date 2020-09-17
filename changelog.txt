@@ -1,6 +1,7 @@
 ﻿2020-09
 -------
-CHANGE:     TJD pre-incement return value changed to refernce from copy.
+MOVE:       CWeather class into weather.h and weather.cpp
+CHANGE:     TJD pre-incement return value changed to reference from copy.
 ADD:        TJD '==', '>', '<" operators.
 
 2020-06

@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2017-220 Gavin Blakeman.
+//                      Copyright 2017-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -57,15 +57,16 @@ namespace ACL
     FP_t longitude_;              ///< D:M:S as D.M/60+s/3600 (-ve -> E, +ve -> W) Limits +-180º
     std::int16_t altitude_;				///< Altitude (m) Limits -100->32000
 
+    CGeographicLocation(CGeographicLocation &&) = delete;
     void Normalise();
 
   protected:
 
   public:
-    /// @brief Constructor
-    /// @throws None.
-    /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-    /// @version 2009-09-01/GGB - Function created
+    /// @brief    Constructor
+    /// @throws   None.
+    /// @version  2013-06-22/GGB - Removed the mutable values for tracking the validity.
+    /// @version  2009-09-01/GGB - Function created
 
     CGeographicLocation() : latitude_(0), longitude_(0), altitude_(0) {}
     CGeographicLocation(CGeographicLocation const &);
@@ -81,7 +82,6 @@ namespace ACL
     virtual std::unique_ptr<CGeographicLocation> createCopy() const;
 
     void setLocation(FP_t, FP_t, int) ;
-    void setLocation(FP_t, FP_t, int, FP_t);
 
     void latitude(FP_t latitude) { latitude_ = latitude; }
     FP_t latitude() const noexcept;

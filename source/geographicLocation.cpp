@@ -42,24 +42,27 @@
 
 namespace ACL
 {
-  /// @brief Copy constructor.
-  /// @param[in] toCopy - The instance to make a copy of.
-  /// @throws std::bad_alloc
-  /// @version 2017-08-26/GGB - Function created.
+  /// @brief      Copy constructor.
+  /// @param[in]  toCopy - The instance to make a copy of.
+  /// @throws     std::bad_alloc
+  /// @version    2017-08-26/GGB - Function created.
 
   CGeographicLocation::CGeographicLocation(CGeographicLocation const &toCopy) : latitude_(toCopy.latitude_),
     longitude_(toCopy.longitude_), altitude_(toCopy.altitude_)
   {
   }
 
-  /// @brief Constructor.
-  /// @details Sets the values. The values are checked and if out of range, an exception will be thrown.
-  ///          (Prior revisions normalised the values, rather than throwing an exception, but with the change to ensuring that
-  ///           the values are valid, it is better to throw
-  /// @throws GCL::CRuntimeAssert(ACL)
-  /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-  /// @version 2012-01-02/GGB - Added support for validating locations. Removed the normalisation of values.
-  /// @version 2011-07-11/GGB - Function created.
+  /// @brief      Constructor.
+  /// @details    Sets the values. The values are checked and if out of range, an exception will be thrown.
+  ///             (Prior revisions normalised the values, rather than throwing an exception, but with the change to ensuring that
+  ///             the values are valid, it is better to throw
+  /// @param[in]  latitude: The latitude of the location.
+  /// @param[in]  longitude: The longiture of the location.
+  /// @param[in]  altitude: The altitude of the location.
+  /// @throws     GCL::CRuntimeAssert(ACL)
+  /// @version    2013-06-22/GGB - Removed the mutable values for tracking the validity.
+  /// @version    2012-01-02/GGB - Added support for validating locations. Removed the normalisation of values.
+  /// @version    2011-07-11/GGB - Function created.
 
   CGeographicLocation::CGeographicLocation(FP_t latitude, FP_t longitude, int altitude)
   {
@@ -71,13 +74,13 @@ namespace ACL
     altitude_ = altitude;
   }
 
-  /// @brief Copy operator for CGeographicLocation.
-  /// @param[in] toCopy - The instance to make a copy of.
-  /// @throws None.
-  /// @version 2017-08-04/GGB - Removed timeZone.
-  /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-  /// @version 2012-01-02/GGB - Added support for testing if valid.
-  /// @version 2011-07-11/GGB - Function created.
+  /// @brief      Copy operator for CGeographicLocation.
+  /// @param[in]  toCopy: The instance to make a copy of.
+  /// @throws     None.
+  /// @version    2017-08-04/GGB - Removed timeZone.
+  /// @version    2013-06-22/GGB - Removed the mutable values for tracking the validity.
+  /// @version    2012-01-02/GGB - Added support for testing if valid.
+  /// @version    2011-07-11/GGB - Function created.
 
   CGeographicLocation &CGeographicLocation::operator=(ACL::CGeographicLocation const &toCopy)
   {
@@ -91,14 +94,14 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Equality operator. Checks that all the values are the same.
-  /// @param[in] rhs - The location to check against.
-  /// @returns true - The locations are the same
-  /// @returns false - The locations are not the same.
-  /// @throws None.
-  /// @version 2017-08-04/GGB - Removed timeZone.
-  /// @version 2017-07-22/GGB - Added noexcept
-  /// @version 2011-07-16/GGB - Function created.
+  /// @brief      Equality operator. Checks that all the values are the same.
+  /// @param[in]  rhs: The location to check against.
+  /// @returns    true - The locations are the same
+  /// @returns    false - The locations are not the same.
+  /// @throws     None.
+  /// @version    2017-08-04/GGB - Removed timeZone.
+  /// @version    2017-07-22/GGB - Added noexcept
+  /// @version    2011-07-16/GGB - Function created.
 
   bool CGeographicLocation::operator==(CGeographicLocation const &rhs) const noexcept
   {
@@ -107,33 +110,33 @@ namespace ACL
              (altitude_ == rhs.altitude_) );
   }
 
-  /// @brief Returns the altitude, if it is valid.
-  /// @returns The altitude in meters.
-  /// @version 2017-07-22/GGB - Added noexcept
-  /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-  /// @version 2012-01-02/GGB - Function created.
+  /// @brief      Returns the altitude, if it is valid.
+  /// @returns    The altitude in meters.
+  /// @version    2017-07-22/GGB - Added noexcept
+  /// @version    2013-06-22/GGB - Removed the mutable values for tracking the validity.
+  /// @version    2012-01-02/GGB - Function created.
 
   std::int16_t CGeographicLocation::altitude() const noexcept
   {
     return altitude_;
   }
 
-  /// @brief Creates a copy of this.
-  /// @returns A copy of *this.
-  /// @throws std::bad_alloc
-  /// @version 2018-10-20/GGB - Function created.
+  /// @brief      Creates a copy of this.
+  /// @returns    A copy of *this.
+  /// @throws     std::bad_alloc
+  /// @version    2018-10-20/GGB - Function created.
 
   std::unique_ptr<CGeographicLocation> CGeographicLocation::createCopy() const
   {
     return std::make_unique<CGeographicLocation>(*this);
   }
 
-  /// @brief Returns the latitude value - if it is valid.
-  /// @returns The latitude (d + m/60 + s/3600)
-  /// @throws None
-  /// @version 2017-07-22/GGB - Added noexcept
-  /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-  /// @version 2012-01-02/GGB - Function created
+  /// @brief      Returns the latitude value - if it is valid.
+  /// @returns    The latitude (d + m/60 + s/3600)
+  /// @throws     None
+  /// @version    2017-07-22/GGB - Added noexcept
+  /// @version    2013-06-22/GGB - Removed the mutable values for tracking the validity.
+  /// @version    2012-01-02/GGB - Function created
 
   FP_t CGeographicLocation::latitude() const noexcept
   {
@@ -165,20 +168,22 @@ namespace ACL
     longitude_ =  std::fmod(longitude_, 180);
   }
 
-  /// @brief Sets the location to the passed values.
-  /// @param[in] latitude - The latitude of the location
-  /// @param[in] longitude - The longitude of the location.
-  /// @param[in] altitude - The altitude of the location.
-  /// @throws None.
-  /// @version 2017-07-22/GGB - Just call the full setLocation function.
-  /// @version 2013-06-22/GGB - Removed the mutable values for tracking the validity.
-  /// @version 2012-01-02/GGB - Added support for validity
-  /// @version 2009-10-24/GGB - Added auto-calc of TimeZone.
-  /// @version 2009-10-06/GGB - Function created.
+  /// @brief      Sets the location to the passed values.
+  /// @param[in]  latitude: The latitude of the location
+  /// @param[in]  longitude: The longitude of the location.
+  /// @param[in]  altitude: The altitude of the location.
+  /// @throws     None.
+  /// @version    2017-07-22/GGB - Just call the full setLocation function.
+  /// @version    2013-06-22/GGB - Removed the mutable values for tracking the validity.
+  /// @version    2012-01-02/GGB - Added support for validity
+  /// @version    2009-10-24/GGB - Added auto-calc of TimeZone.
+  /// @version    2009-10-06/GGB - Function created.
 
   void CGeographicLocation::setLocation(FP_t latitude, FP_t longitude, int altitude)
   {
-    setLocation(latitude, longitude, altitude);
+    latitude_ = latitude;
+    longitude_ = longitude;
+    altitude_ = altitude;
   }
 
 } // namespace ACL

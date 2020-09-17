@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2016-2018 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -50,12 +50,12 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeywordFloat.h"
+#include "include/FITSKeywordFloat.h"
 
 namespace ACL
 {
   /// @brief Copy constructor.
-  /// @param[in] toCopy - The instance to copy.
+  /// @param[in] toCopy: The instance to copy.
   /// @throws None.
   /// @version 2016-04-09/GGB - Function created.
 
@@ -82,7 +82,7 @@ namespace ACL
   }
 
   /// @brief Copy operator
-  /// @param[in] rhs - Instance to copy.
+  /// @param[in] rhs: Instance to copy.
   /// @version 2016-04-09/GGB - Function created.
 
   CFITSKeyword &CFITSKeywordFloat::operator=(CFITSKeywordFloat  const &rhs)

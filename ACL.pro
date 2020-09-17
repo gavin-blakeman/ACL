@@ -141,7 +141,8 @@ SOURCES += \
     source/targetMajorPlanet.cpp \
     source/targetMinorPlanet.cpp \
     source/targetStellar.cpp \
-    source/gregorianDate.cpp
+    source/gregorianDate.cpp \
+    source/weather.cpp
 
 HEADERS += \
     include/wcs.h \
@@ -224,7 +225,8 @@ HEADERS += \
     include/targetMajorPlanet.h \
     include/targetStellar.h \
     include/targetMinorPlanet.h \
-    include/gregorianDate.h
+    include/gregorianDate.h \
+    include/weather.h
 
 OTHER_FILES += \
     ACL \

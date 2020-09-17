@@ -71,7 +71,7 @@
 #include "geographicLocation.h"
 #include "photometry.h"
 #include "RST.h"
-
+#include "weather.h"
 
 
 namespace ACL

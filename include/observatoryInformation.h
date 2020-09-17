@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2017-2018 Gavin Blakeman.
+//                      Copyright 2017-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -39,9 +39,15 @@
 #ifndef ACL_OBSERVATORYINFORMATION_H
 #define ACL_OBSERVATORYINFORMATION_H
 
-#include "geographicLocation.h"
+  // Standard C++ library header files
 
-  // Standard libraries
+#include <cstdint>
+#include <string>
+
+  // ACL library header files
+
+#include "config.h"
+#include "geographicLocation.h"
 
 namespace ACL
 {

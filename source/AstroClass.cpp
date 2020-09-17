@@ -57,12 +57,12 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroClass.h"
+#include "include/AstroClass.h"
 
   // ACL library header files
 
-#include "../include/constants.h"
-#include "../include/AstroFunctions.h"
+#include "include/constants.h"
+#include "include/AstroFunctions.h"
 
   // Miscellaneous library header files.
 
@@ -76,154 +76,7 @@ namespace ACL
   //
   //*******************************************************************************************************************************
 
-  /// @brief Default constructor
-  /// @throws Nothing.
-  /// @version 2015-06-24/GGB - Added rhValid initialisation.
-  /// @version 2011-07-02/GGB - Function created.
 
-  CWeather::CWeather() : temperature_(), pressure_(), RH_()
-  {
-  }
-
-  /// @brief Copy constructor
-  /// @param[in] toCopy: The instance to make a copy of.
-  /// @throws std::bad_alloc
-  /// @version 2017-08-26/GGB - Function created.
-
-  CWeather::CWeather(CWeather const &toCopy) : temperature_(toCopy.temperature_), pressure_(toCopy.pressure_), RH_(toCopy.RH_)
-  {
-  }
-
-  /// @brief Class constructor taking a temperature value.
-  /// @param[in] nt: The temperature to associate with the class.
-  /// @throws None.
-  /// @version 2015-09-17/GGB - Updated to use PCL classes as storage and interface types.
-  /// @version 2011-07-15/GGB - Function created.
-
-  CWeather::CWeather(PCL::CTemperature const &nt) : temperature_(), pressure_(), RH_()
-  {
-    temperature(nt);
-  }
-
-  /// @brief Class constructor.
-  /// @param[in] nt: The temperature to associate with the instance.
-  /// @param[in] np: The pressure to associate with the instance.
-  /// @throws None.
-  /// @version 2015-09-17/GGB - Updated to use PCL classes as storage and interface types.
-  /// @version 2011-07-02/GGB - Function created.
-
-  CWeather::CWeather(PCL::CTemperature const &nt, PCL::CPressure const &np) : temperature_(0), pressure_(0), RH_(0)
-  {
-    temperature(nt);
-    pressure(np);
-  }
-
-  /// @brief Constructor for 3 weather parameters.
-  /// @param[in] nt: The temperature to associate with the instance.
-  /// @param[in] np: The pressure to associate with the instance.
-  /// @param[in] rh: The RH value.
-  /// @throws None.
-  /// @version 2011-07-14/GGB - Function created
-
-  CWeather::CWeather(PCL::CTemperature const &nt, PCL::CPressure const &np, float const &rh) :temperature_(0), pressure_(0)
-  {
-    temperature(nt);
-    pressure(np);
-    RH(rh);
-  }
-
-  /// @brief Equality check for a weather object.
-  /// @throws None.
-  /// @version 2011-07-17/GGB - Function created.
-
-  bool CWeather::operator ==(ACL::CWeather const &rhs) const
-  {
-    if (this == &rhs)
-    {
-      return true;          // Same object
-    }
-    else
-    {
-      return ( (temperature_ == rhs.temperature_) &&
-               (pressure_ == rhs.pressure_) &&
-               (RH_ == rhs.RH_) );
-    };
-  }
-
-  /// @brief Returns the pressure value.
-  /// @returns The pressure
-  /// @throws None.
-  /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
-  /// @version 2015-09-17/GGB - Updated to use PCL::CPressure.
-  /// @version 2011-07-09/GGB - Function created.
-
-  std::optional<PCL::CPressure> const &CWeather::pressure() const
-  {
-    return pressure_;
-  }
-
-  /// @brief set the value of the pressure.
-  /// @param[in] np - New Pressure
-  /// @throws None.
-  /// @version 2016-03-27/GGB - Function created.
-
-  void CWeather::pressure(PCL::CPressure const &np)
-  {
-    if (np(PCL::PU::PA) >= 0 && np(PCL::PU::PA) <= 1000000)
-    {
-      pressure_ = np;
-    };
-  }
-
-  /// @brief Returns the relative humidity value.
-  /// @returns The RH (%)
-  /// @throws None
-  /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
-  /// @version 2011-07-09/GGB - Function created.
-
-  std::optional<float> const &CWeather::RH() const
-  {
-    return RH_;
-  }
-
-  /// @brief Setter function for RH
-  /// @param[in] rh - The relative humidity.
-  /// @throws None.
-  /// @version 2016-03-27/GGB - Function created.
-
-  void CWeather::RH(float const &rh)
-  {
-    if ( (rh >= 0) && (rh <= 1) )
-    {
-      RH_ = rh;
-    };
-  }
-
-  /// @brief Returns the temperaure value.
-  /// @returns The temperature (K)
-  /// @throws None.
-  /// @version 2016-03-23/GGB - Changed return value to boost::optional<> (Bug 11)
-  /// @version 2011-07-09/GGB - Function created.
-
-  std::optional<PCL::CTemperature> const &CWeather::temperature() const
-  {
-    return temperature_;
-  }
-
-  /// @brief Set the temperature.
-  /// @param[in] nt: Temperature.
-  /// @throws None.
-  /// @version 2016-03-27/GGB - Function created.
-
-  void CWeather::temperature(PCL::CTemperature const &nt)
-  {
-    double temp = nt(PCL::TU_C);
-
-    if ((nt(PCL::TU_C) >= -100.0) && (nt(PCL::TU_C) <= 100.0) )
-    {
-      temperature_ = nt;
-    };
-  }
 
   //*******************************************************************************************************************************
   //

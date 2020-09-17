@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -59,14 +59,15 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/AstroImagePoly.h"
+#include "include/AstroImagePoly.h"
 
   // Standard C++ libraries
 
 #include <limits>
 
-  // Other libraries
+  // Miscellaneous library header files
 
+#include "boost/locale.hpp"
 #include <GCL>
 
 namespace ACL
@@ -95,16 +96,16 @@ namespace ACL
    {
    }
 
-  /// @brief Reads a polychromatic image from FITS file.
-  /// @param[in] file - The FITS file to read from.
-  /// @details The function cycles through loading the imageplanes one at a time, until they are all loaded.
-  /// @throws std::bad_alloc
-  /// @version 2015-08-13/GGB - Updated to use cfitsio.
-  /// @version 2015-07-31/GGB - Function created.
+  /// @brief      Reads a polychromatic image from FITS file.
+  /// @param[in]  file: The FITS file to read from.
+  /// @details    The function cycles through loading the imageplanes one at a time, until they are all loaded.
+  /// @throws     std::bad_alloc
+  /// @version    2015-08-13/GGB - Updated to use cfitsio.
+  /// @version    2015-07-31/GGB - Function created.
 
   void CAstroImagePoly::readFromFITS(fitsfile *file)
   {
-    RUNTIME_ASSERT(file != nullptr, "The parameter file cannot be a nullptr.");
+    RUNTIME_ASSERT(file != nullptr, boost::locale::translate("The parameter file cannot be a nullptr."));
 
 //    AXIS_t dimZ = hdu->axis(2);      // Must be positive
 //    AXIS_t axis;

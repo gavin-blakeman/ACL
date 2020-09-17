@@ -36,21 +36,6 @@ public:
   const char *GetObserverInit(void);
 };
 
-class TTelecope
-{
-private:
-  char TelescopeName[MAXTELESCOPENAME];
-  double dAperture;
-  double dFRatio;
-protected:
-public:
-  TTelescope(void);
-  TTelescope(const char *, double, double);
-  double Aperture(void);
-  double FRatio(void);
-  const char *TelescopeName(void);
-};
-
 class TInstrument
 {
 private:

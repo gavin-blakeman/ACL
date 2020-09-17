@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2010-2018 Gavin Blakeman.
+//                      Copyright 2010-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -38,7 +38,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/photometryFunctions.h"
+#include "include/photometryFunctions.h"
 
   // Standard C++ library header files.
 
@@ -46,7 +46,7 @@
 
   // ACL library header files.
 
-#include "../include/error.h"
+#include "include/error.h"
 
 namespace ACL
 {
