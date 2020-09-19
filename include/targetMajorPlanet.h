@@ -54,21 +54,20 @@
 
 namespace ACL
 {
+  enum EPlanets
+  {
+    Mercury = 0,      // Note these enums are used for indexing the static array used for parameters. Do not change order!
+    Venus,
+    Mars,
+    Jupiter,
+    Saturn,
+    Uranus,
+    Neptune,
+    Pluto
+  };
+
   class CTargetMajorPlanet : public CTargetAstronomy
   {
-  public:
-    enum EPlanets
-    {
-      Mercury = 0,      // Note these enums are used for indexing the static array used for parameters. Do not change order!
-      Venus,
-      Mars,
-      Jupiter,
-      Saturn,
-      Uranus,
-      Neptune,
-      Pluto
-    };
-
   private:
     EPlanets planet;
 
@@ -83,6 +82,7 @@ namespace ACL
       // Factory functions
 
     virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
+    static std::unique_ptr<CTargetMajorPlanet> create(EPlanets const &);
 
       // Information functions
 
@@ -93,10 +93,6 @@ namespace ACL
     virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
-
-      // Factory functions
-
-    static std::unique_ptr<CTargetMajorPlanet> create(EPlanets const &);
 
       // Information functions
 

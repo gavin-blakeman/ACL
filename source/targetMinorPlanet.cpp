@@ -50,6 +50,7 @@
 
 #include "boost/algorithm/string.hpp"
 #include "boost/filesystem/fstream.hpp"
+#include "boost/lexical_cast.hpp"
 #include "boost/locale.hpp"
 #include <GCL>
 
@@ -59,26 +60,63 @@
 
 namespace ACL
 {
+  boost::filesystem::path CTargetMinorPlanet::filePath;
+  boost::filesystem::path CTargetMinorPlanet::fileName("MPCORB.DAT");
+
+  struct SColumnData
+  {
+    std::uint_least8_t indexStart;
+    std::uint_least8_t indexEnd;
+  };
+
+  // Start stop of all columns. NOTE: This is one offset, not zero offset. The difference is handled in the code.
+  // This has been intentionally done as the MPCORB format specifies columns wth a 1 offset.
+  static std::vector<SColumnData> columns = { {   1,   7},
+                                              {   9,  13},
+                                              {  15,  19},
+                                              {  21,  25},
+                                              {  27,  35},
+                                              {  38,  46},
+                                              {  49,  57},
+                                              {  60,  68},
+                                              {  71,  79},
+                                              {  81,  91},
+                                              {  93, 103},
+                                              { 106, 106},
+                                              { 108, 116},
+                                              { 118, 122},
+                                              { 124, 126},
+                                              { 128, 136},
+                                              { 138, 141},
+                                              { 143, 145},
+                                              { 147, 149},
+                                              { 151, 160},
+                                              { 162, 165},
+                                              { 167, 194},
+                                              { 195, 202}
+                                            };
+
+
   /// @brief        Constructor constructs from an MPCORB 1 line record.
-  /// @param[in]    mpcorbPath: The path and filename for the MPCORB.DAT file.
   /// @param[in]    targetName: The name of the target.
   /// @throws       CRuntimeError(E_TARGETMP_MPNOTFOUND)
+  /// @version      2020-09-19/GGB - Removed fileName parameter.
   /// @version      2018-09-02/GGB - Added fileName parameter to constructor.
   /// @version      2016-03-25/GGB - Function created.
 
-  CTargetMinorPlanet::CTargetMinorPlanet(boost::filesystem::path const &fileName, std::string const &targetName)
+  CTargetMinorPlanet::CTargetMinorPlanet(std::string const &targetName)
     : CTargetAstronomy(targetName), i_(0), OMEGA_(0), omega_(0), M0_(0), n_(0)
   {
-    if (!MPCORB::loadMP(fileName, targetName, elements_))
+    if (!loadMPData(targetName, elements_))
     {
       RUNTIME_ERROR(boost::locale::translate("TargetMinorPlanet: Minor Planet specified not found."), E_TARGETMP_MPNOTFOUND, "ACL");
     };
   }
 
-  /// @brief Copy constructor.
-  /// @param[in] toCopy: Instance to make a copy of.
-  /// @throws None.
-  /// @version 2018-09-15/GGB - Function created.
+  /// @brief        Copy constructor.
+  /// @param[in]    toCopy: Instance to make a copy of.
+  /// @throws       None.
+  /// @version      2018-09-15/GGB - Function created.
 
   CTargetMinorPlanet::CTargetMinorPlanet(CTargetMinorPlanet const &toCopy) : CTargetAstronomy(toCopy),
     designation_(toCopy.designation_), elements_(toCopy.elements_), epoch_(toCopy.epoch_), M0_(toCopy.M0_), omega_(toCopy.omega_),
@@ -88,12 +126,53 @@ namespace ACL
 
   /// @brief Creates a copy of this instance.
   /// @returns Pointer to a new copy.
-  /// @throws std::bad_alloc
+  /// @throws std::bad_aSlloc
   /// @version 2018-09-15/GGB - Function created.
 
   std::unique_ptr<CTargetAstronomy> CTargetMinorPlanet::createCopy() const
   {
     std::unique_ptr<CTargetAstronomy> returnValue(new CTargetMinorPlanet(*this));
+
+    return returnValue;
+  }
+
+  /// @brief      Searches the MPCORB file to find the specified object.
+  /// @param[in]  mpName: The name of the minor planet, can be designation, or name. or number.
+  /// @param[out] elements: The elements of the minor planet.
+  /// @returns    true - The MP was found.
+  /// @returns    false - The MP was not found.
+  /// @throws     0x3300: Unable to Open MPCORB.DAT
+  /// @version    2018-08-25/GGB - Function created.
+
+  bool CTargetMinorPlanet::loadMPData(std::string const &mpName, SMPCORB &elements)
+  {
+    std::string szLine;
+    bool returnValue = false;
+    boost::filesystem::ifstream ifs(fileName, std::ios::in);
+
+    if (!ifs)
+    {
+      RUNTIME_ERROR("MPCORB: Unable to open MPCORB.DAT", E_UNABLETOOPEN_MPCORB, "ACL");
+    }
+    else
+    {
+      // Iterate over the file until the end of file, or the mpName is found.
+
+      while ( (!ifs.eof()) && !returnValue)
+      {
+        std::getline(ifs, szLine);
+
+        if (szLine.find(mpName) != std::string::npos)
+        {
+          // MP found.
+
+          parseLine(szLine, elements);
+          returnValue = true;
+        };
+      };
+
+      ifs.close();
+    };
 
     return returnValue;
   }
@@ -158,30 +237,115 @@ namespace ACL
 
   }
 
-  /// @brief Factory function taking a line from the MPCORB file to create the minor planet.
-  /// @param[in] dataLine: Line of data in MPCORB format. (null-terminated)
-  /// @returns Pointer to the created CMinorPlanet structure
+  /// @brief      Factory function taking the descriptor of the object to create.
+  /// @param[in]  descriptor: The descriptor of the object to load/create.
+  /// @returns    Pointer to the created CMinorPlanet structure
+  /// @throws     0x2700 - TargetMinorPlanet: Minor Planet Specified not found.
+  /// @version    2020-09-19/GGB - Removed fileName parameter.
+  /// @version    2018-08-24/GGB - Function created.
+
+  std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(std::string const &descriptor)
+  {
+    return std::move(std::make_unique<CTargetMinorPlanet>(descriptor));
+  }
+
+  /// @brief      Parses a single line into the structure.
+  /// @param[in]  szLine: The MPCorbital element line to parse.
+  /// @param[out] elements: The elements parsed.
   /// @throws
-  /// @version 2018-08-24/GGB - Function created.
+  /// @version    2018-08-25/GGB - Function created.
 
-  std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(std::string const &dataLine)
+  void CTargetMinorPlanet::parseLine(std::string const &szLine, SMPCORB &elements)
   {
+    std::vector<std::string> vectorValues;
 
+    if (!szLine.empty() || szLine.size() < 202)
+    {
+        // Decompose the line into the component strings.
+
+      for (SColumnData const &column : columns)
+      {
+        if (szLine.size() > column.indexEnd)
+        {
+          vectorValues.emplace_back(szLine.substr(column.indexStart - 1,
+                                                  column.indexStart - column.indexEnd + 1));
+        }
+        else
+        {
+
+        };
+      };
+
+        // Remove all unnecessary whitespace from the strings.
+
+      for (std::string &szValue : vectorValues)
+      {
+        boost::trim(szValue);
+      };
+
+        // Now process each string and write value.
+
+      std::vector<std::string>::size_type index = 0;
+
+      elements.designation = vectorValues[index++];
+      elements.absoluteMagnitude = boost::lexical_cast<float>(vectorValues[index++]);
+      elements.slopeParameter = boost::lexical_cast<float>(vectorValues[index++]);
+      elements.epoch = vectorValues[index++];
+      elements.meanAnomaly = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.argumentOfPerihelion = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.longitudeOfAscendingNode = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.inclination = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.eccentricity = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.meanDailyMotion = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.semiMajorAxis = boost::lexical_cast<double>(vectorValues[index++]);
+      elements.uncertantyParameter = vectorValues[index++];
+      elements.referece = vectorValues[index++];
+      elements.numberOfObservations = boost::lexical_cast<std::uint64_t>(vectorValues[index++]);
+      elements.numberOfOppositions = boost::lexical_cast<std::uint16_t>(vectorValues[index++]);
+
+        // Two different interpretations needed here.
+
+      index++;
+
+      elements.rmsResidual = boost::lexical_cast<float>(vectorValues[index++]);
+      elements.coursePerturbers = vectorValues[index++];
+      elements.precisePerturbers = vectorValues[index++];
+      elements.computerName = vectorValues[index++];
+
+      if (vectorValues.size() > index)
+      {
+        elements.flags = boost::lexical_cast<std::uint16_t>(vectorValues[index++]);
+      };
+      if (vectorValues.size() > index)
+      {
+        elements.name = vectorValues[index++];
+      };
+      if (vectorValues.size() > index)
+      {
+        elements.dateOfLastObservation = vectorValues[index++];
+      };
+
+    };
   }
 
-  /// @brief Factory function taking the MPCORB filename/path and the descriptor of the object to create.
-  /// @param[in] fileName: The filename and path of the MPCORB file.
-  /// @param[in] descriptor: The descriptor of the object to load/create.
-  /// @returns Pointer to the created CMinorPlanet structure
-  /// @throws 0x2700 - TargetMinorPlanet: Minor Planet Specified not found.
-  /// @version 2018-08-24/GGB - Function created.
+  /// @brief      Sets the file path for the MPCORB elements file.
+  /// @param[in]  newPath: The new path to the MPCORB file.
+  /// @throws     None
+  /// @version    2020-09-19/GGB - Function created.
 
-  std::unique_ptr<CTargetMinorPlanet> CTargetMinorPlanet::create(boost::filesystem::path const &fileName,
-                                                                 std::string const &descriptor)
+  void CTargetMinorPlanet::setFilePath(boost::filesystem::path const &newPath)
   {
-    std::unique_ptr<CTargetMinorPlanet> returnValue(std::make_unique<CTargetMinorPlanet>(fileName, descriptor));
-
-    return returnValue;
+    filePath = newPath;
   }
 
-}
+  /// @brief      Sets the file path for the MPCORB elements file. (This can include the path)
+  /// @param[in]  newName: The new name for the MPCORB file.
+  /// @throws     None
+  /// @version    2020-09-19/GGB - Function created.
+
+  void CTargetMinorPlanet::setFileName(boost::filesystem::path const &newName)
+  {
+    fileName = newName;
+  }
+
+} // namespace ACL

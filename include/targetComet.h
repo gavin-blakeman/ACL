@@ -53,25 +53,62 @@
 
   // ACL library header files
 
-#include "CometEls.h"
 #include "error.h"
 #include "targetAstronomy.h"
 
 namespace ACL
 {
+  struct SCometElements
+  {
+    std::string cometNumber;                  ///< Periodic comet number
+    std::string orbitType;                    ///< Orbit type
+    std::string provisionalDesignation;       ///< Provisional designation
+    std::uint16_t perihelionPassageYear;      ///< Year of perihelion passage
+    std::uint16_t perihelionPassageMonth;     ///< Month of perihelion passage
+    float perihelionPassageDay;               ///< Day of perihelion passage (TT)
+    double perihelionDistance;                ///< Perihelion distance (AU)
+    double orbitalEccentricity;               ///< Orbital eccentricity.
+    double argumentOfPerihelion;
+    double longitudeOfAscendingNode;
+    double inclination;
+    std::uint16_t epochYear;
+    std::uint16_t epochMonth;
+    std::uint16_t epochDay;
+    float absoluteMagnitude;
+    float slopeParameter;
+    std::string nameOfComet;
+    std::string designation;
+  };
+
   class CTargetComet : public CTargetAstronomy
   {
   private:
-    COMETELS::SCometElements elements_;
+    static boost::filesystem::path filePath;
+    static boost::filesystem::path fileName;
+    static std::map<std::string, std::uint32_t> cometCache;
+
+    SCometElements elements_;
+
+    CTargetComet() = delete;
+    CTargetComet(CTargetComet &&) = delete;
+
+    static void parseLine(std::string const &, SCometElements &);
 
   protected:
   public:
     CTargetComet(CTargetComet const &);
-    CTargetComet(boost::filesystem::path const &, std::string const &);
+    CTargetComet(std::string const &);
+
+      // Static functions
+
+    static void setFilePath(boost::filesystem::path const &);
+    static void setFileName(boost::filesystem::path const &);
+    static bool loadCometData(std::string const &, SCometElements &);
 
       // Factory functions
 
     virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
+    static std::unique_ptr<CTargetAstronomy> create(std::string const &);
 
       // Information functions
 

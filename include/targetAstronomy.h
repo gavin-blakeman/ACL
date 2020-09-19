@@ -76,6 +76,15 @@
 
 namespace ACL
 {
+  enum ETargetType
+  {
+    TT_NONE = 0,
+    TT_MAJORPLANET,
+    TT_MINORPLANET,
+    TT_COMET,
+    TT_STELLAR,
+  };
+
   /// The class is used for storing target (object) information and provides the methods to convert to apparent place.
   /// The CTargetAstronomy is a pure virtual class that is used as a base class for the stellar objects and the solar system
   /// objects.
@@ -85,23 +94,14 @@ namespace ACL
   /// @note 1. It is important to reference the document sofa_ast_c.pdf in conjunction with this code. Particularly page 2,
   ///          "The Chain of astrometric transformations". This is not detailed in this documentation, but can be found in the
   ///          "TargetStellar.h" header file.
+  ///
 
   class CTargetAstronomy
   {
-  public:
-    enum ETargetType
-    {
-      TT_NONE = 0,
-      TT_MAJORPLANET,
-      TT_MINORPLANET,
-      TT_COMET,
-      TT_STELLAR,
-    };
-
   private:
   protected:
     std::vector<std::string> objectName_;             ///< List of object names. Object may have more than one name.
-    //CAstronomicalCoordinates catalogCoordinates_;     ///< Catalog Coordinates of the object.
+    //CAstronomicalCoordinates catalogCoordinates_;   ///< Catalog Coordinates of the object.
 
   public:
     CTargetAstronomy();

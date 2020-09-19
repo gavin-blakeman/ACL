@@ -130,9 +130,7 @@ SOURCES += \
     source/telescope.cpp \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
-    source/MPCORB.cpp \
     source/targetComet.cpp \
-    source/CometEls.cpp \
     source/IERS.cpp \
     source/HDBBinaryTable.cpp \
     source/photometryFunctions.cpp \
@@ -214,9 +212,7 @@ HEADERS += \
     include/FITSMemoryFile.h \
     include/error.h \
     include/RST.h \
-    include/MPCORB.h \
     include/targetComet.h \
-    include/CometEls.h \
     include/IERS.h \
     include/HDBBinaryTable.h \
     include/photometryFunctions.h \

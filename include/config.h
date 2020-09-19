@@ -94,7 +94,9 @@ namespace ACL
   /// Only one of the macros USE_NOVAS and USE_SOFA must be defined.
 
 //#define USE_NOVAS
+#ifndef USE_SOFA
 #define USE_SOFA
+#endif
 
 #if defined(USE_NOVAS) && defined(USE_SOFA)
 #error "Cannot have USE_SOFA and USE_NOVAS defined at the same time."

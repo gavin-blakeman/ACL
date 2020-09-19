@@ -56,16 +56,45 @@
 
 #include "config.h"
 #include "error.h"
-#include "MPCORB.h"
 #include "targetAstronomy.h"
 
 namespace ACL
 {
+  struct SMPCORB
+  {
+    std::string designation;
+    float absoluteMagnitude;
+    float slopeParameter;
+    std::string epoch;
+    double meanAnomaly;
+    double argumentOfPerihelion;
+    double longitudeOfAscendingNode;
+    double inclination;
+    double eccentricity;
+    double meanDailyMotion;
+    double semiMajorAxis;
+    std::string uncertantyParameter;
+    std::string referece;
+    std::uint64_t numberOfObservations;
+    std::uint16_t numberOfOppositions;
+    std::string additionalData;
+    float rmsResidual;
+    std::string coursePerturbers;
+    std::string precisePerturbers;
+    std::string computerName;
+    std::uint16_t flags;
+    std::string name;
+    std::string dateOfLastObservation;
+  };
+
   class CTargetMinorPlanet : public CTargetAstronomy
   {
   private:
+    static boost::filesystem::path filePath;
+    static boost::filesystem::path fileName;
+
     std::string designation_;       ///< The MP designation. (From MPCORB)
-    MPCORB::SMPCORB elements_;
+    SMPCORB elements_;
 
     CAstroTime epoch_;              ///< Epoch
     MCL::angle_t M0_;               ///< Mean anomoly at the epoch (degrees)
@@ -80,16 +109,25 @@ namespace ACL
 
     CTargetMinorPlanet() = delete;
 
+    static void parseLine(std::string const &, SMPCORB &);
+    static bool loadMPData(std::string const &, SMPCORB &);
+
   protected:
   public:
     CTargetMinorPlanet(CTargetMinorPlanet const &);
-    CTargetMinorPlanet(boost::filesystem::path const &, std::string const &);
+    CTargetMinorPlanet(std::string const &);
 
     virtual ~CTargetMinorPlanet() {}
+
+      // Static functions
+
+    static void setFilePath(boost::filesystem::path const &);
+    static void setFileName(boost::filesystem::path const &);
 
       // Factory functions
 
     virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
+    static std::unique_ptr<CTargetMinorPlanet> create(std::string const&);
 
       // Information functions
 
@@ -97,18 +135,13 @@ namespace ACL
 
       // Getter functions
 
-    MPCORB::SMPCORB &elements() { return elements_; }
+    SMPCORB &elements() { return elements_; }
 
       // Position functions
 
     virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
     virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
-
-      // Factory functions
-
-    static std::unique_ptr<CTargetMinorPlanet> create(std::string const&);
-    static std::unique_ptr<CTargetMinorPlanet> create(boost::filesystem::path const &, std::string const&);
 
       // Information functions
 
