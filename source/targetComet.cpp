@@ -142,6 +142,7 @@ namespace ACL
   void CTargetComet::setFilePath(boost::filesystem::path const &newPath)
   {
     filePath = newPath;
+    cometCache.clear();
   }
 
   /// @brief        Sets the file name for the location of the comet elements file.
@@ -152,6 +153,7 @@ namespace ACL
   void CTargetComet::setFileName(boost::filesystem::path const &newName)
   {
     fileName = newName;
+    cometCache.clear();
   }
 
   /// @brief      Searches the ComEls.txt file to find the specified object.

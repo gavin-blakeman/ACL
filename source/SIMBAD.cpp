@@ -156,7 +156,7 @@ namespace ACL
     for (auto elem: queryCriteria)
     {
       outputStream << " & ";
-      outputStream << elem.first << " = " << elem.second;
+      outputStream << elem.first << " = " << elem.second.to_string();
     };
 
     outputStream << std::endl;
@@ -180,13 +180,13 @@ namespace ACL
     return (*this);
   }
 
-  /// @brief Adds a region to the script.
-  /// @param[in] rt: The type of the region.
-  /// @param[in] values: The values to define the region. All in decimal degrees.
-  /// @returns (*this)
-  /// @throws CError(0x0700) - Invalid region type.
-  /// @note The dimensions are specified in decimal degrees (floating point type).
-  /// @version 2016-04-25/GGB - Function created.
+  /// @brief      Adds a region to the script.
+  /// @param[in]  rt: The type of the region.
+  /// @param[in]  values: The values to define the region. All in decimal degrees.
+  /// @returns    (*this)
+  /// @throws     CRuntimeError(E_SIMBAD_INVALIDREGIONTYPE)
+  /// @note       The dimensions are specified in decimal degrees (floating point type).
+  /// @version    2016-04-25/GGB - Function created.
 
   CSIMBADScript &CSIMBADScript::addRegion(ERegions rt, std::initializer_list<FP_t> values)
   {
