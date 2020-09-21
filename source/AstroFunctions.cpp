@@ -1511,9 +1511,22 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
   /// @version 2010-07-24/GGB - Function created.
 
   FP_t refraction(FP_t z)
-  {
-    return ( 0.000293 * std::tan(z) - 0.0000003242434 * std::pow(std::tan(z),3) );
-  }
+	{
+    return ( 0.000293 * std::tan(z) + 0.0000003242434 * std::pow(std::tan(z),3) );
+  	// There should be plus ~~~~~~~~^
+		// It works for z < 75°, the alternative is iteration:
+		
+		/*
+		
+		FP_t z_0 = z - 0.01 ; // I don't remember why I did it but it works better with -0.01
+		
+		for ( int c = 0; c < 20; c++ )
+			z_0 = z - 2.9282746e-4 * std::tan(z_0) ;
+		
+		return z_0 ;
+		
+		*/
+	}
 
   /// @brief Parses a string to determine the date/time contained in the string.
   /// @param[in] szDateTime - string value to parse.
