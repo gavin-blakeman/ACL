@@ -41,13 +41,13 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeyword.h"
+#include "include/FITSKeyword.h"
 
   // Standard Library
 
   // ACL Library
 
-#include "../include/common.h"
+#include "include/common.h"
 
   // Miscellaneous libraries
 

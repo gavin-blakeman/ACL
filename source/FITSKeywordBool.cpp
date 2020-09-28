@@ -37,7 +37,7 @@
 //
 //**********************************************************************************************************************************
 
-#include "../include/FITSKeywordBool.h"
+#include "include/FITSKeywordBool.h"
 
 namespace ACL
 {

@@ -861,7 +861,7 @@ namespace ACL
 
     // GGB - Not sure why, but if the following line is uncommented I receive a linker error that the function cannot be found.
 
-    //return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
+    return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
   }
 
 } // namespace

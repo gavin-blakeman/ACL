@@ -1210,10 +1210,10 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Returns the imageName.
-  /// @returns The imageName.
-  /// @throws None.
-  /// @version 2017-08-10/GGB - Function created.
+  /// @brief      Returns the imageName.
+  /// @returns    The imageName.
+  /// @throws     None.
+  /// @version    2017-08-10/GGB - Function created.
 
   std::string CAstroFile::getImageName()
   {
