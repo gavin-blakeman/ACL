@@ -33,10 +33,11 @@
 //
 // FUNCTIONS INCLUDED:  std::string getVersionString()
 //
-// HISTORY:             2018-09-13 GGB - Set version to 2018.09.0000
-//                      2015-09-22 GGB - astroManager 2015.09 release
-//                      2013-09-30 GGB - astroManager 2013.09 release.
-//                      2013-06-29 GGB - File created.
+// HISTORY:             2020-09-30  GGB - Set version to 2020.09.0000
+//                      2018-09-13  GGB - Set version to 2018.09.0000
+//                      2015-09-22  GGB - astroManager 2015.09 release
+//                      2013-09-30  GGB - astroManager 2013.09 release.
+//                      2013-06-29  GGB - File created.
 //
 //*********************************************************************************************************************************
 
@@ -56,16 +57,15 @@
 namespace ACL
 {
 
-  unsigned int const ACL_MAJORVERSION = 2018;           ///< The Major version number (yyyy)
+  unsigned int const ACL_MAJORVERSION = 2020;           ///< The Major version number (yyyy)
   unsigned int const ACL_MINORVERSION = 9;              ///< The Minor version number (mm)
-  unsigned int const ACL_BUILDNUMBER  = 0x01AC;         ///< The build number - incremented on each build.
+  unsigned int const ACL_BUILDNUMBER  = 0x0003;         ///< The build number - incremented on each build.
 
-  /// @brief Returns the library version and build number.
-  /// that was used for editing the library.
-  /// @returns A string with the application name, version, build.
-  /// @throws Nothing.
-  /// @version 2015-06-24/GGB - Converted to C++. Removed all C function calls.
-  /// @version 2013-06-29/GGB - Function created.
+  /// @brief      Returns the library version and build number of the library.
+  /// @returns    A string with the application name, version, build.
+  /// @throws     Nothing.
+  /// @version    2015-06-24/GGB - Converted to C++. Removed all C function calls.
+  /// @version    2013-06-29/GGB - Function created.
 
   std::string getVersionString()
   {

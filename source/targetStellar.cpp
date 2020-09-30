@@ -72,12 +72,12 @@
 
 #include <sstream>
 
-  // ACL library header files.
+// Miscellaneous libraries
 
-#include "include/AstroFunctions.h"
-#include "include/constants.h"
-#include "include/error.h"
-#include "include/FITSStrings.h"
+#include "boost/locale.hpp"
+#include <GCL>
+#include "sofa.h"
+#include "sofam.h"
 
   // NOVAS library (optional depending on DEFINES)
 
@@ -94,11 +94,12 @@
 # endif
 #endif    // USE_NOVAS
 
-  // Miscellaneous libraries
+  // ACL library header files.
 
-#include <GCL>
-#include "sofa.h"
-#include "sofam.h"
+#include "include/AstroFunctions.h"
+#include "include/constants.h"
+#include "include/error.h"
+#include "include/FITSStrings.h"
 
 namespace ACL
 {
@@ -214,24 +215,25 @@ namespace ACL
     return stellarType_;
   }
 
-  /// @brief Calculates the observed position of the stellar object.
-  /// @details Different methods of calculation are used depending on the coordinate system in use (FK4, FK5, ICRS)
-  ///          The first step is always to convert the coordinates into ICRS coordinates.
-  /// @param[in] UTC: The UTC of the observation.
-  /// @param[in] location: The location of the observer (needed to calculate the observed place)
-  /// @param[in] weather: The weather associated with the observer location (needed to calculate observed place)
-  /// @note This routine makes use of the SOFA routines to convert the ICRS coordinates to the observed coordinates.
-  /// @note The routine always calculates the current place of the object.
-  /// @throws RUNTIME_ASSERT
-  /// @version 2018-09-05/GGB - Updat
-  /// @version 2016-03-23/GGB - 1. Removed observedPlaceValid support.
-  ///                           2. Removed location, weather and time from class members.
-  ///                           3. Use SOFA routine for calculation.
-  /// @version 2012-01-12/GGB - Added observedPlaceValid() support and immediate return.
-  /// @version 2011-07-04/GGB
+  /// @brief      Calculates the observed position of the stellar object.
+  /// @details    Different methods of calculation are used depending on the coordinate system in use (FK4, FK5, ICRS)
+  ///             The first step is always to convert the coordinates into ICRS coordinates.
+  /// @param[in]  UTC: The UTC of the observation.
+  /// @param[in]  location: The location of the observer (needed to calculate the observed place)
+  /// @param[in]  weather: The weather associated with the observer location (needed to calculate observed place)
+  /// @note       This routine makes use of the SOFA routines to convert the ICRS coordinates to the observed coordinates.
+  /// @note       The routine always calculates the current place of the object.
+  /// @throws
+  /// @version    2020-09-30/GGB  - Changed parameter weather to reference.
+  /// @version    2018-09-05/GGB - Update
+  /// @version    2016-03-23/GGB -  1. Removed observedPlaceValid support.
+  ///                               2. Removed location, weather and time from class members.
+  ///                               3. Use SOFA routine for calculation.
+  /// @version    2012-01-12/GGB - Added observedPlaceValid() support and immediate return.
+  /// @version    2011-07-04/GGB
 
   SObservedPlace CTargetStellar::positionObserved(CAstroTime const &UTC, CGeographicLocation const &location,
-                                                  CWeather const *weather)
+                                                  CWeather const &weather) const
   {
     SObservedPlace observedPlace;
 
@@ -246,9 +248,9 @@ namespace ACL
               1,
               location.longitude(), location.latitude(), location.altitude(),
               0, 0,
-              (weather) ? (weather->pressure()) ? (*(weather->pressure()))() : 1013.25 : 1013.25,
-              (weather) ? (weather->temperature()) ? (*(weather->temperature()))() : 30 : 30,
-              (weather) ? *weather->RH() : 0.6,
+              weather.pressure() ? (*(weather.pressure()))() : 1013.25,
+              weather.temperature() ? (*(weather.temperature()))() : 30,
+              weather.RH() ? *weather.RH() : 0.6,
               100,
               &observedPlace.azimuth, &observedPlace.zenithDistance, &observedPlace.hourAngle,
               &observedPlace.declination, &observedPlace.rightAscension, &observedPlace.eo);
@@ -257,10 +259,10 @@ namespace ACL
 
   }
 
-  /// @brief Returns the reference system as a string value.
-  /// @returns The catalog system as a string value.
-  /// @throws CODE_ERROR
-  /// @version 2012-01-22/GGB - Function created.
+  /// @brief      Returns the reference system as a string value.
+  /// @returns    The catalog system as a string value.
+  /// @throws     CODE_ERROR
+  /// @version    2012-01-22/GGB - Function created.
 
   std::string CTargetStellar::catalogSystemString()
   {
@@ -297,12 +299,12 @@ namespace ACL
     return returnValue;
   }
 
-  /// @brief Returns the distance of an object.
-  /// @returns The distance to the object in light years.
-  /// @throws none.
-  /// @details This replaces an earlier version of the class were the distance was stored in the class. This version uses the
-  /// parallax to calculate the distance. The distance is returned in light years.
-  /// @version 2009-12-16/GGB - Function created.
+  /// @brief      Returns the distance of an object.
+  /// @returns    The distance to the object in light years.
+  /// @throws     none.
+  /// @details    This replaces an earlier version of the class were the distance was stored in the class. This version uses the
+  ///             parallax to calculate the distance. The distance is returned in light years.
+  /// @version    2009-12-16/GGB - Function created.
 
   FP_t CTargetStellar::getDistance()
   {
@@ -322,7 +324,7 @@ namespace ACL
 
   CAstronomicalCoordinates CTargetStellar::properMotion(TJD const &jd) const
   {
-    RUNTIME_ASSERT(static_cast<double>(jd) >= 0, "The julian day cannot be less than zero.");
+    RUNTIME_ASSERT(static_cast<double>(jd) >= 0, boost::locale::translate("The julian day cannot be less than zero."));
 
     CAstronomicalCoordinates retVal;
     FP_t ra, dec, pmRA, pmDec, parallax, radialVelocity;
@@ -340,7 +342,7 @@ namespace ACL
     }
     else if (nRetVal & 0x04)
     {
-      RUNTIME_ERROR("StellarObjects: SOFA library error, iteration did not converge.");
+      RUNTIME_ERROR(boost::locale::translate("StellarObjects: SOFA library error, iteration did not converge."));
     };
 
     return CAstronomicalCoordinates(MCL::CAngle(ra), MCL::CAngle(dec));
@@ -381,7 +383,7 @@ namespace ACL
       case RS_FK4:
       case RS_FK5:
       {
-        ERRORMESSAGE("Coordinate reference system FK4 and FK5 are not implemented.");
+        ERRORMESSAGE(boost::locale::translate("Coordinate reference system FK4 and FK5 are not implemented."));
         CODE_ERROR;
         break;
       };

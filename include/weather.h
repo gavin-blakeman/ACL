@@ -66,15 +66,15 @@
 #include <optional>
 #include <string>
 
-  // ACL library header files.
-
-#include "config.h"
-
   // Miscellaneous Libraries
 
 #include <GCL>
 #include <MCL>
 #include <PCL>
+
+  // ACL library header files.
+
+#include "config.h"
 
 namespace ACL
 {

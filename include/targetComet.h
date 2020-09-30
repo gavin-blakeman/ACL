@@ -116,7 +116,7 @@ namespace ACL
 
     virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const { CODE_ERROR; }
-    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) const override {}
 
       // Information functions
 

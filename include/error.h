@@ -105,6 +105,8 @@ namespace ACL
   errorCode_t const E_ASTROIMAGE_INVALIDIMAGEPLANE  = 0x2203;
   errorCode_t const E_ASTROIMAGE_WRONGIMAGETYPE     = 0x2207;
 
+  errorCode_t const E_TARGETPLAET_NAMEINCORRECT     = 0x2600;
+
   errorCode_t const E_TARGETMP_MPNOTFOUND           = 0x2700;
 
   errorCode_t const E_TARGETCOMET_NOTFOUND          = 0x2800;

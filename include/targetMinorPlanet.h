@@ -140,8 +140,8 @@ namespace ACL
       // Position functions
 
     virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
-    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
-    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const override;
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) const override;
 
       // Information functions
 

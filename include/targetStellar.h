@@ -80,6 +80,11 @@
 #include <string>
 #include <vector>
 
+  // Miscellaneous library header files.
+
+#include <MCL>
+#include <PCL>
+
   // ACL Library header files.
 
 #include "AstronomicalCoordinates.h"
@@ -88,11 +93,6 @@
 #include "config.h"
 #include "error.h"
 #include "photometry.h"
-
-  // Miscellaneous library header files.
-
-#include <MCL>
-#include <PCL>
 
 namespace ACL
 {
@@ -333,7 +333,7 @@ namespace ACL
 
     virtual CAstronomicalCoordinates positionCatalog() const { return catalogCoordinates_; }
     virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const {}
-    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *);
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) const;
 
     // Information functions
 

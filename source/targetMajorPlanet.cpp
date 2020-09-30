@@ -41,16 +41,18 @@
 
   // Standard C++ library header files.
 
+  // Miscellaneous library header files.
+
+#include <boost/algorithm/string.hpp>
+#include <boost/locale.hpp>
+#include <MCL>
+
 
   // ACL header files.
 
 #include "include/AstroFunctions.h"
 #include "include/constants.h"
 #include "include/error.h"
-
-  // Miscellaneous library header files.
-
-#include <MCL>
 
 namespace ACL
 {
@@ -140,6 +142,64 @@ namespace ACL
 
   CTargetMajorPlanet::CTargetMajorPlanet(CTargetMajorPlanet const &toCopy) : CTargetAstronomy(toCopy), planet(toCopy.planet)
   {
+  }
+
+  /// @brief      Constructor taking a string that is the name of the planet.
+  /// @param[in]  planetName: The name of the planet.
+  /// @throws     std::bad_alloc
+  /// @throws     GCL::CRuntimeError(E_TARGETPLAET_NAMEINCORRECT)
+  /// @version    2020-09-30/GGB - Function created.
+
+  CTargetMajorPlanet::CTargetMajorPlanet(std::string planetName)
+  {
+    boost::to_upper(planetName);
+
+    if (planetName == "MERCURY")
+    {
+      planet = Mercury;
+      objectName("Mercury");
+    }
+    else if (planetName == "VENUS")
+    {
+      planet = Venus;
+      objectName("Venus");
+    }
+    else if (planetName == "MARS")
+    {
+      planet = Mars;
+      objectName("Mars");
+    }
+    else if (planetName == "JUPITER")
+    {
+      planet = Jupiter;
+      objectName("Jupiter");
+
+    }
+    else if (planetName == "SATURN")
+    {
+      planet = Saturn;
+      objectName("Saturn");
+    }
+    else if (planetName == "URANUS")
+    {
+      planet = Uranus;
+      objectName("Uranus");
+    }
+    else if (planetName == "NEPTUNE")
+    {
+      planet = Neptune;
+      objectName("Neptune");
+    }
+    else if (planetName == "PLUTO")
+    {
+      planet = Pluto;
+      objectName("Pluto");
+    }
+    else
+    {
+      RUNTIME_ERROR(boost::locale::translate("Invalid planet name supplied when creating taget."), E_TARGETPLAET_NAMEINCORRECT,
+                    LIBRARYNAME);
+    }
   }
 
   /// @brief Creates a copy of this instance.
@@ -232,6 +292,23 @@ namespace ACL
 
     return CAstronomicalCoordinates(MCL::TVector3D<FP_t>(xeq, yeq, zeq));
 
+  }
+
+  /// @brief      Returns the observed place of the object. This is the ICRF position with local observation parameters applied.
+  /// @param[in]  tEph: The time to calculate the observed place.
+  /// @param[in]  observatory: The details of the observatory.
+  /// @param[in]  weather: The details of the weather.
+  /// @returns    The observed place.
+  /// @throws
+  /// @version    2020-09-30/GGB - Function created.
+
+  SObservedPlace CTargetMajorPlanet::positionObserved(CAstroTime const &tEph, CGeographicLocation const &observatory,
+                                                      CWeather const &weather) const
+  {
+    SObservedPlace returnValue;
+    CAstronomicalCoordinates ICRFCoordinates = std::move(positionICRS(tEph));
+
+    return std::move(returnValue);
   }
 
 

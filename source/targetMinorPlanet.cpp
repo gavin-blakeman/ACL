@@ -188,13 +188,17 @@ namespace ACL
 
   }
 
-  /// @brief Calculates the observed place of a minor planet.
-  /// @param[in] t: Time to calculate the observed place.
+  /// @brief      Calculates the observed place of a minor planet.
+  /// @param[in]  UTC: Time to calculate the observed place.
+  /// @param[in]  observatory: Details of the observatory
+  /// @param[in]  weather: Details of the weather.
+  /// @throws
+  /// @version    2020-09-30/GGB - Function created.
 
-  SObservedPlace CTargetMinorPlanet::positionObserved(CAstroTime const &t, CGeographicLocation const &, CWeather const *)
+  SObservedPlace CTargetMinorPlanet::positionObserved(CAstroTime const &UTC, CGeographicLocation const &, CWeather const &) const
   {
     MCL::CAngle M(0);
-    CAstroTime deltaT = epoch_ - t;
+    CAstroTime deltaT = epoch_ - UTC;
     FP_t E0, E1;
     std::uint_least32_t loopCounter = 0;
     FP_t v, r;

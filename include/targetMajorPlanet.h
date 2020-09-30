@@ -44,13 +44,14 @@
   // Standard C++ library header files.
 
 #include <memory>
+#include <string>
+
+  // Miscellaneous library header files.
 
   // ACL library header files.
 
 #include "error.h"
 #include "targetAstronomy.h"
-
-  // Miscellaneous library header files.
 
 namespace ACL
 {
@@ -77,12 +78,12 @@ namespace ACL
   public:
     CTargetMajorPlanet(CTargetMajorPlanet const &);
     CTargetMajorPlanet(EPlanets const &);
+    CTargetMajorPlanet(std::string );
     virtual ~CTargetMajorPlanet() {}
 
       // Factory functions
 
     virtual std::unique_ptr<CTargetAstronomy> createCopy() const;
-    static std::unique_ptr<CTargetMajorPlanet> create(EPlanets const &);
 
       // Information functions
 
@@ -91,8 +92,8 @@ namespace ACL
       // Position functions.
 
     virtual CAstronomicalCoordinates positionCatalog() const { CODE_ERROR; }
-    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const;
-    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const *) {}
+    virtual CAstronomicalCoordinates positionICRS(CAstroTime const &) const override;
+    virtual SObservedPlace positionObserved(CAstroTime const &, CGeographicLocation const &, CWeather const &) const override;
 
       // Information functions
 
