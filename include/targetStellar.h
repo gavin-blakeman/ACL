@@ -297,9 +297,9 @@ namespace ACL
 
     virtual void stellarType(std::string const &st) { stellarType_ = st; }
     virtual void catalogueCoordinates(CAstronomicalCoordinates, EReferenceSystem = RS_ICRS);
-    virtual void setEpoch(std::string const &);
-    inline virtual void setEpoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch
-    virtual void setEpoch(TJD const &);
+    virtual void epoch(std::string const &);
+    inline virtual void epoch(FP_t ne) {epoch_ = ne;}  // Use a JD to set the epoch
+    virtual void epoch(TJD const &);
     inline virtual void pm(FP_t dPMRA, FP_t dPMDEC) {pmRA_ = dPMRA; pmDec_ = dPMDEC;}
     inline virtual void pmRA(FP_t pmra) {pmRA_ = pmra;}
     inline virtual void pmDec(FP_t pmdec) { pmDec_ = pmdec;}

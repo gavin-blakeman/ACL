@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman. (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2011-2018 Gavin Blakeman.
+//                      Copyright 2011-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -41,7 +41,7 @@
 //
 //*********************************************************************************************************************************
 
-#include "../include/ImageRegister.h"
+#include "include/ImageRegister.h"
 
   // Standard C++ library header files.
 
@@ -49,6 +49,7 @@
 
   // Miscellaneous library header files.
 
+#include "boost/locale.hpp"
 #include "sofam.h"
 
 namespace ACL
@@ -215,7 +216,7 @@ namespace ACL
     DRegisterImageStore::size_type imageCounter = 1;
     std::unique_ptr<bool> maskPlane;
 
-    GCL::logger::defaultLogger().logMessage(GCL::logger::info, "Starting register images function...");
+    GCL::logger::defaultLogger().logMessage(GCL::logger::info, boost::locale::translate("Starting register images function..."));
     GCL::logger::defaultLogger().logMessage(GCL::logger::info,
                                             std::to_string(imageStore.size() - 1) + " images to register.");
 
@@ -333,7 +334,7 @@ namespace ACL
                                        (*fileIterator)->sc, MCL::TPoint2D<FP_t>(1,1), maskPlane);
     };
 
-    GCL::logger::defaultLogger().logMessage(GCL::logger::info, "Completed register images function.");
+    GCL::logger::defaultLogger().logMessage(GCL::logger::info, boost::locale::translate("Completed register images function."));
   }
 
 }  // namespace ACL

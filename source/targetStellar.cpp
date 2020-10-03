@@ -395,27 +395,29 @@ namespace ACL
     };
   }
 
-  /// @brief Converts the passed string into a Julian day epoch
-  /// @param[in] newEpoch: The epoch string to convert.
-  /// @throws Several from convertEpoch
-  /// @version 2018-09-02/GGB - Changed parameter to std::string const &
-  /// @version 2017-08-05/GGB - Use new style convertEpoch.
-  /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
-  /// @version 2009-12-18/GGB - Function created.
+  /// @brief      Converts the passed string into a Julian day epoch
+  /// @param[in]  newEpoch: The epoch string to convert.
+  /// @throws     Several from convertEpoch
+  /// @version    2020-10-02/GGB - Changed function name to epoch.
+  /// @version    2018-09-02/GGB - Changed parameter to std::string const &
+  /// @version    2017-08-05/GGB - Use new style convertEpoch.
+  /// @version    2012-01-12/GGB - Added observedPlaceValid() support.
+  /// @version    2009-12-18/GGB - Function created.
 
-  void CTargetStellar::setEpoch(std::string const &newEpoch)
+  void CTargetStellar::epoch(std::string const &newEpoch)
   {
     epoch_ = convertEpoch(newEpoch);
   }
 
-  /// @brief Stores the value of newEpoch into the Epoch value.
-  /// @param[in] newEpoch: The new epoch value.
-  /// @throws None.
-  /// @version 2015-08-01/GGB - Corrected bug with assignment of value. Changed parameter to const &.
-  /// @version 2012-01-12/GGB - Added observedPlaceValid() support.
-  /// @version 2009-12-18/GGB - Function created.
+  /// @brief      Stores the value of newEpoch into the Epoch value.
+  /// @param[in]  newEpoch: The new epoch value.
+  /// @throws     None.
+  /// @version    2020-10-02/GGB - Changed function name to epoch.
+  /// @version    2015-08-01/GGB - Corrected bug with assignment of value. Changed parameter to const &.
+  /// @version    2012-01-12/GGB - Added observedPlaceValid() support.
+  /// @version    2009-12-18/GGB - Function created.
 
-  void CTargetStellar::setEpoch(TJD const &newEpoch)
+  void CTargetStellar::epoch(TJD const &newEpoch)
   {
     epoch_ = newEpoch;
   }
