@@ -62,7 +62,7 @@
 namespace ACL
 {
 
-  using parameter = SCL::variant_t;
+  using parameter = SCL::any;
   typedef std::pair<std::string, parameter> parameterPair;
   typedef std::tuple<std::string, std::string, parameter> parameterTriple;
 
