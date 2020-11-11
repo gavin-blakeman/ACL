@@ -69,7 +69,7 @@ INCLUDEPATH += \
   "../SOFA/src" \
   "../" \
   "../GeographicLib/GeographicLib-1.48/include/GeographicLib" \
-  "/home/gavin/Documents/Projects/software/Library/Boost/boost_1_71_0" \
+  "/home/gavin/Documents/Projects/software/Library/Boost/boost_1_74_0" \
   "../LibRaw"
 
 SOURCES += \
@@ -95,6 +95,7 @@ SOURCES += \
     source/PhotometryAperture.cpp \
     source/AstrometryObservation.cpp \
     source/AstroImageCalibration.cpp \
+    source/SIMBAD.cpp \
     source/common.cpp \
     source/findstar.cpp \
     source/SourceExtraction.cpp \
@@ -122,7 +123,6 @@ SOURCES += \
     source/FITSKeywordUInt32.cpp \
     source/FITSKeywordDateTime.cpp \
     source/FITSKeywordDate.cpp \
-    source/SIMBAD.cpp \
     source/geographicLocation.cpp \
     source/observatoryInformation.cpp \
     source/photometryFilters.cpp \
@@ -140,9 +140,11 @@ SOURCES += \
     source/targetMinorPlanet.cpp \
     source/targetStellar.cpp \
     source/gregorianDate.cpp \
-    source/weather.cpp
+    source/weather.cpp \
+    source/ADQL.cpp
 
 HEADERS += \
+    include/SIMBAD.h \
     include/wcs.h \
     include/PhotometryObservation.h \
     include/PhotometryApertureEliptical.h \
@@ -202,7 +204,6 @@ HEADERS += \
     include/FITSKeywordUInt32.h \
     include/FITSKeywordBool.h \
     include/FITSKeywordDate.h \
-    include/SIMBAD.h \
     include/geographicLocation.h \
     include/observatoryInformation.h \
     include/photometryFilters.h \
@@ -222,7 +223,8 @@ HEADERS += \
     include/targetStellar.h \
     include/targetMinorPlanet.h \
     include/gregorianDate.h \
-    include/weather.h
+    include/weather.h \
+    include/ADQL.h
 
 OTHER_FILES += \
     ACL \

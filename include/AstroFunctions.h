@@ -82,7 +82,6 @@ namespace ACL
   int sscanfDMS(std::string const &, FP_t &);		/* Convert text to dd.ddd double format. */
   bool sscanfDateTime(std::string const &, unsigned int &, unsigned int &, unsigned int &, unsigned int &, unsigned int &, FP_t &);
 
-
   int sprintfLMS(char *szBuffer, FP_t dNumber, int nDecimal, int nLatLong);
   std::string sprintfLMS(FP_t latlon, int nDecimal, int nLatLon) ;
   int sprintfTMS(char *, double, int, int=0);

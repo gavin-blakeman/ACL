@@ -1,7 +1,7 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
-// FILE:								SIMBAD
+// FILE:								SIMBADParser
 // SUBSYSTEM:						A system to parse SIMBAD query returns.
 // LANGUAGE:						C++
 // TARGET OS:						None.
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2020 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -25,7 +25,9 @@
 //                      see <http://www.gnu.org/licenses/>.
 //
 //
-// OVERVIEW:						A collection of routines for parsing the returned data from SIMBAD database queries.
+// OVERVIEW:						A colllection of routines for parsing the returned data from SIMBAD database queries.
+//                      This is integrated into the remainder of the ACL library.
+//
 //
 // CLASSES INCLUDED:		None
 //
@@ -36,16 +38,45 @@
 //
 //*********************************************************************************************************************************
 
-#ifndef SIMBAD_H
-#define SIMBAD_H
+#ifndef ACL_ADQL_H
+#define ACL_ADQL_H
 
-  // Standard C++ library header files
+  // Standard C++ library header files.
 
+#include <cstdint>
+#include <initializer_list>
 #include <string>
+#include <tuple>
+#include <vector>
+
+  // Miscellaneous library header files.
+
+#include <GCL>
+#include <SCL>
+
+  // ACL library header files
+
+#include "AstronomicalCoordinates.h"
+#include "config.h"
+#include "targetAstronomy.h"
 
 namespace ACL
 {
 
-}
+  class CADQL : public GCL::sqlWriter
+  {
+  public:
+    using index_t = std::uint32_t;
 
-#endif // SIMBAD_H
+  private:
+    std::string fieldDelimiter = ";";
+
+  protected:
+
+  public:
+    CADQL() {}
+  };
+
+}   // namespace ACL
+
+#endif // ACL_ADQL_H

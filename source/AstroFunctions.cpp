@@ -505,14 +505,14 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     return;
   }
 
-  /// @brief Calculates airmass using the Bemporad method.
-  /// @param[in] z - true zenith angle.
-  /// @returns 0 - for z >= PI/2 && z < 0
-  /// @returns Airmass for all other values.
-  /// @note 1) Bemporad's formula only gives good result to +- 85degrees.
-  /// @note 2) Subtracts the refraction value from the Zenith Distance.
-  /// @throws None.
-  /// @version 2010-07-23/GGB - Function created.
+  /// @brief      Calculates airmass using the Bemporad method.
+  /// @param[in]  z: true zenith angle.
+  /// @returns    0 - for z >= PI/2 && z < 0
+  /// @returns    Airmass for all other values.
+  /// @note       1) Bemporad's formula only gives good result to +- 85degrees.
+  /// @note       2) Subtracts the refraction value from the Zenith Distance.
+  /// @throws     None.
+  /// @version    2010-07-23/GGB - Function created.
 
   FP_t airmass(FP_t  z)
   {
@@ -671,8 +671,7 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
   }
 
 
-  // Formats a double in Latitude format with the required number of decimal places.
-  // Uses the secure form of sprintf.
+  /// @brief      Formats a double in Latitude format with the required number of decimal places. Uses the secure form of sprintf.
   // INPUTS:	nLatLong: 0 = N/S, 1=E/W
   //
   // 2009-10-25/GGB - Function created.
@@ -1044,26 +1043,26 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     return nRetVal;
   }
 
-  /// @brief Converts a string into dd.ddd decimal format.
-  /// @param[in] szConvert - The string to convert.
-  /// @param[in] result - The converted value.
-  /// @returns 0 - No error, number of characters scanned.
-  /// @returns -1 - String too long
-  /// @returns -2 - Invalid character.
-  /// @returns -3 - Abnormal string termination.
-  /// @returns -4 - Range Error
-  /// @note Formats accepted:
-  ///   @li -dd mm ss.ss
-  ///   @li dd:mm:ss.ss
-  ///   @li ddDmmM
-  ///   @li ddDmm.mm
-  ///   @li dd.dddD
-  ///   @li dddDmmMss.ssS
+  /// @brief      Converts a string into dd.ddd decimal format.
+  /// @param[in]  szConvert: The string to convert.
+  /// @param[out] result: The converted value.
+  /// @returns    0 - No error, number of characters scanned.
+  /// @returns    -1 - String too long
+  /// @returns    -2 - Invalid character.
+  /// @returns    -3 - Abnormal string termination.
+  /// @returns    -4 - Range Error
+  /// @note       Formats accepted:
+  ///   @li         -dd mm ss.ss
+  ///   @li         dd:mm:ss.ss
+  ///   @li         ddDmmM
+  ///   @li         ddDmm.mm
+  ///   @li         dd.dddD
+  ///   @li         dddDmmMss.ssS
   /// @note
-  ///   @li The minutes and seconds values must be less than 60, otherwise an error is generated.
-  ///   @li If the hours/degrees value is greater that 24/360, it will be normalised.
-  /// @version 2016-05-01/GGB - Updated to use std::string
-  /// @version 2010-01-13/GGB - Function created.
+  ///   @li       The minutes and seconds values must be less than 60, otherwise an error is generated.
+  ///   @li       If the hours/degrees value is greater that 24/360, it will be normalised.
+  /// @version    2016-05-01/GGB - Updated to use std::string
+  /// @version    2010-01-13/GGB - Function created.
 
   int sscanfDMS(std::string const &szConvert, FP_t &result)
   {
@@ -1297,13 +1296,13 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     return nRetVal;
   }
 
-  /// @brief Convert a jd value to a HJD value.
-  /// @param[in] jd - Julian day numbner
-  /// @param[in] ra - RA in degrees
-  /// @param[in] dec - Declination in degrees
-  /// @returns The HJD
-  /// @throws None.
-  /// @version 2010-07-07/GGB - Function created.
+  /// @brief      Convert a jd value to a HJD value.
+  /// @param[in]  jd: Julian day numbner
+  /// @param[in]  ra: RA in degrees
+  /// @param[in]  dec: Declination in degrees
+  /// @returns    The HJD
+  /// @throws     None.
+  /// @version    2010-07-07/GGB - Function created.
 
   FP_t JD2HJD(FP_t jd, FP_t ra, FP_t dec)
   {
@@ -1515,19 +1514,19 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     return ( 0.000293 * std::tan(z) - 0.0000003242434 * std::pow(std::tan(z),3) );
   }
 
-  /// @brief Parses a string to determine the date/time contained in the string.
-  /// @param[in] szDateTime - string value to parse.
-  /// @param[out] year - The year value in the string.
-  /// @param[out] month - The month value in the string.
-  /// @param[out] day - The day value in the string.
-  /// @param[out] hour - The hour value in the string.
-  /// @param[out] minute - The minute value in the string.
-  /// @param[out] second - The seconds value in the string.
-  /// @returns true - successfull
-  /// @returns false - unsuccesfull.
-  /// @throws None.
-  /// @version 2013-09-17/GGB - Corrected error created when changing second to FP_t.
-  /// @version 2011-07-15/GGB - Function created.
+  /// @brief        Parses a string to determine the date/time contained in the string.
+  /// @param[in]    szDateTime: string value to parse.
+  /// @param[out]   year: The year value in the string.
+  /// @param[out]   month: The month value in the string.
+  /// @param[out]   day: The day value in the string.
+  /// @param[out]   hour: The hour value in the string.
+  /// @param[out]   minute: The minute value in the string.
+  /// @param[out]   second: The seconds value in the string.
+  /// @returns      true - successfull
+  /// @returns      false - unsuccesfull.
+  /// @throws       None.
+  /// @version      2013-09-17/GGB - Corrected error created when changing second to FP_t.
+  /// @version      2011-07-15/GGB - Function created.
 
   bool sscanfDateTime(std::string const &szDateTime, unsigned int &year, unsigned int &month, unsigned int &day,
                       unsigned int &hour, unsigned int &minute, FP_t &second)

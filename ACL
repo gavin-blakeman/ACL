@@ -105,6 +105,7 @@
  */
 
 #include "include/AAVSO.h"
+#include "include/ADQL.h"
 #include "include/constants.h"
 #include "include/AstroFunctions.h"
 #include "include/AstroClass.h"
@@ -152,7 +153,6 @@
 #include "include/ImageRegister.h"
 #include "include/ImageStack.h"
 #include "include/observatoryInformation.h"
-#include "include/SIMBAD.h"
 #include "include/SourceExtraction.h"
 #include "include/targetAstronomy.h"
 #include "include/targetComet.h"

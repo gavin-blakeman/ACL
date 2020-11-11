@@ -1,7 +1,7 @@
 ﻿//*********************************************************************************************************************************
 //
 // PROJECT:							Astronomy Class Library
-// FILE:								SIMBAD
+// FILE:								ADQL
 // SUBSYSTEM:						A system to parse SIMBAD query returns.
 // LANGUAGE:						C++
 // TARGET OS:						None.
@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman (GGB)
 // LICENSE:             GPLv2
 //
-//                      Copyright 2020 Gavin Blakeman.
+//                      Copyright 2016-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -25,7 +25,9 @@
 //                      see <http://www.gnu.org/licenses/>.
 //
 //
-// OVERVIEW:						A collection of routines for parsing the returned data from SIMBAD database queries.
+// OVERVIEW:						A colllection of routines for parsing the returned data from SIMBAD database queries.
+//                      This is integrated into the remainder of the ACL library.
+//
 //
 // CLASSES INCLUDED:		None
 //
@@ -36,16 +38,25 @@
 //
 //*********************************************************************************************************************************
 
-#ifndef SIMBAD_H
-#define SIMBAD_H
+#include "include/ADQL.h"
 
-  // Standard C++ library header files
+  // Standard C++ library header files.
 
-#include <string>
+#include <sstream>
+
+  // Miscellaneous library header files.
+
+#include <boost/format.hpp>
+#include "boost/locale.hpp"
+
+  // ACL library header files
+
+#include "include/AstroFunctions.h"
+#include "include/common.h"
+#include "include/error.h"
 
 namespace ACL
 {
 
-}
 
-#endif // SIMBAD_H
+} // namspace ACL
