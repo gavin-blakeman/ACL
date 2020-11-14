@@ -126,7 +126,6 @@ SOURCES += \
     source/geographicLocation.cpp \
     source/observatoryInformation.cpp \
     source/photometryFilters.cpp \
-    source/julianDay.cpp \
     source/telescope.cpp \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
@@ -207,7 +206,6 @@ HEADERS += \
     include/geographicLocation.h \
     include/observatoryInformation.h \
     include/photometryFilters.h \
-    include/julianDay.h \
     include/telescope.h \
     include/FITSMemoryFileArray.h \
     include/FITSMemoryFile.h \

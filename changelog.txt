@@ -1,4 +1,8 @@
-﻿2020-09
+﻿2020-11
+-------
+MOVE:       julianDay to the GCL library.
+
+2020-09
 -------
 MOVE:       CWeather class into weather.h and weather.cpp
 CHANGE:     TJD pre-incement return value changed to reference from copy.
