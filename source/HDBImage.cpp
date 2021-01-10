@@ -74,7 +74,9 @@
 
 #include "boost/locale.hpp"
 #include <GCL>
-#include "wcs.h"      // libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment out K&R prototypes.)
+#include "wcs.h"
+/* libWCS functions. Modify header to link. (Comment out  #ifdef __STDC__, #else and #endif test and comment
+                       * out K&R prototypes.) */
 
 namespace ACL
 {
