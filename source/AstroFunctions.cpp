@@ -48,6 +48,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <locale>
+#include <stdexcept>
 
   // Miscellaneous library header files.
 
@@ -1539,6 +1540,86 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     if (returnValue)
     {
       second = static_cast<FP_t>(ss);
+    };
+
+    return returnValue;
+  }
+
+  /// @brief        Parses a string to determine the date contained in the string.
+  /// @param[in]    szDate: string value to parse.
+  /// @returns      The JD value of the date.
+  /// @throws       std::invalid_argument
+  /// @version      2021-01-10/GGB - Function created.
+
+  TJD sscanfDate(std::string const &szDate)
+  {
+    unsigned int year, month, day;
+    TJD returnValue;
+
+    if (sscanf(szDate.c_str(), "%u-%u-%u", &year, &month, &day) == 3)
+    {
+      returnValue = TJD(year, month, day);
+    }
+    else
+    {
+      throw std::invalid_argument("Date Time format incorrect.");
+    };
+
+
+    return returnValue;
+  }
+
+  /// @brief        Parses a string to determine the date/time contained in the string.
+  /// @param[in]    szDateTime: string value to parse.
+  /// @returns      The JD value of the date.
+  /// @throws       std::invalid_argument
+  /// @version      2021-01-10/GGB - Function created.
+
+  TJD sscanfDateTime(std::string const &szDateTime)
+  {
+    unsigned int year, month, day, hour, minute;
+    FP_t second;
+    TJD returnValue;
+
+    if (sscanfDateTime(szDateTime, year, month, day, hour, minute, second))
+    {
+      returnValue = TJD(year, month, day, hour, minute, second);
+    }
+    else
+    {
+      throw std::invalid_argument("Date Time format incorrect.");
+    };
+
+    return returnValue;
+  }
+
+  /// @brief        Parses a string to determine the time contained in the string.
+  /// @param[in]    szTime: string value to parse.
+  /// @returns      The JD value of the date.
+  /// @throws       std::invalid_argument
+  /// @version      2021-01-10/GGB - Function created.
+
+  TJD sscanfTime(std::string const &szTime)
+  {
+    unsigned int hours, minute;
+    float second;
+    TJD returnValue;
+
+    int converted = sscanf(szTime.c_str(), "%u:%u:%f", &hours, &minute, &second);
+
+    if (converted == 3)
+    {
+      second = static_cast<FP_t>(second);
+
+      returnValue = TJD(hours / 24 + minute / (24 * 60) + second / (24 * 60 * 60));
+    }
+    else if (converted == 2)
+    {
+      returnValue = TJD((static_cast<FP_t>(hours) / 24) + static_cast<FP_t>(minute) / (24 * 60));
+    }
+    else
+    {
+      throw std::invalid_argument("Date Time format incorrect.");
     };
 
     return returnValue;
