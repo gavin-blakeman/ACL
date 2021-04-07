@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2009-2021 Gavin Blakeman.
+//                      Copyright 2009-2020 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -755,7 +755,7 @@ C OUTPUT= RA2 AND DEC2 MEAN PLACE, IN RADIANS, FOR EPOCH2, IN YEARS A.D.
     };
   }
 
-  /// @brief Formats a double in TMS format with the required number of decimal places.
+  /// Formats a double in TMS format with the required number of decimal places.
   //
   // 2009-10-19/GGB - Function created.
 

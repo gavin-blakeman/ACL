@@ -47,12 +47,9 @@
 #include <initializer_list>
 #include <string>
 
-  // Miscellaneous library header files
-
-#include <SCL>
-
 namespace ACL
 {
+
   using parameter = SCL::any;
   typedef std::pair<std::string, parameter> parameterPair;
   typedef std::tuple<std::string, std::string, parameter> parameterTriple;

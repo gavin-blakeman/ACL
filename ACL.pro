@@ -36,7 +36,7 @@ CONFIG    += staticlib
 
 QT        -= core gui
 
-QMAKE_CXXFLAGS += -std=c++2a
+QMAKE_CXXFLAGS += -std=c++17
 DEFINES   += BOOST_THREAD_USE_LIB
 
 win32:CONFIG(release, debug|release) {
@@ -60,7 +60,7 @@ INCLUDEPATH += \
   "../cfitsio" \
   "../dlib-19.4" \
   "../GCL" \
-  "../libWCS/wcssubs-3.8.7" \
+  "../libWCS/wcstools-3.8.7/libwcs" \
   "../MCL" \
   "../NOVAS" \
   "../PCL" \
