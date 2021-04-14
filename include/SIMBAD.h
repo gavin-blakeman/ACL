@@ -47,6 +47,10 @@
 #include <initializer_list>
 #include <string>
 
+  // Miscellaneous library header files
+
+#include <SCL>
+
 namespace ACL
 {
 

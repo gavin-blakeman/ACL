@@ -45,6 +45,7 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/locale.hpp"
 #include "boost/tokenizer.hpp"
+#include <GCL>
 
   // ACL library header files.
 

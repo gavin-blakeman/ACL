@@ -124,6 +124,7 @@ SOURCES += \
     source/FITSKeywordDateTime.cpp \
     source/FITSKeywordDate.cpp \
     source/geographicLocation.cpp \
+    source/julianDay.cpp \
     source/observatoryInformation.cpp \
     source/photometryFilters.cpp \
     source/telescope.cpp \
@@ -144,6 +145,7 @@ SOURCES += \
 
 HEADERS += \
     include/SIMBAD.h \
+    include/julianDay.h \
     include/wcs.h \
     include/PhotometryObservation.h \
     include/PhotometryApertureEliptical.h \
