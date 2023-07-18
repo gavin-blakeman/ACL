@@ -43,6 +43,10 @@
 
 #include <string>
 
+  // Miscellaneous library header files
+
+#include <SCL>
+
 namespace ACL
 {
 

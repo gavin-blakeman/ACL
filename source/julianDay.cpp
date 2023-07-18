@@ -10,7 +10,7 @@
 // AUTHOR:							Gavin Blakeman.
 // LICENSE:             GPLv2
 //
-//                      Copyright 2005-2020 Gavin Blakeman.
+//                      Copyright 2005-2021 Gavin Blakeman.
 //                      This file is part of the Astronomy Class Library (ACL)
 //
 //                      ACL is free software: you can redistribute it and/or modify it under the terms of the GNU General
@@ -861,7 +861,7 @@ namespace ACL
 
     // GGB - Not sure why, but if the following line is uncommented I receive a linker error that the function cannot be found.
 
-    return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
+    //return GCL::sprintfHMS(static_cast<std::uint32_t>(JD_[1] * SECONDS_PER_DAY));
   }
 
 } // namespace

@@ -124,9 +124,9 @@ SOURCES += \
     source/FITSKeywordDateTime.cpp \
     source/FITSKeywordDate.cpp \
     source/geographicLocation.cpp \
+    source/julianDay.cpp \
     source/observatoryInformation.cpp \
     source/photometryFilters.cpp \
-    source/julianDay.cpp \
     source/telescope.cpp \
     source/FITSMemoryFileArray.cpp \
     source/FITSMemoryFile.cpp \
@@ -145,6 +145,7 @@ SOURCES += \
 
 HEADERS += \
     include/SIMBAD.h \
+    include/julianDay.h \
     include/wcs.h \
     include/PhotometryObservation.h \
     include/PhotometryApertureEliptical.h \
@@ -207,7 +208,6 @@ HEADERS += \
     include/geographicLocation.h \
     include/observatoryInformation.h \
     include/photometryFilters.h \
-    include/julianDay.h \
     include/telescope.h \
     include/FITSMemoryFileArray.h \
     include/FITSMemoryFile.h \
